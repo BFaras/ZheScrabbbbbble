@@ -46,6 +46,10 @@ export class SocketManager {
         this.sio.on('connection', (socket) => {
             this.socketDatabaseService.databaseSocketRequests(socket);
 
+            socket.on('testChat', (text: String) => {
+                console.log(text);
+            });
+
             socket.on('new-message', (message: Message) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;

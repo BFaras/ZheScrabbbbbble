@@ -1,4 +1,4 @@
-package com.example.testchatbox.ui.login
+package com.example.testchatbox.data.login
 
 /**
  * Authentication result : success (user details) or error message.
