@@ -1,0 +1,74 @@
+<div class="container justified">
+    <img src="https://bit.ly/3m206ss" width="400" height="80" alt="Logo Scrabble" />
+    <h1 class="header-item">Configuration des paramètres de la partie</h1>
+    <h2 *ngIf="isSoloMode">Mode solo</h2>
+    <h3 *ngIf="isSoloMode">Vous allez jouer contre {{ randomName }}</h3>
+    <h2 *ngIf="!isSoloMode">Mode multijoueur</h2>
+    <div class="game-settings">
+        <div *ngIf="isSoloMode" class="input-container">
+            <p class="text-container">Difficulté du jeu:</p>
+            <select class="input" id="game-difficulty" (change)="updateRandomName()" required>
+                <option value="débutant" default selected>Niveau débutant</option>
+                <option value="expert">Niveau avancé</option>
+            </select>
+        </div>
+        <div class="input-container">
+            <p class="text-container">Nom du joueur:</p>
+            <input class="input" id="player-name" placeholder="Saisir le nom du joueur" maxlength="20" #playerName required />
+        </div>
+        <div *ngIf="!isSoloMode" class="input-container">
+            <p class="text-container">Nom de la salle:</p>
+            <input class="input" id="room-name" placeholder="Saisir le nom de la salle" #roomName required />
+        </div>
+        <div class="input-container">
+            <p class="text-container">Dictionnaire:</p>
+            <div *ngIf="dictionaryList.length">
+                <select class="input" id="dictionaries" required>
+                    <option
+                        id="dictionary-details"
+                        *ngFor="let dictionary of dictionaryList; let indexOfElement = index"
+                        [attr.data-index]="indexOfElement"
+                    >
+                        {{ dictionary.title + ': ' + dictionary.description }}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="input-container">
+            <p class="text-container">Temps par tour:</p>
+            <div id="timer-box">
+                <button #decrementButton id="dec-button" (click)="decrementClock()">-</button>
+                <div #time id="time-text">1:00</div>
+                <button #incrementButton id="inc-button" (click)="incrementClock()">+</button>
+            </div>
+        </div>
+        <div class="mode-buttons">
+            <button
+                [disabled]="buttonDisabled"
+                *ngIf="isSoloMode"
+                class="button"
+                id="createGame"
+                (click)="checkSoloInput(playerName.value) ? createSoloRoom(playerName.value) : alertFalseInput()"
+            >
+                Créer une partie
+            </button>
+            <button
+                [disabled]="buttonDisabled"
+                *ngIf="!isSoloMode"
+                class="button"
+                id="createGame"
+                (click)="checkMultiInput(playerName.value) ? createMultiRoom(playerName.value) : alertFalseInput()"
+            >
+                Créer une partie
+            </button>
+            <button class="button cancel" [routerLink]="['/home']">Retourner au menu principal</button>
+        </div>
+    </div>
+    <div class="footer-item">
+        <h4 class="team-name">Équipe 206</h4>
+        <p>
+            <span>Ioana Daria Danciu</span>, <span>Arnaud Delage-Reid</span>, <span>Manuel Ramirez-Evrard</span>, <span>Kaboungala Bintou Seni</span>,
+            <span>Pablo Sepulveda Solis</span>, <span>Imane Znadi</span>
+        </p>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+#zoom-holder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#holder-buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+#letter-holder-container {
+    padding: 10px;
+    margin: 5px 50px 15px 50px;
+    border-radius: 10px;
+    background-color: #faf5f1;
+    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+}
+
+.button {
+    margin: 10px;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    padding: 10px;
+    background-color: #a5c2b2;
+    border-radius: 7px;
+    width: 150px;
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    color: rgb(94, 94, 94);
+}
+.button:disabled,
+.button[disabled] {
+    margin: 10px;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    padding: 10px;
+    background-color: #a5c2b2;
+    border-radius: 7px;
+    width: 150px;
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    color: rgb(94, 94, 94);
+}
+
+.button:hover:enabled {
+    color: black;
+    cursor: pointer;
+    background: #8cbea3;
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}

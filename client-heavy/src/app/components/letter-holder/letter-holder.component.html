@@ -1,0 +1,29 @@
+<div id="zoom-holder">
+    <div id="holder-buttons-container" (click)="$event.stopPropagation()">
+        <button class="button" id="cancelButton" [style.visibility]="makingSelection ? 'visible' : 'hidden'" (click)="cancelSelection()">
+            Annuler
+        </button>
+        <button
+            class="button"
+            id="swapButton"
+            [style.visibility]="makingSelection ? 'visible' : 'hidden'"
+            (click)="swapLetters()"
+            [disabled]="isDisabled || notEnoughLettersLeft"
+        >
+            Échanger
+        </button>
+        <canvas
+            (click)="isReceiver()"
+            (contextmenu)="isReceiver()"
+            #letterHolder
+            (contextmenu)="clickInside($event)"
+            (click)="clickInside($event)"
+            (keypress)="onKeyDown($event)"
+            id="letter-holder-container"
+            [attr.width]="width"
+            [attr.height]="height"
+        ></canvas>
+        <button id="playButton" class="button" [disabled]="isDisabled" (click)="sendWord()">Jouer</button>
+        <button class="button" id="skipButton" (click)="skipTurn()" [disabled]="isDisabled">Passer</button>
+    </div>
+</div>

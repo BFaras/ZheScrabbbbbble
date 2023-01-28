@@ -1,0 +1,25 @@
+<div id="chat-box" (click)="isReceiver()">
+    <p id="title-chat">BOITE DE COMMUNICATION</p>
+    <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+        <div *ngFor="let message of messageHistory">
+            <ul [ngStyle]="{ color: message.color }">
+                <div *ngIf="message.username === '[SERVER]'; else elseBlock">{{ message.body }}</div>
+                <ng-template #elseBlock>{{ message.username }} : {{ message.body }}</ng-template>
+            </ul>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <input
+            type="text"
+            required
+            [(ngModel)]="message.body"
+            placeholder="Tapez une commande."
+            minlength="1"
+            maxlength="512"
+            (keyup.enter)="sendMessage()"
+            autofocus
+        />
+        <button (click)="sendMessage()">Envoyer</button>
+    </div>
+</div>

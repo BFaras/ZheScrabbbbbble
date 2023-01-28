@@ -1,0 +1,20 @@
+
+<div class="container justified">
+    <img src="https://bit.ly/3m206ss" width="400" height="80" alt="Logo Scrabble" />
+    <div id="button-container">
+        <section id="game-modes" class="justified">
+            <p class="paragraph">Choisissez un mode de jeu ou consultez la liste des meilleurs scores!</p>
+            <button class="button" routerLink="/solo-multi" (click)="setScrabbleMode(gameTypeEnum.CLASSIC)"><i>Scrabble</i> classique</button>
+            <button class="button" routerLink="/solo-multi" (click)="setScrabbleMode(gameTypeEnum.LOG2990)"><i>Scrabble </i>LOG2990</button>
+            <button class="button" (click)="openScores()">Meilleurs scores</button>
+        </section>
+    </div>
+
+    <div class="footer-item">
+        <h4 class="team-name">Équipe 206 💪😤👊 </h4>
+        <p>
+            <span>Ioana Daria Danciu</span>, <span>Arnaud Delage-Reid</span>, <span>Manuel Ramirez-Evrard</span>, <span>Kaboungala Bintou Seni</span>,
+            <span>Pablo Sepulveda Solis</span>, <span>Imane Znadi</span>
+        </p>
+    </div>
+</div>

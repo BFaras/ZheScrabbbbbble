@@ -1,0 +1,29 @@
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { GameType } from '@app/classes/game-settings';
+import { LeaderboardComponent } from '@app/components/leaderboard/leaderboard.component';
+import { GameModeService } from '@app/services/game-mode-service/game-mode.service';
+
+@Component({
+    selector: 'app-main-page',
+    templateUrl: './main-page.component.html',
+    styleUrls: ['./main-page.component.scss'],
+})
+export class MainPageComponent {
+    constructor(private dialog: MatDialog, private gameModeService: GameModeService) {}
+
+    openScores() {
+        this.dialog.open(LeaderboardComponent, {
+            width: '30%',
+            height: '500px',
+        });
+    }
+
+    setScrabbleMode(scrabbleMode: GameType): void {
+        this.gameModeService.setScrabbleMode(scrabbleMode);
+    }
+
+    get gameTypeEnum(): typeof GameType {
+        return GameType;
+    }
+}

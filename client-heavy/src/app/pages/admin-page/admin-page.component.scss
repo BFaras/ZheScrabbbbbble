@@ -1,0 +1,236 @@
+.box {
+    height: 300px;
+    width: 1000px;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px !important;
+    border-radius: 10px;
+    background-color: #e0d7d4;
+    flex-direction: column;
+    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bolder;
+    font-size: 16px;
+}
+
+.name-container {
+    width: 900px;
+    height: 220px;
+    padding: 0px 30px 10px 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.one-name {
+    height: 50px;
+    margin-bottom: 10px;
+    padding: 0px 10px 0px 15px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #ebe4e1;
+}
+
+.games {
+    width: 1400px;
+    height: 390px;
+}
+
+.row {
+    background-color: #ebe4e1;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+    border-radius: 4px;
+}
+
+.error {
+    margin-top: 5px;
+    font-size: x-large !important;
+    color:#cb654f;
+    width: 1500px !important;
+}
+
+.player1 {
+    background-color: #fcf8f7;
+}
+
+.player2 {
+    background-color: #fcf3f0;
+}
+
+.titles {
+    font-size: 17px;
+    padding: 10px 0px 10px 0px;
+    width: 140px;
+}
+
+thead th {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 999;
+    background-color: #e0d7d4;
+}
+
+#header-fixed {
+    position: fixed;
+    top: 0px;
+    display: none;
+    background-color: white;
+}
+
+#history {
+    height: 350px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 5px 0px;
+    padding: 0px 20px;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background: #cb654f;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #8cbea3;
+}
+
+.container {
+    margin-top: 4%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.message {
+    width: 650px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.add {
+    height: 100px;
+}
+
+.games {
+    justify-content: flex-start;
+}
+
+.button {
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    padding: 5px;
+    background-color: #d3b1a7;
+    border-radius: 7px;
+    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    font-size: 17px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: rgb(94, 94, 94);
+    transition: color 0.5s linear;
+    -webkit-transition: color 0.2s linear;
+    width: 150px;
+    margin: 2px 0px 7px 20px;
+}
+
+.button:hover:enabled {
+    color: black;
+    cursor: pointer;
+    background: #ce8975;
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+.modify-dict {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cancel {
+    width: 50vh;
+    margin: 15px !important;
+}
+
+.download {
+    width: 40px;
+}
+
+::ng-deep mat-dialog-container {
+    padding: 0% !important;
+    border-radius: 10px !important;
+}
+
+.box.reset {
+    height: 370px;
+    margin-bottom: 50px;
+}
+
+.reset-btn {
+    display: flex;
+    margin-bottom: 20px;
+    flex-direction: row;
+}
+
+.name-container.reset {
+    height: 300px;
+}
+
+#add-vp {
+    flex-direction: row;
+}
+
+.player {
+    height: 380px;
+}
+
+.winner {
+    background-color:#9cb198;
+}
+
+.loser {
+    background-color:#d3a897;
+}
+
+#legend {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+p.winner {
+    margin: 17px 10px 0px 0px;
+    padding: 10px;
+    border-radius: 7%;
+}
+
+p.loser {
+    margin: 17px 10px 0px 0px;
+    padding: 10px;
+    border-radius: 7%;
+}

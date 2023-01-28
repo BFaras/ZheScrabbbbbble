@@ -1,0 +1,103 @@
+.container {
+    margin-top: 80px;
+}
+
+.justified {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button {
+    text-decoration: none;
+    margin-top: 20px;
+    text-align: center;
+    border: none;
+    padding: 10px;
+    background-color: rgb(204, 224, 183);
+    border-radius: 7px;
+    width: 50vh;
+    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    font-size: 17px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: rgb(94, 94, 94);
+    transition: color 0.5s linear;
+    -webkit-transition: color 0.2s linear;
+}
+
+.button:hover {
+    color: black;
+    cursor: pointer;
+    background: rgb(186, 204, 122);
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+.team-name {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    color: green;
+}
+
+.header-item {
+    justify-content: center;
+    text-align: center;
+    padding: 100px;
+}
+
+.footer-item {
+    position: absolute;
+    text-align: center;
+    bottom: 0;
+}
+
+.footer-item p :nth-child(even) {
+    color: black;
+}
+.footer-item p :nth-child(odd) {
+    color: grey;
+}
+
+.mode-buttons {
+    display: flex;
+    padding-top: 100px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+}
+
+.cancel {
+    background-color: #d3b1a7;
+}
+
+.cancel:hover:enabled {
+    background: #ce8975;
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+.team-name {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    color: green;
+}
+
+#spinner-container {
+    height: 0vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mat-spinner::ng-deep circle {
+    stroke: rgb(241, 36, 163);
+}
+
+.mode-buttons {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

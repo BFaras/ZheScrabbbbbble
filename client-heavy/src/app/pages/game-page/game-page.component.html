@@ -1,0 +1,27 @@
+<div id="wrapper">
+    <div class="container">
+        <section class="side-components">
+            <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Scrabble_American_logo.svg/1200px-Scrabble_American_logo.svg.png"
+                width="350"
+                height="80"
+                alt="Logo Scrabble"
+            />
+            <app-info-panel></app-info-panel>
+        </section>
+
+        <app-play-area class="play-area" tabindex="0" [receiver]="isReceiver"></app-play-area>
+
+        <section class="side-components">
+            <button *ngIf="!endGame; else other_content" (click)="alert()" class="button" id="abandonner">Abandonner</button>
+            <ng-template #other_content><button class="button" (click)="goHome()" id="quitter">Quitter</button></ng-template>
+            <app-chat id="chatBox" (receiver)="setReceiver($event)"></app-chat>
+            <section id="font-size-container">
+                <span>Modifier la taille des lettres</span><br />
+                <button class="font-size" id="increase" (click)="onIncrease()">+</button>
+                <button class="font-size" id="decrease" (click)="onDecrease()">-</button>
+            </section>
+        </section>
+    </div>
+    <app-letter-holder id="letter-holder" (receiver)="setReceiver($event)"></app-letter-holder>
+</div>

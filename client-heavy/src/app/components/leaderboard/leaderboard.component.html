@@ -1,0 +1,12 @@
+<div id="game-types-container" class="justified">
+    <button class="button green" [disabled]="gameType === gameTypeEnum.CLASSIC" (click)="setGameType(gameTypeEnum.CLASSIC)">Classique</button>
+    <button class="button green" [disabled]="gameType === gameTypeEnum.LOG2990" (click)="setGameType(gameTypeEnum.LOG2990)">Log2990</button>
+</div>
+<div *ngIf="scores.length > 0; else elseBlock">
+    <mat-list *ngFor="let score of scores">
+        <mat-list-item>{{ score }}</mat-list-item>
+    </mat-list>
+</div>
+<ng-template #elseBlock>
+    <h1>La base de donnée n'est pas disponible. Veuillez réessayer plus tard</h1>
+</ng-template>
