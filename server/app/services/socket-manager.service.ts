@@ -12,13 +12,14 @@ import {
     DEFAULT_COLOR,
     ILLEGAL_COMMAND_ERROR,
     INVALID_SYNTAX_ERROR,
-    RECONNECT_TIME,
+    RECONNECT_TIME
 } from '@app/constants/communication-constants';
 import { PlayerName, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
 import { CommandController, CommandResult } from '@app/controllers/command.controller';
 import { RoomManagerService } from '@app/services/room-manager.service';
 import * as http from 'http';
 import * as io from 'socket.io';
+import { AuthSocketService } from './auth-socket.service';
 import { DatabaseService } from './database.service';
 import { SocketDatabaseService } from './socket-database.service';
 
@@ -27,6 +28,7 @@ export class SocketManager {
     private roomManager: RoomManagerService;
     private commandController: CommandController;
     private socketDatabaseService: SocketDatabaseService;
+    private authSocketService: AuthSocketService;
     private databaseService: DatabaseService;
     private timeoutRoom: { [key: string]: NodeJS.Timeout };
 
@@ -34,6 +36,7 @@ export class SocketManager {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
         this.socketDatabaseService = new SocketDatabaseService(databaseService);
         this.databaseService = databaseService;
+        this.authSocketService = new AuthSocketService();
         this.timeoutRoom = {};
     }
 
@@ -43,8 +46,9 @@ export class SocketManager {
     }
 
     handleSockets(): void {
-        this.sio.on('connection', (socket) => {
+        this.sio.on('connection', (socket: io.Socket) => {
             this.socketDatabaseService.databaseSocketRequests(socket);
+            this.authSocketService.handleAuthSockets(socket);
 
             socket.on('new-message', (message: Message) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
