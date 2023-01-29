@@ -2,6 +2,6 @@ export interface AccountCreationState {
     isUsernameValid: boolean;
     isEmailValid: boolean;
     isPasswordValid: boolean;
-    isUsernameTaken: boolean;
+    isUsernameFree: boolean;
     accountCreationSuccess: boolean;
 }

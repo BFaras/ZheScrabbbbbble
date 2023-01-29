@@ -30,19 +30,15 @@ export class AuthentificationService {
 
     private async verifyAccountRequirements(username: string, password: string, email: string): Promise<AccountCreationState> {
         const accountCreationState: AccountCreationState = {
-            isUsernameValid: true,
-            isEmailValid: true,
-            isPasswordValid: true,
-            isUsernameTaken: false,
+            isUsernameValid: username.length >= MIN_USERNAME_LENGTH,
+            isEmailValid: email.includes(CHAR_EMAIL_MUST_CONTAIN),
+            isPasswordValid: password.length >= MIN_USERNAME_LENGTH,
+            isUsernameFree: await this.dbService.isUsernameTaken(username),
             accountCreationSuccess: true,
         };
 
-        accountCreationState.isUsernameValid = username.length >= MIN_USERNAME_LENGTH;
-        accountCreationState.isEmailValid = email.includes(CHAR_EMAIL_MUST_CONTAIN);
-        accountCreationState.isPasswordValid = password.length >= MIN_USERNAME_LENGTH;
-        accountCreationState.isUsernameTaken = await this.dbService.isUsernameTaken(username);
         accountCreationState.accountCreationSuccess =
-            accountCreationState.isUsernameValid && accountCreationState.isEmailValid && accountCreationState.isPasswordValid && accountCreationState.isUsernameTaken;
+            accountCreationState.isUsernameValid && accountCreationState.isEmailValid && accountCreationState.isPasswordValid && accountCreationState.isUsernameFree;
 
         return Promise.resolve(accountCreationState);
     }
