@@ -48,6 +48,15 @@ export class DatabaseService {
         }
     }
 
+    async isUsernameTaken(usernameToCheck: string): Promise<boolean> {
+        const usernameInDB = await this.getCollection(CollectionType.USERPROFILES)?.findOne({ 'username': usernameToCheck })
+        return Promise.resolve(usernameInDB == undefined);
+    }
+
+    async addUserAccount(): Promise<void> {
+
+    }
+
     async addScore(score: Score, gameType: GameType): Promise<void> {
         await this.getCollection(CollectionType.SCORE, gameType)?.insertOne(score).catch();
     }

@@ -35,8 +35,8 @@ export class SocketManager {
     constructor(server: http.Server, databaseService: DatabaseService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
         this.socketDatabaseService = new SocketDatabaseService(databaseService);
+        this.authSocketService = new AuthSocketService(databaseService);
         this.databaseService = databaseService;
-        this.authSocketService = new AuthSocketService();
         this.timeoutRoom = {};
     }
 

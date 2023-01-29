@@ -9,39 +9,44 @@ import {
     POSITIVE_MULTIPLIER
 } from '@app/constants/authentification-constants';
 import { AccountCreationState } from '@app/interfaces/account-creation-state';
+import { DatabaseService } from './database.service';
 
 export class AuthentificationService {
+    constructor(private dbService: DatabaseService) {}
+
     authentifyUser(username: string, password: string): boolean {
         const encryptedPasswordFromDB: string = '';
         const decryptedPasswordFromDB: string = this.decryptPassword(encryptedPasswordFromDB);
         return decryptedPasswordFromDB == password;
     }
 
-    createAccount(username: string, password: string, email: string, userAvatar: string): AccountCreationState {
-        const accountCreationState: AccountCreationState = this.verifyAccountRequirements(username, password, email);
+    async createAccount(username: string, password: string, email: string, userAvatar: string): Promise<AccountCreationState> {
+        const accountCreationState: AccountCreationState = await this.verifyAccountRequirements(username, password, email);
         if (accountCreationState.accountCreationSuccess) {
             const encryptedPassword: string = this.encryptPassword(password);
             console.log(encryptedPassword.length);
             //TO DO : If error : accountCreationState.accountCreationSuccess = false
         }
-        return accountCreationState;
+        return Promise.resolve(accountCreationState);
     }
 
-    private verifyAccountRequirements(username: string, password: string, email: string): AccountCreationState {
+    private async verifyAccountRequirements(username: string, password: string, email: string): Promise<AccountCreationState> {
         const accountCreationState: AccountCreationState = {
             isUsernameValid: true,
             isEmailValid: true,
             isPasswordValid: true,
+            isUsernameTaken: false,
             accountCreationSuccess: true,
         };
 
         accountCreationState.isUsernameValid = username.length >= MIN_USERNAME_LENGTH;
         accountCreationState.isEmailValid = email.includes(CHAR_EMAIL_MUST_CONTAIN);
         accountCreationState.isPasswordValid = password.length >= MIN_USERNAME_LENGTH;
+        accountCreationState.isUsernameTaken = await this.dbService.isUsernameTaken(username);
         accountCreationState.accountCreationSuccess =
-            accountCreationState.isUsernameValid && accountCreationState.isEmailValid && accountCreationState.isPasswordValid;
+            accountCreationState.isUsernameValid && accountCreationState.isEmailValid && accountCreationState.isPasswordValid && accountCreationState.isUsernameTaken;
 
-        return accountCreationState;
+        return Promise.resolve(accountCreationState);
     }
 
     private encryptPassword(decryptedPassword: string): string {

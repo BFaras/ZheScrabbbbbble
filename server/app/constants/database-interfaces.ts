@@ -49,4 +49,5 @@ export enum CollectionType {
     DICTIONARY = 'dictionary',
     NAMES = 'playerNames',
     GAMES = 'gameHistory',
+    USERPROFILES = 'userProfiles'
 }
