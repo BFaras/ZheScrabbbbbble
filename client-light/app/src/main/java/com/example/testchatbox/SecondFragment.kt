@@ -32,6 +32,14 @@ class SecondFragment : Fragment() {
         SocketHandler.establishConnection()
 
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        SocketHandler.getSocket().on("New Message") { args ->
+            if(args[0] != null){
+                val currentText = binding.textView.text.toString()
+                val message = args[0] as String;
+                binding.textView.text = currentText + System.getProperty("line.separator") + message;
+            }
+
+        }
         return binding.root
 
     }
@@ -41,12 +49,12 @@ class SecondFragment : Fragment() {
 
         binding.send.setOnClickListener {
             var text = binding.inputText.text.toString();
-            val currentDate = Calendar.getInstance().time.toString()
-            binding.inputText.setText("");
-            text = currentDate + " : " + text;
-            val currentText = binding.textView.text.toString()
-            SocketHandler.getSocket().emit("testChat", text)
-            binding.textView.setText(currentText + System.getProperty("line.separator") + text);
+            if(text.isNotEmpty()){
+                val currentDate = Calendar.getInstance().time.toString()
+                binding.inputText.setText("");
+                text = "$currentDate : $text";
+                SocketHandler.getSocket().emit("Message Sent", text)
+            }
         }
     }
 

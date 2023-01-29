@@ -26,6 +26,7 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
 import { LetterHolderComponent } from './components/letter-holder/letter-holder.component';
 import { TimerComponent } from './components/timer/timer.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
+import { ChatPageComponent } from './pages/chat-page/chat-page.component';
 import { ChatService } from './services/chat-service/chat.service';
 /**
  * Main module that is used in main.ts.
@@ -38,6 +39,7 @@ import { ChatService } from './services/chat-service/chat.service';
         AppComponent,
         GamePageComponent,
         MainPageComponent,
+        ChatPageComponent,
         MaterialPageComponent,
         PlayAreaComponent,
         InfoPanelComponent,

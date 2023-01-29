@@ -19,6 +19,7 @@ import { CommandController, CommandResult } from '@app/controllers/command.contr
 import { RoomManagerService } from '@app/services/room-manager.service';
 import * as http from 'http';
 import * as io from 'socket.io';
+import { ChatSocketService } from './chat-socket.service';
 import { DatabaseService } from './database.service';
 import { SocketDatabaseService } from './socket-database.service';
 
@@ -27,12 +28,14 @@ export class SocketManager {
     private roomManager: RoomManagerService;
     private commandController: CommandController;
     private socketDatabaseService: SocketDatabaseService;
+    private chatSocketService : ChatSocketService;
     private databaseService: DatabaseService;
     private timeoutRoom: { [key: string]: NodeJS.Timeout };
 
     constructor(server: http.Server, databaseService: DatabaseService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
         this.socketDatabaseService = new SocketDatabaseService(databaseService);
+        this.chatSocketService = new ChatSocketService();
         this.databaseService = databaseService;
         this.timeoutRoom = {};
     }
@@ -45,11 +48,7 @@ export class SocketManager {
     handleSockets(): void {
         this.sio.on('connection', (socket) => {
             this.socketDatabaseService.databaseSocketRequests(socket);
-
-            socket.on('testChat', (text: String) => {
-                console.log(text);
-            });
-
+            this.chatSocketService.handleChatSockets(socket);
             socket.on('new-message', (message: Message) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
