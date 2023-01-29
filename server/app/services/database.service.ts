@@ -49,7 +49,7 @@ export class DatabaseService {
     }
 
     async isUsernameTaken(usernameToCheck: string): Promise<boolean> {
-        const usernameInDB = await this.getCollection(CollectionType.USERACCOUNTS)?.findOne({ 'username': usernameToCheck })
+        const usernameInDB = await this.getCollection(CollectionType.USERACCOUNTS)?.findOne({ 'username': usernameToCheck });
         return Promise.resolve(usernameInDB == undefined);
     }
 
@@ -64,6 +64,16 @@ export class DatabaseService {
 
         await this.getCollection(CollectionType.USERACCOUNTS)?.insertOne(accountInfo).catch(() => { isAccountCreated = false; });
         return Promise.resolve(isAccountCreated);
+    }
+
+    async getUserEncryptedPassword(username: string): Promise<string> {
+        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<AccountInfo>)?.findOne({ 'username': username });
+        let encryptedPassword = '';
+
+        if (userAccountInfoDoc != undefined) {
+            encryptedPassword = userAccountInfoDoc.encryptedPassword;
+        }
+        return encryptedPassword;
     }
 
     async addScore(score: Score, gameType: GameType): Promise<void> {

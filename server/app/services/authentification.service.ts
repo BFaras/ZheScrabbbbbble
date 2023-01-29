@@ -14,10 +14,9 @@ import { DatabaseService } from './database.service';
 export class AuthentificationService {
     constructor(private dbService: DatabaseService) {}
 
-    authentifyUser(username: string, password: string): boolean {
-        const encryptedPasswordFromDB: string = '';
-        const decryptedPasswordFromDB: string = this.decryptPassword(encryptedPasswordFromDB);
-        return decryptedPasswordFromDB == password;
+    async authentifyUser(username: string, password: string): Promise<boolean> {
+        let decryptedPasswordFromDB: string = this.decryptPassword(await this.dbService.getUserEncryptedPassword(username));
+        return decryptedPasswordFromDB.length > 0 && decryptedPasswordFromDB == password;
     }
 
     async createAccount(username: string, password: string, email: string, userAvatar: string): Promise<AccountCreationState> {
