@@ -24,8 +24,7 @@ export class AuthentificationService {
         const accountCreationState: AccountCreationState = await this.verifyAccountRequirements(username, password, email);
         if (accountCreationState.accountCreationSuccess) {
             const encryptedPassword: string = this.encryptPassword(password);
-            console.log(encryptedPassword.length);
-            //TO DO : If error : accountCreationState.accountCreationSuccess = false
+            accountCreationState.accountCreationSuccess = await this.dbService.addUserAccount(username, encryptedPassword, email, userAvatar);
         }
         return Promise.resolve(accountCreationState);
     }

@@ -1,6 +1,6 @@
 import { GameType } from '@app/constants/basic-constants';
 import { DATABASE_NAME, DATABASE_URL } from '@app/constants/database-environment';
-import { CollectionType, Dictionary, GameHistory, PlayerName, Score, TopScores, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
+import { AccountInfo, CollectionType, Dictionary, GameHistory, PlayerName, Score, TopScores, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
 import * as fs from 'fs';
 import { Collection, Db, MongoClient } from 'mongodb';
 import 'reflect-metadata';
@@ -49,12 +49,21 @@ export class DatabaseService {
     }
 
     async isUsernameTaken(usernameToCheck: string): Promise<boolean> {
-        const usernameInDB = await this.getCollection(CollectionType.USERPROFILES)?.findOne({ 'username': usernameToCheck })
+        const usernameInDB = await this.getCollection(CollectionType.USERACCOUNTS)?.findOne({ 'username': usernameToCheck })
         return Promise.resolve(usernameInDB == undefined);
     }
 
-    async addUserAccount(): Promise<void> {
+    async addUserAccount(username: string, encryptedPassword: string, email: string, userAvatar: string): Promise<boolean> {
+        let isAccountCreated = true;
+        const accountInfo: AccountInfo = {
+            username,
+            encryptedPassword,
+            email,
+            userAvatar
+        }
 
+        await this.getCollection(CollectionType.USERACCOUNTS)?.insertOne(accountInfo).catch(() => { isAccountCreated = false; });
+        return Promise.resolve(isAccountCreated);
     }
 
     async addScore(score: Score, gameType: GameType): Promise<void> {
