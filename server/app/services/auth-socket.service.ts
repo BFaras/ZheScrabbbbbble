@@ -12,17 +12,21 @@ export class AuthSocketService {
     handleAuthSockets(socket: io.Socket) {
         socket.on('User authentification', async (username: string, password: string) => {
             const isAuthentificationSuccess = await this.authentificationService.authentifyUser(username, password);
-            socket.emit("Authentification status", isAuthentificationSuccess);
+            socket.emit('Authentification status', isAuthentificationSuccess);
         });
 
         socket.on('Create user account', async (username: string, password: string, email: string, userAvatar: string) => {
-            const accountCreationStatus: AccountCreationState = await this.authentificationService.createAccount(username, password, email, userAvatar);
+            const accountCreationStatus: AccountCreationState = await this.authentificationService.createAccount(
+                username,
+                password,
+                email,
+                userAvatar,
+            );
 
             if (accountCreationStatus.accountCreationSuccess) {
-                socket.emit("Authentification success", accountCreationStatus.accountCreationSuccess);
-            }
-            else {
-                socket.emit("Account creation error", accountCreationStatus);
+                socket.emit('Authentification success', accountCreationStatus.accountCreationSuccess);
+            } else {
+                socket.emit('Account creation error', accountCreationStatus);
             }
         });
     }

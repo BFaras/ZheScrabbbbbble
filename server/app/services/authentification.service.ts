@@ -10,12 +10,11 @@ import {
 } from '@app/constants/authentification-constants';
 import { AccountCreationState } from '@app/interfaces/account-creation-state';
 import { DatabaseService } from './database.service';
-
 export class AuthentificationService {
     constructor(private dbService: DatabaseService) {}
 
     async authentifyUser(username: string, password: string): Promise<boolean> {
-        let decryptedPasswordFromDB: string = this.decryptPassword(await this.dbService.getUserEncryptedPassword(username));
+        const decryptedPasswordFromDB: string = this.decryptPassword(await this.dbService.getUserEncryptedPassword(username));
         return decryptedPasswordFromDB.length > 0 && decryptedPasswordFromDB == password;
     }
 
@@ -33,20 +32,23 @@ export class AuthentificationService {
             isUsernameValid: username.length >= MIN_USERNAME_LENGTH,
             isEmailValid: email.includes(CHAR_EMAIL_MUST_CONTAIN),
             isPasswordValid: password.length >= MIN_USERNAME_LENGTH,
-            isUsernameFree: await this.dbService.isUsernameTaken(username),
+            isUsernameFree: await this.dbService.isUsernameFree(username),
             accountCreationSuccess: true,
         };
 
         accountCreationState.accountCreationSuccess =
-            accountCreationState.isUsernameValid && accountCreationState.isEmailValid && accountCreationState.isPasswordValid && accountCreationState.isUsernameFree;
+            accountCreationState.isUsernameValid &&
+            accountCreationState.isEmailValid &&
+            accountCreationState.isPasswordValid &&
+            accountCreationState.isUsernameFree;
 
         return Promise.resolve(accountCreationState);
     }
 
     private encryptPassword(decryptedPassword: string): string {
-        let encryptedPassword: string = '';
+        let encryptedPassword = '';
         for (let i = 0; i < decryptedPassword.length; i++) {
-            const multiplier = i % 2 == 0 ? NEGATIVE_MULTIPLIER : POSITIVE_MULTIPLIER;
+            const multiplier = i % 2 === 0 ? NEGATIVE_MULTIPLIER : POSITIVE_MULTIPLIER;
             const newCharAtPositionCode: number = decryptedPassword.charCodeAt(i) + i * multiplier * NB_OF_CHARS_TO_ADVANCE;
             encryptedPassword += String.fromCharCode(newCharAtPositionCode);
             encryptedPassword += this.generateRandomString(i + NB_OF_RANDOM_CHARS_TO_ADD);
@@ -56,10 +58,10 @@ export class AuthentificationService {
     }
 
     private decryptPassword(encryptedPassword: string): string {
-        let decryptedPassword: string = '';
+        let decryptedPassword = '';
         let letterCounter = 0;
         for (let i = 0; i < encryptedPassword.length; i += letterCounter + NB_OF_RANDOM_CHARS_TO_ADD) {
-            const multiplier = letterCounter % 2 == 0 ? POSITIVE_MULTIPLIER : NEGATIVE_MULTIPLIER;
+            const multiplier = letterCounter % 2 === 0 ? POSITIVE_MULTIPLIER : NEGATIVE_MULTIPLIER;
             const charAtPositionCode: number = encryptedPassword.charCodeAt(i) + letterCounter * multiplier * NB_OF_CHARS_TO_ADVANCE;
             decryptedPassword += String.fromCharCode(charAtPositionCode);
             letterCounter++;

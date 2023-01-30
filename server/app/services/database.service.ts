@@ -1,6 +1,15 @@
 import { GameType } from '@app/constants/basic-constants';
 import { DATABASE_NAME, DATABASE_URL } from '@app/constants/database-environment';
-import { AccountInfo, CollectionType, Dictionary, GameHistory, PlayerName, Score, TopScores, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
+import {
+    AccountInfo,
+    CollectionType,
+    Dictionary,
+    GameHistory,
+    PlayerName,
+    Score,
+    TopScores,
+    VirtualPlayerDifficulty
+} from '@app/constants/database-interfaces';
 import * as fs from 'fs';
 import { Collection, Db, MongoClient } from 'mongodb';
 import 'reflect-metadata';
@@ -48,9 +57,9 @@ export class DatabaseService {
         }
     }
 
-    async isUsernameTaken(usernameToCheck: string): Promise<boolean> {
-        const usernameInDB = await this.getCollection(CollectionType.USERACCOUNTS)?.findOne({ 'username': usernameToCheck });
-        return Promise.resolve(usernameInDB == undefined);
+    async isUsernameFree(usernameToCheck: string): Promise<boolean> {
+        const usernameInDB = await this.getCollection(CollectionType.USERACCOUNTS)?.findOne({ username: usernameToCheck });
+        return Promise.resolve(usernameInDB === undefined || usernameInDB === null);
     }
 
     async addUserAccount(username: string, encryptedPassword: string, email: string, userAvatar: string): Promise<boolean> {
@@ -59,18 +68,24 @@ export class DatabaseService {
             username,
             encryptedPassword,
             email,
-            userAvatar
-        }
+            userAvatar,
+        };
 
-        await this.getCollection(CollectionType.USERACCOUNTS)?.insertOne(accountInfo).catch(() => { isAccountCreated = false; });
+        await this.getCollection(CollectionType.USERACCOUNTS)
+            ?.insertOne(accountInfo)
+            .catch(() => {
+                isAccountCreated = false;
+            });
         return Promise.resolve(isAccountCreated);
     }
 
     async getUserEncryptedPassword(username: string): Promise<string> {
-        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<AccountInfo>)?.findOne({ 'username': username });
+        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<AccountInfo>)?.findOne({
+            username,
+        });
         let encryptedPassword = '';
 
-        if (userAccountInfoDoc != undefined) {
+        if (userAccountInfoDoc !== undefined && userAccountInfoDoc !== null) {
             encryptedPassword = userAccountInfoDoc.encryptedPassword;
         }
         return encryptedPassword;
