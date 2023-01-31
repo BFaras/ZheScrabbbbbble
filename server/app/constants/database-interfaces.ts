@@ -39,6 +39,13 @@ export interface PlayerInfo {
     winner: boolean;
 }
 
+export interface AccountInfo {
+    username: string;
+    encryptedPassword: string;
+    email: string;
+    userAvatar: string;
+}
+
 export const enum VirtualPlayerDifficulty {
     BEGINNER = 'débutant',
     EXPERT = 'expert',
@@ -49,4 +56,5 @@ export enum CollectionType {
     DICTIONARY = 'dictionary',
     NAMES = 'playerNames',
     GAMES = 'gameHistory',
+    USERACCOUNTS = 'userAccount'
 }
