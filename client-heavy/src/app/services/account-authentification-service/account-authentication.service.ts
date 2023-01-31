@@ -20,6 +20,7 @@ export class AccountAuthenticationService {
   getStatusOfAuthentication():  Observable<boolean> {
     return new Observable((observer: Observer<boolean>) => {
       this.socket.on('Authentification status', (message: boolean) => {observer.next(message)
+      });
     });
     
   }
