@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Account } from '@app/classes/account';
 import { AccountAuthenticationService } from '@app/services/account-authentification-service/account-authentication.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login-area',
@@ -13,7 +14,9 @@ export class LoginAreaComponent implements OnInit {
     email : "",
     password : "",
   }
+  subscription:Subscription
   hide:boolean = true;
+  isConnected: boolean = false;
 
   constructor(private accountAuthentificationService:AccountAuthenticationService) { }
 
@@ -31,6 +34,12 @@ export class LoginAreaComponent implements OnInit {
 
   loginToAccount(){
     this.accountAuthentificationService.LoginToAccount(this.userAccount)
+    this.subscription = this.accountAuthentificationService.getStatusOfAuthentication().subscribe(
+      (status: boolean) => this.showStatus(status) );
+  }
+
+  showStatus(status:boolean){
+    this.isConnected = status
   }
 
 }
