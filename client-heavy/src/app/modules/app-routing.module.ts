@@ -6,8 +6,10 @@ import { JoinGameComponent } from '@app/components/game-initialisation/join-game
 import { WaitingRoomComponent } from '@app/components/game-initialisation/waiting-room/waiting-room.component';
 import { AdminPageComponent } from '@app/pages/admin-page/admin-page.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
+import { LoginPageComponent } from '@app/pages/login-page/login-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
+import { SignUpPageComponent } from '@app/pages/sign-up-page/sign-up-page.component';
 import { SoloMultiPageComponent } from '@app/pages/solo-multi-page/solo-multi-page.component';
 
 const routes: Routes = [
@@ -17,6 +19,8 @@ const routes: Routes = [
     { path: 'game', component: GamePageComponent },
     { path: 'material', component: MaterialPageComponent },
     { path: 'solo-multi', component: SoloMultiPageComponent },
+    { path: 'login', component: LoginPageComponent },
+    { path: 'sign-up', component: SignUpPageComponent },
     { path: 'create-game', component: CreateGameComponent },
     { path: 'join-game', component: JoinGameComponent },
     { path: 'join-game-setup', component: JoinGameSetupComponent },

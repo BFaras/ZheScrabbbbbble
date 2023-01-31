@@ -12,6 +12,8 @@ import { AccountCreationState } from '@app/interfaces/account-creation-state';
 
 export class AuthentificationService {
     authentifyUser(username: string, password: string): boolean {
+        console.log(username);
+        console.log(password);
         const encryptedPasswordFromDB: string = '';
         const decryptedPasswordFromDB: string = this.decryptPassword(encryptedPasswordFromDB);
         return decryptedPasswordFromDB == password;
@@ -22,6 +24,9 @@ export class AuthentificationService {
         if (accountCreationState.accountCreationSuccess) {
             const encryptedPassword: string = this.encryptPassword(password);
             console.log(encryptedPassword.length);
+            console.log(username);
+            console.log(password);
+            console.log(email);
             //TO DO : If error : accountCreationState.accountCreationSuccess = false
         }
         return accountCreationState;
