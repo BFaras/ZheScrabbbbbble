@@ -20,6 +20,7 @@ import { RoomManagerService } from '@app/services/room-manager.service';
 import * as http from 'http';
 import * as io from 'socket.io';
 import { AuthSocketService } from './auth-socket.service';
+import { ChatSocketService } from './chat-socket.service';
 import { DatabaseService } from './database.service';
 import { SocketDatabaseService } from './socket-database.service';
 
@@ -28,6 +29,7 @@ export class SocketManager {
     private roomManager: RoomManagerService;
     private commandController: CommandController;
     private socketDatabaseService: SocketDatabaseService;
+    private chatSocketService: ChatSocketService;
     private authSocketService: AuthSocketService;
     private databaseService: DatabaseService;
     private timeoutRoom: { [key: string]: NodeJS.Timeout };
@@ -35,6 +37,7 @@ export class SocketManager {
     constructor(server: http.Server, databaseService: DatabaseService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
         this.socketDatabaseService = new SocketDatabaseService(databaseService);
+        this.chatSocketService = new ChatSocketService();
         this.authSocketService = new AuthSocketService(databaseService);
         this.databaseService = databaseService;
         this.timeoutRoom = {};
@@ -48,6 +51,7 @@ export class SocketManager {
     handleSockets(): void {
         this.sio.on('connection', (socket: io.Socket) => {
             this.socketDatabaseService.databaseSocketRequests(socket);
+            this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
 
             socket.on('new-message', (message: Message) => {

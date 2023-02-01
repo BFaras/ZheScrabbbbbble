@@ -1,4 +1,4 @@
-package com.example.testchatbox.ui.login
+package com.example.testchatbox.data.login
 
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
