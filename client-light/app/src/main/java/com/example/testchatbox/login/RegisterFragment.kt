@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentRegisterBinding
 
 import com.example.testchatbox.R
@@ -42,20 +43,24 @@ class RegisterFragment : Fragment() {
             .get(RegisterViewModel::class.java)
 
         val usernameEditText = binding.username
+        val emailEditText = binding.email
         val passwordEditText = binding.password
-        val loginButton = binding.login
+        val registerButton = binding.register
         val loadingProgressBar = binding.loading
 
-        registerViewModel.loginFormState.observe(viewLifecycleOwner,
-            Observer { loginFormState ->
-                if (loginFormState == null) {
+        registerViewModel.RegisterFormState.observe(viewLifecycleOwner,
+            Observer { registerFormState ->
+                if (registerFormState == null) {
                     return@Observer
                 }
-                loginButton.isEnabled = loginFormState.isDataValid
-                loginFormState.usernameError?.let {
+                registerButton.isEnabled = registerFormState.isDataValid
+                registerFormState.usernameError?.let {
                     usernameEditText.error = getString(it)
                 }
-                loginFormState.passwordError?.let {
+                registerFormState.emailError?.let {
+                    emailEditText.error = getString(it)
+                }
+                registerFormState.passwordError?.let {
                     passwordEditText.error = getString(it)
                 }
             })
@@ -65,7 +70,7 @@ class RegisterFragment : Fragment() {
                 loginResult ?: return@Observer
                 loadingProgressBar.visibility = View.GONE
                 loginResult.error?.let {
-                    showLoginFailed(it)
+                    showRegisterFailed(it)
                 }
                 loginResult.success?.let {
                     updateUiWithUser(it)
@@ -84,39 +89,40 @@ class RegisterFragment : Fragment() {
             override fun afterTextChanged(s: Editable) {
                 registerViewModel.loginDataChanged(
                     usernameEditText.text.toString(),
+                    emailEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
             }
         }
         usernameEditText.addTextChangedListener(afterTextChangedListener)
+        emailEditText.addTextChangedListener(afterTextChangedListener)
         passwordEditText.addTextChangedListener(afterTextChangedListener)
         passwordEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                registerViewModel.login(
+                registerViewModel.register(
                     usernameEditText.text.toString(),
+                    emailEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
             }
             false
         }
 
-        loginButton.setOnClickListener {
+        registerButton.setOnClickListener {
             loadingProgressBar.visibility = View.VISIBLE
-            registerViewModel.login(
+            registerViewModel.register(
                 usernameEditText.text.toString(),
+                emailEditText.text.toString(),
                 passwordEditText.text.toString()
             )
         }
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome) + model.displayName
-        // TODO : initiate successful logged in experience
-        val appContext = context?.applicationContext ?: return
-        Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
+        findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
+    private fun showRegisterFailed(@StringRes errorString: Int) {
         val appContext = context?.applicationContext ?: return
         Toast.makeText(appContext, errorString, Toast.LENGTH_LONG).show()
     }

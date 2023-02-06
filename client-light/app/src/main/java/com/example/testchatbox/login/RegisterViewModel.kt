@@ -7,43 +7,48 @@ import android.util.Patterns
 
 import com.example.testchatbox.R
 
-class RegisterViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class RegisterViewModel() : ViewModel() {
 
-    private val _loginForm = MutableLiveData<LoginFormState>()
-    val loginFormState: LiveData<LoginFormState> = _loginForm
+    private val _registerForm = MutableLiveData<RegisterFormState>()
+    val RegisterFormState: LiveData<RegisterFormState> = _registerForm
 
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(username: String, password: String) {
-        // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
-
-        if (result is Result.Success) {
-            _loginResult.value =
-                LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-        } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
+    fun register(username: String, email: String, password: String) {
+        SocketHandler.getSocket().once("Creation result"){ args ->
+            if(args[0] != null){
+                val success = args[0] as Boolean;
+                if(success){
+                    _loginResult.value =
+                        LoginResult(success = LoggedInUserView(displayName = username))
+                } else {
+                    _loginResult.value = LoginResult(error = R.string.register_failed )
+                }
+            }
         }
+        SocketHandler.getSocket().emit("Create user account", username, password);
     }
 
-    fun loginDataChanged(username: String, password: String) {
+    fun loginDataChanged(username: String,email : String, password: String, ) {
         if (!isUserNameValid(username)) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
+            _registerForm.value = RegisterFormState(usernameError = R.string.invalid_username)
+        } else if (!isUserNameValid(email)) {
+            _registerForm.value = RegisterFormState(emailError = R.string.invalid_email)
         } else if (!isPasswordValid(password)) {
-            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
+            _registerForm.value = RegisterFormState(passwordError = R.string.invalid_password)
         } else {
-            _loginForm.value = LoginFormState(isDataValid = true)
+            _registerForm.value = RegisterFormState(isDataValid = true)
         }
     }
 
     // A placeholder username validation check
     private fun isUserNameValid(username: String): Boolean {
-        return if (username.contains("@")) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
-        } else {
-            username.isNotBlank()
-        }
+        return username.isNotBlank()
+    }
+
+    private fun isEmailValid(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
     // A placeholder password validation check
