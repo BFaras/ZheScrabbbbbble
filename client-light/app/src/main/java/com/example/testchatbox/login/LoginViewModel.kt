@@ -22,10 +22,9 @@ class LoginViewModel() : ViewModel() {
             if(args[0] != null){
                 val success = args[0] as Boolean;
                 if(success){
-                    _loginResult.value =
-                        LoginResult(success = LoggedInUserView(displayName = username))
+                    _loginResult.postValue(LoginResult(success = LoggedInUserView(displayName = username)))
                 } else {
-                    _loginResult.value = LoginResult(error = R.string.login_failed)
+                    _loginResult.postValue(LoginResult(error = R.string.login_failed))
                 }
             }
         }
