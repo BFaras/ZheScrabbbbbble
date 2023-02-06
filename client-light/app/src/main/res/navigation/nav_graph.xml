@@ -28,10 +28,19 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.testchatbox.login.LoginFragment"
-        android:label="fragment_login"
+        android:label="Log In"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.testchatbox.login.RegisterFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>
