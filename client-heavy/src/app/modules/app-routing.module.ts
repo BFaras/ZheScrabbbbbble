@@ -5,6 +5,7 @@ import { JoinGameSetupComponent } from '@app/components/game-initialisation/join
 import { JoinGameComponent } from '@app/components/game-initialisation/join-game/join-game.component';
 import { WaitingRoomComponent } from '@app/components/game-initialisation/waiting-room/waiting-room.component';
 import { AdminPageComponent } from '@app/pages/admin-page/admin-page.component';
+import { ChatPageComponent } from '@app/pages/chat-page/chat-page.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { LoginPageComponent } from '@app/pages/login-page/login-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
@@ -15,6 +16,7 @@ import { SoloMultiPageComponent } from '@app/pages/solo-multi-page/solo-multi-pa
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: 'admin', component: AdminPageComponent },
+    { path: 'chat', component: ChatPageComponent },
     { path: 'home', component: MainPageComponent },
     { path: 'game', component: GamePageComponent },
     { path: 'material', component: MaterialPageComponent },

@@ -1,0 +1,2 @@
+<textarea #textarea readonly rows="10" [scrollTop]="textarea.scrollHeight">{{chatText}}</textarea>
+<input [(ngModel)]="nextMessage" (keydown.enter)="sendMessage()"/>
