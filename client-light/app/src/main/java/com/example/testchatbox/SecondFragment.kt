@@ -27,9 +27,6 @@ class SecondFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Temporary location for this. Put where you want to connect to the server
-        SocketHandler.setSocket()
-        SocketHandler.establishConnection()
 
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
         SocketHandler.getSocket().on("New Message") { args ->

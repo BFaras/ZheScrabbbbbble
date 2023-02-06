@@ -35,6 +35,9 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        SocketHandler.setSocket()
+        SocketHandler.establishConnection()
+
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
 
