@@ -22,12 +22,7 @@ export class AuthSocketService {
                 email,
                 userAvatar,
             );
-
-            if (accountCreationStatus.accountCreationSuccess) {
-                socket.emit('Authentification success', accountCreationStatus.accountCreationSuccess);
-            } else {
-                socket.emit('Account creation error', accountCreationStatus);
-            }
+            socket.emit('Creation result', accountCreationStatus.accountCreationSuccess);
         });
     }
 }
