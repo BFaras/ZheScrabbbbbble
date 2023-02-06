@@ -26,7 +26,7 @@ class RegisterViewModel() : ViewModel() {
                 }
             }
         }
-        SocketHandler.getSocket().emit("Create user account", username, password);
+        SocketHandler.getSocket().emit("Create user account", username, password, email, "Avatar");
     }
 
     fun loginDataChanged(username: String,email : String, password: String, ) {

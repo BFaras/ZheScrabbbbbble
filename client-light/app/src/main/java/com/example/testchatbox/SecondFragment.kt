@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentSecondBinding
+import com.example.testchatbox.login.model.LoggedInUser
 import java.util.*
 
 /**
@@ -47,9 +48,10 @@ class SecondFragment : Fragment() {
         binding.send.setOnClickListener {
             var text = binding.inputText.text.toString();
             if(text.isNotEmpty()){
-                val currentDate = Calendar.getInstance().time.toString()
+                val currentDate = Calendar.getInstance().time.toString();
+                val userName = LoggedInUser.getName();
                 binding.inputText.setText("");
-                text = "$currentDate : $text";
+                text = "$currentDate | $userName : $text";
                 SocketHandler.getSocket().emit("Message Sent", text)
             }
         }

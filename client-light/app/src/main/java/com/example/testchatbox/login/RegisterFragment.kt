@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentRegisterBinding
 
 import com.example.testchatbox.R
+import com.example.testchatbox.login.model.LoggedInUser
 
 class RegisterFragment : Fragment() {
 
@@ -119,7 +120,8 @@ class RegisterFragment : Fragment() {
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-        findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
+        LoggedInUser.connectUser(model.displayName)
+        findNavController().navigate(R.id.action_registerFragment_to_FirstFragment)
     }
 
     private fun showRegisterFailed(@StringRes errorString: Int) {
