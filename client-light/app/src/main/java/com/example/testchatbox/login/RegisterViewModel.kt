@@ -1,15 +1,13 @@
-package com.example.testchatbox.data.login
+package com.example.testchatbox.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
-import com.example.testchatbox.data.LoginRepository
-import com.example.testchatbox.data.Result
 
 import com.example.testchatbox.R
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class RegisterViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
@@ -41,10 +39,6 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
     // A placeholder username validation check
     private fun isUserNameValid(username: String): Boolean {
-        return username.isNotBlank()
-    }
-
-    private fun isEmailValid(username: String): Boolean {
         return if (username.contains("@")) {
             Patterns.EMAIL_ADDRESS.matcher(username).matches()
         } else {

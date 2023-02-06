@@ -1,4 +1,4 @@
-package com.example.testchatbox.data.login
+package com.example.testchatbox.login
 
 /**
  * Data validation state of the login form.

@@ -1,4 +1,4 @@
-package com.example.testchatbox.data.login
+package com.example.testchatbox.login
 
 /**
  * User details post authentication that is exposed to the UI
