@@ -18,6 +18,8 @@ export class AccountAuthenticationService {
   }
 
   LoginToAccount(account: Account): void {
+    console.log(account.username)
+    console.log(account.password)
     this.socket.emit('User authentification', account.username, account.password);
     
   }

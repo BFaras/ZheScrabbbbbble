@@ -10,7 +10,7 @@ import { SocketManagerService } from '@app/services/socket-manager-service/socke
     styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
-    constructor(private dialog: MatDialog, private gameModeService: GameModeService,private socketManager:SocketManagerService) {}
+    constructor(private dialog: MatDialog, private gameModeService: GameModeService, private socketManager: SocketManagerService) {}
 
     openScores() {
         this.dialog.open(LeaderboardComponent, {
@@ -26,10 +26,9 @@ export class MainPageComponent {
     get gameTypeEnum(): typeof GameType {
         return GameType;
     }
-    async disconnectUser(){
+    disconnectUser() {
         this.socketManager.getSocket().disconnect();
-        await this.socketManager.createSocket();
-        console.log(this.socketManager.getSocket())
+        this.socketManager.createSocket();
 
     }
 }

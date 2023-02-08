@@ -43,7 +43,7 @@ export class SignUpAreaComponent implements OnInit {
   }
 
   showStatus(status:boolean){
-    if (status === true){
+    if (status == true){
       this.router.navigate(['home'])
     }else{
       alert('Échec de la Création de compte')

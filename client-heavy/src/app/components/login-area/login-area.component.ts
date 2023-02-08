@@ -42,10 +42,12 @@ export class LoginAreaComponent implements OnInit {
   }
 
   showStatus(status:boolean){
-    if (status === true){
-      this.router.navigate(['home'])
+    if (status == true){
+      console.log(status)
+      this.router.navigate(['home']);
     }else{
-      alert("Échec de l'authentification")
+      console.log(status)
+      alert("Échec de l'authentification");
     }
   }
 

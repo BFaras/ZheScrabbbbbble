@@ -60,6 +60,7 @@ export class SocketManager {
             this.socketDatabaseService.databaseSocketRequests(socket);
             this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
+            console.log(socket.id);
 
             socket.on('new-message', (message: Message) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
@@ -137,6 +138,8 @@ export class SocketManager {
             });
 
             socket.on('disconnect', async () => {
+                console.log('called');
+                this.onlineUsersService.removeOnlineUser(this.accountInfoService.getUsername(socket));
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
                 if (currentRoom.getGame.isGameOver()) {
@@ -153,7 +156,6 @@ export class SocketManager {
                     await this.disconnectPlayer(currentRoom, socket);
                 }, RECONNECT_TIME);
                 this.timeoutRoom[currentRoom.getName()] = timeout;
-                this.onlineUsersService.removeOnlineUser(this.accountInfoService.getUsername(socket));
             });
 
             socket.on('abandon', async () => {
