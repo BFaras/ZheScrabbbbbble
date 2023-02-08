@@ -1,4 +1,12 @@
 import {
+    CREATION_SUCCESS,
+    DATABASE_UNAVAILABLE,
+    EMAIL_INVALID,
+    PASSWORD_INVALID,
+    USERNAME_INVALID,
+    USERNAME_TAKEN
+} from '@app/constants/account-error-code-constants';
+import {
     CHAR_EMAIL_MUST_CONTAIN,
     MAX_ASCII_SYMBOL,
     MIN_ASCII_SYMBOL,
@@ -15,34 +23,40 @@ export class AuthentificationService {
 
     async authentifyUser(username: string, password: string): Promise<boolean> {
         const decryptedPasswordFromDB: string = this.decryptPassword(await this.dbService.getUserEncryptedPassword(username));
-        return decryptedPasswordFromDB.length > 0 && decryptedPasswordFromDB == password;
+        return decryptedPasswordFromDB.length > 0 && decryptedPasswordFromDB === password;
     }
 
-    async createAccount(username: string, password: string, email: string, userAvatar: string): Promise<AccountCreationState> {
-        const accountCreationState: AccountCreationState = await this.verifyAccountRequirements(username, password, email);
-        if (accountCreationState.accountCreationSuccess) {
+    async createAccount(username: string, password: string, email: string, userAvatar: string): Promise<string> {
+        let accountCreationState: string = await this.verifyAccountRequirements(username, password, email);
+        if (accountCreationState === CREATION_SUCCESS) {
             const encryptedPassword: string = this.encryptPassword(password);
-            accountCreationState.accountCreationSuccess = await this.dbService.addUserAccount(username, encryptedPassword, email, userAvatar);
+            if (await this.dbService.addUserAccount(username, encryptedPassword, email, userAvatar)) {
+                accountCreationState = DATABASE_UNAVAILABLE;
+            }
         }
         return Promise.resolve(accountCreationState);
     }
 
-    private async verifyAccountRequirements(username: string, password: string, email: string): Promise<AccountCreationState> {
+    private async verifyAccountRequirements(username: string, password: string, email: string): Promise<string> {
+        let errorCode = CREATION_SUCCESS;
         const accountCreationState: AccountCreationState = {
             isUsernameValid: username.length >= MIN_USERNAME_LENGTH,
             isEmailValid: email.includes(CHAR_EMAIL_MUST_CONTAIN),
             isPasswordValid: password.length >= MIN_USERNAME_LENGTH,
             isUsernameFree: await this.dbService.isUsernameFree(username),
-            accountCreationSuccess: true,
         };
 
-        accountCreationState.accountCreationSuccess =
-            accountCreationState.isUsernameValid &&
-            accountCreationState.isEmailValid &&
-            accountCreationState.isPasswordValid &&
-            accountCreationState.isUsernameFree;
+        if (!accountCreationState.isUsernameValid) {
+            errorCode = USERNAME_INVALID;
+        } else if (!accountCreationState.isEmailValid) {
+            errorCode = EMAIL_INVALID;
+        } else if (!accountCreationState.isPasswordValid) {
+            errorCode = PASSWORD_INVALID;
+        } else if (!accountCreationState.isUsernameFree) {
+            errorCode = USERNAME_TAKEN;
+        }
 
-        return Promise.resolve(accountCreationState);
+        return Promise.resolve(errorCode);
     }
 
     private encryptPassword(decryptedPassword: string): string {

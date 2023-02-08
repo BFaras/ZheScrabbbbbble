@@ -1,4 +1,4 @@
-import { AccountCreationState } from '@app/interfaces/account-creation-state';
+import { CREATION_SUCCESS } from '@app/constants/account-error-code-constants';
 import * as io from 'socket.io';
 import { AuthentificationService } from './authentification.service';
 import { DatabaseService } from './database.service';
@@ -16,13 +16,8 @@ export class AuthSocketService {
         });
 
         socket.on('Create user account', async (username: string, password: string, email: string, userAvatar: string) => {
-            const accountCreationStatus: AccountCreationState = await this.authentificationService.createAccount(
-                username,
-                password,
-                email,
-                userAvatar,
-            );
-            socket.emit('Creation result', accountCreationStatus.accountCreationSuccess);
+            const accountCreationStatus: string = await this.authentificationService.createAccount(username, password, email, userAvatar);
+            socket.emit('Creation result', accountCreationStatus === CREATION_SUCCESS);
         });
     }
 }
