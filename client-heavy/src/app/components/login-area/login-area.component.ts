@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Account } from '@app/classes/account';
 import { AccountAuthenticationService } from '@app/services/account-authentification-service/account-authentication.service';
 import { Subscription } from 'rxjs';
-
+import { VISIBILITY_CONSTANTS } from '@app/constants/visibility-constants';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login-area',
   templateUrl: './login-area.component.html',
@@ -18,28 +19,34 @@ export class LoginAreaComponent implements OnInit {
   hide:boolean = true;
   isConnected: boolean = false;
 
-  constructor(private accountAuthentificationService:AccountAuthenticationService) { }
+  constructor(private accountAuthenticationService:AccountAuthenticationService, private router:Router) {
+    this.accountAuthenticationService.setUpSocket()
+   }
 
   ngOnInit(): void {
   }
 
   changePasswordVisibility(): string{
-    return this.hide ? 'password' : 'text';
+    return this.hide ? VISIBILITY_CONSTANTS.passwordHidden : VISIBILITY_CONSTANTS.passwordShown  ;
     
   }
 
   changeIconVisibility(): string{
-    return this.hide ? 'visibility_off' : 'visibility';
+    return this.hide ? VISIBILITY_CONSTANTS.IconHiddenMode : VISIBILITY_CONSTANTS.IconShownMode;
   }
 
   loginToAccount(){
-    this.accountAuthentificationService.LoginToAccount(this.userAccount)
-    this.subscription = this.accountAuthentificationService.getStatusOfAuthentication().subscribe(
+    this.accountAuthenticationService.LoginToAccount(this.userAccount);
+    this.subscription = this.accountAuthenticationService.getStatusOfAuthentication().subscribe(
       (status: boolean) => this.showStatus(status) );
   }
 
   showStatus(status:boolean){
-    this.isConnected = status
+    if (status === true){
+      this.router.navigate(['home'])
+    }else{
+      alert("Échec de l'authentification")
+    }
   }
 
 }
