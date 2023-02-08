@@ -8,7 +8,6 @@ import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
 import { Service } from 'typedi';
 import { DictionaryController } from './controllers/dictionary.controller';
-import { DatabaseService } from './services/database.service';
 
 @Service()
 export class Application {
@@ -33,10 +32,6 @@ export class Application {
         this.config();
 
         this.bindRoutes();
-    }
-
-    getDatabaseService(): DatabaseService {
-        return this.dictionaryController.getDatabaseService();
     }
 
     bindRoutes(): void {
