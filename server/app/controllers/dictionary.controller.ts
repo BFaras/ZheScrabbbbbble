@@ -1,7 +1,7 @@
 import { Dictionary } from '@app/constants/database-interfaces';
 import { DatabaseService } from '@app/services/database.service';
 import { Request, Response, Router } from 'express';
-import { Service } from 'typedi';
+import { Container, Service } from 'typedi';
 
 const HTTP_STATUS_CREATED = 201;
 const HTTP_STATUS_OK = 200;
@@ -11,13 +11,11 @@ const HTTP_STATUS_BAD_REQUEST = 400;
 @Service()
 export class DictionaryController {
     router: Router;
+    databaseService: DatabaseService;
 
-    constructor(private readonly databaseService: DatabaseService) {
+    constructor() {
         this.configureRouter();
-    }
-
-    getDatabaseService(): DatabaseService {
-        return this.databaseService;
+        this.databaseService = Container.get(DatabaseService);
     }
 
     private configureRouter(): void {

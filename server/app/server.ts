@@ -1,7 +1,7 @@
 import { Application } from '@app/app';
 import * as http from 'http';
 import { AddressInfo } from 'net';
-import { Service } from 'typedi';
+import { Container, Service } from 'typedi';
 import { DatabaseService } from './services/database.service';
 import { SocketManager } from './services/socket-manager.service';
 
@@ -14,7 +14,9 @@ export class Server {
     private socketManager: SocketManager;
     private databaseService: DatabaseService;
 
-    constructor(private readonly application: Application) {}
+    constructor(private readonly application: Application) {
+        this.databaseService = Container.get(DatabaseService);
+    }
 
     private static normalizePort(val: number | string): number | string | boolean {
         const port: number = typeof val === 'string' ? parseInt(val, this.baseDix) : val;
@@ -30,7 +32,6 @@ export class Server {
         this.application.app.set('port', Server.appPort);
 
         this.server = http.createServer(this.application.app);
-        this.databaseService = this.application.getDatabaseService();
 
         if (!testServer) {
             try {

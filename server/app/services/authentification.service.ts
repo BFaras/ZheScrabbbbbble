@@ -17,13 +17,31 @@ import {
     POSITIVE_MULTIPLIER
 } from '@app/constants/authentification-constants';
 import { AccountCreationState } from '@app/interfaces/account-creation-state';
+import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
+import { OnlineUsersService } from './online-users.service';
+
+@Service()
 export class AuthentificationService {
-    constructor(private dbService: DatabaseService) {}
+    private readonly dbService: DatabaseService;
+    private readonly onlineUsersService: OnlineUsersService;
+    constructor() {
+        this.dbService = Container.get(DatabaseService);
+        this.onlineUsersService = Container.get(OnlineUsersService);
+    }
 
     async authentifyUser(username: string, password: string): Promise<boolean> {
-        const decryptedPasswordFromDB: string = this.decryptPassword(await this.dbService.getUserEncryptedPassword(username));
-        return decryptedPasswordFromDB.length > 0 && decryptedPasswordFromDB === password;
+        let isConnectionSuccessful = false;
+        if (!this.onlineUsersService.isUserOnline(username)) {
+            const decryptedPasswordFromDB: string = this.decryptPassword(await this.dbService.getUserEncryptedPassword(username));
+            isConnectionSuccessful = decryptedPasswordFromDB.length > 0 && decryptedPasswordFromDB === password;
+        }
+
+        if (isConnectionSuccessful) {
+            this.onlineUsersService.addOnlineUser(username);
+        }
+
+        return isConnectionSuccessful;
     }
 
     async createAccount(username: string, password: string, email: string, userAvatar: string): Promise<string> {
@@ -34,6 +52,11 @@ export class AuthentificationService {
                 accountCreationState = DATABASE_UNAVAILABLE;
             }
         }
+
+        if (accountCreationState === CREATION_SUCCESS) {
+            this.onlineUsersService.addOnlineUser(username);
+        }
+
         return Promise.resolve(accountCreationState);
     }
 
