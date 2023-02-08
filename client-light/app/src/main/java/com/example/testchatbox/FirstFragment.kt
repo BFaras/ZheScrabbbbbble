@@ -1,6 +1,8 @@
 package com.example.testchatbox
 
+import SocketHandler
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +38,13 @@ private var _binding: FragmentFirstBinding? = null
 
         binding.buttonFirst.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        }
+
+        binding.buttonDisconnect.setOnClickListener {
+            SocketHandler.closeConnection();
+            LoggedInUser.disconnectUser();
+            SocketHandler.establishConnection();
+            findNavController().navigate(R.id.action_FirstFragment_to_loginFragment)
         }
     }
 
