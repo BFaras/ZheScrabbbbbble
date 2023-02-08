@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/DarkGray"
     tools:context=".SecondFragment">
+
+    <View
+        android:id="@+id/viewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/background_content_top"
+        app:layout_constraintBottom_toTopOf="@id/send"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <FrameLayout
+        android:id="@+id/send"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/background_chat_input"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" >
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_send"
+            android:tint="@color/white"
+        />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/textview_second"
@@ -15,52 +46,73 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/chatRecyclerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:clipToPadding="false"-->
+<!--        android:orientation="vertical"-->
+<!--        android:overScrollMode="never"-->
+<!--        android:padding="20dp"-->
+<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/viewBackground"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
     <TextView
         android:id="@+id/textView"
-        android:layout_width="977dp"
-        android:layout_height="193dp"
-        android:layout_marginStart="84dp"
-        android:layout_marginTop="74dp"
-        android:layout_marginEnd="65dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/border"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="50dp"
+        android:includeFontPadding="true"
+        android:orientation="vertical"
+        android:overScrollMode="never"
+        android:padding="20dp"
+        android:scrollbars="vertical"
+        android:textSize="20dp"
         android:visibility="visible"
-        android:scrollbars = "vertical"
-        app:layout_constraintBottom_toTopOf="@+id/inputText"
+        app:layout_constraintBottom_toBottomOf="@id/viewBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview_second" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/inputText"
-        android:layout_width="723dp"
-        android:layout_height="73dp"
-        android:layout_marginStart="84dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginBottom="90dp"
-        android:background="@drawable/border"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="65dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/background_chat_input"
         android:ems="10"
+        android:hint="@string/tapez_quelque_chose"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:includeFontPadding="true"
         android:inputType="textShortMessage"
+        android:padding="10dp"
+        android:paddingStart="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/send"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toStartOf="parent"/>
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView"-->
 
-    <Button
-        android:id="@+id/send"
-        android:layout_width="134dp"
-        android:layout_height="78dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="72dp"
-        android:layout_marginEnd="61dp"
-        android:layout_marginBottom="75dp"
-        android:text="send"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/inputText"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.456" />
+
+<!--    <Button-->
+<!--        android:id="@+id/send"-->
+<!--        android:layout_width="155dp"-->
+<!--        android:layout_height="61dp"-->
+<!--        android:layout_marginTop="4dp"-->
+<!--        android:text="send"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/inputText"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/inputText"-->
+<!--        tools:layout_editor_absoluteX="1065dp" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
