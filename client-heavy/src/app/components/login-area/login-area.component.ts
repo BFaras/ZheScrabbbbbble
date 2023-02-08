@@ -4,6 +4,7 @@ import { AccountAuthenticationService } from '@app/services/account-authentifica
 import { Subscription } from 'rxjs';
 import { VISIBILITY_CONSTANTS } from '@app/constants/visibility-constants';
 import { Router } from '@angular/router';
+import { AccountService } from '@app/services/account-service/account.service';
 @Component({
   selector: 'app-login-area',
   templateUrl: './login-area.component.html',
@@ -19,7 +20,7 @@ export class LoginAreaComponent implements OnInit {
   hide:boolean = true;
   isConnected: boolean = false;
 
-  constructor(private accountAuthenticationService:AccountAuthenticationService, private router:Router) {
+  constructor(private accountAuthenticationService:AccountAuthenticationService, private router:Router,private account:AccountService) {
     this.accountAuthenticationService.setUpSocket()
    }
 
@@ -43,10 +44,9 @@ export class LoginAreaComponent implements OnInit {
 
   showStatus(status:boolean){
     if (status == true){
-      console.log(status)
+      this.account.setUsername(this.userAccount.username)
       this.router.navigate(['home']);
     }else{
-      console.log(status)
       alert("Échec de l'authentification");
     }
   }

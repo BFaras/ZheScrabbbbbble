@@ -1,4 +1,5 @@
 import { Component, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
+import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
 
 @Component({
@@ -11,16 +12,18 @@ export class ChatPageComponent implements AfterContentChecked{
     nextMessage: string = '';
     timeStamp: string = "";
 
-    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService) {
+    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService,private account:AccountService) {
         chatService.getNewMessages().subscribe((message: string) => {
+            console.log("test1")
             this.chatText += message + '\n';
         })
     }
+    
 
     createTimeStamp(){
         var date = new Date()
         date.setTime(date.getTime())
-        this.timeStamp =  date.getHours().toString()+ ":"+ date.getMinutes().toString() + ":" + date.getSeconds().toString() + " "
+        this.timeStamp =  " "+ date.getHours().toString()+ ":"+ date.getMinutes().toString() + ":" + date.getSeconds().toString() + " "
     }
 
     ngAfterContentChecked(): void {
@@ -31,8 +34,10 @@ export class ChatPageComponent implements AfterContentChecked{
     sendMessage(){
         this.createTimeStamp()
         console.log(this.timeStamp)
+        console.log(this.account.getUsername())
+        console.log(this.nextMessage)
         if(this.nextMessage.length == 0) return;
-        this.chatService.sendMessage2(this.timeStamp + this.nextMessage);
+        this.chatService.sendMessage2(this.timeStamp + this.account.getUsername() + " "+ this.nextMessage);
         this.nextMessage = '';
     }
 
