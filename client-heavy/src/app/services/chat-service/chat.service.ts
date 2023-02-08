@@ -17,6 +17,16 @@ export class ChatService {
         return this.socket.id;
     }
 
+    sendMessage2(message: string){
+        this.socket.emit('Message Sent', message);
+    }
+
+    getNewMessages(): Observable<string> {
+        return new Observable((observer: Observer<string>) => {
+            this.socket.on('New Message', (message: string) => observer.next(message));
+        });
+    }
+
     sendMessage(message: Message) {
         this.socket.emit('new-message', message);
     }

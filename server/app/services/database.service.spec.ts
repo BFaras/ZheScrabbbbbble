@@ -29,7 +29,7 @@ describe('Database service', () => {
         await databaseService.start(mongoUri);
         const scores = await databaseService['getCollection'](CollectionType.SCORE, GameType.CLASSIC).find({}).toArray();
         expect(databaseService['client']).to.not.be.undefined;
-        expect(databaseService['db'].databaseName).to.equal('ScrabbleLOG2990');
+        expect(databaseService['db'].databaseName).to.equal('ScrabbleLOG3900');
         expect(scores.length).to.equal(5);
     });
 
