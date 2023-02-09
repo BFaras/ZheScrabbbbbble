@@ -14,8 +14,10 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/background_content_top"
         app:layout_constraintBottom_toTopOf="@id/send"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintEnd_toStartOf="@+id/textview_second"
+        app:layout_constraintStart_toStartOf="@+id/textview_second"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <FrameLayout
         android:id="@+id/send"
         android:layout_width="40dp"
@@ -25,7 +27,7 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/background_chat_input"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" >
+        app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
@@ -34,46 +36,13 @@
             android:layout_marginLeft="4dp"
             android:padding="8dp"
             android:src="@drawable/ic_send"
-            android:tint="@color/white"
-        />
+            android:tint="@color/white" />
     </FrameLayout>
 
     <TextView
         android:id="@+id/textview_second"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/chatRecyclerView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_marginTop="50dp"-->
-<!--        android:clipToPadding="false"-->
-<!--        android:orientation="vertical"-->
-<!--        android:overScrollMode="never"-->
-<!--        android:padding="20dp"-->
-<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-<!--        app:layout_constraintBottom_toBottomOf="@id/viewBackground"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="50dp"
-        android:includeFontPadding="true"
-        android:orientation="vertical"
-        android:overScrollMode="never"
-        android:padding="20dp"
-        android:scrollbars="vertical"
-        android:textSize="20dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@id/viewBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -101,18 +70,47 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/send"
         app:layout_constraintHorizontal_bias="0.45"
-        app:layout_constraintStart_toStartOf="parent"/>
-<!--        app:layout_constraintTop_toBottomOf="@+id/textView"-->
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/viewBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="50dp"
+            android:includeFontPadding="true"
+            android:orientation="vertical"
+            android:overScrollMode="never"
+            android:padding="30dp"
+            android:scrollbars="vertical"
+            android:textSize="40dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/viewBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </ScrollView>
+
+    <!--        app:layout_constraintTop_toBottomOf="@+id/textView"-->
 
 
-<!--    <Button-->
-<!--        android:id="@+id/send"-->
-<!--        android:layout_width="155dp"-->
-<!--        android:layout_height="61dp"-->
-<!--        android:layout_marginTop="4dp"-->
-<!--        android:text="send"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/inputText"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/inputText"-->
-<!--        tools:layout_editor_absoluteX="1065dp" />-->
+    <!--    <Button-->
+    <!--        android:id="@+id/send"-->
+    <!--        android:layout_width="155dp"-->
+    <!--        android:layout_height="61dp"-->
+    <!--        android:layout_marginTop="4dp"-->
+    <!--        android:text="send"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@+id/inputText"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/inputText"-->
+    <!--        tools:layout_editor_absoluteX="1065dp" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
