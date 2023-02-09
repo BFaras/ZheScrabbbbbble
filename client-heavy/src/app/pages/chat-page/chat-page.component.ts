@@ -23,7 +23,7 @@ export class ChatPageComponent implements AfterContentChecked {
 
 
     sendMessage() {
-        const timeStamp = (new Date()).toLocaleTimeString();
+        const timeStamp = (new Date()).toLocaleTimeString().split(' ')[0];
         this.nextMessage = this.nextMessage.trim();
         if (this.nextMessage.length == 0) return;
         this.chatService.sendMessage2(timeStamp + ' | ' + this.account.getUsername() + " : " + this.nextMessage);
