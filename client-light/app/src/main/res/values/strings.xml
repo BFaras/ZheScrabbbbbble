@@ -19,4 +19,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="tapez_quelque_chose">Tapez quelque chose...</string>
+    <string name="tournois">TOURNOIS</string>
+    <string name="classique">CLASSIQUE</string>
+    <string name="collaboratif">COLLABORATIF</string>
 </resources>
