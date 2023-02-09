@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="deploymentTargetDropDown">
-    <runningDeviceTargetSelectedWithDropDown>
+    <runningDeviceTargetsSelectedWithDialog>
       <Target>
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\arnau\.android\avd\Galaxy_Tab_A_2019_API_28.avd" />
+            <type value="SERIAL_NUMBER" />
+            <value value="R52NC08LNGJ" />
           </Key>
         </deviceKey>
       </Target>
-    </runningDeviceTargetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2023-02-06T15:03:50.511899200Z" />
+    </runningDeviceTargetsSelectedWithDialog>
   </component>
 </project>

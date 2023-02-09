@@ -28,14 +28,11 @@ import { LoginAreaComponent } from './components/login-area/login-area.component
 import { SignUpAreaComponent } from './components/sign-up-area/sign-up-area.component';
 import { TimerComponent } from './components/timer/timer.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
-<<<<<<< HEAD
-import { LoginPageComponent } from './pages/login-page/login-page.component';
-import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
-=======
 import { ChatPageComponent } from './pages/chat-page/chat-page.component';
->>>>>>> main
-import { ChatService } from './services/chat-service/chat.service';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
+import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
+import { ChatService } from './services/chat-service/chat.service';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.

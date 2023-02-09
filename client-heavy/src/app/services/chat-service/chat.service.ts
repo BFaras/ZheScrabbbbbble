@@ -17,7 +17,7 @@ export class ChatService {
         return this.socket.id;
     }
 
-    sendMessage2(message: string){
+    sendMessage2(message: string) {
         this.socket.emit('Message Sent', message);
     }
 

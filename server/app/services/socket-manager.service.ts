@@ -50,6 +50,7 @@ export class SocketManager {
 
     handleSockets(): void {
         this.sio.on('connection', (socket: io.Socket) => {
+            console.log('New Connection');
             this.socketDatabaseService.databaseSocketRequests(socket);
             this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
