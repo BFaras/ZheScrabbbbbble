@@ -36,7 +36,7 @@ private var _binding: FragmentFirstBinding? = null
 
         binding.textviewFirst.text = "Hello "+LoggedInUser.getName()
 
-        binding.buttonFirst.setOnClickListener {
+        binding.buttonchat.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
 

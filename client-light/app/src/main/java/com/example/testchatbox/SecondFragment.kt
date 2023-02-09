@@ -29,23 +29,25 @@ class SecondFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
         return binding.root
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+        super.onViewCreated(view, savedInstanceState);
         SocketHandler.getSocket().on("New Message") { args ->
             if(args[0] != null){
-                print(binding)
-                val currentText = binding.textView.text.toString()
                 val message = args[0] as String;
-                binding.textView.text = currentText + System.getProperty("line.separator") + message;
+                binding.textView.append(message + System.getProperty("line.separator"));
+                activity?.runOnUiThread(Runnable {
+                    binding.textView.invalidate();
+                    binding.textView.requestLayout();
+                });
+
             }
         }
+
         binding.send.setOnClickListener {
             var text = binding.inputText.text.toString().trim();
             if(text.isNotEmpty()){

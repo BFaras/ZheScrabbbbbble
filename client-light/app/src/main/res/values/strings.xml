@@ -20,12 +20,10 @@
     <string name="invalid_email">Not a valid email</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-<<<<<<< HEAD
     <string name="register_failed">"Failed to register new account"</string>
-=======
     <string name="tapez_quelque_chose">Tapez quelque chose...</string>
     <string name="tournois">TOURNOIS</string>
     <string name="classique">CLASSIQUE</string>
     <string name="collaboratif">COLLABORATIF</string>
->>>>>>> origin/feature/UI-chatbox
+    <string name="disconnect">DECONNEXION</string>
 </resources>
