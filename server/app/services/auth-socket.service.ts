@@ -18,6 +18,7 @@ export class AuthSocketService {
             const isAuthentificationSuccess = await this.authentificationService.authentifyUser(username, password);
             if (isAuthentificationSuccess) {
                 this.accountInfoService.setUsername(socket, username);
+                console.log((new Date()).toLocaleTimeString() + ' | Login successfull');
             }
             socket.emit('Authentification status', isAuthentificationSuccess);
         });
@@ -26,6 +27,7 @@ export class AuthSocketService {
             const accountCreationStatus: string = await this.authentificationService.createAccount(username, password, email, userAvatar);
             if (accountCreationStatus === CREATION_SUCCESS) {
                 this.accountInfoService.setUsername(socket, username);
+                console.log((new Date()).toLocaleTimeString() + ' | Register successfull');
             }
             socket.emit('Creation result', accountCreationStatus === CREATION_SUCCESS);
         });

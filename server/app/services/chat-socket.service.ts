@@ -6,7 +6,7 @@ export class ChatSocketService {
             socket.emit('New Message', message);
             socket.broadcast.emit('New Message', message);
             // eslint-disable-next-line no-console
-            console.log(message);
+            console.log((new Date()).toLocaleTimeString() + ' | New Message : ' + message);
         });
     }
 }

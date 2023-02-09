@@ -7,29 +7,28 @@ import { SocketManagerService } from '../socket-manager-service/socket-manager.s
   providedIn: 'root'
 })
 export class AccountAuthenticationService {
-  private socket:Socket
+  private socket: Socket
 
   constructor(private socketManagerService: SocketManagerService) {
     this.setUpSocket()
-   }
+  }
 
-  setUpSocket(){
+  setUpSocket() {
     this.socket = this.socketManagerService.getSocket();
   }
 
   LoginToAccount(account: Account): void {
-    console.log(account.username)
-    console.log(account.password)
     this.socket.emit('User authentification', account.username, account.password);
-    
+
   }
 
-  getStatusOfAuthentication():  Observable<boolean> {
+  getStatusOfAuthentication(): Observable<boolean> {
     return new Observable((observer: Observer<boolean>) => {
-      this.socket.on('Authentification status', (message: boolean) => {observer.next(message)
+      this.socket.on('Authentification status', (message: boolean) => {
+        observer.next(message)
       });
     });
-    
+
   }
 
 }

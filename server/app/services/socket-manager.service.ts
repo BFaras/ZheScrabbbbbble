@@ -57,11 +57,10 @@ export class SocketManager {
 
     handleSockets(): void {
         this.sio.on('connection', (socket: io.Socket) => {
-            console.log('New Connection');
+            console.log((new Date()).toLocaleTimeString() + ' | New device connection to server');
             this.socketDatabaseService.databaseSocketRequests(socket);
             this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
-            console.log(socket.id);
 
             socket.on('new-message', (message: Message) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
@@ -139,7 +138,7 @@ export class SocketManager {
             });
 
             socket.on('disconnect', async () => {
-                console.log('called');
+                console.log((new Date()).toLocaleTimeString() + ' | User Disconnected from server');
                 this.onlineUsersService.removeOnlineUser(this.accountInfoService.getUsername(socket));
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;

@@ -47,9 +47,9 @@ class SecondFragment : Fragment() {
             }
         }
         binding.send.setOnClickListener {
-            var text = binding.inputText.text.toString();
+            var text = binding.inputText.text.toString().trim();
             if(text.isNotEmpty()){
-                val currentDate = Calendar.getInstance().time.toString();
+                val currentDate = Calendar.getInstance().time.toString().split(' ')[3];
                 val userName = LoggedInUser.getName();
                 binding.inputText.setText("");
                 text = "$currentDate | $userName : $text";
