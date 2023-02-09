@@ -76,27 +76,27 @@
         android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:padding="30dp"
+        android:paddingBottom="50dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintBottom_toBottomOf="@id/viewBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@id/viewBackground">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="50dp"
-            android:includeFontPadding="true"
             android:orientation="vertical"
             android:overScrollMode="never"
-            android:padding="30dp"
             android:scrollbars="vertical"
-            android:textSize="40dp"
-            android:visibility="visible"
+            android:textSize="30dp"
+            android:paddingBottom="55dp"
             app:layout_constraintBottom_toBottomOf="@id/viewBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/viewBackground" />
 
     </ScrollView>
 
