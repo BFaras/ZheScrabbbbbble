@@ -9,6 +9,10 @@ export class SocketManagerService {
     socket: Socket;
 
     constructor() {
+        this.createSocket()
+    }
+
+    createSocket(){
         this.socket = io(environment.serverUrl);
     }
 

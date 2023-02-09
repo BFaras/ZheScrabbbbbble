@@ -3,5 +3,4 @@ export interface AccountCreationState {
     isEmailValid: boolean;
     isPasswordValid: boolean;
     isUsernameFree: boolean;
-    accountCreationSuccess: boolean;
 }

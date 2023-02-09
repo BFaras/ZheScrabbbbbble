@@ -11,11 +11,19 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
+    <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome!"</string>
     <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_email">Not a valid email</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="register_failed">"Failed to register new account"</string>
+    <string name="tapez_quelque_chose">Tapez quelque chose...</string>
+    <string name="tournois">TOURNOIS</string>
+    <string name="classique">CLASSIQUE</string>
+    <string name="collaboratif">COLLABORATIF</string>
+    <string name="disconnect">DECONNEXION</string>
 </resources>

@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -27,11 +30,24 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.testchatbox.data.login.LoginFragment"
-        android:label="fragment_login"
+        android:name="com.example.testchatbox.login.LoginFragment"
+        android:label="Log In"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.testchatbox.login.RegisterFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+
     </fragment>
 </navigation>

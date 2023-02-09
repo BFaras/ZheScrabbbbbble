@@ -4,12 +4,14 @@ import SocketHandler
 import android.os.Bundle
 import android.os.UserHandle
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentSecondBinding
+import com.example.testchatbox.login.model.LoggedInUser
 import java.util.*
 
 /**
@@ -27,39 +29,35 @@ class SecondFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Temporary location for this. Put where you want to connect to the server
-        SocketHandler.setSocket()
-        SocketHandler.establishConnection()
-
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
-        SocketHandler.getSocket().on("New Message") { args ->
-            if(args[0] != null){
-                val currentText = binding.textView.text.toString()
-                val message = args[0] as String;
-                binding.textView.text = currentText + System.getProperty("line.separator") + message;
-            }
-
-        }
         return binding.root
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        super.onViewCreated(view, savedInstanceState);
+        SocketHandler.getSocket().on("New Message") { args ->
+            if(args[0] != null){
+                val message = args[0] as String;
+                binding.textView.append(message + System.getProperty("line.separator"));
+                activity?.runOnUiThread(Runnable {
+                    binding.textView.invalidate();
+                    binding.textView.requestLayout();
+                });
+
+            }
+        }
 
         binding.send.setOnClickListener {
-            var text = binding.inputText.text.toString();
+            var text = binding.inputText.text.toString().trim();
             if(text.isNotEmpty()){
-                val currentDate = Calendar.getInstance().time.toString()
+                val currentDate = Calendar.getInstance().time.toString().split(' ')[3];
+                val userName = LoggedInUser.getName();
                 binding.inputText.setText("");
-                text = "$currentDate : $text";
+                text = "$currentDate | $userName : $text";
                 SocketHandler.getSocket().emit("Message Sent", text)
             }
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

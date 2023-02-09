@@ -24,9 +24,14 @@ import { NameValidatorComponent } from './components/game-initialisation/name-va
 import { WaitingRoomComponent } from './components/game-initialisation/waiting-room/waiting-room.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { LetterHolderComponent } from './components/letter-holder/letter-holder.component';
+import { LoginAreaComponent } from './components/login-area/login-area.component';
+import { SignUpAreaComponent } from './components/sign-up-area/sign-up-area.component';
 import { TimerComponent } from './components/timer/timer.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { ChatPageComponent } from './pages/chat-page/chat-page.component';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
+import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
 import { ChatService } from './services/chat-service/chat.service';
 /**
  * Main module that is used in main.ts.
@@ -55,6 +60,11 @@ import { ChatService } from './services/chat-service/chat.service';
         LeaderboardComponent,
         AdminPageComponent,
         AdminPopUpComponent,
+        LoginPageComponent,
+        LoginAreaComponent,
+        SignUpPageComponent,
+        SignUpAreaComponent,
+        ProfilePageComponent,
     ],
     imports: [
         AppMaterialModule,
