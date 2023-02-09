@@ -1,13 +1,9 @@
 <div class="container">
-    <h1 class="title"> Log in</h1>
+    <h1 class="title"> Authentification</h1>
     <form class="form">
             <mat-form-field class="username input-field" appearance="fill">
                 <mat-label>Nom d'utilisateur</mat-label>
                 <input matInput name = "username" [(ngModel)]="userAccount.username" >
-            </mat-form-field>
-            <mat-form-field class="email input-field" appearance="fill">
-                <mat-label>Email : </mat-label>
-                <input  type = "email" matInput  name = "email" [(ngModel)]="userAccount.email">
             </mat-form-field>
             <mat-form-field class="pasword input-field" appearance="fill">
                 <mat-label>Mot de passe : </mat-label>
@@ -16,7 +12,6 @@
                     <mat-icon>{{changeIconVisibility()}}</mat-icon>
                 </button>
             </mat-form-field>
-              <button (click) = "loginToAccount()"class = "button-login" mat-raised-button>Log in</button>
-              <div *ngIf = "isConnected" class = "status-connection">Connection réussite</div>
+              <button (click) = "loginToAccount()"class = "button-login" mat-raised-button>Authentification</button>
         </form>
     </div>   

@@ -19,9 +19,12 @@ import { CommandController, CommandResult } from '@app/controllers/command.contr
 import { RoomManagerService } from '@app/services/room-manager.service';
 import * as http from 'http';
 import * as io from 'socket.io';
+import Container from 'typedi';
+import { AccountInfoService } from './account-info.service';
 import { AuthSocketService } from './auth-socket.service';
 import { ChatSocketService } from './chat-socket.service';
 import { DatabaseService } from './database.service';
+import { OnlineUsersService } from './online-users.service';
 import { SocketDatabaseService } from './socket-database.service';
 
 export class SocketManager {
@@ -32,13 +35,17 @@ export class SocketManager {
     private chatSocketService: ChatSocketService;
     private authSocketService: AuthSocketService;
     private databaseService: DatabaseService;
+    private onlineUsersService: OnlineUsersService;
+    private accountInfoService: AccountInfoService;
     private timeoutRoom: { [key: string]: NodeJS.Timeout };
 
     constructor(server: http.Server, databaseService: DatabaseService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
-        this.socketDatabaseService = new SocketDatabaseService(databaseService);
+        this.socketDatabaseService = new SocketDatabaseService();
         this.chatSocketService = new ChatSocketService();
-        this.authSocketService = new AuthSocketService(databaseService);
+        this.authSocketService = new AuthSocketService();
+        this.accountInfoService = Container.get(AccountInfoService);
+        this.onlineUsersService = Container.get(OnlineUsersService);
         this.databaseService = databaseService;
         this.timeoutRoom = {};
     }
@@ -54,6 +61,7 @@ export class SocketManager {
             this.socketDatabaseService.databaseSocketRequests(socket);
             this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
+            console.log(socket.id);
 
             socket.on('new-message', (message: Message) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
@@ -131,6 +139,8 @@ export class SocketManager {
             });
 
             socket.on('disconnect', async () => {
+                console.log('called');
+                this.onlineUsersService.removeOnlineUser(this.accountInfoService.getUsername(socket));
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
                 if (currentRoom.getGame.isGameOver()) {

@@ -41,7 +41,7 @@ export class CreateGameComponent implements OnInit, OnDestroy {
         private waitingRoomManagerService: WaitingRoomManagerService,
         private gameModeService: GameModeService,
         private router: Router,
-        private dictionaryService: DictionaryService,
+        private dictionaryService: DictionaryService
     ) {
         this.timer = { minute: 1, second: 0 };
         this.dictionaryList = [];

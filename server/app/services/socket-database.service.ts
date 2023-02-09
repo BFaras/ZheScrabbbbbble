@@ -1,15 +1,15 @@
 import { GameType } from '@app/constants/basic-constants';
 import { CollectionType, Dictionary, GameHistory, PlayerName, Score, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
 import * as io from 'socket.io';
-import { Service } from 'typedi';
+import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
 
 @Service()
 export class SocketDatabaseService {
     private databaseService: DatabaseService;
 
-    constructor(databaseService: DatabaseService) {
-        this.databaseService = databaseService;
+    constructor() {
+        this.databaseService = Container.get(DatabaseService);
     }
 
     databaseSocketRequests(socket: io.Socket) {

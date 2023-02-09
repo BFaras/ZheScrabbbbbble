@@ -7,37 +7,35 @@ import { Observable, Observer } from 'rxjs';
     providedIn: 'root',
 })
 export class ChatService {
-    private socket;
 
-    constructor(private socketManagerService: SocketManagerService) {
-        this.socket = this.socketManagerService.getSocket();
-    }
+    constructor(private socketManagerService: SocketManagerService) {}
 
     getClientID(): string {
-        return this.socket.id;
+        return this.socketManagerService.getSocket().id;
     }
 
     sendMessage2(message: string) {
-        this.socket.emit('Message Sent', message);
+        console.log(message);
+        this.socketManagerService.getSocket().emit('Message Sent', message);
     }
 
     getNewMessages(): Observable<string> {
         return new Observable((observer: Observer<string>) => {
-            this.socket.on('New Message', (message: string) => observer.next(message));
+            this.socketManagerService.getSocket().on('New Message', (message: string) => observer.next(message));
         });
     }
 
     sendMessage(message: Message) {
-        this.socket.emit('new-message', message);
+        this.socketManagerService.getSocket().emit('new-message', message);
     }
 
     sendCommand(argument: string, command: string) {
-        this.socket.emit('command', command, argument.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
+        this.socketManagerService.getSocket().emit('command', command, argument.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
     }
 
     getMessages(): Observable<Message> {
         return new Observable((observer: Observer<Message>) => {
-            this.socket.on('new-message', (message: Message) => observer.next(message));
+            this.socketManagerService.getSocket().on('new-message', (message: Message) => observer.next(message));
         });
     }
 }

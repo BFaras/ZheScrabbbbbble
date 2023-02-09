@@ -5,6 +5,8 @@
 package-lock.json
 .DS_Store
 
+.idea/
+
 # Code Coverage Folder
 coverage/
 

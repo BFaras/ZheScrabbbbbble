@@ -14,7 +14,7 @@ import { SignUpPageComponent } from '@app/pages/sign-up-page/sign-up-page.compon
 import { SoloMultiPageComponent } from '@app/pages/solo-multi-page/solo-multi-page.component';
 
 const routes: Routes = [
-    { path: '', redirectTo: '/home', pathMatch: 'full' },
+    { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'admin', component: AdminPageComponent },
     { path: 'chat', component: ChatPageComponent },
     { path: 'home', component: MainPageComponent },
@@ -27,7 +27,7 @@ const routes: Routes = [
     { path: 'join-game', component: JoinGameComponent },
     { path: 'join-game-setup', component: JoinGameSetupComponent },
     { path: 'waiting-room', component: WaitingRoomComponent },
-    { path: '**', redirectTo: '/home' },
+    { path: '**', redirectTo: '/login' },
 ];
 
 @NgModule({
