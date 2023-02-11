@@ -82,6 +82,16 @@ export class DatabaseService {
         return Promise.resolve(isAccountCreated);
     }
 
+    async changeUserPassword(username: string, encryptedPassword: string) {
+        let isChangeSuccess = true;
+        await this.getCollection(CollectionType.USERACCOUNTS)
+            ?.updateOne({ username }, { encryptedPassword })
+            .catch(() => {
+                isChangeSuccess = false;
+            });
+        return isChangeSuccess;
+    }
+
     async getUserEncryptedPassword(username: string): Promise<string> {
         const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<AccountInfo>)?.findOne({
             username,

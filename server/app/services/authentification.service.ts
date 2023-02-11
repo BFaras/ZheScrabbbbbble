@@ -1,12 +1,4 @@
 import {
-    CREATION_SUCCESS,
-    DATABASE_UNAVAILABLE,
-    EMAIL_INVALID,
-    PASSWORD_INVALID,
-    USERNAME_INVALID,
-    USERNAME_TAKEN
-} from '@app/constants/account-error-code-constants';
-import {
     CHAR_EMAIL_MUST_CONTAIN,
     MAX_ASCII_SYMBOL,
     MIN_ASCII_SYMBOL,
@@ -16,6 +8,14 @@ import {
     NEGATIVE_MULTIPLIER,
     POSITIVE_MULTIPLIER
 } from '@app/constants/authentification-constants';
+import {
+    DATABASE_UNAVAILABLE,
+    EMAIL_INVALID,
+    NO_ERROR,
+    PASSWORD_INVALID,
+    USERNAME_INVALID,
+    USERNAME_TAKEN
+} from '@app/constants/error-code-constants';
 import { AccountCreationState } from '@app/interfaces/account-creation-state';
 import { Question } from '@app/interfaces/question';
 import { Container, Service } from 'typedi';
@@ -47,14 +47,14 @@ export class AuthentificationService {
 
     async createAccount(username: string, password: string, email: string, userAvatar: string, securityQuestion: Question): Promise<string> {
         let accountCreationState: string = await this.verifyAccountRequirements(username, password, email);
-        if (accountCreationState === CREATION_SUCCESS) {
+        if (accountCreationState === NO_ERROR) {
             const encryptedPassword: string = this.encryptPassword(password);
             if (!(await this.dbService.addUserAccount(username, encryptedPassword, email, userAvatar, securityQuestion))) {
                 accountCreationState = DATABASE_UNAVAILABLE;
             }
         }
 
-        if (accountCreationState === CREATION_SUCCESS) {
+        if (accountCreationState === NO_ERROR) {
             this.onlineUsersService.addOnlineUser(username);
         }
 
@@ -70,8 +70,13 @@ export class AuthentificationService {
         return answerToQuestion === realAnswer;
     }
 
+    async changeUserPassword(username: string, newPassword: string) {
+        const encryptedPassword = this.encryptPassword(newPassword);
+        return this.dbService.changeUserPassword(username, encryptedPassword);
+    }
+
     private async verifyAccountRequirements(username: string, password: string, email: string): Promise<string> {
-        let errorCode = CREATION_SUCCESS;
+        let errorCode = NO_ERROR;
         const accountCreationState: AccountCreationState = {
             isUsernameValid: username.length >= MIN_USERNAME_LENGTH,
             isEmailValid: email.includes(CHAR_EMAIL_MUST_CONTAIN),

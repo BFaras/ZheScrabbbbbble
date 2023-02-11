@@ -1,4 +1,4 @@
-import { CREATION_SUCCESS } from '@app/constants/account-error-code-constants';
+import { DATABASE_UNAVAILABLE, NO_ERROR, WRONG_SECURITY_ANSWER } from '@app/constants/error-code-constants';
 import { Question } from '@app/interfaces/question';
 import * as io from 'socket.io';
 import Container, { Service } from 'typedi';
@@ -34,11 +34,11 @@ export class AuthSocketService {
                     userAvatar,
                     securityQuestion,
                 );
-                if (accountCreationStatus === CREATION_SUCCESS) {
+                if (accountCreationStatus === NO_ERROR) {
                     this.accountInfoService.setUsername(socket, username);
                     console.log(new Date().toLocaleTimeString() + ' | Register successfull');
                 }
-                socket.emit('Creation result', accountCreationStatus === CREATION_SUCCESS);
+                socket.emit('Creation result', accountCreationStatus === NO_ERROR);
             },
         );
 
@@ -49,9 +49,14 @@ export class AuthSocketService {
 
         socket.on('Account Question Answer', async (answerToQuestion: string, newPassword: string) => {
             const usernameForReset = socket.data.usernameResettingPassword;
-            const errorCode = '1';
+            let errorCode = WRONG_SECURITY_ANSWER;
             if (await this.authentificationService.isSecurityQuestionAnswerRight(usernameForReset, newPassword)) {
-                socket.data.usernameResettingPassword = null;
+                errorCode = DATABASE_UNAVAILABLE;
+
+                if (await this.authentificationService.changeUserPassword(usernameForReset, newPassword)) {
+                    errorCode = NO_ERROR;
+                    socket.data.usernameResettingPassword = null;
+                }
             }
             socket.emit('Password Reset response', errorCode);
         });
