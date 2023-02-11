@@ -1,4 +1,4 @@
-export const CREATION_SUCCESS = '0';
+export const CREATION_SUCCESS = '';
 export const USERNAME_INVALID = '1';
 export const EMAIL_INVALID = '2';
 export const PASSWORD_INVALID = '3';

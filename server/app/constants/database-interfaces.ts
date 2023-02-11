@@ -1,3 +1,4 @@
+import { Question } from '@app/interfaces/question';
 import { GameType } from './basic-constants';
 
 export interface Score {
@@ -44,6 +45,7 @@ export interface AccountInfo {
     encryptedPassword: string;
     email: string;
     userAvatar: string;
+    securityQuestion: Question;
 }
 
 export const enum VirtualPlayerDifficulty {
@@ -56,5 +58,5 @@ export enum CollectionType {
     DICTIONARY = 'dictionary',
     NAMES = 'playerNames',
     GAMES = 'gameHistory',
-    USERACCOUNTS = 'userAccount'
+    USERACCOUNTS = 'userAccount',
 }

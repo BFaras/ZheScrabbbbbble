@@ -17,6 +17,7 @@ import {
     POSITIVE_MULTIPLIER
 } from '@app/constants/authentification-constants';
 import { AccountCreationState } from '@app/interfaces/account-creation-state';
+import { Question } from '@app/interfaces/question';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
 import { OnlineUsersService } from './online-users.service';
@@ -32,24 +33,23 @@ export class AuthentificationService {
 
     async authentifyUser(username: string, password: string): Promise<boolean> {
         if (this.onlineUsersService.isUserOnline(username)) {
-            console.log((new Date()).toLocaleTimeString() + ' | User is already connected on another device');
-            return false
+            console.log(new Date().toLocaleTimeString() + ' | User is already connected on another device');
+            return false;
         }
         const decryptedPasswordFromDB: string = this.decryptPassword(await this.dbService.getUserEncryptedPassword(username));
         if (decryptedPasswordFromDB.length > 0 && decryptedPasswordFromDB === password) {
             this.onlineUsersService.addOnlineUser(username);
             return true;
         }
-        console.log((new Date()).toLocaleTimeString() + ' | Incorrect password, login failed');
+        console.log(new Date().toLocaleTimeString() + ' | Incorrect password, login failed');
         return false;
     }
 
-    async createAccount(username: string, password: string, email: string, userAvatar: string): Promise<string> {
+    async createAccount(username: string, password: string, email: string, userAvatar: string, securityQuestion: Question): Promise<string> {
         let accountCreationState: string = await this.verifyAccountRequirements(username, password, email);
         if (accountCreationState === CREATION_SUCCESS) {
-
             const encryptedPassword: string = this.encryptPassword(password);
-            if (!await this.dbService.addUserAccount(username, encryptedPassword, email, userAvatar)) {
+            if (!(await this.dbService.addUserAccount(username, encryptedPassword, email, userAvatar, securityQuestion))) {
                 accountCreationState = DATABASE_UNAVAILABLE;
             }
         }
@@ -59,6 +59,15 @@ export class AuthentificationService {
         }
 
         return Promise.resolve(accountCreationState);
+    }
+
+    async getUserSecurityQuestion(username: string) {
+        return await this.dbService.getUserSecurityQuestion(username);
+    }
+
+    async isSecurityQuestionAnswerRight(username: string, answerToQuestion: string): Promise<boolean> {
+        const realAnswer = await this.dbService.getSecurityQuestionAsnwer(username);
+        return answerToQuestion === realAnswer;
     }
 
     private async verifyAccountRequirements(username: string, password: string, email: string): Promise<string> {
@@ -71,16 +80,16 @@ export class AuthentificationService {
         };
 
         if (!accountCreationState.isUsernameValid) {
-            console.log((new Date()).toLocaleTimeString() + ' | Register failed, username too short');
+            console.log(new Date().toLocaleTimeString() + ' | Register failed, username too short');
             errorCode = USERNAME_INVALID;
         } else if (!accountCreationState.isEmailValid) {
-            console.log((new Date()).toLocaleTimeString() + ' | Register failed, invalid email');
+            console.log(new Date().toLocaleTimeString() + ' | Register failed, invalid email');
             errorCode = EMAIL_INVALID;
         } else if (!accountCreationState.isPasswordValid) {
-            console.log((new Date()).toLocaleTimeString() + ' | Register failed, password too short');
+            console.log(new Date().toLocaleTimeString() + ' | Register failed, password too short');
             errorCode = PASSWORD_INVALID;
         } else if (!accountCreationState.isUsernameFree) {
-            console.log((new Date()).toLocaleTimeString() + ' | Register failed, username taken');
+            console.log(new Date().toLocaleTimeString() + ' | Register failed, username taken');
             errorCode = USERNAME_TAKEN;
         }
 
