@@ -2,8 +2,7 @@
 import { GameRoom } from '@app/classes/game-room';
 import { GameSettings } from '@app/classes/game-settings';
 import { Player } from '@app/classes/player';
-import { Direction, ErrorType, GameType } from '@app/constants/basic-constants';
-import { GoalsValidation } from '@app/services/goals-validation.service';
+import { Direction, ErrorType } from '@app/constants/basic-constants';
 import { PossibleWords } from '@app/services/possible-word-finder.service';
 import { RoomManagerService } from '@app/services/room-manager.service';
 import { assert, expect } from 'chai';
@@ -11,6 +10,7 @@ import { describe } from 'mocha';
 import { CommandController } from './command.controller';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import Sinon = require('sinon');
+import { WordValidation } from '@app/services/word-validation.service';
 
 describe('CommandController', () => {
     let commandController: CommandController;
@@ -29,9 +29,8 @@ describe('CommandController', () => {
             roomName: 'RoomNameTest',
             virtualPlayerName: 'VirtualPlayerNameTest',
             isEasyMode: true,
-            gameType: GameType.CLASSIC,
         };
-        const wordValidationService: GoalsValidation = new GoalsValidation(['ma']);
+        const wordValidationService: WordValidation = new WordValidation(['ma']);
         gameRoom = new GameRoom('testRoom', wordValidationService, gameSettings);
         player1 = new Player('id1', 'Joe');
         player2 = new Player('id2', 'Eve');

@@ -1,4 +1,3 @@
-import { GameType } from '@app/constants/basic-constants';
 import { Timer } from '@app/constants/basic-interface';
 
 export interface GameSettings {
@@ -9,5 +8,4 @@ export interface GameSettings {
     roomName: string;
     virtualPlayerName?: string;
     isEasyMode?: boolean;
-    gameType: GameType;
 }

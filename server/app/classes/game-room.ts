@@ -1,7 +1,7 @@
 import { Player } from '@app/classes/player';
-import { GameType } from '@app/constants/basic-constants';
+import { MAX_NUMBER_OF_PLAYERS } from '@app/constants/basic-constants';
 import { Timer } from '@app/constants/basic-interface';
-import { GoalsValidation } from '@app/services/goals-validation.service';
+import { WordValidation } from '@app/services/word-validation.service';
 import { Game } from './game';
 import { GameSettings } from './game-settings';
 import { VirtualPlayer } from './virtual-player';
@@ -14,20 +14,18 @@ export class GameRoom {
     private timer: Timer;
     private isSoloGame: boolean;
     private game: Game;
-    private gameType: GameType;
 
-    constructor(name: string, wordValidationService: GoalsValidation, gameSettings: GameSettings) {
+    constructor(name: string, wordValidationService: WordValidation, gameSettings: GameSettings) {
         this.name = name;
         this.players = [];
         this.connectedPlayers = 0;
         this.isSoloGame = gameSettings.isSoloMode;
         this.timer = gameSettings.timer;
-        this.game = new Game(wordValidationService, this.players, gameSettings.gameType);
-        this.gameType = gameSettings.gameType;
+        this.game = new Game(wordValidationService, this.players);
     }
 
     addPlayer(player: Player) {
-        if (this.players.length < 2) {
+        if (this.players.length < MAX_NUMBER_OF_PLAYERS) {
             this.players.push(player);
         }
     }
@@ -103,10 +101,6 @@ export class GameRoom {
 
     getTimeChosen(): Timer {
         return this.timer;
-    }
-
-    getGameType(): GameType {
-        return this.gameType;
     }
 
     get getGame(): Game {

@@ -1,5 +1,3 @@
-import { GameType } from './basic-constants';
-
 export interface Score {
     username: string;
     score: number;
@@ -27,7 +25,6 @@ export interface GameHistory {
     length: string;
     player1: PlayerInfo;
     player2: PlayerInfo;
-    mode: GameType;
     abandoned?: boolean;
 }
 

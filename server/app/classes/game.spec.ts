@@ -5,10 +5,9 @@
 import { Hand } from '@app/classes/hand';
 import { Letter } from '@app/classes/letter';
 import { Player } from '@app/classes/player';
-import { Direction, ErrorType, GameType } from '@app/constants/basic-constants';
+import { Direction, ErrorType } from '@app/constants/basic-constants';
 import { GameState, PlaceLetterCommandInfo } from '@app/constants/basic-interface';
-import { FIVE_ROUND, Goal, SWAP_FIFTEEN_LETTERS } from '@app/constants/goal-constants';
-import { GoalsValidation } from '@app/services/goals-validation.service';
+import { WordValidation } from '@app/services/word-validation.service';
 import { assert, expect } from 'chai';
 import * as sinon from 'sinon';
 import { Game } from './game';
@@ -18,29 +17,12 @@ describe('GameService', () => {
     let player1: Player;
     let player2: Player;
     let players: Player[];
-    let gameType: GameType;
-    let goal: Goal;
-    const fiveRound: Goal = {
-        title: FIVE_ROUND.title,
-        points: FIVE_ROUND.points,
-        completed: FIVE_ROUND.completed,
-        progress: FIVE_ROUND.progress,
-        progressMax: FIVE_ROUND.progressMax,
-    };
 
     beforeEach(() => {
-        goal = {
-            title: SWAP_FIFTEEN_LETTERS.title,
-            points: SWAP_FIFTEEN_LETTERS.points,
-            completed: SWAP_FIFTEEN_LETTERS.completed,
-            progress: SWAP_FIFTEEN_LETTERS.progress,
-            progressMax: SWAP_FIFTEEN_LETTERS.progressMax,
-        };
         player1 = new Player('id1', 'Joe');
         player2 = new Player('id2', 'Eve');
         players = [player1, player2];
-        gameType = GameType.CLASSIC;
-        gameService = new Game(new GoalsValidation(['ma']) as GoalsValidation, players, gameType);
+        gameService = new Game(new WordValidation(['ma']) as WordValidation, players);
     });
 
     it('should return correct player if getPlayerTurn is called', () => {
@@ -144,83 +126,6 @@ describe('GameService', () => {
         const spy = sinon.spy(gameService['reserve'], 'getReserveContent');
         gameService.getReserveContent();
         assert(spy.called);
-    });
-    it('StartGame should give 3 goals to each player ', () => {
-        gameService['gameType'] = GameType.LOG2990;
-        gameService.startGame();
-        expect(gameService['players'][0].getGoals()?.length === 3).to.equals(true);
-    });
-    it('goalsCreation should give 3 goals to each player ', () => {
-        gameService['gameType'] = GameType.LOG2990;
-        gameService['goalsCreation']();
-        expect(gameService['players'][0].getGoals()?.length === 3).to.equals(true);
-    });
-
-    it('swapFifteenLetters should increment the number of swap of players', () => {
-        const oldNumberOfSwap = gameService['getPlayerTurn']().getNumberOfSwap();
-        gameService['swapFifteenLetters'](goal, 1);
-        const newNumberOfSwap = gameService['getPlayerTurn']().getNumberOfSwap();
-        expect(newNumberOfSwap - oldNumberOfSwap).equals(1);
-    });
-
-    it('swapFifteenLetters should add the score of the player and complete the goal when accomplish', () => {
-        gameService['getPlayerTurn']().setGoals([goal]);
-        const oldScore = gameService['getPlayerTurn']().getScore();
-        gameService['getPlayerTurn']()['numberOfSwap'] = 14;
-        gameService['swapFifteenLetters'](goal, 1);
-        const newScore = gameService['getPlayerTurn']().getScore();
-
-        expect(newScore - oldScore).equals(SWAP_FIFTEEN_LETTERS.points);
-    });
-    it('swapLetters should  increment the number of swap of players', () => {
-        gameService.startGame();
-        gameService['gameType'] = GameType.LOG2990;
-        gameService['getPlayerTurn']().setGoals([goal]);
-        const oldNumberOfSwap = gameService['getPlayerTurn']().getNumberOfSwap();
-        gameService.swapLetters(gameService['getPlayerTurn']().getHand().getLettersToString()[0]);
-        const newNumberOfSwap = gameService['getPlayerNotTurn']().getNumberOfSwap();
-
-        expect(newNumberOfSwap - oldNumberOfSwap).equals(1);
-    });
-
-    it('swapLetter should call resetNumberOfPlacementSucc', () => {
-        gameService.startGame();
-        gameService['getPlayerTurn']().setGoals([FIVE_ROUND]);
-        const spy = sinon.spy(Player.prototype, 'resetNumberOfPlacementSucc');
-        gameService.swapLetters(gameService['getPlayerTurn']().getHand().getLettersToString()[0]);
-        assert(spy.called);
-        spy.restore();
-    });
-    it('passTurn should call resetNumberOfPlacementSucc', () => {
-        gameService['gameType'] = GameType.LOG2990;
-        gameService['getPlayerTurn']().setGoals([FIVE_ROUND]);
-        const spy = sinon.spy(Player.prototype, 'resetNumberOfPlacementSucc');
-        gameService.passTurn();
-        assert(spy.called);
-    });
-    it(' placeLetter should call goalValidation ', () => {
-        const spy = sinon.spy(gameService['wordValidationService'], 'goalValidation');
-        gameService['players'][0].swapTurn();
-        gameService['gameType'] = GameType.LOG2990;
-        gameService['getPlayerTurn']().setGoals([FIVE_ROUND]);
-        gameService['players'][0]['hand'].addLetters([new Letter('i', 1), new Letter('l', 5)]);
-        const placeLetterCommandInfo: PlaceLetterCommandInfo = { letterCoord: 7, numberCoord: 7, direction: Direction.Vertical, letters: 'il' };
-        gameService.placeLetter(placeLetterCommandInfo);
-        assert(spy.called);
-    });
-
-    it(' checkForFiveRounds should call fiveRound ', () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const spy = sinon.spy(Game.prototype, 'fiveRounds' as any);
-        gameService['getPlayerTurn']().setGoals([fiveRound]);
-        gameService['checkForFiveRounds']();
-        assert(spy.called);
-    });
-    it(' checkForFiveRounds should complete the goals when accomplish ', () => {
-        gameService['getPlayerTurn']()['numberOfPlacementSucc'] = 4;
-        gameService['getPlayerTurn']().setGoals([fiveRound]);
-        gameService['checkForFiveRounds']();
-        expect(fiveRound.completed).equals(true);
     });
 
     it('should create game history when calling create game history', () => {

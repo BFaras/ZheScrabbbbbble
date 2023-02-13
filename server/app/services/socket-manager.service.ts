@@ -333,8 +333,7 @@ export class SocketManager {
                 isYourTurn ? otherScore : activeScore,
                 isYourTurn ? activeScore : otherScore,
                 disconnect,
-                currentRoom.getIsSoloGame(),
-                currentRoom.getGame.getGameType(),
+                currentRoom.getIsSoloGame()
             );
         }
         if (!socket) return;

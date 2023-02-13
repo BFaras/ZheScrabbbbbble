@@ -1,28 +1,26 @@
 import { GameRoom } from '@app/classes/game-room';
 import { GameSettings } from '@app/classes/game-settings';
 import { Player } from '@app/classes/player';
-import { GameType } from '@app/constants/basic-constants';
 import { Timer } from '@app/constants/basic-interface';
 import { Dictionary } from '@app/constants/database-interfaces';
 import * as fs from 'fs';
 import { Service } from 'typedi';
-import { GoalsValidation } from './goals-validation.service';
+import { WordValidation } from './word-validation.service';
 
 export interface WaitingRoom {
     hostName: string;
     roomName: string;
     timer: Timer;
-    gameType: GameType;
 }
 
 @Service()
 export class RoomManagerService {
     private activeRooms: { [key: string]: GameRoom } = {};
-    private defaultWordValidationService: GoalsValidation;
+    private defaultWordValidationService: WordValidation;
     constructor(dictionary: Dictionary | undefined) {
         if (!dictionary?.words) dictionary = JSON.parse(fs.readFileSync('./assets/dictionnary.json', 'utf8')) as Dictionary;
         if (!dictionary?.words) dictionary.words = [];
-        this.defaultWordValidationService = new GoalsValidation(dictionary.words);
+        this.defaultWordValidationService = new WordValidation(dictionary.words);
     }
 
     createSoloRoomName(): string {
@@ -42,7 +40,7 @@ export class RoomManagerService {
     createRoom(gameSettings: GameSettings, words: string[] | undefined) {
         let roomName = '';
         if (gameSettings.roomName) roomName = gameSettings.roomName;
-        this.activeRooms[roomName] = new GameRoom(roomName, words ? new GoalsValidation(words) : this.defaultWordValidationService, gameSettings);
+        this.activeRooms[roomName] = new GameRoom(roomName, words ? new WordValidation(words) : this.defaultWordValidationService, gameSettings);
     }
 
     addPlayer(player: Player, roomName: string) {
@@ -68,7 +66,6 @@ export class RoomManagerService {
                     roomName: room.getName(),
                     hostName: room.getPlayerFromIndex(0).getName(),
                     timer: room.getTimeChosen(),
-                    gameType: room.getGameType(),
                 });
             }
         }

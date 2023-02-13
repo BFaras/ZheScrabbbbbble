@@ -1,7 +1,6 @@
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 /* eslint-disable dot-notation */
-import { GameType } from '@app/constants/basic-constants';
 import { CollectionType, TopScores, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
 import { Server } from '@app/server';
 import { assert } from 'chai';
@@ -44,7 +43,7 @@ describe('SocketDatabase service tests', () => {
             username: 'Eve',
             score: 1,
         };
-        socketDatabaseService.sendScoreToDatabase(joeScore, eveScore, false, false, GameType.CLASSIC);
+        socketDatabaseService.sendScoreToDatabase(joeScore, eveScore, false, false);
         assert.isTrue(addScoreMock.getCall(0).calledWith(joeScore));
         assert.isTrue(addScoreMock.getCall(1).calledWith(eveScore));
         addScoreMock.reset();
@@ -60,7 +59,7 @@ describe('SocketDatabase service tests', () => {
             username: 'Eve',
             score: 1,
         };
-        socketDatabaseService.sendScoreToDatabase(joeScore, eveScore, true, false, GameType.CLASSIC);
+        socketDatabaseService.sendScoreToDatabase(joeScore, eveScore, true, false);
         assert.isFalse(addScoreMock.calledWith(joeScore));
         assert.isTrue(addScoreMock.calledWith(eveScore));
         addScoreMock.reset();
@@ -76,7 +75,7 @@ describe('SocketDatabase service tests', () => {
             username: 'Eve',
             score: 1,
         };
-        socketDatabaseService.sendScoreToDatabase(joeScore, eveScore, false, true, GameType.CLASSIC);
+        socketDatabaseService.sendScoreToDatabase(joeScore, eveScore, false, true);
         assert.isTrue(addScoreMock.calledWith(joeScore));
         assert.isFalse(addScoreMock.calledWith(eveScore));
         addScoreMock.reset();
@@ -84,7 +83,7 @@ describe('SocketDatabase service tests', () => {
 
     it('should call sendTopScores when requestTopScores is emited', (done) => {
         const sendTopScoresMock = sinon.mock(socketDatabaseService).expects('sendTopScores');
-        clientSocket.emit('requestTopScores', 5, GameType.CLASSIC);
+        clientSocket.emit('requestTopScores', 5);
         setTimeout(() => {
             assert.isTrue(sendTopScoresMock.called);
             done();
@@ -101,7 +100,7 @@ describe('SocketDatabase service tests', () => {
                     resolve({});
                 }),
             );
-        clientSocket.emit('requestTopScores', 5, GameType.CLASSIC);
+        clientSocket.emit('requestTopScores', 5);
         clientSocket.on('topScores', () => {
             assert(getTopScoresMock.called);
             done();
@@ -229,7 +228,6 @@ describe('SocketDatabase service tests', () => {
             length: 'test',
             player1: { name: 'test1', score: 0, virtual: false, winner: false },
             player2: { name: 'test2', score: 0, virtual: false, winner: true },
-            mode: GameType.CLASSIC,
         };
         const addGameHistoryMock = sinon.mock(socketDatabaseService['databaseService']).expects('addGameHistory');
         socketDatabaseService.sendGameHistoryToDatabase(gameHistory);

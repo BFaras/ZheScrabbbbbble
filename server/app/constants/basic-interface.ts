@@ -1,6 +1,5 @@
 import { Letter } from '@app/classes/letter';
 import { Direction } from './basic-constants';
-import { Goal } from './goal-constants';
 
 export interface LetterPosition {
     letter: Letter;
@@ -24,8 +23,6 @@ export interface GameState {
     reserveLength: number;
     gameOver: boolean;
     boardWithInvalidWords?: string[][];
-    yourGoals?: Goal[];
-    oppenentGoals?: Goal[];
 }
 
 export interface Message {

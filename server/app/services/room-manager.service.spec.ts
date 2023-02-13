@@ -3,7 +3,6 @@
 /* eslint-disable dot-notation */
 import { GameSettings } from '@app/classes/game-settings';
 import { Player } from '@app/classes/player';
-import { GameType } from '@app/constants/basic-constants';
 import { expect } from 'chai';
 import { RoomManagerService } from './room-manager.service';
 
@@ -23,7 +22,6 @@ describe('RoomManagerService', () => {
             roomName: 'testRoom',
             virtualPlayerName: 'VirtualPlayerNameTest',
             isEasyMode: true,
-            gameType: GameType.CLASSIC,
         };
         roomManagerService.createRoom(gameSettings, roomManagerService['defaultWordValidationService']['dictionary']);
         player1 = new Player('id1', 'Joe');

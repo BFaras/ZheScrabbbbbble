@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 /* eslint-disable dot-notation */
 
-import { Direction, GameType } from '@app/constants/basic-constants';
+import { Direction } from '@app/constants/basic-constants';
 import { PlaceLetterCommandInfo } from '@app/constants/basic-interface';
 import { CommandTypes } from '@app/controllers/command.controller';
-import { GoalsValidation } from '@app/services/goals-validation.service';
 import { PossibleWords } from '@app/services/possible-word-finder.service';
 import { assert, expect } from 'chai';
 import { describe } from 'mocha';
@@ -17,12 +16,13 @@ import { CommandDetails, VirtualPlayer } from './virtual-player';
 import { VirtualPlayerEasy } from './virtual-player-easy';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import Sinon = require('sinon');
+import { WordValidation } from '@app/services/word-validation.service';
 
 describe('VirtualPlayerEasy', () => {
     let virtualPlayer: VirtualPlayer;
     const name = '1';
     const dict: string[] = ['aime', 'amie', 'poly'];
-    const wordValidationService = new GoalsValidation(dict);
+    const wordValidationService = new WordValidation(dict);
     let room: GameRoom;
     let realPlayer: Player;
     const firstWordCommandinfo: PlaceLetterCommandInfo = { letterCoord: 7, numberCoord: 7, direction: Direction.Horizontal, letters: 'a i m e' };
@@ -42,7 +42,6 @@ describe('VirtualPlayerEasy', () => {
             roomName: 'RoomNameTest',
             virtualPlayerName: 'VirtualPlayerNameTest',
             isEasyMode: true,
-            gameType: GameType.CLASSIC,
         };
         room = new GameRoom('testRoom', wordValidationService, gameSettings);
         realPlayer = new Player('16783jc', 'real');

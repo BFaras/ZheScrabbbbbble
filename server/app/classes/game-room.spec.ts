@@ -4,9 +4,8 @@
 /* eslint-disable dot-notation */
 import { GameRoom } from '@app/classes/game-room';
 import { Player } from '@app/classes/player';
-import { GameType } from '@app/constants/basic-constants';
 import { Timer } from '@app/constants/basic-interface';
-import { GoalsValidation } from '@app/services/goals-validation.service';
+import { WordValidation } from '@app/services/word-validation.service';
 import { expect } from 'chai';
 import { GameSettings } from './game-settings';
 import { VirtualPlayerEasy } from './virtual-player-easy';
@@ -28,9 +27,8 @@ describe('GameRoom', () => {
             roomName: 'RoomNameTest',
             virtualPlayerName: 'VirtualPlayerNameTest',
             isEasyMode: true,
-            gameType: GameType.CLASSIC,
         };
-        const wordValidationService: GoalsValidation = new GoalsValidation(['ma']);
+        const wordValidationService: WordValidation = new WordValidation(['ma']);
         gameRoom = new GameRoom('testRoom', wordValidationService, gameSettings);
         player1 = new Player('id1', 'Joe');
         player2 = new Player('id2', 'Eve');

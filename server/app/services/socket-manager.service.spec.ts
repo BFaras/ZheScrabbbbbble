@@ -10,7 +10,7 @@
 /* eslint-disable import/no-unresolved */
 import { GameSettings } from '@app/classes/game-settings';
 import { Player } from '@app/classes/player';
-import { ErrorType, GameType } from '@app/constants/basic-constants';
+import { ErrorType } from '@app/constants/basic-constants';
 import { Message, Timer } from '@app/constants/basic-interface';
 import { SocketManager } from '@app/services/socket-manager.service';
 import { Server } from 'app/server';
@@ -45,7 +45,6 @@ describe('SocketManager service tests', () => {
             roomName: 'testRoom',
             virtualPlayerName: 'VirtualPlayerNameTest',
             isEasyMode: false,
-            gameType: GameType.CLASSIC,
         };
         defaultSoloSettings = {
             hostPlayerName: 'Joe',
@@ -55,7 +54,6 @@ describe('SocketManager service tests', () => {
             roomName: 'solo1',
             virtualPlayerName: 'Bob',
             isEasyMode: true,
-            gameType: GameType.CLASSIC,
         };
         sinon
             .mock(service['socketDatabaseService'])
