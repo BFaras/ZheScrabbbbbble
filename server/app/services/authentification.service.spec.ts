@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
+import { DATABASE_UNAVAILABLE, NO_ERROR, USERNAME_INVALID } from '@app/constants/error-code-constants';
+import { Question } from '@app/interfaces/question';
 import { expect } from 'chai';
 import { assert } from 'console';
 import { AuthentificationService } from './authentification.service';
@@ -12,6 +14,9 @@ import Sinon = require('sinon');
 describe('AuthentificationService Tests', () => {
     const testUsername = 'Test12';
     const testPassword = 'Test22';
+    const goodTestEmail = 'myEmail@hi.com';
+    const testAvatar = '';
+    const testSecurityQuestion: Question = { question: 'Who are you?', answer: 'Me' };
 
     let authService: AuthentificationService;
 
@@ -53,5 +58,28 @@ describe('AuthentificationService Tests', () => {
         assert(stubDbServiceGetPass.called);
         assert(stubOnlineServiceIsOnline.called);
         assert(stubAuthServiceDecryptPass.called);
+    });
+
+    it('createAccount should should return false if there is an error during the requirements verification', async () => {
+        const testError = USERNAME_INVALID;
+        Sinon.stub(AuthentificationService.prototype, 'verifyAccountRequirements' as any).returns(Promise.resolve(testError));
+        expect(await authService.createAccount(testUsername, testPassword, goodTestEmail, testAvatar, testSecurityQuestion)).to.deep.equal(testError);
+    });
+
+    it('createAccount should should return false if there is an error with the database', async () => {
+        const testError = DATABASE_UNAVAILABLE;
+        const accountCreatedInDB = false;
+        Sinon.stub(AuthentificationService.prototype, 'verifyAccountRequirements' as any).returns(Promise.resolve(NO_ERROR));
+        Sinon.stub(DatabaseService.prototype, 'addUserAccount').returns(Promise.resolve(accountCreatedInDB));
+        expect(await authService.createAccount(testUsername, testPassword, goodTestEmail, testAvatar, testSecurityQuestion)).to.deep.equal(testError);
+    });
+
+    it('createAccount should should return NO_ERROR if the account was created successfully', async () => {
+        const testError = NO_ERROR;
+        const accountCreatedInDB = true;
+        Sinon.stub(AuthentificationService.prototype, 'verifyAccountRequirements' as any).returns(Promise.resolve(NO_ERROR));
+        Sinon.stub(DatabaseService.prototype, 'addUserAccount').returns(Promise.resolve(accountCreatedInDB));
+        Sinon.stub(OnlineUsersService.prototype, 'addOnlineUser');
+        expect(await authService.createAccount(testUsername, testPassword, goodTestEmail, testAvatar, testSecurityQuestion)).to.deep.equal(testError);
     });
 });
