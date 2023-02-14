@@ -61,6 +61,7 @@ export class AuthentificationService {
         return Promise.resolve(accountCreationState);
     }
 
+    // To test in the future
     async getUserSecurityQuestion(username: string) {
         return await this.dbService.getUserSecurityQuestion(username);
     }
