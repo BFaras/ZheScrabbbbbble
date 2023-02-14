@@ -142,4 +142,10 @@ describe('AuthentificationService Tests', () => {
         Sinon.stub(DatabaseService.prototype, 'isUsernameFree').returns(Promise.resolve(isUsernameFree));
         expect(await authService['verifyAccountRequirements'](testUsername, testPassword, goodTestEmail)).to.deep.equal(NO_ERROR);
     });
+
+    it('an encrypted password should be the same as the original word once decrypted', async () => {
+        const testPasswordToEncrypt = 'I~AmA!Hero!%$~';
+        const encryptedPass = authService['encryptPassword'](testPasswordToEncrypt);
+        expect(authService['decryptPassword'](encryptedPass)).to.deep.equal(testPasswordToEncrypt);
+    });
 });
