@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_resetFragment"
+            app:destination="@id/resetFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -47,6 +50,16 @@
         tools:layout="@layout/fragment_register" >
         <action
             android:id="@+id/action_registerFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/resetFragment"
+        android:name="com.example.testchatbox.login.ResetPasswordFragment"
+        android:label="@string/reset_fragment_label"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_resetFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
 
     </fragment>

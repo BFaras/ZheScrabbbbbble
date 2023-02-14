@@ -11,9 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentFirstBinding
 import com.example.testchatbox.login.model.LoggedInUser
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
+
 class FirstFragment : Fragment() {
 
 private var _binding: FragmentFirstBinding? = null

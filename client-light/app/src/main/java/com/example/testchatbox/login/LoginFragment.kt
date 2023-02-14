@@ -48,6 +48,7 @@ class LoginFragment : Fragment() {
         val passwordEditText = binding.password
         val loginButton = binding.login
         var registerButton = binding.register
+        var resetButton = binding.reset
         val loadingProgressBar = binding.loading
 
         loginViewModel.loginFormState.observe(viewLifecycleOwner,
@@ -113,6 +114,10 @@ class LoginFragment : Fragment() {
         }
         registerButton.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+        }
+
+        resetButton.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_resetFragment)
         }
     }
 
