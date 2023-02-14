@@ -1,6 +1,14 @@
+/* eslint-disable dot-notation */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
-import { DATABASE_UNAVAILABLE, NO_ERROR, USERNAME_INVALID } from '@app/constants/error-code-constants';
+import {
+    DATABASE_UNAVAILABLE,
+    EMAIL_INVALID,
+    NO_ERROR,
+    PASSWORD_INVALID,
+    USERNAME_INVALID,
+    USERNAME_TAKEN
+} from '@app/constants/error-code-constants';
 import { Question } from '@app/interfaces/question';
 import { expect } from 'chai';
 import { assert } from 'console';
@@ -100,5 +108,38 @@ describe('AuthentificationService Tests', () => {
         authService.changeUserPassword(testUsername, testPassword + 'aaaa');
         expect(passwordEncryptionStub.called);
         expect(dbServiceChangePassStub.called);
+    });
+
+    it('verifyAccountRequirements should return USERNAME_INVALID error code when username is too short', async () => {
+        const isUsernameFree = true;
+        const badUsername = '';
+        Sinon.stub(DatabaseService.prototype, 'isUsernameFree').returns(Promise.resolve(isUsernameFree));
+        expect(await authService['verifyAccountRequirements'](badUsername, testPassword, goodTestEmail)).to.deep.equal(USERNAME_INVALID);
+    });
+
+    it('verifyAccountRequirements should return EMAIL_INVALID error code when email is invalid', async () => {
+        const isUsernameFree = true;
+        const badEmail = 'aaa.com';
+        Sinon.stub(DatabaseService.prototype, 'isUsernameFree').returns(Promise.resolve(isUsernameFree));
+        expect(await authService['verifyAccountRequirements'](testUsername, testPassword, badEmail)).to.deep.equal(EMAIL_INVALID);
+    });
+
+    it('verifyAccountRequirements should return PASSWORD_INVALID error code when password is invalid', async () => {
+        const isUsernameFree = true;
+        const badPassword = '';
+        Sinon.stub(DatabaseService.prototype, 'isUsernameFree').returns(Promise.resolve(isUsernameFree));
+        expect(await authService['verifyAccountRequirements'](testUsername, badPassword, goodTestEmail)).to.deep.equal(PASSWORD_INVALID);
+    });
+
+    it('verifyAccountRequirements should return USERNAME_TAKEN if the username is taken', async () => {
+        const isUsernameFree = false;
+        Sinon.stub(DatabaseService.prototype, 'isUsernameFree').returns(Promise.resolve(isUsernameFree));
+        expect(await authService['verifyAccountRequirements'](testUsername, testPassword, goodTestEmail)).to.deep.equal(USERNAME_TAKEN);
+    });
+
+    it('verifyAccountRequirements should return NO_ERROR if the account information meets all the requirements', async () => {
+        const isUsernameFree = true;
+        Sinon.stub(DatabaseService.prototype, 'isUsernameFree').returns(Promise.resolve(isUsernameFree));
+        expect(await authService['verifyAccountRequirements'](testUsername, testPassword, goodTestEmail)).to.deep.equal(NO_ERROR);
     });
 });
