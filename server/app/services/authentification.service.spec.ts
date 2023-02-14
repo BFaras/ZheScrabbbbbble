@@ -82,4 +82,23 @@ describe('AuthentificationService Tests', () => {
         Sinon.stub(OnlineUsersService.prototype, 'addOnlineUser');
         expect(await authService.createAccount(testUsername, testPassword, goodTestEmail, testAvatar, testSecurityQuestion)).to.deep.equal(testError);
     });
+
+    it('isSecurityQuestionAnswerRight should should return true if security question answer is the same', async () => {
+        Sinon.stub(DatabaseService.prototype, 'getSecurityQuestionAsnwer').returns(Promise.resolve(testSecurityQuestion.answer));
+        expect(await authService.isSecurityQuestionAnswerRight(testUsername, testSecurityQuestion.answer)).to.be.true;
+    });
+
+    it('isSecurityQuestionAnswerRight should should return false if security question answer is not the same', async () => {
+        const bogusAnswer = 'Not me';
+        Sinon.stub(DatabaseService.prototype, 'getSecurityQuestionAsnwer').returns(Promise.resolve(testSecurityQuestion.answer));
+        expect(await authService.isSecurityQuestionAnswerRight(testUsername, bogusAnswer)).to.be.false;
+    });
+
+    it('changeUserPassword should call password encryption and then call changeUserPassword() from dbService', async () => {
+        const passwordEncryptionStub = Sinon.stub(AuthentificationService.prototype, 'encryptPassword' as any);
+        const dbServiceChangePassStub = Sinon.stub(DatabaseService.prototype, 'changeUserPassword').returns(Promise.resolve(true));
+        authService.changeUserPassword(testUsername, testPassword + 'aaaa');
+        expect(passwordEncryptionStub.called);
+        expect(dbServiceChangePassStub.called);
+    });
 });
