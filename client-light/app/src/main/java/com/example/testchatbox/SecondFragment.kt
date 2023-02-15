@@ -56,6 +56,7 @@ class SecondFragment : Fragment() {
                 binding.inputText.setText("");
                 text = "$currentDate | $userName : $text";
                 SocketHandler.getSocket().emit("Message Sent", text)
+                binding.scrollView.fullScroll(View.FOCUS_DOWN);
             }
         }
     }
