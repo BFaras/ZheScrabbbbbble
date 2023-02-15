@@ -27,7 +27,7 @@ describe('Authentification Tests', async () => {
     beforeEach(async () => {
         server = Container.get(Server);
         dbService = Container.get(DatabaseService);
-        await server.init(true);
+        await server.init(false);
         clientSocket = ioClient(urlString);
     });
 
@@ -39,77 +39,81 @@ describe('Authentification Tests', async () => {
     });
 
     it('Socket emit Create User Account should create a user account if it does not exist', (done) => {
-        clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
-        clientSocket.once('Creation result', async (isCreationSuccess: boolean) => {
+        clientSocket.once('Creation result', (isCreationSuccess: boolean) => {
             expect(isCreationSuccess).to.be.true;
             done();
         });
+        clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
     });
 
     it('Socket emit Create User Account should not create a user account if username is taken', (done) => {
-        clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
-        clientSocket.once('Creation result', async () => {
-            clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
-            clientSocket.once('Creation result', async (isCreationSuccess: boolean) => {
+        clientSocket.once('Creation result', () => {
+            clientSocket.once('Creation result', (isCreationSuccess: boolean) => {
                 expect(isCreationSuccess).to.be.false;
                 done();
             });
+            clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
         });
+        clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
     });
 
     it('Socket emit User authentification should authentify existing player', (done) => {
-        clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
-        clientSocket.once('Creation result', async () => {
-            clientSocket.emit('User authentification', testUsername, testPassword);
-            clientSocket.once('Authentification status', async (isAuthSuccess: boolean) => {
+        clientSocket.once('Creation result', () => {
+            clientSocket.disconnect();
+            clientSocket.connect();
+            clientSocket.once('Authentification status', (isAuthSuccess: boolean) => {
                 expect(isAuthSuccess).to.be.true;
                 done();
             });
+            clientSocket.emit('User authentification', testUsername, testPassword);
         });
+        clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
     });
 
     it('Socket emit User authentification should not authentify existing player if he is already connected', (done) => {
-        clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
-        clientSocket.once('Creation result', async () => {
-            clientSocket.emit('User authentification', testUsername, testPassword);
-            clientSocket.once('Authentification status', async () => {
-                clientSocket.emit('User authentification', testUsername, testPassword);
-                clientSocket.once('Authentification status', async (isAuthSuccess: boolean) => {
+        clientSocket.once('Creation result', () => {
+            clientSocket.disconnect();
+            clientSocket.connect();
+            clientSocket.once('Authentification status', () => {
+                clientSocket.once('Authentification status', (isAuthSuccess: boolean) => {
                     expect(isAuthSuccess).to.be.false;
                     done();
                 });
+                clientSocket.emit('User authentification', testUsername, testPassword);
             });
+            clientSocket.emit('User authentification', testUsername, testPassword);
         });
+        clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
     });
 
     it('Socket emit Account Question Answer should reset password if answer to question is correct', (done) => {
         const newPassword = '12345';
-        clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
-        clientSocket.once('Creation result', async () => {
-            clientSocket.emit('Reset User Password', testUsername);
-            clientSocket.once('Creation result', async () => {
-                clientSocket.emit('Account Question Answer', testSecurityQuestion.answer, newPassword);
-                clientSocket.once('Password Reset response', async (errorCode: string) => {
+        clientSocket.once('Creation result', () => {
+            clientSocket.once('User Account Question', () => {
+                clientSocket.once('Password Reset response', (errorCode: string) => {
                     expect(errorCode).to.deep.equals(NO_ERROR);
                     done();
                 });
+                clientSocket.emit('Account Question Answer', testSecurityQuestion.answer, newPassword);
             });
+            clientSocket.emit('Reset User Password', testUsername);
         });
+        clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
     });
 
     it('Socket emit Account Question Answer should not reset password if answer to question is incorrect', (done) => {
         const newPassword = '12345';
         const wrongAnswer = testSecurityQuestion.answer + 'hello';
-        clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
-        clientSocket.once('Creation result', async () => {
-            clientSocket.emit('Reset User Password', testUsername);
-            clientSocket.once('Creation result', async () => {
+        clientSocket.once('Creation result', () => {
+            clientSocket.once('User Account Question', () => {
                 clientSocket.emit('Account Question Answer', wrongAnswer, newPassword);
                 clientSocket.once('Password Reset response', async (errorCode: string) => {
                     expect(errorCode).to.deep.equals(WRONG_SECURITY_ANSWER);
                     done();
                 });
             });
+            clientSocket.emit('Reset User Password', testUsername);
         });
+        clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
     });
 });

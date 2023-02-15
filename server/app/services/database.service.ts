@@ -86,10 +86,10 @@ export class DatabaseService {
         await this.getCollection(CollectionType.USERACCOUNTS)?.deleteOne({ username });
     }
 
-    async changeUserPassword(username: string, encryptedPassword: string) {
+    async changeUserPassword(username: string, encryptedPassword: string): Promise<boolean> {
         let isChangeSuccess = true;
         await this.getCollection(CollectionType.USERACCOUNTS)
-            ?.updateOne({ username }, { encryptedPassword })
+            ?.updateOne({ username }, { $set: { encryptedPassword } })
             .catch(() => {
                 isChangeSuccess = false;
             });
