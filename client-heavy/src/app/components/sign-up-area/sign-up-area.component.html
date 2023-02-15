@@ -1,6 +1,6 @@
 <div class="container">
     <h1 class="title"> Inscription</h1>
-    <form class="form">
+    <div *ngIf = !isFormFinished  class="form-first-step">
             <mat-form-field class="username input-field" appearance="fill">
                 <mat-label >Nom d'utilisateur</mat-label>
                 <input matInput name = "username" [(ngModel)]="newAccount.username" >
@@ -16,6 +16,20 @@
                     <mat-icon>{{changeIconVisibility()}}</mat-icon>
                 </button>
             </mat-form-field>
-              <button class = "button-sign-up" mat-raised-button (click)="createNewAccount()">Inscription</button>
-        </form>
-    </div>   
+              <button class = "button-sign-up" mat-raised-button [disabled] = "verifyIfFirstPageFormFinished()" (click)="goToCreateQuestion()">Continue</button>
+    </div>
+<div *ngIf = isFormFinished class="form-first-step">
+    <button class = "goToFirstStepForm"(click) = "goToCreateQuestion()" routerLink = "/sign-up" mat-fab color="primary" aria-label="Example icon button with a delete icon">
+        <mat-icon>replay</mat-icon>
+    </button>
+        <mat-form-field class="username input-field" appearance="fill">
+            <mat-label >Question de sécurité : </mat-label>
+            <input matInput name = "question" [(ngModel)]="newAccount.securityQuestion.question" >
+        </mat-form-field>
+        <mat-form-field class="email input-field" appearance="fill">
+            <mat-label>Réponse : </mat-label>
+            <input  matInput  name = "réponse" [(ngModel)]="newAccount.securityQuestion.answer">
+        </mat-form-field>
+          <button class = "button-sign-up" mat-raised-button [disabled]="verifyIfSecondPageFormFinished()" (click)="createNewAccount()">Inscription</button>
+</div>
+</div>   

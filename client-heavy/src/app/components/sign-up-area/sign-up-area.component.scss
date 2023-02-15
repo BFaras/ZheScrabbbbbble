@@ -7,7 +7,7 @@
     padding:3em;
 }
 
-.form{
+.form-first-step{
     padding : 1em;
     height: 80%;
     display:flex;
@@ -21,14 +21,18 @@
     padding:3em;
 }
 
-.form{
+.form-first-step{
     padding : 1em;
     height: 80%;
     display:flex;
     flex-direction:column;
     gap: 14px;
+}
 
-
+.goToFirstStepForm{
+    position: relative;
+    left: 90%;
+    bottom: 14%;
 }
 
 .input-field{  
