@@ -14,8 +14,7 @@ export class SignUpAreaComponent implements OnInit {
     username : "",
     email : "",
     password : "",
-    securityQuestion : "",
-    securityAnswer : ""
+    securityQuestion: {question: "" , answer : ""},
   }
   subscription:Subscription
   hide:boolean = true;
@@ -47,7 +46,7 @@ export class SignUpAreaComponent implements OnInit {
   }
 
   verifyIfSecondPageFormFinished(): boolean{
-    if (this.newAccount.securityQuestion === "" || this.newAccount.securityAnswer === ""){
+    if (this.newAccount.securityQuestion.question === "" || this.newAccount.securityQuestion.answer === ""){
       return true
     }
     else{

@@ -24,11 +24,11 @@
     </button>
         <mat-form-field class="username input-field" appearance="fill">
             <mat-label >Question de sécurité : </mat-label>
-            <input matInput name = "question" [(ngModel)]="newAccount.securityQuestion" >
+            <input matInput name = "question" [(ngModel)]="newAccount.securityQuestion.question" >
         </mat-form-field>
         <mat-form-field class="email input-field" appearance="fill">
             <mat-label>Réponse : </mat-label>
-            <input  matInput  name = "réponse" [(ngModel)]="newAccount.securityAnswer">
+            <input  matInput  name = "réponse" [(ngModel)]="newAccount.securityQuestion.answer">
         </mat-form-field>
           <button class = "button-sign-up" mat-raised-button [disabled]="verifyIfSecondPageFormFinished()" (click)="createNewAccount()">Inscription</button>
 </div>

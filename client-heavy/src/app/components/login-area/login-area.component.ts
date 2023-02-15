@@ -15,8 +15,7 @@ export class LoginAreaComponent implements OnInit {
     username : "",
     email : "",
     password : "",
-    securityQuestion : "",
-    securityAnswer: "",
+    securityQuestion: {question: "" , answer : ""},
   }
   subscription:Subscription
   hide:boolean = true;
