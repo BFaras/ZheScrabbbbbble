@@ -82,6 +82,10 @@ export class DatabaseService {
         return Promise.resolve(isAccountCreated);
     }
 
+    async removeUserAccount(username: string) {
+        await this.getCollection(CollectionType.USERACCOUNTS)?.deleteOne({ username });
+    }
+
     async changeUserPassword(username: string, encryptedPassword: string) {
         let isChangeSuccess = true;
         await this.getCollection(CollectionType.USERACCOUNTS)
