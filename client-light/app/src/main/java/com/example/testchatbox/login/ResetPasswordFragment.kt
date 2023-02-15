@@ -86,12 +86,18 @@ class ResetPasswordFragment : Fragment() {
                     SocketHandler.getSocket().once("Password Reset response"){ args ->
                         if(args[0] != null){
                             val error = args[0] as String;
-                            if(error.isEmpty()){
+                            if(error.toInt() == 0){
                                 LoggedInUser.connectUser(usernameEditText.text.toString())
                                 findNavController().navigate(R.id.action_resetFragment_to_FirstFragment)
                             }
+                            val errorMessage = when(error.toInt()){
+                                3 -> R.string.PASSWORD_INVALID.toString()
+                                5 -> R.string.DATABASE_UNAVAILABLE.toString()
+                                6 -> R.string.WRONG_SECURITY_ANSWER.toString()
+                                else -> "Error"
+                            }
                             val appContext = context?.applicationContext
-                            Toast.makeText(appContext, "Error", Toast.LENGTH_LONG).show()
+                            Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
                         }
                     }
                     SocketHandler.getSocket().emit("Account Question Answer", answer, password)
