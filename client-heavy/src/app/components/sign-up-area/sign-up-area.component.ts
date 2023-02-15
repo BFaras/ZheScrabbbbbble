@@ -14,10 +14,12 @@ export class SignUpAreaComponent implements OnInit {
     username : "",
     email : "",
     password : "",
+    securityQuestion : "",
+    securityAnswer : ""
   }
-  isAccountCreated:boolean = false;
   subscription:Subscription
   hide:boolean = true;
+  isFormFinished: boolean = false;
 
   constructor(private accountCreationService:AccountCreationService,private router:Router) {
     this.accountCreationService.setUpSocket()
@@ -35,6 +37,24 @@ export class SignUpAreaComponent implements OnInit {
     return this.hide ? VISIBILITY_CONSTANTS.IconHiddenMode : VISIBILITY_CONSTANTS.IconShownMode;
   }
 
+  verifyIfFirstPageFormFinished(): boolean{
+    if (this.newAccount.username === "" || this.newAccount.password === "" || this.newAccount.email === ""){
+      return true
+    }
+    else{
+      return false
+    }
+  }
+
+  verifyIfSecondPageFormFinished(): boolean{
+    if (this.newAccount.securityQuestion === "" || this.newAccount.securityAnswer === ""){
+      return true
+    }
+    else{
+      return false
+    }
+  }
+
   createNewAccount():void{
     this.accountCreationService.sendNewAccountInformation(this.newAccount)
     this.subscription = this.accountCreationService.getStatusOfAccountCreation().subscribe(
@@ -50,8 +70,9 @@ export class SignUpAreaComponent implements OnInit {
     }
   }
 
-
-  
+  goToCreateQuestion():void{
+    this.isFormFinished = !this.isFormFinished
+  }
 
 
 }
