@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentSecondBinding
 import com.example.testchatbox.login.model.LoggedInUser
@@ -38,26 +39,37 @@ class SecondFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState);
         SocketHandler.getSocket().on("New Message") { args ->
             if(args[0] != null){
-                val message = args[0] as String;
+                val message = args[0] as String
                 binding.textView.append(message + System.getProperty("line.separator"));
-                activity?.runOnUiThread(Runnable {
-                    binding.textView.invalidate();
-                    binding.textView.requestLayout();
-                });
+                activity?.runOnUiThread {
+                    binding.textView.invalidate()
+                    binding.textView.requestLayout()
+                }
 
             }
         }
 
-        binding.send.setOnClickListener {
-            var text = binding.inputText.text.toString().trim();
-            if(text.isNotEmpty()){
-                val currentDate = Calendar.getInstance().time.toString().split(' ')[3];
-                val userName = LoggedInUser.getName();
-                binding.inputText.setText("");
-                text = "$currentDate | $userName : $text";
-                SocketHandler.getSocket().emit("Message Sent", text)
-                binding.scrollView.fullScroll(View.FOCUS_DOWN);
+        binding.inputText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                sendMessage()
             }
+            false
+        }
+
+        binding.send.setOnClickListener {
+            sendMessage()
+        }
+
+    }
+    private fun sendMessage() {
+        var text = binding.inputText.text.toString().trim()
+        if(text.isNotEmpty()){
+            val currentDate = Calendar.getInstance().time.toString().split(' ')[3]
+            val userName = LoggedInUser.getName()
+            binding.inputText.setText("")
+            text = "$currentDate | $userName : $text"
+            SocketHandler.getSocket().emit("Message Sent", text)
+            binding.scrollView.fullScroll(View.FOCUS_DOWN)
         }
     }
 
