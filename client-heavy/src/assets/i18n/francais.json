@@ -1,0 +1,27 @@
+{
+    "LOGIN":{
+        "AUTH":"Authentification",
+        "LOGIN":"Connexion"
+    },
+    "SIGNUP":{
+        "NEWACC":"Nouveau? Créez un compte!",
+        "CONFIRM":"Confirmer",
+        "EMAIL":"Adresse Email",
+        "SHOWPASS":"Montrer le mot de passe"
+    },
+    "USERDATA":{
+        "USERNAME":"Nom d'utilisateur",
+        "PASSWORD":"Mot de passe"
+    },
+    "INFOBOARD":{
+        "INFOBOARD":"Panneau informatif",
+        "SCORE":"Points",
+        "lETTERSLEFT":"Nombre de lettres restantes dans la réserve: ",
+        "TIMER":"Temps restant: "
+    },
+    "LETTERHOLDER":{
+        "PASS":"Passer",
+        "PLAY":"Jouer",
+        "REPLACE":"Échanger"
+    }
+}

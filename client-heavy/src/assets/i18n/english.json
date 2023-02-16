@@ -1,0 +1,27 @@
+{
+    "LOGIN":{
+        "AUTH":"Authentication",
+        "LOGIN":"Log in"
+    },
+    "SIGNUP":{
+        "NEWACC":"New? Create an account!",
+        "CONFIRM":"Confirm",
+        "EMAIL":"Email Address",
+        "SHOWPASS":"Show Password"
+    },
+    "USERDATA":{
+        "USERNAME":"Username",
+        "PASSWORD":"Password"
+    },
+    "INFOBOARD":{
+        "INFOBOARD":"Info Board",
+        "SCORE":"Score",
+        "lETTERSLEFT":"Number of unused letters left: ",
+        "TIMER":"Time left: "
+    },
+    "LETTERHOLDER":{
+        "PASS":"Skip turn",
+        "PLAY":"Play",
+        "REPLACE":"Replace"
+    }
+}

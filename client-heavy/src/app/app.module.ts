@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -15,6 +15,8 @@ import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { SoloMultiPageComponent } from '@app/pages/solo-multi-page/solo-multi-page.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AdminPopUpComponent } from './components/admin-pop-up/admin-pop-up.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { CreateGameComponent } from './components/game-initialisation/create-game/create-game.component';
@@ -39,6 +41,15 @@ import { ChatService } from './services/chat-service/chat.service';
  * Please do not move this module in the module folder.
  * Otherwise Angular Cli will not know in which module to put new component
  */
+/*
+export const httpTranslateLoaderFactory = (http: HttpClient): TranslateHttpLoader => {
+    return new TranslateHttpLoader(http);
+};
+*/
+export function httpTranslateLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http);
+}
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -77,6 +88,13 @@ import { ChatService } from './services/chat-service/chat.service';
         MatProgressSpinnerModule,
         MatListModule,
         MatDialogModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: httpTranslateLoaderFactory,
+                deps: [HttpClient]
+            }
+        })
     ],
     providers: [ChatService],
     bootstrap: [AppComponent],
