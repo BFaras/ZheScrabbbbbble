@@ -10,6 +10,7 @@ import {
     TopScores,
     VirtualPlayerDifficulty
 } from '@app/constants/database-interfaces';
+import { ChatInfoDB } from '@app/interfaces/chat-info';
 import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
 import { Collection, Db, MongoClient } from 'mongodb';
@@ -130,6 +131,22 @@ export class DatabaseService {
             securityQuestionAnswer = userAccountInfoDoc.securityQuestion.answer;
         }
         return securityQuestionAnswer;
+    }
+
+    async addNewChatCanal(chatInfo: ChatInfoDB): Promise<string> {
+        let chatId = '';
+        let creationSuccess = true;
+        const chatDoc = await this.getCollection(CollectionType.CHATCANALS)
+            ?.insertOne(chatInfo)
+            .catch(() => {
+                creationSuccess = false;
+            });
+
+        if (creationSuccess) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            chatId = chatDoc!.insertedId.toString();
+        }
+        return Promise.resolve(chatId);
     }
 
     async addScore(score: Score, gameType: GameType): Promise<void> {

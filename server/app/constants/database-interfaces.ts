@@ -59,4 +59,5 @@ export enum CollectionType {
     NAMES = 'playerNames',
     GAMES = 'gameHistory',
     USERACCOUNTS = 'userAccount',
+    CHATCANALS = 'chatCanals',
 }
