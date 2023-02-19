@@ -23,9 +23,8 @@ export interface GameHistory {
     date: string;
     time: string;
     length: string;
-    player1: PlayerInfo;
-    player2: PlayerInfo;
-    abandoned?: boolean;
+    winnerIndex: number;
+    players: PlayerInfo[];
 }
 
 export interface PlayerInfo {
@@ -33,7 +32,6 @@ export interface PlayerInfo {
     score: number;
     virtual: boolean;
     difficulty?: VirtualPlayerDifficulty;
-    winner: boolean;
 }
 
 export interface AccountInfo {

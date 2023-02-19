@@ -107,27 +107,25 @@ export class Game {
     endGame(): string {
         this.gameOver = true;
         this.scorePlayers();
-        const endMessage: string =
-            'Fin de partie - lettres restantes \n' +
-            this.players[0].getName() +
-            ' : ' +
-            this.players[0].getHand().getLettersToString() +
-            '\n' +
-            this.players[1].getName() +
-            ' : ' +
-            this.players[1].getHand().getLettersToString();
+        let endMessage: string = 'Fin de partie - lettres restantes';
+        for(const player of this.players){
+            endMessage += '\n' + player.getName() + ' : ' + player.getHand().getLettersToString();
+        }
         return endMessage;
     }
 
     createGameHistory(winnerIndex: number): GameHistory {
+        const playerInfos : PlayerInfo[] = [];
+        for(const player of this.players){
+            playerInfos.push(this.getPlayerInfo(player));
+        }
         const gameHistory: GameHistory = {
             date: this.getFormattedDate(),
             time: this.getFormattedStartTime(),
             length: this.getFormattedDuration(),
-            player1: this.getPlayerInfo(0, winnerIndex),
-            player2: this.getPlayerInfo(1, winnerIndex),
+            winnerIndex: winnerIndex,
+            players: playerInfos
         };
-        if (gameHistory.player1.virtual || gameHistory.player2.virtual) gameHistory.abandoned = this.isConvertedSoloGame;
         return gameHistory;
     }
 
@@ -246,16 +244,15 @@ export class Game {
         return `${day < DECIMAL_BASE ? '0' : ''}${day}/${month < DECIMAL_BASE ? '0' : ''}${month}/${year}`;
     }
 
-    private getPlayerInfo(index: number, winnerIndex: number): PlayerInfo {
-        const player: PlayerInfo = {
-            name: this.players[index].getName(),
-            score: this.players[index].getScore(),
-            virtual: this.players[index] instanceof VirtualPlayer,
-            winner: winnerIndex === index,
+    private getPlayerInfo(player : Player): PlayerInfo {
+        const playerInfo: PlayerInfo = {
+            name: player.getName(),
+            score: player.getScore(),
+            virtual: player instanceof VirtualPlayer,
         };
-        if (player.virtual)
-            player.difficulty = this.players[index] instanceof VirtualPlayerHard ? VirtualPlayerDifficulty.EXPERT : VirtualPlayerDifficulty.BEGINNER;
-        return player;
+        if (playerInfo.virtual)
+            playerInfo.difficulty = player instanceof VirtualPlayerHard ? VirtualPlayerDifficulty.EXPERT : VirtualPlayerDifficulty.BEGINNER;
+        return playerInfo;
     }
 
     get isConvertedSoloGame(): boolean {
