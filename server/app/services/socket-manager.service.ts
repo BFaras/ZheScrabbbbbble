@@ -1,22 +1,3 @@
-import { GameRoom } from '@app/classes/game-room';
-import { GameSettings } from '@app/classes/game-settings';
-import { Player } from '@app/classes/player';
-import { CommandDetails, VirtualPlayer } from '@app/classes/virtual-player';
-import { VirtualPlayerEasy } from '@app/classes/virtual-player-easy';
-import { VirtualPlayerHard } from '@app/classes/virtual-player-hard';
-import { ErrorType } from '@app/constants/basic-constants';
-import { GameState, Message } from '@app/constants/basic-interface';
-import {
-    COLOR_OTHER_PLAYER,
-    COLOR_SYSTEM,
-    DEFAULT_COLOR,
-    ILLEGAL_COMMAND_ERROR,
-    INVALID_SYNTAX_ERROR,
-    RECONNECT_TIME
-} from '@app/constants/communication-constants';
-import { PlayerName, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
-import { CommandController, CommandResult } from '@app/controllers/command.controller';
-import { RoomManagerService } from '@app/services/room-manager.service';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
@@ -29,15 +10,14 @@ import { SocketDatabaseService } from './socket-database.service';
 
 export class SocketManager {
     private sio: io.Server;
-    private roomManager: RoomManagerService;
-    private commandController: CommandController;
+    //private roomManager: RoomManagerService;
+    //private commandController: CommandController;
     private socketDatabaseService: SocketDatabaseService;
     private chatSocketService: ChatSocketService;
     private authSocketService: AuthSocketService;
-    private databaseService: DatabaseService;
     private onlineUsersService: OnlineUsersService;
     private accountInfoService: AccountInfoService;
-    private timeoutRoom: { [key: string]: NodeJS.Timeout };
+    //private timeoutRoom: { [key: string]: NodeJS.Timeout };
 
     constructor(server: http.Server, databaseService: DatabaseService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
@@ -46,13 +26,13 @@ export class SocketManager {
         this.authSocketService = new AuthSocketService();
         this.accountInfoService = Container.get(AccountInfoService);
         this.onlineUsersService = Container.get(OnlineUsersService);
-        this.databaseService = databaseService;
-        this.timeoutRoom = {};
+        //this.databaseService = databaseService;
+        //this.timeoutRoom = {};
     }
 
     async roomManagerSetup() {
-        this.roomManager = new RoomManagerService(await this.socketDatabaseService.getDictionary());
-        this.commandController = new CommandController(this.roomManager);
+        //this.roomManager = new RoomManagerService(await this.socketDatabaseService.getDictionary());
+        //this.commandController = new CommandController(this.roomManager);
     }
 
     handleSockets(): void {
@@ -61,11 +41,11 @@ export class SocketManager {
             this.socketDatabaseService.databaseSocketRequests(socket);
             this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
-
+            /*
             socket.on('new-message', (message: Message) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
-                const messageHead = message.username === '[SERVER]' ? message.username : currentRoom?.getPlayer(socket.id, false)?.getName();
+                const messageHead = message.username === '[SERVER]' ? message.username : currentRoom?.getPlayer(socket.id)?.getName();
                 socket.emit('new-message', {
                     username: messageHead,
                     body: message.body,
@@ -88,13 +68,13 @@ export class SocketManager {
                 }
                 socket.emit('new-message', {
                     username: '[SERVER]',
-                    body: `${currentRoom.getPlayer(socket.id, false)?.getName()} ${returnValue.activePlayerMessage}`,
+                    body: `${currentRoom.getPlayer(socket.id)?.getName()} ${returnValue.activePlayerMessage}`,
                     color: COLOR_SYSTEM,
                 });
                 if (returnValue.otherPlayerMessage === 'NotEndTurn') return;
                 socket.to(roomName).emit('new-message', {
                     username: '[SERVER]',
-                    body: `${currentRoom.getPlayer(socket.id, false)?.getName()} ${returnValue.otherPlayerMessage}`,
+                    body: `${currentRoom.getPlayer(socket.id)?.getName()} ${returnValue.otherPlayerMessage}`,
                     color: COLOR_SYSTEM,
                 });
                 this.sendEndGameMessage(returnValue, roomName);
@@ -136,10 +116,11 @@ export class SocketManager {
                 this.roomManager.addPlayer(virtualUser, roomName);
                 socket.emit('soloRoomIsReady');
             });
-
+            */
             socket.on('disconnect', async () => {
                 console.log((new Date()).toLocaleTimeString() + ' | User Disconnected from server');
                 this.onlineUsersService.removeOnlineUser(this.accountInfoService.getUsername(socket));
+                /*
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
                 if (currentRoom.getGame.isGameOver()) {
@@ -149,15 +130,16 @@ export class SocketManager {
                 socket.leave(currentRoom.getName());
                 this.sio.to(currentRoom.getName()).emit('new-message', {
                     username: '[SERVER]',
-                    body: `${currentRoom?.getPlayer(socket.id, false)?.getName()} s'est déconnecté.`,
+                    body: `${currentRoom?.getPlayer(socket.id)?.getName()} s'est déconnecté.`,
                     color: COLOR_SYSTEM,
                 });
                 const timeout = await setTimeout(async () => {
                     await this.disconnectPlayer(currentRoom, socket);
                 }, RECONNECT_TIME);
                 this.timeoutRoom[currentRoom.getName()] = timeout;
+                */
             });
-
+            /*
             socket.on('abandon', async () => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
@@ -167,7 +149,7 @@ export class SocketManager {
                 }
                 this.sio.to(currentRoom.getName()).emit('new-message', {
                     username: '[SERVER]',
-                    body: `${currentRoom.getPlayer(socket.id, false)?.getName()} a abandonné et quitté la partie.`,
+                    body: `${currentRoom.getPlayer(socket.id)?.getName()} a abandonné et quitté la partie.`,
                     color: COLOR_SYSTEM,
                 });
                 await this.disconnectPlayer(currentRoom, socket);
@@ -176,7 +158,7 @@ export class SocketManager {
             socket.on('reconnect', (id: string) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(id);
                 if (!currentRoom) return;
-                currentRoom.getPlayer(id, false)?.setUUID(socket.id);
+                currentRoom.getPlayer(id)?.setUUID(socket.id);
                 if (!currentRoom.getIsSoloGame() && currentRoom.isPlayerTurn(socket.id)) currentRoom.getGame.swapActivePlayer();
                 const roomName = currentRoom.getName();
                 clearTimeout(this.timeoutRoom[roomName]);
@@ -246,9 +228,11 @@ export class SocketManager {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (currentRoom) socket.emit('hereAreTheSettings', currentRoom.getPlayerFromIndex(0).getName(), currentRoom.getTimeChosen());
             });
+            */
         });
     }
 
+    /*
     handleError(errorType: ErrorType) {
         switch (errorType) {
             case ErrorType.IllegalCommand:
@@ -266,7 +250,6 @@ export class SocketManager {
         if (currentRoom.getIsSoloGame()) {
             currentRoom.getGame.endGame();
             this.sendGameState(currentRoom as GameRoom, socket, true);
-            currentRoom.removeVirtualPlayers();
             this.roomManager.removePlayer(socket.id, currentRoom.getName());
             return;
         }
@@ -340,4 +323,5 @@ export class SocketManager {
         socket.to(currentRoom.getName()).emit('game-state', isYourTurn ? gameStateActive : gameStateOther);
         socket.emit('game-state', isYourTurn ? gameStateOther : gameStateActive);
     }
+    */
 }

@@ -7,18 +7,16 @@ export class Player {
     private hand: Hand;
     private name: string;
     private score: number;
-    private playerHasTurn: boolean;
 
     constructor(uuid: string, name: string) {
         this.uuid = uuid;
         this.name = name;
         this.score = 0;
         this.hand = new Hand([]);
-        this.playerHasTurn = false;
     }
+
     copyPlayerState(player: Player) {
         this.score = player.getScore();
-        this.playerHasTurn = player.hasTurn();
         this.hand = player.getHand();
     }
 
@@ -43,12 +41,5 @@ export class Player {
     }
     addScore(turnScore: number) {
         this.score += turnScore;
-    }
-
-    hasTurn(): boolean {
-        return this.playerHasTurn;
-    }
-    swapTurn() {
-        this.playerHasTurn = this.hasTurn() ? false : true;
     }
 }

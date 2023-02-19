@@ -6,11 +6,12 @@ import {
     DECIMAL_BASE,
     ErrorType,
     HAND_SIZE,
+    MAX_NUMBER_OF_PLAYERS,
     MILLISECOND_IN_HOURS,
     MILLISECOND_IN_MINUTES,
     MILLISECOND_IN_SECONDS,
     NUMBER_PASS_ENDING_GAME,
-    TIME_BASE,
+    TIME_BASE
 } from '@app/constants/basic-constants';
 import { GameState, PlaceLetterCommandInfo } from '@app/constants/basic-interface';
 import { GameHistory, PlayerInfo, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
@@ -31,6 +32,7 @@ export class Game {
     private gameOver: boolean;
     private startDate: Date;
     private convertedSoloGame: boolean;
+    private playerTurnIndex: number;
 
     constructor(wordValidation: WordValidation, players: Player[]) {
         this.passCounter = 0;
@@ -41,16 +43,19 @@ export class Game {
         this.wordValidationService = wordValidation;
         this.convertedSoloGame = false;
     }
+
     startGame() {
-        if (this.players.length === 2) {
-            this.players[Math.floor(Math.random() * this.players.length)].swapTurn();
-            this.players[0].getHand().addLetters(this.reserve.drawLetters(HAND_SIZE));
-            this.players[1].getHand().addLetters(this.reserve.drawLetters(HAND_SIZE));
+        if (this.players.length === MAX_NUMBER_OF_PLAYERS) {
+            this.playerTurnIndex = Math.floor(Math.random() * this.players.length);
+            for (const player of this.players) {
+                player.getHand().addLetters(this.reserve.drawLetters(HAND_SIZE));
+            }
             this.startDate = new Date();
         }
     }
+
     placeLetter(commandInfo: PlaceLetterCommandInfo): CommandResult {
-        const playerHand = this.getPlayerTurn().getHand();
+        const playerHand = this.players[this.playerTurnIndex].getHand();
         const letters = playerHand.getLetters(commandInfo.letters, true);
         const formattedCommand = CommandFormattingService.formatCommandPlaceLetter(commandInfo, this.board, letters);
         if (!formattedCommand) {
@@ -68,7 +73,7 @@ export class Game {
             return { activePlayerMessage: invalidWordPlayerMessage, otherPlayerMessage: invalidWordPlayerMessage };
         }
         this.boardWithInvalidWord = undefined;
-        this.getPlayerTurn().addScore(score);
+        this.players[this.playerTurnIndex].addScore(score);
         const endMessage = this.endTurn();
         if (endMessage) {
             return { endGameMessage: endMessage };
@@ -80,7 +85,7 @@ export class Game {
 
     swapLetters(stringLetters: string): CommandResult {
         if (!this.reserve.canSwap() || this.reserve.getLength() < stringLetters.length) return { errorType: ErrorType.IllegalCommand };
-        const activeHand = this.getPlayerTurn().getHand();
+        const activeHand = this.players[this.playerTurnIndex].getHand();
         const letters = activeHand.getLetters(stringLetters, true);
         if (!letters) return { errorType: ErrorType.IllegalCommand };
         activeHand.addLetters(this.reserve.drawLetters(HAND_SIZE - activeHand.getLength()));
@@ -151,13 +156,10 @@ export class Game {
         }
         return gameState;
     }
-    swapActivePlayer() {
-        this.players[0].swapTurn();
-        this.players[1].swapTurn();
-    }
+
     findWords(virtualPlay: boolean): PossibleWords[] {
         return PossibleWordFinder.findWords(
-            { hand: this.getPlayerTurn()?.getHand(), wordValidation: this.wordValidationService, board: this.board },
+            { hand: this.players[this.playerTurnIndex].getHand(), wordValidation: this.wordValidationService, board: this.board },
             virtualPlay,
         );
     }
@@ -176,6 +178,19 @@ export class Game {
         this.convertedSoloGame = true;
     }
 
+    isPlayerTurn(playerID: string): boolean {
+        for (let i = 0; i < this.players.length; i++) {
+            if (this.players[i].getUUID() === playerID) {
+                return i === this.playerTurnIndex;
+            }
+        }
+        return false;
+    }
+
+    changeTurn() {
+        this.playerTurnIndex = (this.playerTurnIndex + 1) % MAX_NUMBER_OF_PLAYERS;
+    }
+
     private scorePlayer(playerNumber: number) {
         const player = this.players[playerNumber];
         if (!player) return;
@@ -185,21 +200,21 @@ export class Game {
 
     private endTurn(): string {
         let returnMessage = '';
-        this.swapActivePlayer();
+        this.changeTurn();
         if (this.isGameFinished()) {
             returnMessage = this.endGame();
         }
         return returnMessage;
     }
     private isGameFinished(): boolean {
-        return this.passCounter === NUMBER_PASS_ENDING_GAME || (this.getPlayerNotTurn().getHand().getLength() === 0 && this.getReserveLength() === 0);
+        return this.passCounter === NUMBER_PASS_ENDING_GAME || (this.isAnyHandEmpty() && this.getReserveLength() === 0);
     }
 
-    private getPlayerTurn(): Player {
-        return this.players[0].hasTurn() ? this.players[0] : this.players[1];
-    }
-    private getPlayerNotTurn(): Player {
-        return this.players[1].hasTurn() ? this.players[0] : this.players[1];
+    private isAnyHandEmpty(): boolean {
+        for (const player of this.players) {
+            if (player.getHand().getLength() === 0) return true;
+        }
+        return false;
     }
 
     private resetCounter() {

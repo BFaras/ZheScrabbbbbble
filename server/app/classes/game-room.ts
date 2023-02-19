@@ -4,7 +4,6 @@ import { Timer } from '@app/constants/basic-interface';
 import { WordValidation } from '@app/services/word-validation.service';
 import { Game } from './game';
 import { GameSettings } from './game-settings';
-import { VirtualPlayer } from './virtual-player';
 import { VirtualPlayerEasy } from './virtual-player-easy';
 
 export class GameRoom {
@@ -29,9 +28,10 @@ export class GameRoom {
             this.players.push(player);
         }
     }
+
     convertSoloGame(playerID: string, virtualPlayer: VirtualPlayerEasy) {
-        if (!this.getPlayer(playerID, false)) return;
-        const index: number = this.getPlayer(playerID, false) === this.players[0] ? 0 : 1;
+        if (!this.getPlayer(playerID)) return;
+        const index: number = this.getPlayer(playerID) === this.players[0] ? 0 : 1;
         virtualPlayer.copyPlayerState(this.players[index]);
         this.players[index] = virtualPlayer;
         this.isSoloGame = true;
@@ -39,7 +39,7 @@ export class GameRoom {
     }
 
     removePlayer(playerID: string): boolean {
-        const player = this.getPlayer(playerID, false);
+        const player = this.getPlayer(playerID);
         if (!player) {
             return false;
         }
@@ -48,18 +48,8 @@ export class GameRoom {
         return true;
     }
 
-    removeVirtualPlayers() {
-        if (this.players[1] instanceof VirtualPlayer) this.players.splice(1, 1);
-        if (this.players[0] instanceof VirtualPlayer) this.players.splice(0, 1);
-    }
-
     isPlayerInRoom(playerID: string): boolean {
-        return this.getPlayer(playerID, false) !== null;
-    }
-
-    isPlayerTurn(playerID: string): boolean {
-        const player = this.getPlayer(playerID, false);
-        return player ? player.hasTurn() : false;
+        return this.getPlayer(playerID) !== null;
     }
 
     getPlayerCount(): number {
@@ -74,9 +64,9 @@ export class GameRoom {
         return this.isSoloGame;
     }
 
-    getPlayer(playerID: string, otherPlayer: boolean): Player | null {
+    getPlayer(playerID: string): Player | null {
         for (const player of this.players) {
-            if ((player.getUUID() === playerID) !== otherPlayer) {
+            if (player.getUUID() === playerID) {
                 return player;
             }
         }
@@ -87,16 +77,9 @@ export class GameRoom {
         return this.players[playerIndex];
     }
 
-    getPlayerIndex(active: boolean): number {
-        if (active) {
-            return this.players[0].hasTurn() ? 0 : 1;
-        }
-        return this.players[0].hasTurn() ? 1 : 0;
-    }
-
     incrementConnectedPlayers(): boolean {
         this.connectedPlayers++;
-        return this.connectedPlayers === 2;
+        return this.connectedPlayers === MAX_NUMBER_OF_PLAYERS;
     }
 
     getTimeChosen(): Timer {
