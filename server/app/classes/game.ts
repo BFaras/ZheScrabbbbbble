@@ -13,7 +13,7 @@ import {
     NUMBER_PASS_ENDING_GAME,
     TIME_BASE
 } from '@app/constants/basic-constants';
-import { GameState, PlaceLetterCommandInfo } from '@app/constants/basic-interface';
+import { GameState, PlaceLetterCommandInfo, PlayerState } from '@app/constants/basic-interface';
 import { GameHistory, PlayerInfo, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
 import { CommandResult } from '@app/controllers/command.controller';
 import { CommandFormattingService } from '@app/services/command-formatting.service';
@@ -25,7 +25,6 @@ import { VirtualPlayerHard } from './virtual-player-hard';
 export class Game {
     private passCounter: number;
     private board: Board;
-    private boardWithInvalidWord: string[][] | undefined;
     private wordValidationService: WordValidation;
     private players: Player[];
     private reserve: Reserve;
@@ -66,13 +65,11 @@ export class Game {
         this.resetCounter();
         if (score < 0) {
             const invalidWordPlayerMessage = 'a tenté de placer un mot invalide.';
-            this.boardWithInvalidWord = this.board.toStringArray();
             this.board.removeLetters(formattedCommand);
             playerHand.addLetters(letters as Letter[]);
             this.endTurn();
             return { activePlayerMessage: invalidWordPlayerMessage, otherPlayerMessage: invalidWordPlayerMessage };
         }
-        this.boardWithInvalidWord = undefined;
         this.players[this.playerTurnIndex].addScore(score);
         const endMessage = this.endTurn();
         if (endMessage) {
@@ -92,7 +89,6 @@ export class Game {
         this.reserve.returnLetters(letters);
         this.resetCounter();
         this.endTurn();
-        this.boardWithInvalidWord = undefined;
         const activePlayerMessage = `a échangé les lettres ${stringLetters}.`;
         const otherPlayerMessage = `a échangé ${stringLetters.length} lettres.`;
         return { activePlayerMessage, otherPlayerMessage };
@@ -100,7 +96,6 @@ export class Game {
 
     passTurn(): CommandResult {
         this.incrementCounter();
-        this.boardWithInvalidWord = undefined;
         const endMessage = this.endTurn();
         if (endMessage) {
             return { endGameMessage: endMessage };
@@ -111,8 +106,7 @@ export class Game {
 
     endGame(): string {
         this.gameOver = true;
-        this.scorePlayer(0);
-        this.scorePlayer(1);
+        this.scorePlayers();
         const endMessage: string =
             'Fin de partie - lettres restantes \n' +
             this.players[0].getName() +
@@ -137,24 +131,22 @@ export class Game {
         return gameHistory;
     }
 
-    createGameState(playerNumber: number): GameState {
-        const opponentNumber = playerNumber === 0 ? 1 : 0;
-        const player = this.players[playerNumber];
-        const opponent = this.players[opponentNumber];
-        const gameState: GameState = {
-            board: this.board.toStringArray(),
-            hand: player.getHand().getLettersToString(),
-            opponentHandLength: opponent.getHand().getLength(),
-            isYourTurn: player.hasTurn(),
-            yourScore: player.getScore(),
-            opponentScore: opponent.getScore(),
+    createGameState(): GameState {
+        const playerStates: PlayerState[] = [];
+        for(const player of this.players){
+            playerStates.push({
+                username: player.getName(),
+                hand: player.getHand().getLettersToString(),
+                score: player.getScore()
+            })
+        }
+        return {
+            finalBoard: this.board.toStringArray(),
+            playerTurnIndex: this.playerTurnIndex,
+            players: playerStates,
             reserveLength: this.reserve.getLength(),
             gameOver: this.gameOver
         };
-        if (this.boardWithInvalidWord) {
-            gameState.boardWithInvalidWords = this.boardWithInvalidWord;
-        }
-        return gameState;
     }
 
     findWords(virtualPlay: boolean): PossibleWords[] {
@@ -191,11 +183,20 @@ export class Game {
         this.playerTurnIndex = (this.playerTurnIndex + 1) % MAX_NUMBER_OF_PLAYERS;
     }
 
-    private scorePlayer(playerNumber: number) {
-        const player = this.players[playerNumber];
-        if (!player) return;
-        if (player?.getHand().calculateHandScore() === 0) player.addScore(this.players[playerNumber === 0 ? 1 : 0]?.getHand().calculateHandScore());
-        player.addScore(-player?.getHand().calculateHandScore());
+    private scorePlayers() {
+        let scoreSum : number = 0;
+        let emptyHandIndex : number = 0;
+        for(let i = 0; i < this.players.length; i++){
+            const player = this.players[i];
+            const score = player.getHand().calculateHandScore();
+            if (score === 0){
+                emptyHandIndex = i;
+            }else{
+                scoreSum += score;
+                player.addScore(-score);
+            }
+        }
+        this.players[emptyHandIndex].addScore(scoreSum);
     }
 
     private endTurn(): string {

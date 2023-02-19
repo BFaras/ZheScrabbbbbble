@@ -14,15 +14,17 @@ export interface PlaceLetterCommandInfo {
 }
 
 export interface GameState {
-    board: string[][];
-    hand: string[];
-    opponentHandLength: number;
-    isYourTurn: boolean;
-    yourScore: number;
-    opponentScore: number;
+    finalBoard: string[][];
+    players: PlayerState[];
+    playerTurnIndex: number;
     reserveLength: number;
     gameOver: boolean;
-    boardWithInvalidWords?: string[][];
+}
+
+export interface PlayerState {
+    username: string;
+    hand: string[];
+    score: number;
 }
 
 export interface Message {
