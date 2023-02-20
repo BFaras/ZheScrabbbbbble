@@ -26,7 +26,7 @@ describe('Chat Tests', async () => {
     });
 
     it('should create chat', () => {
-        const chatInfo: ChatInfoDB = { chatName: 'HelloChat', chatType: ChatType.Public, usersIds: [] };
+        const chatInfo: ChatInfoDB = { chatName: 'HelloChat', chatType: ChatType.PUBLIC, usersIds: [] };
         await dbService.addNewChatCanal(chatInfo);
         expect(true).to.be.true;
     });

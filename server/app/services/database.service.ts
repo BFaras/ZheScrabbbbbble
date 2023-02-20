@@ -10,7 +10,7 @@ import {
     TopScores,
     VirtualPlayerDifficulty
 } from '@app/constants/database-interfaces';
-import { ChatInfoDB } from '@app/interfaces/chat-info';
+import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
 import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
 import { Collection, Db, MongoClient } from 'mongodb';
@@ -178,6 +178,13 @@ export class DatabaseService {
         }
 
         return wasUserRemovedFromChat;
+    }
+
+    async getChatCanalsUserCanJoin(userId: string): Promise<ChatInfo[]> {
+        const chatCanlasUserCanJoin = (await this.getCollection(CollectionType.CHATCANALS)
+            ?.find({ userIds: userId, chatType: ChatType.PUBLIC }, { userIds: 0 })
+            .toArray()) as ChatInfo[];
+        return chatCanlasUserCanJoin;
     }
 
     async getNumberOfUsersInChatCanal(chatId: string): Promise<number> {

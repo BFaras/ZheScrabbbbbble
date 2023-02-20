@@ -41,6 +41,8 @@ export class ChatService {
         return errorCode;
     }
 
-    async getPublicChats(): Promise<ChatInfo[]> {}
+    async getPublicChatsUserCanJoin(userId: string): Promise<ChatInfo[]> {
+        return await this.getPublicChatsUserCanJoin(userId);
+    }
     async getUserChats(userId: string): Promise<ChatInfo[]> {}
 }

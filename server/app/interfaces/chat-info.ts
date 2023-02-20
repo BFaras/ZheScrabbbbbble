@@ -1,6 +1,6 @@
 export enum ChatType {
-    Public,
-    Private,
+    PUBLIC,
+    PRIVATE,
 }
 
 export interface ChatInfoDB {
@@ -11,6 +11,6 @@ export interface ChatInfoDB {
 
 export interface ChatInfo {
     chatName: string;
-    chatId: string;
+    _id: string;
     chatType: ChatType;
 }
