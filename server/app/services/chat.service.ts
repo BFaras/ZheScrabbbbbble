@@ -23,6 +23,7 @@ export class ChatService {
 
         return errorCode;
     }
+
     async joinChat(userId: string, chatId: string): Promise<string> {
         let errorCode = NO_ERROR;
         if (!(await this.dbService.joinChatCanal(userId, chatId))) {
@@ -30,7 +31,16 @@ export class ChatService {
         }
         return errorCode;
     }
-    async leaveChat(userId: string, chatId: string): Promise<string> {}
+
+    async leaveChat(userId: string, chatId: string): Promise<string> {
+        let errorCode = NO_ERROR;
+
+        if (!(await this.dbService.leaveChatCanal(userId, chatId))) {
+            errorCode = DATABASE_UNAVAILABLE;
+        }
+        return errorCode;
+    }
+
     async getPublicChats(): Promise<ChatInfo[]> {}
     async getUserChats(userId: string): Promise<ChatInfo[]> {}
 }

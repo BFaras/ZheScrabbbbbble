@@ -162,6 +162,38 @@ export class DatabaseService {
         return wasUserAddedToChat;
     }
 
+    async leaveChatCanal(userId: string, chatId: string) {
+        let wasUserRemovedFromChat = false;
+        if (!(await this.isUserInChat(userId, chatId))) {
+            wasUserRemovedFromChat = true;
+            await this.getCollection(CollectionType.CHATCANALS)
+                ?.updateOne({ _id: chatId }, { $pull: { usersIds: userId } })
+                .catch(() => {
+                    wasUserRemovedFromChat = false;
+                });
+        }
+
+        if ((await this.getNumberOfUsersInChatCanal(chatId)) <= 0) {
+            this.removeChatCanal(chatId);
+        }
+
+        return wasUserRemovedFromChat;
+    }
+
+    async getNumberOfUsersInChatCanal(chatId: string): Promise<number> {
+        const chatCanalDocResult = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: chatId }, { _id: 0, userIds: 1 });
+        let numberofUsers = 100;
+
+        if (chatCanalDocResult !== undefined && chatCanalDocResult !== null) {
+            numberofUsers = chatCanalDocResult.userIds.length;
+        }
+        return numberofUsers;
+    }
+
+    async removeChatCanal(chatId: string): Promise<void> {
+        await this.getCollection(CollectionType.CHATCANALS)?.deleteOne({ _id: chatId });
+    }
+
     async isUserInChat(userId: string, chatId: string): Promise<boolean> {
         const thisChatWithUserInIt = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: chatId, usersIds: userId });
         return Promise.resolve(!(thisChatWithUserInIt === undefined || thisChatWithUserInIt === null));
