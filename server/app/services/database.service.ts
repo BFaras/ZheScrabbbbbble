@@ -149,6 +149,24 @@ export class DatabaseService {
         return Promise.resolve(chatId);
     }
 
+    async joinChatCanal(userId: string, chatId: string): Promise<boolean> {
+        let wasUserAddedToChat = false;
+        if (!(await this.isUserInChat(userId, chatId))) {
+            wasUserAddedToChat = true;
+            await this.getCollection(CollectionType.CHATCANALS)
+                ?.updateOne({ _id: chatId }, { $push: { usersIds: userId } })
+                .catch(() => {
+                    wasUserAddedToChat = false;
+                });
+        }
+        return wasUserAddedToChat;
+    }
+
+    async isUserInChat(userId: string, chatId: string): Promise<boolean> {
+        const thisChatWithUserInIt = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: chatId, usersIds: userId });
+        return Promise.resolve(!(thisChatWithUserInIt === undefined || thisChatWithUserInIt === null));
+    }
+
     async addScore(score: Score, gameType: GameType): Promise<void> {
         await this.getCollection(CollectionType.SCORE, gameType)?.insertOne(score).catch();
     }
