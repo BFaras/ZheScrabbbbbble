@@ -34,24 +34,24 @@ export class CommandController {
     }
 
     executeCommand(command: Command): CommandResult {
-        const room = this.roomManagerService.findRoomFromPlayer(command.playerID);
-        if (!room) {
+        const game = this.roomManagerService.findRoomFromPlayer(command.playerID)?.getGame;
+        if (!game) {
             return { errorType: ErrorType.IllegalCommand };
         }
-        if (!room.isPlayerTurn(command.playerID) && CommandTypes[command.commandType] !== CommandTypes.Reserve) {
+        if (!game.isPlayerTurn(command.playerID) && CommandTypes[command.commandType] !== CommandTypes.Reserve) {
             return { errorType: ErrorType.IllegalCommand };
         }
         switch (CommandTypes[command.commandType]) {
             case CommandTypes.Pass:
-                return room.getGame.passTurn();
+                return game.passTurn();
             case CommandTypes.Place:
-                return this.placeLetters(command.args, room.getGame);
+                return this.placeLetters(command.args, game);
             case CommandTypes.Swap:
-                return this.swapLetters(command.args, room.getGame);
+                return this.swapLetters(command.args, game);
             case CommandTypes.Hint:
-                return this.hintCommand(room.getGame);
+                return this.hintCommand(game);
             case CommandTypes.Reserve:
-                return this.reserveMessage(room.getGame);
+                return this.reserveMessage(game);
         }
         return { errorType: ErrorType.IllegalCommand };
     }
