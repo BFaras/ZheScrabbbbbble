@@ -25,5 +25,21 @@ export class ChatSocketService {
         socket.on('Create New Chat', async (chatName: string, chatType: ChatType) => {
             socket.emit('Chat Creation Response', await this.chatService.createChat(this.accountInfoService.getUserId(socket), chatName, chatType));
         });
+
+        socket.on('Public Chat List Response', async () => {
+            socket.emit('Public Chat List Response', await this.chatService.getPublicChatsUserCanJoin(this.accountInfoService.getUserId(socket)));
+        });
+
+        socket.on('Join Public Chat', async (chatCode: string) => {
+            socket.emit('Join Chat Response', await this.chatService.joinChat(this.accountInfoService.getUserId(socket), chatCode));
+        });
+
+        socket.on('Leave Public Chat', async (chatCode: string) => {
+            socket.emit('Leave Chat Response', await this.chatService.leaveChat(this.accountInfoService.getUserId(socket), chatCode));
+        });
+
+        socket.on('Get User Chat List', async () => {
+            socket.emit('User Chat List Response', await this.chatService.getUserChats(this.accountInfoService.getUserId(socket)));
+        });
     }
 }

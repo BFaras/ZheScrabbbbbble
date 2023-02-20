@@ -1,6 +1,7 @@
 export enum ChatType {
     PUBLIC,
     PRIVATE,
+    GLOBAL,
 }
 
 export interface ChatInfoDB {
