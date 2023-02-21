@@ -111,7 +111,7 @@ class RegisterFragment : Fragment() {
         passwordEditText.addTextChangedListener(afterTextChangedListener)
         questionEditText.addTextChangedListener(afterTextChangedListener)
         answerEditText.addTextChangedListener(afterTextChangedListener)
-        passwordEditText.setOnEditorActionListener { _, actionId, _ ->
+        answerEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 registerViewModel.register(
                     usernameEditText.text.toString(),

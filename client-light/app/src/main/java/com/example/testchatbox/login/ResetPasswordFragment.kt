@@ -14,6 +14,7 @@ import SocketHandler
 import android.widget.Toast
 
 
+
 /**
  * A simple [Fragment] subclass.
  * Use the [ResetPasswordFragment.newInstance] factory method to
@@ -57,7 +58,7 @@ class ResetPasswordFragment : Fragment() {
                     usernameSection.visibility = View.GONE
                     questionSection.visibility = View.VISIBLE
 
-                    SocketHandler.getSocket().once("Authentification status"){ args ->
+                    SocketHandler.getSocket().once("Creation result"){ args ->
                         if(args[0] != null){
                             val question = args[0] as String;
                             questionText.text = question

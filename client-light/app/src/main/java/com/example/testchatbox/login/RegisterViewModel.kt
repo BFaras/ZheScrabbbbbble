@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
-
+import com.example.testchatbox.QuestionInterface
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
 import com.example.testchatbox.R
-import java.io.Serializable
+
 
 class RegisterViewModel() : ViewModel() {
 
@@ -30,8 +32,9 @@ class RegisterViewModel() : ViewModel() {
                 }
             }
         }
-        class Question(val question: String, val answer: String) :Serializable{}
-        SocketHandler.getSocket().emit("Create user account", username, password, email, "Avatar",  Question(question, answer));
+        val quest = QuestionInterface(question, answer)
+        val quest2 = Json.encodeToString(quest)
+        SocketHandler.getSocket().emit("Create user account", username, password, email, "Avatar",  quest2);
     }
 
 
@@ -65,3 +68,4 @@ class RegisterViewModel() : ViewModel() {
         return password.length > 5
     }
 }
+
