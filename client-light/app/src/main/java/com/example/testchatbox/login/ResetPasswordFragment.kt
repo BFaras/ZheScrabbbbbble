@@ -55,15 +55,20 @@ class ResetPasswordFragment : Fragment() {
                 usernameEditText.error =  getString(R.string.invalid_username)
             }else {
                 try {
-                    usernameSection.visibility = View.GONE
-                    questionSection.visibility = View.VISIBLE
-
-                    SocketHandler.getSocket().once("Creation result"){ args ->
+                    SocketHandler.getSocket().once("User Account Question"){ args ->
                         if(args[0] != null){
                             val question = args[0] as String;
-                            questionText.text = question
-                            usernameSection.visibility = View.GONE
-                            questionSection.visibility = View.VISIBLE
+                            activity?.runOnUiThread(Runnable {
+                                if(!question.isEmpty()){
+                                    questionText.text = question
+                                    usernameSection.visibility = View.GONE
+                                    questionSection.visibility = View.VISIBLE
+                                }
+                                else{
+                                    val appContext = context?.applicationContext
+                                    Toast.makeText(appContext, "Error", Toast.LENGTH_LONG).show()
+                                }
+                            });
                         }
                     }
                     SocketHandler.getSocket().emit("Reset User Password", username)
@@ -97,8 +102,10 @@ class ResetPasswordFragment : Fragment() {
                                 6 -> R.string.WRONG_SECURITY_ANSWER.toString()
                                 else -> "Error"
                             }
-                            val appContext = context?.applicationContext
-                            Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
+                            activity?.runOnUiThread(Runnable {
+                                val appContext = context?.applicationContext
+                                Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
+                            });
                         }
                     }
                     SocketHandler.getSocket().emit("Account Question Answer", answer, password)

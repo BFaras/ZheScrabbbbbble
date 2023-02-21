@@ -32,9 +32,7 @@ class RegisterViewModel() : ViewModel() {
                 }
             }
         }
-        val quest = QuestionInterface(question, answer)
-        val quest2 = Json.encodeToString(quest)
-        SocketHandler.getSocket().emit("Create user account", username, password, email, "Avatar",  quest2);
+        SocketHandler.getSocket().emit("Create user account", username, password, email, "Avatar",  Json.encodeToString(QuestionInterface(question, answer)));
     }
 
 
