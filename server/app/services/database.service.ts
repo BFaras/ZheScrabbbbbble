@@ -9,6 +9,7 @@ import {
     TopScores,
     VirtualPlayerDifficulty
 } from '@app/constants/database-interfaces';
+import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
 import { Collection, Db, MongoClient } from 'mongodb';
 import 'reflect-metadata';
@@ -60,13 +61,15 @@ export class DatabaseService {
         return Promise.resolve(usernameInDB === undefined || usernameInDB === null);
     }
 
-    async addUserAccount(username: string, encryptedPassword: string, email: string, userAvatar: string): Promise<boolean> {
+    // eslint-disable-next-line max-len, prettier/prettier
+    async addUserAccount(username: string, encryptedPassword: string, email: string, userAvatar: string, securityQuestion: Question): Promise<boolean> {
         let isAccountCreated = true;
         const accountInfo: AccountInfo = {
             username,
             encryptedPassword,
             email,
             userAvatar,
+            securityQuestion,
         };
 
         await this.getCollection(CollectionType.USERACCOUNTS)
@@ -75,6 +78,20 @@ export class DatabaseService {
                 isAccountCreated = false;
             });
         return Promise.resolve(isAccountCreated);
+    }
+
+    async removeUserAccount(username: string) {
+        await this.getCollection(CollectionType.USERACCOUNTS)?.deleteOne({ username });
+    }
+
+    async changeUserPassword(username: string, encryptedPassword: string): Promise<boolean> {
+        let isChangeSuccess = true;
+        await this.getCollection(CollectionType.USERACCOUNTS)
+            ?.updateOne({ username }, { $set: { encryptedPassword } })
+            .catch(() => {
+                isChangeSuccess = false;
+            });
+        return isChangeSuccess;
     }
 
     async getUserEncryptedPassword(username: string): Promise<string> {
@@ -91,6 +108,30 @@ export class DatabaseService {
 
     async addScore(score: Score): Promise<void> {
         await this.getCollection(CollectionType.SCORE)?.insertOne(score).catch();
+    }
+
+    async getUserSecurityQuestion(username: string): Promise<string> {
+        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<AccountInfo>)?.findOne({
+            username,
+        });
+        let securityQuestion = '';
+
+        if (userAccountInfoDoc !== undefined && userAccountInfoDoc !== null) {
+            securityQuestion = userAccountInfoDoc.securityQuestion.question;
+        }
+        return securityQuestion;
+    }
+
+    async getSecurityQuestionAsnwer(username: string): Promise<string> {
+        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<AccountInfo>)?.findOne({
+            username,
+        });
+        let securityQuestionAnswer = '';
+
+        if (userAccountInfoDoc !== undefined && userAccountInfoDoc !== null) {
+            securityQuestionAnswer = userAccountInfoDoc.securityQuestion.answer;
+        }
+        return securityQuestionAnswer;
     }
 
     async getTopScores(resultCount: number): Promise<TopScores> {
