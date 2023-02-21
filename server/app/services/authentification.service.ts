@@ -61,6 +61,7 @@ export class AuthentificationService {
         return Promise.resolve(accountCreationState);
     }
 
+    // To test in the future
     async getUserSecurityQuestion(username: string) {
         return await this.dbService.getUserSecurityQuestion(username);
     }
@@ -72,7 +73,7 @@ export class AuthentificationService {
 
     async changeUserPassword(username: string, newPassword: string) {
         const encryptedPassword = this.encryptPassword(newPassword);
-        return this.dbService.changeUserPassword(username, encryptedPassword);
+        return await this.dbService.changeUserPassword(username, encryptedPassword);
     }
 
     private async verifyAccountRequirements(username: string, password: string, email: string): Promise<string> {

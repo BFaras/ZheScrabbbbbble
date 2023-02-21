@@ -44,13 +44,13 @@ export class AuthSocketService {
 
         socket.on('Reset User Password', async (username: string) => {
             socket.data.usernameResettingPassword = username;
-            socket.emit('Authentification status', await this.authentificationService.getUserSecurityQuestion(username));
+            socket.emit('User Account Question', await this.authentificationService.getUserSecurityQuestion(username));
         });
 
         socket.on('Account Question Answer', async (answerToQuestion: string, newPassword: string) => {
             const usernameForReset = socket.data.usernameResettingPassword;
             let errorCode = WRONG_SECURITY_ANSWER;
-            if (await this.authentificationService.isSecurityQuestionAnswerRight(usernameForReset, newPassword)) {
+            if (await this.authentificationService.isSecurityQuestionAnswerRight(usernameForReset, answerToQuestion)) {
                 errorCode = DATABASE_UNAVAILABLE;
 
                 if (await this.authentificationService.changeUserPassword(usernameForReset, newPassword)) {

@@ -1,5 +1,5 @@
 // Account creation error codes
-export const NO_ERROR = '';
+export const NO_ERROR = '0';
 export const USERNAME_INVALID = '1';
 export const EMAIL_INVALID = '2';
 export const PASSWORD_INVALID = '3';
