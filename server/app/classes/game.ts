@@ -30,7 +30,6 @@ export class Game {
     private reserve: Reserve;
     private gameOver: boolean;
     private startDate: Date;
-    private convertedSoloGame: boolean;
     private playerTurnIndex: number;
 
     constructor(wordValidation: WordValidation, players: Player[]) {
@@ -40,7 +39,6 @@ export class Game {
         this.gameOver = false;
         this.players = players;
         this.wordValidationService = wordValidation;
-        this.convertedSoloGame = false;
     }
 
     startGame() {
@@ -108,15 +106,15 @@ export class Game {
         this.gameOver = true;
         this.scorePlayers();
         let endMessage: string = 'Fin de partie - lettres restantes';
-        for(const player of this.players){
+        for (const player of this.players) {
             endMessage += '\n' + player.getName() + ' : ' + player.getHand().getLettersToString();
         }
         return endMessage;
     }
 
     createGameHistory(winnerIndex: number): GameHistory {
-        const playerInfos : PlayerInfo[] = [];
-        for(const player of this.players){
+        const playerInfos: PlayerInfo[] = [];
+        for (const player of this.players) {
             playerInfos.push(this.getPlayerInfo(player));
         }
         const gameHistory: GameHistory = {
@@ -131,7 +129,7 @@ export class Game {
 
     createGameState(): GameState {
         const playerStates: PlayerState[] = [];
-        for(const player of this.players){
+        for (const player of this.players) {
             playerStates.push({
                 username: player.getName(),
                 hand: player.getHand().getLettersToString(),
@@ -164,10 +162,6 @@ export class Game {
         return this.reserve.getLength();
     }
 
-    convertSoloGame() {
-        this.convertedSoloGame = true;
-    }
-
     isPlayerTurn(playerID: string): boolean {
         for (let i = 0; i < this.players.length; i++) {
             if (this.players[i].getUUID() === playerID) {
@@ -182,14 +176,14 @@ export class Game {
     }
 
     private scorePlayers() {
-        let scoreSum : number = 0;
-        let emptyHandIndex : number = 0;
-        for(let i = 0; i < this.players.length; i++){
+        let scoreSum: number = 0;
+        let emptyHandIndex: number = 0;
+        for (let i = 0; i < this.players.length; i++) {
             const player = this.players[i];
             const score = player.getHand().calculateHandScore();
-            if (score === 0){
+            if (score === 0) {
                 emptyHandIndex = i;
-            }else{
+            } else {
                 scoreSum += score;
                 player.addScore(-score);
             }
@@ -244,7 +238,7 @@ export class Game {
         return `${day < DECIMAL_BASE ? '0' : ''}${day}/${month < DECIMAL_BASE ? '0' : ''}${month}/${year}`;
     }
 
-    private getPlayerInfo(player : Player): PlayerInfo {
+    private getPlayerInfo(player: Player): PlayerInfo {
         const playerInfo: PlayerInfo = {
             name: player.getName(),
             score: player.getScore(),
@@ -253,9 +247,5 @@ export class Game {
         if (playerInfo.virtual)
             playerInfo.difficulty = player instanceof VirtualPlayerHard ? VirtualPlayerDifficulty.EXPERT : VirtualPlayerDifficulty.BEGINNER;
         return playerInfo;
-    }
-
-    get isConvertedSoloGame(): boolean {
-        return this.convertedSoloGame;
     }
 }

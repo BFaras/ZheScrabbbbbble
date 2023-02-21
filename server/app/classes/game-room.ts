@@ -1,25 +1,20 @@
 import { Player } from '@app/classes/player';
 import { MAX_NUMBER_OF_PLAYERS } from '@app/constants/basic-constants';
-import { Timer } from '@app/constants/basic-interface';
 import { WordValidation } from '@app/services/word-validation.service';
 import { Game } from './game';
-import { GameSettings } from './game-settings';
-import { VirtualPlayerEasy } from './virtual-player-easy';
 
 export class GameRoom {
     private players: Player[];
+    private id: string;
     private name: string;
     private connectedPlayers: number;
-    private timer: Timer;
-    private isSoloGame: boolean;
     private game: Game;
 
-    constructor(name: string, wordValidationService: WordValidation, gameSettings: GameSettings) {
+    constructor(id: string, name: string, wordValidationService: WordValidation) {
+        this.id = id;
         this.name = name;
         this.players = [];
         this.connectedPlayers = 0;
-        this.isSoloGame = gameSettings.isSoloMode;
-        this.timer = gameSettings.timer;
         this.game = new Game(wordValidationService, this.players);
     }
 
@@ -27,15 +22,6 @@ export class GameRoom {
         if (this.players.length < MAX_NUMBER_OF_PLAYERS) {
             this.players.push(player);
         }
-    }
-
-    convertSoloGame(playerID: string, virtualPlayer: VirtualPlayerEasy) {
-        if (!this.getPlayer(playerID)) return;
-        const index: number = this.getPlayer(playerID) === this.players[0] ? 0 : 1;
-        virtualPlayer.copyPlayerState(this.players[index]);
-        this.players[index] = virtualPlayer;
-        this.isSoloGame = true;
-        this.game.convertSoloGame();
     }
 
     removePlayer(playerID: string): boolean {
@@ -60,10 +46,6 @@ export class GameRoom {
         return this.name;
     }
 
-    getIsSoloGame(): boolean {
-        return this.isSoloGame;
-    }
-
     getPlayer(playerID: string): Player | null {
         for (const player of this.players) {
             if (player.getUUID() === playerID) {
@@ -82,8 +64,8 @@ export class GameRoom {
         return this.connectedPlayers === MAX_NUMBER_OF_PLAYERS;
     }
 
-    getTimeChosen(): Timer {
-        return this.timer;
+    getID(): string {
+        return this.id;
     }
 
     get getGame(): Game {

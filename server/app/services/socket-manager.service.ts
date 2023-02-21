@@ -1,3 +1,4 @@
+import { Player } from '@app/classes/player';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
@@ -6,11 +7,12 @@ import { AuthSocketService } from './auth-socket.service';
 import { ChatSocketService } from './chat-socket.service';
 import { DatabaseService } from './database.service';
 import { OnlineUsersService } from './online-users.service';
+import { RoomManagerService } from './room-manager.service';
 import { SocketDatabaseService } from './socket-database.service';
 
 export class SocketManager {
     private sio: io.Server;
-    //private roomManager: RoomManagerService;
+    private roomManager: RoomManagerService;
     //private commandController: CommandController;
     private socketDatabaseService: SocketDatabaseService;
     private chatSocketService: ChatSocketService;
@@ -31,7 +33,7 @@ export class SocketManager {
     }
 
     async roomManagerSetup() {
-        //this.roomManager = new RoomManagerService(await this.socketDatabaseService.getDictionary());
+        this.roomManager = new RoomManagerService(await this.socketDatabaseService.getDictionary());
         //this.commandController = new CommandController(this.roomManager);
     }
 
@@ -41,6 +43,18 @@ export class SocketManager {
             this.socketDatabaseService.databaseSocketRequests(socket);
             this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
+
+            socket.on('Create Game Room', async (name: string) => {
+                if (this.roomManager.verifyIfRoomExists(name)) {
+                    socket.emit('Room Creation Response',);
+                    return;
+                }
+                const roomId = this.roomManager.createRoom(name, (await this.socketDatabaseService.getDictionary()).words);
+                const newUser = new Player(socket.id, this.accountInfoService.getUsername(socket));
+                this.roomManager.addPlayer(newUser, name);
+                socket.join(roomId);
+                socket.broadcast.emit('Room Creation Response');
+            });
             /*
             socket.on('new-message', (message: Message) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
