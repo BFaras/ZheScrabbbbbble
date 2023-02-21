@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,8 @@ class RegisterFragment : Fragment() {
         val usernameEditText = binding.username
         val emailEditText = binding.email
         val passwordEditText = binding.password
+        val questionEditText = binding.question
+        val answerEditText = binding.answer
         val registerButton = binding.register
         val loadingProgressBar = binding.loading
 
@@ -63,6 +66,12 @@ class RegisterFragment : Fragment() {
                 }
                 registerFormState.passwordError?.let {
                     passwordEditText.error = getString(it)
+                }
+                registerFormState.questionError?.let {
+                    questionEditText.error = getString(it)
+                }
+                registerFormState.answerError?.let {
+                    answerEditText.error = getString(it)
                 }
             })
 
@@ -91,19 +100,25 @@ class RegisterFragment : Fragment() {
                 registerViewModel.loginDataChanged(
                     usernameEditText.text.toString(),
                     emailEditText.text.toString(),
-                    passwordEditText.text.toString()
+                    passwordEditText.text.toString(),
+                    questionEditText.text.toString(),
+                    answerEditText.text.toString()
                 )
             }
         }
         usernameEditText.addTextChangedListener(afterTextChangedListener)
         emailEditText.addTextChangedListener(afterTextChangedListener)
         passwordEditText.addTextChangedListener(afterTextChangedListener)
+        questionEditText.addTextChangedListener(afterTextChangedListener)
+        answerEditText.addTextChangedListener(afterTextChangedListener)
         passwordEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 registerViewModel.register(
                     usernameEditText.text.toString(),
                     emailEditText.text.toString(),
-                    passwordEditText.text.toString()
+                    passwordEditText.text.toString(),
+                    questionEditText.text.toString(),
+                    answerEditText.text.toString()
                 )
             }
             false
@@ -114,7 +129,9 @@ class RegisterFragment : Fragment() {
             registerViewModel.register(
                 usernameEditText.text.toString(),
                 emailEditText.text.toString(),
-                passwordEditText.text.toString()
+                passwordEditText.text.toString(),
+                questionEditText.text.toString(),
+                answerEditText.text.toString()
             )
         }
     }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import android.util.Patterns
 
 import com.example.testchatbox.R
+import java.io.Serializable
 
 class RegisterViewModel() : ViewModel() {
 
@@ -29,8 +30,12 @@ class RegisterViewModel() : ViewModel() {
                 }
             }
         }
-        SocketHandler.getSocket().emit("Create user account", username, password, email, "Avatar", {Question :String -> question, Answer : String -> answer});
+        class Question(val question: String, val answer: String) :Serializable{}
+        SocketHandler.getSocket().emit("Create user account", username, password, email, "Avatar",  Question(question, answer));
     }
+
+
+
 
     fun loginDataChanged(username: String,email : String, password: String, question :String, answer : String) {
         if (!isTextValid(username)) {
@@ -42,7 +47,7 @@ class RegisterViewModel() : ViewModel() {
         }else if (!isTextValid(question)) {
             _registerForm.value = RegisterFormState(questionError = R.string.invalid_question)
         }else if (!isTextValid(answer)) {
-            _registerForm.value = RegisterFormState(questionError = R.string.invalid_answer)
+            _registerForm.value = RegisterFormState(answerError = R.string.invalid_answer)
         } else {
             _registerForm.value = RegisterFormState(isDataValid = true)
         }
