@@ -11,7 +11,7 @@ import {
 } from '@app/constants/database-interfaces';
 import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
-import { Collection, Db, MongoClient } from 'mongodb';
+import { Collection, Db, Document, MongoClient } from 'mongodb';
 import 'reflect-metadata';
 import { Service } from 'typedi';
 
@@ -240,7 +240,7 @@ export class DatabaseService {
         return this.client.close();
     }
 
-    private getCollection<T>(collectionType: CollectionType): Collection<T> {
+    private getCollection<T extends Document>(collectionType: CollectionType): Collection<T> {
         return this.database?.collection(collectionType);
     }
 
