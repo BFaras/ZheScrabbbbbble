@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/DarkGray"
-    tools:context=".SecondFragment">
+    tools:context=".ChatFragment">
 
     <View
         android:id="@+id/viewBackground"
