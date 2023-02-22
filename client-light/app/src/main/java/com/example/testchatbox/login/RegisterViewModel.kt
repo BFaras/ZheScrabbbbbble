@@ -8,6 +8,7 @@ import com.example.testchatbox.QuestionInterface
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import com.example.testchatbox.R
+import org.json.JSONObject
 
 
 class RegisterViewModel() : ViewModel() {
@@ -32,7 +33,7 @@ class RegisterViewModel() : ViewModel() {
                 }
             }
         }
-        SocketHandler.getSocket().emit("Create user account", username, password, email, "Avatar",  Json.encodeToString(QuestionInterface(question, answer)));
+        SocketHandler.getSocket().emit("Create user account", username, password, email, "Avatar",  JSONObject().put("question",question).put("answer", answer));
     }
 
 

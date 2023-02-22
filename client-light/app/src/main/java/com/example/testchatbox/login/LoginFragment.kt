@@ -125,7 +125,7 @@ class LoginFragment : Fragment() {
         val welcome = getString(R.string.welcome) + model.displayName
         // TODO : initiate successful logged in experience
         LoggedInUser.connectUser(model.displayName)
-        findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
+        findNavController().navigate(R.id.action_loginFragment_to_MainMenuFragment)
         //val appContext = context?.applicationContext ?: return
         //Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
     }

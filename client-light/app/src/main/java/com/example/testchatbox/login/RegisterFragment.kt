@@ -138,7 +138,7 @@ class RegisterFragment : Fragment() {
 
     private fun updateUiWithUser(model: LoggedInUserView) {
         LoggedInUser.connectUser(model.displayName)
-        findNavController().navigate(R.id.action_registerFragment_to_FirstFragment)
+        findNavController().navigate(R.id.action_registerFragment_to_MainMenuFragment)
     }
 
     private fun showRegisterFailed(@StringRes errorString: Int) {

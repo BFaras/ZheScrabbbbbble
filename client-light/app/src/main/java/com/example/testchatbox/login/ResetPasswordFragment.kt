@@ -93,8 +93,10 @@ class ResetPasswordFragment : Fragment() {
                         if(args[0] != null){
                             val error = args[0] as String;
                             if(error.toInt() == 0){
-                                LoggedInUser.connectUser(usernameEditText.text.toString())
-                                findNavController().navigate(R.id.action_resetFragment_to_FirstFragment)
+                                activity?.runOnUiThread(Runnable {
+                                    LoggedInUser.connectUser(usernameEditText.text.toString())
+                                    findNavController().navigate(R.id.action_resetFragment_to_MainMenuFragment)
+                                });
                             }
                             val errorMessage = when(error.toInt()){
                                 3 -> R.string.PASSWORD_INVALID.toString()
