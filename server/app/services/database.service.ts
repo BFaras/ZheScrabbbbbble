@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { GameType } from '@app/constants/basic-constants';
 import { DATABASE_NAME, DATABASE_URL } from '@app/constants/database-environment';
 import {
@@ -13,7 +14,7 @@ import {
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
 import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
-import { Collection, Db, MongoClient } from 'mongodb';
+import { Collection, Db, MongoClient, ObjectId } from 'mongodb';
 import 'reflect-metadata';
 import { Service } from 'typedi';
 
@@ -154,11 +155,12 @@ export class DatabaseService {
         if (!(await this.isUserInChat(userId, chatId))) {
             wasUserAddedToChat = true;
             await this.getCollection(CollectionType.CHATCANALS)
-                ?.updateOne({ _id: chatId }, { $push: { usersIds: userId } })
+                ?.updateOne({ _id: new ObjectId(chatId) }, { $push: { usersIds: userId } })
                 .catch(() => {
                     wasUserAddedToChat = false;
                 });
         }
+
         return wasUserAddedToChat;
     }
 
@@ -167,7 +169,7 @@ export class DatabaseService {
         if (!(await this.isUserInChat(userId, chatId))) {
             wasUserRemovedFromChat = true;
             await this.getCollection(CollectionType.CHATCANALS)
-                ?.updateOne({ _id: chatId }, { $pull: { usersIds: userId } })
+                ?.updateOne({ _id: new ObjectId(chatId) }, { $pull: { usersIds: userId } })
                 .catch(() => {
                     wasUserRemovedFromChat = false;
                 });
@@ -182,34 +184,38 @@ export class DatabaseService {
 
     async getChatCanalsUserCanJoin(userId: string): Promise<ChatInfo[]> {
         const chatCanlasUserCanJoin = (await this.getCollection(CollectionType.CHATCANALS)
-            ?.find({ userIds: { $ne: userId }, chatType: ChatType.PUBLIC }, { userIds: 0, chatName: 1, chatType: 1 })
-            .toArray()) as ChatInfo[];
+            ?.find({ usersIds: { $ne: userId }, chatType: ChatType.PUBLIC }, { projection: { usersIds: 0, chatName: 1, chatType: 1 } })
+            .toArray()) as unknown as ChatInfo[];
         return chatCanlasUserCanJoin;
     }
 
     async getChatsUserIsIn(userId: string): Promise<ChatInfo[]> {
         const chatCanalsUserIsIn = (await this.getCollection(CollectionType.CHATCANALS)
-            ?.find({ userIds: userId }, { userIds: 0, chatName: 1, chatType: 1 })
-            .toArray()) as ChatInfo[];
+            ?.find({ usersIds: userId }, { projection: { usersIds: 0, chatName: 1, chatType: 1 } })
+            .toArray()) as unknown as ChatInfo[];
+        console.log('Here');
         return chatCanalsUserIsIn;
     }
 
     async getNumberOfUsersInChatCanal(chatId: string): Promise<number> {
-        const chatCanalDocResult = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: chatId }, { _id: 0, userIds: 1 });
+        const chatCanalDocResult = await this.getCollection(CollectionType.CHATCANALS)?.findOne(
+            { _id: new ObjectId(chatId) },
+            { projection: { _id: 0, usersIds: 1 } },
+        );
         let numberofUsers = 100;
 
         if (chatCanalDocResult !== undefined && chatCanalDocResult !== null) {
-            numberofUsers = chatCanalDocResult.userIds.length;
+            numberofUsers = (chatCanalDocResult as unknown as ChatInfoDB).usersIds.length;
         }
         return numberofUsers;
     }
 
     async removeChatCanal(chatId: string): Promise<void> {
-        await this.getCollection(CollectionType.CHATCANALS)?.deleteOne({ _id: chatId });
+        await this.getCollection(CollectionType.CHATCANALS)?.deleteOne({ _id: new ObjectId(chatId) });
     }
 
     async isUserInChat(userId: string, chatId: string): Promise<boolean> {
-        const thisChatWithUserInIt = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: chatId, usersIds: userId });
+        const thisChatWithUserInIt = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: new ObjectId(chatId), usersIds: userId });
         return Promise.resolve(!(thisChatWithUserInIt === undefined || thisChatWithUserInIt === null));
     }
 

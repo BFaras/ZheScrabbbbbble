@@ -17,8 +17,7 @@ export class ChatService {
         let errorCode = DATABASE_UNAVAILABLE;
 
         if (createdChatId !== '') {
-            errorCode = NO_ERROR;
-            this.joinChat(userId, createdChatId);
+            errorCode = await this.joinChat(userId, createdChatId);
         }
 
         return errorCode;
