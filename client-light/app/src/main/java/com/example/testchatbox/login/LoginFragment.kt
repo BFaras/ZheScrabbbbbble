@@ -48,6 +48,7 @@ class LoginFragment : Fragment() {
         val passwordEditText = binding.password
         val loginButton = binding.login
         var registerButton = binding.register
+        var resetButton = binding.reset
         val loadingProgressBar = binding.loading
 
         loginViewModel.loginFormState.observe(viewLifecycleOwner,
@@ -114,13 +115,17 @@ class LoginFragment : Fragment() {
         registerButton.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
+
+        resetButton.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_resetFragment)
+        }
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
         val welcome = getString(R.string.welcome) + model.displayName
         // TODO : initiate successful logged in experience
         LoggedInUser.connectUser(model.displayName)
-        findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
+        findNavController().navigate(R.id.action_loginFragment_to_MainMenuFragment)
         //val appContext = context?.applicationContext ?: return
         //Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
     }
