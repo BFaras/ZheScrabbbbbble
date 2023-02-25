@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
 import { NO_ERROR } from '@app/constants/error-code-constants';
-import { ChatType } from '@app/interfaces/chat-info';
+import { ChatInfo, ChatType } from '@app/interfaces/chat-info';
 import { Server } from 'app/server';
 import { expect } from 'chai';
 import { Container } from 'typedi';
@@ -18,8 +18,10 @@ import Sinon = require('sinon');
 describe('Chat Tests', async () => {
     const testUserId = 'Jhsdg15f45akdsa';
     const testUserId2 = 'UFnfsahsa54lOP';
+    const testUserIdCreatingChats = 'fshhst4552f4FO5B';
     const testChatName = 'TestChat1456Test';
     const testChatType = ChatType.PUBLIC;
+    const numberOfChatsToCreateForTest = 3;
 
     let server: Server;
     let chatService: ChatService;
@@ -81,5 +83,83 @@ describe('Chat Tests', async () => {
         expect(chatLeaveError).to.deep.equals(NO_ERROR);
         expect(await dbService.isUserInChat(testUserId, chatIds[0])).to.be.false;
         expect(await dbService.isUserInChat(testUserId2, chatIds[0])).to.be.true;
+    });
+
+    it('should return a list of all the chats a user is in when calling getUserChats', async () => {
+        for (let i = 0; i < numberOfChatsToCreateForTest; i++) {
+            await chatService.createChat(testUserIdCreatingChats, testChatName, testChatType);
+        }
+
+        (await chatService.getUserChats(testUserIdCreatingChats)).forEach((chatInfo: ChatInfo) => {
+            chatIds.push(chatInfo._id);
+        });
+
+        for (let i = 0; i < chatIds.length; i++) {
+            if (i % 2 === 0) {
+                await chatService.joinChat(testUserId, chatIds[i]);
+            } else {
+                await chatService.joinChat(testUserId2, chatIds[i]);
+            }
+        }
+
+        const chatUser1IsIn: ChatInfo[] = await chatService.getUserChats(testUserId);
+        const chatUser2IsIn: ChatInfo[] = await chatService.getUserChats(testUserId2);
+        const chatIdsUser1IsIn: string[] = [];
+        const chatIdsUser2IsIn: string[] = [];
+
+        chatUser1IsIn.forEach((chatInfo: ChatInfo) => {
+            chatIdsUser1IsIn.push(chatInfo._id);
+        });
+
+        chatUser2IsIn.forEach((chatInfo: ChatInfo) => {
+            chatIdsUser2IsIn.push(chatInfo._id);
+        });
+
+        for (let i = 0; i < chatIds.length; i++) {
+            if (i % 2 === 0) {
+                expect(chatIdsUser1IsIn).to.contain(chatIds[i]);
+            } else {
+                expect(chatIdsUser2IsIn).to.contain(chatIds[i]);
+            }
+        }
+    });
+
+    it('should return a list of all the chats a user can join and is not in when calling getPublicChatsUserCanJoin', async () => {
+        for (let i = 0; i < numberOfChatsToCreateForTest; i++) {
+            await chatService.createChat(testUserIdCreatingChats, testChatName, testChatType);
+        }
+
+        (await chatService.getUserChats(testUserIdCreatingChats)).forEach((chatInfo: ChatInfo) => {
+            chatIds.push(chatInfo._id);
+        });
+
+        for (let i = 0; i < chatIds.length; i++) {
+            if (i % 2 === 0) {
+                await chatService.joinChat(testUserId, chatIds[i]);
+            } else {
+                await chatService.joinChat(testUserId2, chatIds[i]);
+            }
+        }
+
+        const chatUser1CanJoin: ChatInfo[] = await chatService.getPublicChatsUserCanJoin(testUserId);
+        const chatUser2CanJoin: ChatInfo[] = await chatService.getPublicChatsUserCanJoin(testUserId2);
+        const chatIdsUser1CanJoin: string[] = [];
+        const chatIdsUser2CanJoin: string[] = [];
+
+        chatUser1CanJoin.forEach((chatInfo: ChatInfo) => {
+            chatIdsUser1CanJoin.push(chatInfo._id);
+        });
+
+        chatUser2CanJoin.forEach((chatInfo: ChatInfo) => {
+            chatIdsUser2CanJoin.push(chatInfo._id);
+        });
+
+        for (let i = 0; i < chatIds.length; i++) {
+            if (i % 2 === 0) {
+                expect(chatIdsUser2CanJoin).to.contain(chatIds[i]);
+            } else {
+                expect(chatIdsUser1CanJoin).to.contain(chatIds[i]);
+            }
+        }
     });
 });

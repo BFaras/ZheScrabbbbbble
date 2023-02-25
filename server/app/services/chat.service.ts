@@ -41,7 +41,7 @@ export class ChatService {
     }
 
     async getPublicChatsUserCanJoin(userId: string): Promise<ChatInfo[]> {
-        return await this.getPublicChatsUserCanJoin(userId);
+        return await this.dbService.getChatCanalsUserCanJoin(userId);
     }
     async getUserChats(userId: string): Promise<ChatInfo[]> {
         return await this.dbService.getChatsUserIsIn(userId);
