@@ -184,16 +184,15 @@ export class DatabaseService {
 
     async getChatCanalsUserCanJoin(userId: string): Promise<ChatInfo[]> {
         const chatCanlasUserCanJoin = (await this.getCollection(CollectionType.CHATCANALS)
-            ?.find({ usersIds: { $ne: userId }, chatType: ChatType.PUBLIC }, { projection: { usersIds: 0, chatName: 1, chatType: 1 } })
+            ?.find({ usersIds: { $ne: userId }, chatType: ChatType.PUBLIC }, { projection: { chatName: 1, chatType: 1 } })
             .toArray()) as unknown as ChatInfo[];
         return chatCanlasUserCanJoin;
     }
 
     async getChatsUserIsIn(userId: string): Promise<ChatInfo[]> {
         const chatCanalsUserIsIn = (await this.getCollection(CollectionType.CHATCANALS)
-            ?.find({ usersIds: userId }, { projection: { usersIds: 0, chatName: 1, chatType: 1 } })
+            ?.find({ usersIds: userId }, { projection: { chatName: 1, chatType: 1 } })
             .toArray()) as unknown as ChatInfo[];
-        console.log('Here');
         return chatCanalsUserIsIn;
     }
 
