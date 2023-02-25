@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable max-lines */
 import { GameType } from '@app/constants/basic-constants';
 import { DATABASE_NAME, DATABASE_URL } from '@app/constants/database-environment';
@@ -147,7 +148,7 @@ export class DatabaseService {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             chatId = chatDoc!.insertedId.toString();
         }
-        return Promise.resolve(chatId);
+        return chatId;
     }
 
     async joinChatCanal(userId: string, chatId: string): Promise<boolean> {
@@ -166,7 +167,7 @@ export class DatabaseService {
 
     async leaveChatCanal(userId: string, chatId: string) {
         let wasUserRemovedFromChat = false;
-        if (!(await this.isUserInChat(userId, chatId))) {
+        if (await this.isUserInChat(userId, chatId)) {
             wasUserRemovedFromChat = true;
             await this.getCollection(CollectionType.CHATCANALS)
                 ?.updateOne({ _id: new ObjectId(chatId) }, { $pull: { usersIds: userId } })
@@ -185,15 +186,15 @@ export class DatabaseService {
     async getChatCanalsUserCanJoin(userId: string): Promise<ChatInfo[]> {
         const chatCanlasUserCanJoin = (await this.getCollection(CollectionType.CHATCANALS)
             ?.find({ usersIds: { $ne: userId }, chatType: ChatType.PUBLIC }, { projection: { chatName: 1, chatType: 1 } })
-            .toArray()) as unknown as ChatInfo[];
-        return chatCanlasUserCanJoin;
+            .toArray()) as unknown[];
+        return this.transformMongoArrayToChatInfoArray(chatCanlasUserCanJoin);
     }
 
     async getChatsUserIsIn(userId: string): Promise<ChatInfo[]> {
         const chatCanalsUserIsIn = (await this.getCollection(CollectionType.CHATCANALS)
             ?.find({ usersIds: userId }, { projection: { chatName: 1, chatType: 1 } })
-            .toArray()) as unknown as ChatInfo[];
-        return chatCanalsUserIsIn;
+            .toArray()) as unknown[];
+        return this.transformMongoArrayToChatInfoArray(chatCanalsUserIsIn);
     }
 
     async getNumberOfUsersInChatCanal(chatId: string): Promise<number> {
@@ -201,12 +202,12 @@ export class DatabaseService {
             { _id: new ObjectId(chatId) },
             { projection: { _id: 0, usersIds: 1 } },
         );
-        let numberofUsers = 100;
+        let numberOfUsers = 100;
 
         if (chatCanalDocResult !== undefined && chatCanalDocResult !== null) {
-            numberofUsers = (chatCanalDocResult as unknown as ChatInfoDB).usersIds.length;
+            numberOfUsers = (chatCanalDocResult as unknown as ChatInfoDB).usersIds.length;
         }
-        return numberofUsers;
+        return numberOfUsers;
     }
 
     async removeChatCanal(chatId: string): Promise<void> {
@@ -216,6 +217,14 @@ export class DatabaseService {
     async isUserInChat(userId: string, chatId: string): Promise<boolean> {
         const thisChatWithUserInIt = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: new ObjectId(chatId), usersIds: userId });
         return Promise.resolve(!(thisChatWithUserInIt === undefined || thisChatWithUserInIt === null));
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    transformMongoArrayToChatInfoArray(mongoArray: any[]): ChatInfo[] {
+        mongoArray.forEach((mongoInfo) => {
+            mongoInfo._id = mongoInfo._id.toString();
+        });
+        return mongoArray as ChatInfo[];
     }
 
     async addScore(score: Score, gameType: GameType): Promise<void> {
