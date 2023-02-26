@@ -10,14 +10,15 @@ export class GameRoom {
     private game: Game;
     private visibility: RoomVisibility;
     private password: string;
+    private gameStarted: boolean;
 
-    constructor(id: string, name: string, visibility: RoomVisibility, password: string) {
+    constructor(id: string, name: string, visibility: RoomVisibility, password?: string) {
         this.id = id;
         this.name = name;
         this.players = [];
         this.connectedPlayers = 0;
         this.visibility = visibility;
-        if (visibility === RoomVisibility.Protected) {
+        if (visibility === RoomVisibility.Protected && password) {
             this.password = password;
         }
         this.game = new Game(this.players);
@@ -60,6 +61,10 @@ export class GameRoom {
         return null;
     }
 
+    getHostPlayer(): Player {
+        return this.players[0];
+    }
+
     getPlayerFromIndex(playerIndex: number): Player {
         return this.players[playerIndex];
     }
@@ -77,8 +82,26 @@ export class GameRoom {
         return this.visibility;
     }
 
-    verifyPassword(password: string): boolean {
+    getPlayerNames(): string[] {
+        const names = [];
+        for (const player of this.players) {
+            names.push(player.getName());
+        }
+        return names;
+    }
+
+    verifyPassword(password?: string): boolean {
+        if(!this.password) return true;
         return this.password === password;
+    }
+
+    startGame() {
+        this.game.startGame();
+        this.gameStarted = true;
+    }
+
+    isGameStarted(){
+        return this.gameStarted;
     }
 
     get getGame(): Game {

@@ -43,7 +43,6 @@ export class Server {
         }
 
         this.socketManager = new SocketManager(this.server, this.databaseService);
-        await this.socketManager.roomManagerSetup();
         this.socketManager.handleSockets();
 
         this.server.listen(Server.appPort);

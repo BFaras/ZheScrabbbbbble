@@ -9,5 +9,7 @@ export const DATABASE_UNAVAILABLE = '5';
 // Password reset error codes
 export const WRONG_SECURITY_ANSWER = '6';
 
-// Room creation error codes
+// Room management error codes
 export const ROOM_NAME_TAKEN = 'ROOM-1';
+export const ROOM_PASSWORD_INCORRECT = 'ROOM-2';
+export const JOIN_REQUEST_REFUSED = 'ROOM-3';

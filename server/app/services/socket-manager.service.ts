@@ -1,6 +1,6 @@
 import { Player } from '@app/classes/player';
 import { RoomVisibility } from '@app/constants/basic-constants';
-import { NO_ERROR, ROOM_NAME_TAKEN } from '@app/constants/error-code-constants';
+import { JOIN_REQUEST_REFUSED, NO_ERROR, ROOM_NAME_TAKEN, ROOM_PASSWORD_INCORRECT } from '@app/constants/error-code-constants';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
@@ -21,6 +21,7 @@ export class SocketManager {
     private authSocketService: AuthSocketService;
     private onlineUsersService: OnlineUsersService;
     private accountInfoService: AccountInfoService;
+    private pendingJoinGameRequests: Map<string, [string, io.Socket]>;
     //private timeoutRoom: { [key: string]: NodeJS.Timeout };
 
     constructor(server: http.Server, databaseService: DatabaseService) {
@@ -30,14 +31,13 @@ export class SocketManager {
         this.authSocketService = new AuthSocketService();
         this.accountInfoService = Container.get(AccountInfoService);
         this.onlineUsersService = Container.get(OnlineUsersService);
+        this.roomManager = Container.get(RoomManagerService);
+        this.pendingJoinGameRequests = new Map<string, [string, io.Socket]>();
         //this.databaseService = databaseService;
         //this.timeoutRoom = {};
-    }
-
-    async roomManagerSetup() {
-        this.roomManager = new RoomManagerService(await this.socketDatabaseService.getDictionary());
         //this.commandController = new CommandController(this.roomManager);
     }
+  
 
     handleSockets(): void {
         this.sio.on('connection', (socket: io.Socket) => {
@@ -51,15 +51,51 @@ export class SocketManager {
                     socket.emit('Room Creation Response', ROOM_NAME_TAKEN);
                     return;
                 }
-                const roomId = this.roomManager.createRoom(name);
+                const roomId = this.roomManager.createRoom(name, visibility, password);
                 const newUser = new Player(socket.id, this.accountInfoService.getUsername(socket));
-                this.roomManager.addPlayer(newUser, name);
+                this.roomManager.addPlayer(name, newUser, password);
                 socket.join(roomId);
                 socket.broadcast.emit('Room Creation Response', NO_ERROR);
             });
 
             socket.on('Get Game Room List', () => {
+                socket.emit('Game Room List Response', this.roomManager.getGameRooms());
+            });
 
+            socket.on('Join Game Room', (roomCode: string, password?: string) => {
+                const username = this.accountInfoService.getUsername(socket);
+                if(this.roomManager.getRoomVisibility(roomCode) === RoomVisibility.Private){
+                    this.pendingJoinGameRequests.set(username, [roomCode, socket]);
+                    this.sio.to(this.roomManager.getRoomHost(roomCode).getUUID()).emit('Join Room Request', username);
+                    return;
+                }
+                if(!this.roomManager.addPlayer(roomCode, new Player(socket.id, username), password)){
+                    socket.emit('Join Room Response', ROOM_PASSWORD_INCORRECT);
+                    return;
+                }
+                socket.join(roomCode);
+                const playerNames = this.roomManager.getRoomPlayerNames(roomCode);
+                socket.to(roomCode).emit('Room Player Update', playerNames);
+                socket.emit('Join Room Response', NO_ERROR, playerNames);
+            });
+
+            socket.on('Join Request Response', (response: boolean, username: string) => {
+                const requestInfo = this.pendingJoinGameRequests.get(username);
+                this.pendingJoinGameRequests.delete(username);
+                if(!requestInfo) return;
+                if(!response){
+                    requestInfo[1].emit('Join Room Response', JOIN_REQUEST_REFUSED);
+                    return;
+                }
+                this.roomManager.addPlayer(requestInfo[0], new Player(requestInfo[1].id, username));
+                requestInfo[1].join(requestInfo[0]);
+                const playerNames = this.roomManager.getRoomPlayerNames(requestInfo[0]);
+                requestInfo[1].to(requestInfo[0]).emit('Room Player Update', playerNames);
+                requestInfo[1].emit('Join Room Response', NO_ERROR, playerNames);
+            });
+
+            socket.on('Cancel Join Request', () => {
+                this.pendingJoinGameRequests.delete(this.accountInfoService.getUsername(socket));
             });
             /*
             socket.on('new-message', (message: Message) => {
