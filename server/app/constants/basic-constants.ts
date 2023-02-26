@@ -57,3 +57,9 @@ export enum Direction {
     Vertical,
     Horizontal,
 }
+
+export enum RoomVisibility {
+    Private,
+    Public,
+    Protected
+}

@@ -1,5 +1,5 @@
 import { Letter } from '@app/classes/letter';
-import { Direction } from './basic-constants';
+import { Direction, RoomVisibility } from './basic-constants';
 
 export interface LetterPosition {
     letter: Letter;
@@ -26,7 +26,6 @@ export interface PlayerState {
     hand: string[];
     score: number;
 }
-
 export interface Message {
     username: string;
     body: string;
@@ -35,4 +34,11 @@ export interface Message {
 export class Timer {
     minute: number;
     second: number;
+}
+export interface GameRoomInfo {
+    name: string;
+    id: string;
+    visibility: RoomVisibility;
+    players: string[];
+    isStarted: boolean;
 }

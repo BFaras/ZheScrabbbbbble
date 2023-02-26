@@ -1,31 +1,15 @@
 import { GameRoom } from '@app/classes/game-room';
 import { Player } from '@app/classes/player';
-import { Timer } from '@app/constants/basic-interface';
-import { Dictionary } from '@app/constants/database-interfaces';
-import * as fs from 'fs';
-import { Service } from 'typedi';
-import { WordValidation } from './word-validation.service';
+import { RoomVisibility } from '@app/constants/basic-constants';
+import { GameRoomInfo } from '@app/constants/basic-interface';
 import crypto = require('crypto');
 
-export interface WaitingRoom {
-    hostName: string;
-    roomName: string;
-    timer: Timer;
-}
-
-@Service()
 export class RoomManagerService {
     private activeRooms: { [key: string]: GameRoom } = {};
-    private defaultWordValidationService: WordValidation;
-    constructor(dictionary: Dictionary | undefined) {
-        if (!dictionary?.words) dictionary = JSON.parse(fs.readFileSync('./assets/dictionnary.json', 'utf8')) as Dictionary;
-        if (!dictionary?.words) dictionary.words = [];
-        this.defaultWordValidationService = new WordValidation(dictionary.words);
-    }
 
-    createRoom(roomName: string, words: string[] | undefined): string {
+    createRoom(roomName: string, visibility: RoomVisibility, password?: string): string {
         const id = 'room-' + roomName + '-' + crypto.randomBytes(10).toString('hex');
-        this.activeRooms[roomName] = new GameRoom(id, roomName, words ? new WordValidation(words) : this.defaultWordValidationService);
+        this.activeRooms[roomName] = new GameRoom(id, roomName, visibility, password);
         return id;
     }
 
@@ -44,21 +28,19 @@ export class RoomManagerService {
         return roomName in this.activeRooms;
     }
 
-    /*
-    getWaitingRooms(): WaitingRoom[] {
-        const waitingRooms: WaitingRoom[] = [];
+    getGameRooms(): GameRoomInfo[] {
+        const gameRooms: GameRoomInfo[] = [];
         for (const room of Object.values(this.activeRooms)) {
             if (room.getPlayerCount() === 1 && !room.getGame.isGameOver()) {
-                waitingRooms.push({
+                gameRooms.push({
                     roomName: room.getName(),
                     hostName: room.getPlayerFromIndex(0).getName(),
                     timer: room.getTimeChosen(),
                 });
             }
         }
-        return waitingRooms;
+        return gameRooms;
     }
-    */
 
     findRoomFromPlayer(playerID: string): GameRoom | null {
         for (const room of Object.values(this.activeRooms)) {

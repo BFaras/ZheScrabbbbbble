@@ -19,6 +19,7 @@ import { CommandResult } from '@app/controllers/command.controller';
 import { CommandFormattingService } from '@app/services/command-formatting.service';
 import { PossibleWordFinder, PossibleWords } from '@app/services/possible-word-finder.service';
 import { WordValidation } from '@app/services/word-validation.service';
+import Container from 'typedi';
 import { VirtualPlayer } from './virtual-player';
 import { VirtualPlayerHard } from './virtual-player-hard';
 
@@ -32,13 +33,13 @@ export class Game {
     private startDate: Date;
     private playerTurnIndex: number;
 
-    constructor(wordValidation: WordValidation, players: Player[]) {
+    constructor(players: Player[]) {
         this.passCounter = 0;
         this.reserve = new Reserve();
         this.board = new Board();
         this.gameOver = false;
         this.players = players;
-        this.wordValidationService = wordValidation;
+        this.wordValidationService = Container.get(WordValidation);
     }
 
     startGame() {

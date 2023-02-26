@@ -12,7 +12,7 @@ export interface TopScores {
 export interface Dictionary {
     title: string;
     description: string;
-    words?: string[];
+    words: string[];
 }
 
 export interface PlayerName {

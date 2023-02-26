@@ -1,4 +1,6 @@
 import { Player } from '@app/classes/player';
+import { RoomVisibility } from '@app/constants/basic-constants';
+import { NO_ERROR, ROOM_NAME_TAKEN } from '@app/constants/error-code-constants';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
@@ -44,16 +46,20 @@ export class SocketManager {
             this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
 
-            socket.on('Create Game Room', async (name: string) => {
+            socket.on('Create Game Room', async (name: string, visibility: RoomVisibility, password?: string) => {
                 if (this.roomManager.verifyIfRoomExists(name)) {
-                    socket.emit('Room Creation Response',);
+                    socket.emit('Room Creation Response', ROOM_NAME_TAKEN);
                     return;
                 }
-                const roomId = this.roomManager.createRoom(name, (await this.socketDatabaseService.getDictionary()).words);
+                const roomId = this.roomManager.createRoom(name);
                 const newUser = new Player(socket.id, this.accountInfoService.getUsername(socket));
                 this.roomManager.addPlayer(newUser, name);
                 socket.join(roomId);
-                socket.broadcast.emit('Room Creation Response');
+                socket.broadcast.emit('Room Creation Response', NO_ERROR);
+            });
+
+            socket.on('Get Game Room List', () => {
+
             });
             /*
             socket.on('new-message', (message: Message) => {

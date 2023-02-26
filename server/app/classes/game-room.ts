@@ -1,6 +1,5 @@
 import { Player } from '@app/classes/player';
-import { MAX_NUMBER_OF_PLAYERS } from '@app/constants/basic-constants';
-import { WordValidation } from '@app/services/word-validation.service';
+import { MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
 import { Game } from './game';
 
 export class GameRoom {
@@ -9,13 +8,19 @@ export class GameRoom {
     private name: string;
     private connectedPlayers: number;
     private game: Game;
+    private visibility: RoomVisibility;
+    private password: string;
 
-    constructor(id: string, name: string, wordValidationService: WordValidation) {
+    constructor(id: string, name: string, visibility: RoomVisibility, password: string) {
         this.id = id;
         this.name = name;
         this.players = [];
         this.connectedPlayers = 0;
-        this.game = new Game(wordValidationService, this.players);
+        this.visibility = visibility;
+        if (visibility === RoomVisibility.Protected) {
+            this.password = password;
+        }
+        this.game = new Game(this.players);
     }
 
     addPlayer(player: Player) {
@@ -66,6 +71,14 @@ export class GameRoom {
 
     getID(): string {
         return this.id;
+    }
+
+    getVisibility(): RoomVisibility {
+        return this.visibility;
+    }
+
+    verifyPassword(password: string): boolean {
+        return this.password === password;
     }
 
     get getGame(): Game {
