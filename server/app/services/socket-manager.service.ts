@@ -97,6 +97,18 @@ export class SocketManager {
             socket.on('Cancel Join Request', () => {
                 this.pendingJoinGameRequests.delete(this.accountInfoService.getUsername(socket));
             });
+
+            socket.on('Leave Game Room', () => {
+                const room = this.roomManager.findRoomFromPlayer(socket.id);
+                if(!room) return;
+                room.removePlayer(socket.id);
+                if(room.getPlayerCount() === 0){
+                    this.roomManager.deleteRoom(room.getID());
+                    return;
+                }
+                const playerNames = this.roomManager.getRoomPlayerNames(room.getID());
+                socket.to(room.getID()).emit('Room Player Update', playerNames);
+            });
             /*
             socket.on('new-message', (message: Message) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
