@@ -15,3 +15,8 @@ export interface ChatInfo {
     _id: string;
     chatType: ChatType;
 }
+
+export interface ChatCreationResponse {
+    errorCode: string;
+    chatId: string;
+}

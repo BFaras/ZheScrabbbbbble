@@ -15,7 +15,7 @@ import {
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
 import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
-import { Collection, Db, MongoClient, ObjectId } from 'mongodb';
+import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb';
 import 'reflect-metadata';
 import { Service } from 'typedi';
 
@@ -87,6 +87,18 @@ export class DatabaseService {
 
     async removeUserAccount(username: string) {
         await this.getCollection(CollectionType.USERACCOUNTS)?.deleteOne({ username });
+    }
+
+    async getUserId(username: string) {
+        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<Document>)?.findOne({
+            username,
+        });
+        let userId = '';
+
+        if (userAccountInfoDoc !== undefined && userAccountInfoDoc !== null) {
+            userId = userAccountInfoDoc._id.toString();
+        }
+        return userId;
     }
 
     async changeUserPassword(username: string, encryptedPassword: string): Promise<boolean> {

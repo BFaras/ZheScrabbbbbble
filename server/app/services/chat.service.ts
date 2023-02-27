@@ -1,5 +1,5 @@
 import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
-import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
+import { ChatCreationResponse, ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
 
@@ -11,7 +11,7 @@ export class ChatService {
         this.dbService = Container.get(DatabaseService);
     }
 
-    async createChat(userId: string, chatName: string, chatType: ChatType): Promise<string> {
+    async createChat(userId: string, chatName: string, chatType: ChatType): Promise<ChatCreationResponse> {
         const chatInfo: ChatInfoDB = { chatName, chatType, usersIds: [] };
         const createdChatId: string = await this.dbService.addNewChatCanal(chatInfo);
         let errorCode = DATABASE_UNAVAILABLE;
@@ -20,7 +20,7 @@ export class ChatService {
             errorCode = await this.joinChat(userId, createdChatId);
         }
 
-        return errorCode;
+        return { errorCode, chatId: createdChatId };
     }
 
     async joinChat(userId: string, chatId: string): Promise<string> {

@@ -76,6 +76,10 @@ export class AuthentificationService {
         return await this.dbService.changeUserPassword(username, encryptedPassword);
     }
 
+    async getUserId(username: string) {
+        return await this.dbService.getUserId(username);
+    }
+
     private async verifyAccountRequirements(username: string, password: string, email: string): Promise<string> {
         let errorCode = NO_ERROR;
         const accountCreationState: AccountCreationState = {

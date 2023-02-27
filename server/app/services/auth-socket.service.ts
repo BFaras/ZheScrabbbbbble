@@ -1,24 +1,31 @@
+/* eslint-disable no-underscore-dangle */
 import { DATABASE_UNAVAILABLE, NO_ERROR, WRONG_SECURITY_ANSWER } from '@app/constants/error-code-constants';
+import { ChatInfo } from '@app/interfaces/chat-info';
 import { Question } from '@app/interfaces/question';
 import * as io from 'socket.io';
 import Container, { Service } from 'typedi';
 import { AccountInfoService } from './account-info.service';
 import { AuthentificationService } from './authentification.service';
+import { ChatService } from './chat.service';
 
 @Service()
 export class AuthSocketService {
     private readonly authentificationService: AuthentificationService;
     private readonly accountInfoService: AccountInfoService;
+    private readonly chatService: ChatService;
 
     constructor() {
         this.authentificationService = Container.get(AuthentificationService);
         this.accountInfoService = Container.get(AccountInfoService);
+        this.chatService = Container.get(ChatService);
     }
     handleAuthSockets(socket: io.Socket) {
         socket.on('User authentification', async (username: string, password: string) => {
             const isAuthentificationSuccess = await this.authentificationService.authentifyUser(username, password);
             if (isAuthentificationSuccess) {
                 this.accountInfoService.setUsername(socket, username);
+                await this.joinUserChatRooms(socket);
+                this.accountInfoService.setUserId(socket, await this.authentificationService.getUserId(username));
                 console.log(new Date().toLocaleTimeString() + ' | Login successfull');
             }
             socket.emit('Authentification status', isAuthentificationSuccess);
@@ -36,6 +43,7 @@ export class AuthSocketService {
                 );
                 if (accountCreationStatus === NO_ERROR) {
                     this.accountInfoService.setUsername(socket, username);
+                    this.accountInfoService.setUserId(socket, await this.authentificationService.getUserId(username));
                     console.log(new Date().toLocaleTimeString() + ' | Register successfull');
                 }
                 socket.emit('Creation result', accountCreationStatus === NO_ERROR);
@@ -59,6 +67,13 @@ export class AuthSocketService {
                 }
             }
             socket.emit('Password Reset response', errorCode);
+        });
+    }
+
+    async joinUserChatRooms(socket: io.Socket) {
+        const userChats: ChatInfo[] = await this.chatService.getUserChats(this.accountInfoService.getUserId(socket));
+        userChats.forEach((userChatInfo: ChatInfo) => {
+            socket.join(userChatInfo._id);
         });
     }
 }
