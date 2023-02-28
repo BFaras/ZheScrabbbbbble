@@ -1,4 +1,7 @@
 {
+    "CHANGELANG":{
+        "MESSAGE":"Changer le langage"
+    },
     "LOGIN":{
         "AUTH":"Authentification",
         "LOGIN":"Connexion"

@@ -10,7 +10,7 @@ export class LoginPageComponent implements OnInit {
 
   constructor(public translate: TranslateService) {
     translate.addLangs(['en', 'fr']);
-    translate.setDefaultLang('fr');
+    this.translate.use('fr');
   }
 
   ngOnInit(): void {
@@ -18,7 +18,6 @@ export class LoginPageComponent implements OnInit {
 
   translateLanguageTo(lang: string) {
     this.translate.use(lang);
-    console.log(lang);
   }
 
 }

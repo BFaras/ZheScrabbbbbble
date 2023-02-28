@@ -1,11 +1,11 @@
 <div class="container justified">
     <div class="lang">
-        Change Language : 
+        {{'CHANGELANG.MESSAGE' | translate}} : 
         <select #selLang (change)="translateLanguageTo(selLang.value)" style="font-family: 'Courier New', Courier, monospace;">
-            <option *ngFor="let language of translate.getLangs()" [value]="language">{{ language }}</option>
+            <option *ngFor="let language of translate.getLangs().slice(0,2).reverse()" [value]="language">{{ language }}</option>
         </select>
     </div>
-    <div class="right-side">
+    <div>
         <app-login-area class="login-component"></app-login-area>
     </div>
 </div>

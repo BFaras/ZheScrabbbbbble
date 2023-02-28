@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class MainPageComponent {
     constructor(private dialog: MatDialog, private gameModeService: GameModeService, private socketManager: SocketManagerService, public translate: TranslateService) {
+        translate.resetLang;
         translate.addLangs(['en', 'fr']);
         translate.setDefaultLang('fr');
     }
