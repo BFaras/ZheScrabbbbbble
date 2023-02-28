@@ -10,7 +10,8 @@
         "NEWACC":"Nouveau? Créez un compte!",
         "CONFIRM":"Confirmer",
         "EMAIL":"Adresse Email",
-        "SHOWPASS":"Montrer le mot de passe"
+        "SHOWPASS":"Montrer le mot de passe",
+        "SIGNUP":"Inscription"
     },
     "USERDATA":{
         "USERNAME":"Nom d'utilisateur",

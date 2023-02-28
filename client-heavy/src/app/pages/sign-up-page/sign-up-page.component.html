@@ -1,11 +1,11 @@
-<div class="container">
-    <div class="left-side">
-        <button mat-fab routerLink = "login" color="primary" aria-label="Example icon button with a delete icon">
-            <mat-icon>delete</mat-icon>
-        </button>
+<div class="container justified">
+    <div class="lang">
+        {{'CHANGELANG.MESSAGE' | translate}} : 
+        <select #selLang (change)="translateLanguageTo(selLang.value)" style="font-family: 'Courier New', Courier, monospace;">
+            <option *ngFor="let language of translate.getLangs().slice(0,2).reverse()" [value]="language">{{ language }}</option>
+        </select>
     </div>
-    <div class="right-side">
+    <div>
         <app-sign-up-area class="sign-up-component"></app-sign-up-area>
     </div>
-
 </div>
