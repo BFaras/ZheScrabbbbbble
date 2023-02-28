@@ -46,4 +46,18 @@ export class ChatService {
     async getUserChats(userId: string): Promise<ChatInfo[]> {
         return await this.dbService.getChatsUserIsIn(userId);
     }
+
+    async joinGlobalChat(userId: string) {
+        if (!(await this.createGlobalChat(userId))) {
+            await this.joinChat(userId, await this.dbService.getGlobalChatId());
+        }
+    }
+
+    private async createGlobalChat(userId: string): Promise<boolean> {
+        if (!(await this.dbService.isGlobalChatExistant())) {
+            await this.createChat(userId, 'Global Chat', ChatType.GLOBAL);
+            return true;
+        }
+        return false;
+    }
 }
