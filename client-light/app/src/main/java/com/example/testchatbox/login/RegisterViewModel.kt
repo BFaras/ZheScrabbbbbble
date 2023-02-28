@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
-import com.example.testchatbox.QuestionInterface
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import com.example.testchatbox.R

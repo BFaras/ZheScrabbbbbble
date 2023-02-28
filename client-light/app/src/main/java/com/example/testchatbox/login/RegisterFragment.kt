@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentRegisterBinding
 
 import com.example.testchatbox.R
+import com.example.testchatbox.chat.ChatModel
 import com.example.testchatbox.login.model.LoggedInUser
 
 class RegisterFragment : Fragment() {
@@ -138,6 +139,7 @@ class RegisterFragment : Fragment() {
 
     private fun updateUiWithUser(model: LoggedInUserView) {
         LoggedInUser.connectUser(model.displayName)
+        ChatModel.createListerner();
         findNavController().navigate(R.id.action_registerFragment_to_MainMenuFragment)
     }
 
