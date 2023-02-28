@@ -1,11 +1,11 @@
-<div class="container">
-    <div class="left-side">
-        <button routerLink = "/sign-up" mat-fab color="primary" aria-label="Example icon button with a delete icon">
-            <mat-icon>delete</mat-icon>
-        </button>
+<div class="container justified">
+    <div class="lang">
+        Change Language : 
+        <select #selLang (change)="translateLanguageTo(selLang.value)" style="font-family: 'Courier New', Courier, monospace;">
+            <option *ngFor="let language of translate.getLangs()" [value]="language">{{ language }}</option>
+        </select>
     </div>
     <div class="right-side">
         <app-login-area class="login-component"></app-login-area>
     </div>
-
 </div>

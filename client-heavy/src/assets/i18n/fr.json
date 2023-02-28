@@ -23,5 +23,11 @@
         "PASS":"Passer",
         "PLAY":"Jouer",
         "REPLACE":"Échanger"
+    },
+    "HOMEPAGE":{
+        "MESSAGE":"Choisissez un mode de jeu!",
+        "CLASSIC":"Un à un",
+        "TURNAMENT":"Tournois",
+        "COLLABORATIVE":"Collaboratif"
     }
 }

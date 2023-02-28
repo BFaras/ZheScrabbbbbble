@@ -4,13 +4,17 @@ import { GameType } from '@app/classes/game-settings';
 import { LeaderboardComponent } from '@app/components/leaderboard/leaderboard.component';
 import { GameModeService } from '@app/services/game-mode-service/game-mode.service';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
+import { TranslateService } from '@ngx-translate/core';
 @Component({
     selector: 'app-main-page',
     templateUrl: './main-page.component.html',
     styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
-    constructor(private dialog: MatDialog, private gameModeService: GameModeService, private socketManager: SocketManagerService) {}
+    constructor(private dialog: MatDialog, private gameModeService: GameModeService, private socketManager: SocketManagerService, public translate: TranslateService) {
+        translate.addLangs(['en', 'fr']);
+        translate.setDefaultLang('fr');
+    }
 
     openScores() {
         this.dialog.open(LeaderboardComponent, {
@@ -30,5 +34,9 @@ export class MainPageComponent {
         this.socketManager.getSocket().disconnect();
         this.socketManager.createSocket();
 
+    }
+
+    translateLanguageTo(lang: string) {
+        this.translate.use(lang);
     }
 }

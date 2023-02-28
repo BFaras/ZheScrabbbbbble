@@ -1,26 +1,24 @@
-.container{
+.container {
     height: 100vh;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-
-}
-
-.right-side{
-    position: relative; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 18px;
     background-color: rgb(247, 237, 223);
-    height:100%;
-    width:64.8%
 }
 
-.left-side{
-    position: relative; 
-    height:100%;
-    width:35.2%;
+.justified {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    flex-direction: column;
+}
+
+.lang {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 20px;
+    font-weight: bold;
+    position: fixed;
+    top: 5%;
+    left: 2%;
 }
 
 .login-component{
@@ -29,3 +27,4 @@
     width: 544px;
     height: 658px;
 }
+
