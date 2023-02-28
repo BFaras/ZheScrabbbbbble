@@ -13,3 +13,10 @@ export const WRONG_SECURITY_ANSWER = '6';
 export const ROOM_NAME_TAKEN = 'ROOM-1';
 export const ROOM_PASSWORD_INCORRECT = 'ROOM-2';
 export const JOIN_REQUEST_REFUSED = 'ROOM-3';
+
+// Game error codes
+export const UNKNOWN_ACTION = 'GAME-1';
+export const NOT_YOUR_TURN = 'GAME-2';
+export const NOT_IN_GAME = 'GAME-3';
+export const INVALID_COMMAND_SYNTAX = 'GAME-4';
+export const ILLEGAL_COMMAND = 'GAME-5';

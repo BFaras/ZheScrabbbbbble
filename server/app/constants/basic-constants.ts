@@ -49,10 +49,6 @@ export const TWO_SPECIALS_CASES_CONSTANT = 2;
 
 export const MAX_NUMBER_OF_PLAYERS = 4;
 
-export enum ErrorType {
-    IllegalCommand,
-    InvalidSyntax,
-}
 export enum Direction {
     Vertical,
     Horizontal,

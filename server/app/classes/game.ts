@@ -4,7 +4,6 @@ import { Player } from '@app/classes/player';
 import { Reserve } from '@app/classes/reserve';
 import {
     DECIMAL_BASE,
-    ErrorType,
     HAND_SIZE,
     MAX_NUMBER_OF_PLAYERS,
     MILLISECOND_IN_HOURS,
@@ -15,6 +14,7 @@ import {
 } from '@app/constants/basic-constants';
 import { GameState, PlaceLetterCommandInfo, PlayerState } from '@app/constants/basic-interface';
 import { GameHistory, PlayerInfo, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
+import { ILLEGAL_COMMAND } from '@app/constants/error-code-constants';
 import { CommandResult } from '@app/controllers/command.controller';
 import { CommandFormattingService } from '@app/services/command-formatting.service';
 import { PossibleWordFinder, PossibleWords } from '@app/services/possible-word-finder.service';
@@ -58,7 +58,7 @@ export class Game {
         const formattedCommand = CommandFormattingService.formatCommandPlaceLetter(commandInfo, this.board, letters);
         if (!formattedCommand) {
             playerHand.addLetters(letters as Letter[]);
-            return { errorType: ErrorType.IllegalCommand };
+            return { errorType: ILLEGAL_COMMAND };
         }
         const score = this.wordValidationService.validation(formattedCommand, this.board, true);
         this.resetCounter();
@@ -80,10 +80,10 @@ export class Game {
     }
 
     swapLetters(stringLetters: string): CommandResult {
-        if (!this.reserve.canSwap() || this.reserve.getLength() < stringLetters.length) return { errorType: ErrorType.IllegalCommand };
+        if (!this.reserve.canSwap() || this.reserve.getLength() < stringLetters.length) return { errorType: ILLEGAL_COMMAND };
         const activeHand = this.players[this.playerTurnIndex].getHand();
         const letters = activeHand.getLetters(stringLetters, true);
-        if (!letters) return { errorType: ErrorType.IllegalCommand };
+        if (!letters) return { errorType: ILLEGAL_COMMAND };
         activeHand.addLetters(this.reserve.drawLetters(HAND_SIZE - activeHand.getLength()));
         this.reserve.returnLetters(letters);
         this.resetCounter();

@@ -1,6 +1,6 @@
 import { Game } from '@app/classes/game';
-import { ErrorType } from '@app/constants/basic-constants';
 import { PlaceLetterCommandInfo } from '@app/constants/basic-interface';
+import { INVALID_COMMAND_SYNTAX, NOT_IN_GAME, NOT_YOUR_TURN, UNKNOWN_ACTION } from '@app/constants/error-code-constants';
 import { CommandVerificationService } from '@app/services/command-verification.service';
 import { PossibleWords } from '@app/services/possible-word-finder.service';
 import { RoomManagerService } from '@app/services/room-manager.service';
@@ -12,7 +12,7 @@ export interface Command {
 }
 
 export interface CommandResult {
-    errorType?: ErrorType;
+    errorType?: string;
     activePlayerMessage?: string;
     otherPlayerMessage?: string;
     endGameMessage?: string;
@@ -36,10 +36,10 @@ export class CommandController {
     executeCommand(command: Command): CommandResult {
         const game = this.roomManagerService.findRoomFromPlayer(command.playerID)?.getGame;
         if (!game) {
-            return { errorType: ErrorType.IllegalCommand };
+            return { errorType: NOT_IN_GAME };
         }
         if (!game.isPlayerTurn(command.playerID) && CommandTypes[command.commandType] !== CommandTypes.Reserve) {
-            return { errorType: ErrorType.IllegalCommand };
+            return { errorType: NOT_YOUR_TURN };
         }
         switch (CommandTypes[command.commandType]) {
             case CommandTypes.Pass:
@@ -53,13 +53,13 @@ export class CommandController {
             case CommandTypes.Reserve:
                 return this.reserveMessage(game);
         }
-        return { errorType: ErrorType.IllegalCommand };
+        return { errorType: UNKNOWN_ACTION };
     }
 
     private placeLetters(args: string, game: Game): CommandResult {
         const commandInfo: PlaceLetterCommandInfo | null = CommandVerificationService.verifyCommandPlaceLetter(args);
         if (!commandInfo) {
-            return { errorType: ErrorType.InvalidSyntax };
+            return { errorType: INVALID_COMMAND_SYNTAX };
         }
         return this.placeMessage(game.placeLetter(commandInfo), args);
     }
@@ -74,7 +74,7 @@ export class CommandController {
 
     private swapLetters(args: string, game: Game): CommandResult {
         if (!CommandVerificationService.verifyCommandSwapLetters(args)) {
-            return { errorType: ErrorType.InvalidSyntax };
+            return { errorType: INVALID_COMMAND_SYNTAX };
         }
         return game.swapLetters(args);
     }
