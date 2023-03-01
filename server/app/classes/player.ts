@@ -1,7 +1,5 @@
 import { Hand } from '@app/classes/hand';
-import { Service } from 'typedi';
 
-@Service()
 export class Player {
     private uuid: string;
     private hand: Hand;
