@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
-import { Goal } from '@app/classes/goal';
 import { GameState, GameStateService } from '@app/services/game-state-service/game-state.service';
 import { Subscription } from 'rxjs';
 import { Player, playersInfo } from './players-info';
@@ -16,9 +15,7 @@ const LOWEST_POSSIBLE_SCORE = -70;
 export class InfoPanelComponent implements AfterViewInit, OnDestroy {
     playersInfo: Player[] = playersInfo;
     roundInfo: Round[] = roundInfo;
-    onGoingPublicObjectives: Goal[] = [];
     subscriptions: Subscription[] = [];
-    areGoals: boolean = false;
 
     constructor(private readonly gameStateService: GameStateService) {}
 
@@ -71,13 +68,6 @@ export class InfoPanelComponent implements AfterViewInit, OnDestroy {
         if (gameState.gameOver) {
             this.endGame(gameState);
             return;
-        }
-
-        if (gameState.yourGoals && gameState.oppenentGoals) {
-            this.areGoals = true;
-            this.playersInfo[0].objectives = gameState.yourGoals;
-            this.playersInfo[1].objectives = gameState.oppenentGoals;
-            this.onGoingPublicObjectives = [this.playersInfo[0].objectives[0], this.playersInfo[0].objectives[1]];
         }
 
         this.playersInfo[0].winner = false;

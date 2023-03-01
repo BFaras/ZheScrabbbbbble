@@ -28,23 +28,6 @@
     margin-bottom: 10%;
 }
 
-#objective-subtitle {
-    color: black;
-    font-variant: small-caps;
-    font-size: 20px;
-}
-
-#objectives {
-    font-size: 14px;
-    font-weight: bold;
-    color: rgb(79, 139, 79);
-}
-
-#objectives-completed {
-    font-size: 13px;
-    color: #757272;
-    font-style: italic;
-}
 
 ul.checked {
     color: #757272;
@@ -97,6 +80,3 @@ ul {
     background: #cb654f;
 }
 
-.hidden-objectives {
-    display: none;
-}

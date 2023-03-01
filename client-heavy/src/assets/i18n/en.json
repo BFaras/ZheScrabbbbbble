@@ -48,7 +48,7 @@
         "MOT":"WORD",
         "LETTRE":"LETTER",
         "START":"START",
-        "SIZE":"Changer letters' size"
+        "SIZE":"Change letters' size"
     },
     "GIVEUP":{
         "GIVEUP":"Give Up",

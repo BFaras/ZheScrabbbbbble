@@ -1,12 +1,9 @@
-import { Goal } from '@app/classes/goal';
-
 export interface Player {
     name: string;
     currentScore: number;
     letterCount: number;
     active: boolean;
     winner: boolean;
-    objectives: Goal[];
 }
 
 export const playersInfo = [
@@ -15,15 +12,13 @@ export const playersInfo = [
         currentScore: 0,
         letterCount: 0,
         active: false,
-        winner: false,
-        objectives: [],
+        winner: false
     },
     {
         name: 'Joueur 2',
         currentScore: 0,
         letterCount: 0,
         active: false,
-        winner: false,
-        objectives: [],
+        winner: false
     },
 ];
