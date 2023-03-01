@@ -13,11 +13,17 @@
         <app-play-area class="play-area" tabindex="0" [receiver]="isReceiver"></app-play-area>
 
         <section class="side-components">
-            <button *ngIf="!endGame; else other_content" (click)="alert()" class="button" id="abandonner">Abandonner</button>
-            <ng-template #other_content><button class="button" (click)="goHome()" id="quitter">Quitter</button></ng-template>
+            <button *ngIf="!endGame; else other_content" (click)="alert()" class="button" id="abandonner">{{'GIVEUP.GIVEUP' | translate}}</button>
+            <div class="lang">
+                {{'CHANGELANG.MESSAGE' | translate}} : 
+                <select #selLang (change)="translateLanguageTo(selLang.value)" style="font-family: 'Courier New', Courier, monospace;">
+                    <option *ngFor="let language of translate.getLangs().slice(0,2).reverse()" [value]="language">{{ language }}</option>
+                </select>
+            </div>
+            <ng-template #other_content><button class="button" (click)="goHome()" id="quitter">{{'GIVEUP.QUIT' | translate}}</button></ng-template>
             <app-chat id="chatBox" (receiver)="setReceiver($event)"></app-chat>
             <section id="font-size-container">
-                <span>Modifier la taille des lettres</span><br />
+                <span>{{'BOARD.SIZE' | translate}}</span><br />
                 <button class="font-size" id="increase" (click)="onIncrease()">+</button>
                 <button class="font-size" id="decrease" (click)="onDecrease()">-</button>
             </section>

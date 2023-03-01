@@ -4,7 +4,8 @@
     },
     "LOGIN":{
         "AUTH":"Authentification",
-        "LOGIN":"Connexion"
+        "LOGIN":"Connexion",
+        "SIGNOUT": "Déconnexion"
     },
     "SIGNUP":{
         "NEWACC":"Nouveau? Créez un compte!",
@@ -18,15 +19,35 @@
         "PASSWORD":"Mot de passe"
     },
     "INFOBOARD":{
-        "INFOBOARD":"Panneau informatif",
-        "SCORE":"Points",
-        "lETTERSLEFT":"Nombre de lettres restantes dans la réserve: ",
-        "TIMER":"Temps restant: "
+        "INFOBOARD":"PANNEAU INFORMATIF",
+        "SCORE":"Points: ",
+        "LETTERSLEFT":"Nombre de lettres restantes dans la réserve: ",
+        "LETTERSINHAND":"Nombre de lettres sur le chevalet: ",
+        "TIMER":"Temps restant: ",
+        "TURN":", c'est à votre tour!",
+        "WIN":", vous avez gagné!"
+    },
+    "CHATBOX":{
+        "CHATBOX":"BOÎTE DE COMMUNICATION",
+        "DEFAULT":"Tapez une commande",
+        "SEND":"Envoyer"
     },
     "LETTERHOLDER":{
         "PASS":"Passer",
         "PLAY":"Jouer",
-        "REPLACE":"Échanger"
+        "REPLACE":"Échanger",
+        "CANCEL":"Annuler"
+    },
+    "BOARD":{
+        "MOT":"MOT",
+        "LETTRE":"LETTRE",
+        "START":"DÉBUT",
+        "SIZE":"Modifier la taille des lettres"
+    },
+    "GIVEUP":{
+        "GIVEUP":"Abandonner",
+        "MESSAGE":"Êtes-vous sûr(e) de vouloir quitter la partie? Tout votre progrès sera perdu.",
+        "QUIT":"Quitter"
     },
     "HOMEPAGE":{
         "MESSAGE":"Choisissez un mode de jeu!",

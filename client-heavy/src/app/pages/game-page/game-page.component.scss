@@ -22,6 +22,30 @@
     flex-direction: column;
 }
 
+.lang {
+    margin-top: 8%;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+select {
+    border-radius: 5px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    -webkit-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px; 
+    border: 1px solid #AAA;
+    color: #555;
+    font-size: inherit;
+    margin-top: 5%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+
 #font-size-container {
     margin-top: 5%;
     display: flex;
@@ -66,7 +90,7 @@
 
 .button {
     text-decoration: none;
-    margin: 50px 0px 30px;
+    margin-top: 10%;
     text-align: center;
     border: none;
     padding: 10px;

@@ -1,21 +1,22 @@
 <div class="container">
     <div class="inner-container">
-        <header id="title">PANNEAU INFORMATIF</header>
+        <header id="title">{{'INFOBOARD.INFOBOARD' | translate}}</header>
         <div id="info">
             <div *ngFor="let player of playersInfo">
                 <span class="name">{{ player.name }}</span>
-                <span class="name" style="color: #cb654f" *ngIf="player.active">, c'est à votre tour!</span>
-                <span class="name" style="color: #cb654f" *ngIf="player.winner">, vous avez gagné!</span>
+                <span class="name" style="color: #cb654f" *ngIf="player.active">{{'INFOBOARD.TURN' | translate}}</span>
+                <span class="name" style="color: #cb654f" *ngIf="player.winner">{{'INFOBOARD.WIN' | translate}}</span>
                 <br /><br />
-                <p>Score: {{ player.currentScore }}</p>
-                <p *ngIf="player.letterCount < 7">Nombre de lettres sur le chevalet: {{ player.letterCount }}</p>
+                <p>{{'INFOBOARD.SCORE' | translate}}{{ player.currentScore }}</p>
+                <p *ngIf="player.letterCount < 7">{{'INFOBOARD.LETTERSINHAND' | translate}}{{ player.letterCount }}</p>
                 <br />
             </div>
-            <p>Nombre de lettres restantes dans la réserve: {{ roundInfo[0].lettersRemaining }}</p>
+            <p>{{'INFOBOARD.LETTERSLEFT' | translate}}{{ roundInfo[0].lettersRemaining }}</p>
         </div>
         <br />
         <app-timer></app-timer>
-        <br />
+        <!--
+           <br />
         <div id="objectives" *ngIf="areGoals">
             <p id="objective-subtitle">objectifs publics</p>
 
@@ -74,6 +75,8 @@
                     </ul>
                 </div>
             </div>
-        </div>
+        </div> 
+        -->
+        
     </div>
 </div>

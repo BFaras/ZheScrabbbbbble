@@ -10,7 +10,7 @@ export class SignUpPageComponent implements OnInit {
 
   constructor(public translate: TranslateService) {
     translate.addLangs(['en', 'fr']);
-    //this.translate.use('fr');
+    //this.translate.setDefaultLang('en');
   }
 
   ngOnInit(): void {

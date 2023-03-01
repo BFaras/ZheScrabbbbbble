@@ -1,5 +1,5 @@
 <div id="chat-box" (click)="isReceiver()">
-    <p id="title-chat">BOITE DE COMMUNICATION</p>
+    <p id="title-chat">{{'CHATBOX.CHATBOX' | translate}}</p>
     <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
         <div *ngFor="let message of messageHistory">
             <ul [ngStyle]="{ color: message.color }">
@@ -20,6 +20,6 @@
             (keyup.enter)="sendMessage()"
             autofocus
         />
-        <button (click)="sendMessage()">Envoyer</button>
+        <button (click)="sendMessage()">{{'CHATBOX.SEND' | translate}}</button>
     </div>
 </div>

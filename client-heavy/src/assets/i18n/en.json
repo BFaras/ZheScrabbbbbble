@@ -4,7 +4,8 @@
     },
     "LOGIN":{
         "AUTH":"Authentication",
-        "LOGIN":"Log in"
+        "LOGIN":"Log in",
+        "SIGNOUT": "Sign Out"
     },
     "SIGNUP":{
         "NEWACC":"New? Create an account!",
@@ -18,17 +19,43 @@
         "PASSWORD":"Password"
     },
     "INFOBOARD":{
-        "INFOBOARD":"Info Board",
-        "SCORE":"Score",
-        "lETTERSLEFT":"Number of unused letters left: ",
-        "TIMER":"Time left: "
+        "INFOBOARD":"INFO BOARD",
+        "SCORE":"Score: ",
+        "LETTERSLEFT":"Number of unused letters left: ",
+        "LETTERSINHAND":"Number of letters in hand: ",
+        "TIMER":"Time left: ",
+        "TURN":", it's your turn!",
+        "WIN":", you won!"
+    },
+    "CHATBOX":{
+        "CHATBOX":"CHAT BOX",
+        "DEFAULT":"Type a command",
+        "SEND":"Send"
     },
     "LETTERHOLDER":{
         "PASS":"Skip turn",
         "PLAY":"Play",
-        "REPLACE":"Replace"
+        "REPLACE":"Replace",
+        "CANCEL":"Cancel"
     },
     "HOMEPAGE":{
+        "MESSAGE":"Pick a Game Mode!",
+        "CLASSIC":"One on One",
+        "TURNAMENT":"Turnament",
+        "COLLABORATIVE":"Collaborative"
+    },
+    "BOARD":{
+        "MOT":"WORD",
+        "LETTRE":"LETTER",
+        "START":"START",
+        "SIZE":"Changer letters' size"
+    },
+    "GIVEUP":{
+        "GIVEUP":"Give Up",
+        "MESSAGE":"Are you sure you want to leave the game? All progress will be lost.",
+        "QUIT":"Leave"
+    },
+    "GAMEPAGE":{
         "MESSAGE":"Pick a Game Mode!",
         "CLASSIC":"One on One",
         "TURNAMENT":"Turnament",
