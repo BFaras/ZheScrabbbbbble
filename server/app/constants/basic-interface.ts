@@ -14,7 +14,7 @@ export interface PlaceLetterCommandInfo {
 }
 
 export interface GameState {
-    finalBoard: string[][];
+    board: string[][];
     players: PlayerState[];
     playerTurnIndex: number;
     reserveLength: number;

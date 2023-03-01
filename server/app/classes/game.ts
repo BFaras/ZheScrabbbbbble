@@ -138,7 +138,7 @@ export class Game {
             })
         }
         return {
-            finalBoard: this.board.toStringArray(),
+            board: this.board.toStringArray(),
             playerTurnIndex: this.playerTurnIndex,
             players: playerStates,
             reserveLength: this.reserve.getLength(),
