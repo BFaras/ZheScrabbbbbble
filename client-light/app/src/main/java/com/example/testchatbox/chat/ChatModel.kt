@@ -18,8 +18,25 @@ class Chat(val chatType : ChatType, val chatName :String, val _id:String){
     }
 }
 
-object ChatModel {
-    private val chatList = LinkedHashMap<String,Chat> ()
+interface Observer {
+    fun update(chatCode: String)
+}
+
+interface Observable{
+    val observers: ArrayList<Observer>
+
+    fun addObserver(observer: Observer) {
+        observers.add(observer)
+    }
+
+    fun notifyObservers(chatCode:String) {
+        observers.forEach { it.update(chatCode) }
+    }
+}
+
+object ChatModel : Observable {
+    private val chatList = LinkedHashMap<String,Chat> ();
+    override val observers: ArrayList<Observer> = arrayListOf();
 
 
 
@@ -59,6 +76,7 @@ object ChatModel {
                     Thread.sleep(500);
                     chatList[chatCode]?.pushMessage(chatMessage);
                 }
+                notifyObservers(chatCode);
             }
         }
     }
