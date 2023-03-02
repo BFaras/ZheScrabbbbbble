@@ -13,6 +13,7 @@ import {
     VirtualPlayerDifficulty
 } from '@app/constants/database-interfaces';
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
+import { ProfileInfo } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
 import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb';
@@ -101,9 +102,9 @@ export class DatabaseService {
         return userId;
     }
 
-    async getUserName(userId: string) {
-        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<Document>)?.findOne({
-            _id: userId,
+    async getUsernameFromId(userId: string) {
+        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<AccountInfo>)?.findOne({
+            _id: new ObjectId(userId),
         });
         let username = '';
 
@@ -157,6 +158,24 @@ export class DatabaseService {
             securityQuestionAnswer = userAccountInfoDoc.securityQuestion.answer;
         }
         return securityQuestionAnswer;
+    }
+
+    async getUserProfileInfo(userId: string): Promise<ProfileInfo> {
+        let profileInfo: ProfileInfo = {
+            // eslint-disable-next-line prettier/prettier
+            avatar: '', level: 0, userCode: '', stats: [], tournamentWins: [0, 0, 0], connectionHistory: [], gameHistory: [],
+        };
+        const userProfileInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<ProfileInfo>)?.findOne(
+            {
+                _id: new ObjectId(userId),
+            },
+            { projection: { _id: 0 } },
+        );
+
+        if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
+            profileInfo = userProfileInfoDoc;
+        }
+        return profileInfo;
     }
 
     async addNewChatCanal(chatInfo: ChatInfoDB): Promise<string> {

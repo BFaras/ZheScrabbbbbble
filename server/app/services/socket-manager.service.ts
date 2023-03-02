@@ -25,6 +25,7 @@ import { AuthSocketService } from './auth-socket.service';
 import { ChatSocketService } from './chat-socket.service';
 import { DatabaseService } from './database.service';
 import { OnlineUsersService } from './online-users.service';
+import { ProfileSocketService } from './profile-socket.service';
 import { SocketDatabaseService } from './socket-database.service';
 
 export class SocketManager {
@@ -34,6 +35,7 @@ export class SocketManager {
     private socketDatabaseService: SocketDatabaseService;
     private chatSocketService: ChatSocketService;
     private authSocketService: AuthSocketService;
+    private profileSocketService: ProfileSocketService;
     private databaseService: DatabaseService;
     private onlineUsersService: OnlineUsersService;
     private accountInfoService: AccountInfoService;
@@ -57,10 +59,11 @@ export class SocketManager {
 
     handleSockets(): void {
         this.sio.on('connection', (socket: io.Socket) => {
-            console.log((new Date()).toLocaleTimeString() + ' | New device connection to server');
+            console.log(new Date().toLocaleTimeString() + ' | New device connection to server');
             this.socketDatabaseService.databaseSocketRequests(socket);
             this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
+            this.profileSocketService.handleProfileSockets(socket);
 
             socket.on('new-message', (message: Message) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
@@ -138,7 +141,7 @@ export class SocketManager {
             });
 
             socket.on('disconnect', async () => {
-                console.log((new Date()).toLocaleTimeString() + ' | User Disconnected from server');
+                console.log(new Date().toLocaleTimeString() + ' | User Disconnected from server');
                 this.onlineUsersService.removeOnlineUser(this.accountInfoService.getUsername(socket));
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
