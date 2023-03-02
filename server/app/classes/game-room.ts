@@ -22,6 +22,7 @@ export class GameRoom {
             this.password = password;
         }
         this.game = new Game(this.players);
+        this.gameStarted = false;
     }
 
     addPlayer(player: Player) {
@@ -71,7 +72,7 @@ export class GameRoom {
 
     incrementConnectedPlayers(): boolean {
         this.connectedPlayers++;
-        return this.connectedPlayers === MAX_NUMBER_OF_PLAYERS;
+        return this.connectedPlayers >= MAX_NUMBER_OF_PLAYERS;
     }
 
     getID(): string {
@@ -96,6 +97,7 @@ export class GameRoom {
     }
 
     startGame() {
+        if(this.gameStarted) return;
         this.game.startGame();
         this.gameStarted = true;
     }
