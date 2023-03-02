@@ -61,7 +61,7 @@ export class ChatService {
     async getUserChats(userId: string): Promise<ChatInfo[]> {
         const userChats: ChatInfo[] = await this.dbService.getChatsUserIsIn(userId);
 
-        userChats.forEach((chatInfo: ChatInfo) => {
+        userChats.forEach(async (chatInfo: ChatInfo) => {
             if (chatInfo.chatType === ChatType.PRIVATE) {
                 chatInfo.chatName = await this.renamePrivateChat(chatInfo.chatName, userId);
             }
