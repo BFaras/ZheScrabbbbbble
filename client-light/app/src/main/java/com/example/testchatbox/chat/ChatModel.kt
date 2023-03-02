@@ -10,9 +10,6 @@ enum class  ChatType{
     GLOBAL,
 }
 
-class ChatInterface(val chatType : ChatType, val chatName :String, val _id:String){
-}
-
 class Chat(val chatType : ChatType, val chatName :String, val _id:String){
     var messages = arrayListOf<String>();
 
@@ -24,14 +21,17 @@ class Chat(val chatType : ChatType, val chatName :String, val _id:String){
 object ChatModel {
     private val chatList = LinkedHashMap<String,Chat> ()
 
+
+
     fun updateList(){
         SocketHandler.getSocket().once("User Chat List Response") { args ->
             if(args[0] != null){
-                val chats = args[0] as Array<ChatInterface>;
+                val chats = args[0] as Array<JSONObject>;
                 for (chat in chats)
                 {
-                    if(!chatList.containsKey(chat._id))
-                        chatList[chat._id]=(Chat(chat.chatType, chat.chatName, chat._id))
+                    if(!chatList.containsKey(chat.get("_id")))
+                        chatList[chat.get("_id") as String]=(Chat(chat.get("chatType") as ChatType,
+                            chat.get("chatName") as String, chat.get("_id") as String))
                 }
             }
         }
@@ -46,7 +46,8 @@ object ChatModel {
         return (chatList.remove(_id) != null)
     }
 
-    fun createListerner(){
+    fun initialiseChat(){
+        updateList();
         SocketHandler.getSocket().on("New Chat Message") { args ->
             if(args[0] != null && args[1] != null ){
                 val chatCode = args[0] as String;

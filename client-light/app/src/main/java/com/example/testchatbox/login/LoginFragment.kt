@@ -123,7 +123,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-        ChatModel.createListerner();
+        ChatModel.initialiseChat();
         LoggedInUser.connectUser(model.displayName)
         findNavController().navigate(R.id.action_loginFragment_to_MainMenuFragment)
     }

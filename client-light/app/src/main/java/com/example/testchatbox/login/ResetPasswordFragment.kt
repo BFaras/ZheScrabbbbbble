@@ -95,7 +95,7 @@ class ResetPasswordFragment : Fragment() {
                             if(error.toInt() == 0){
                                 activity?.runOnUiThread(Runnable {
                                     LoggedInUser.connectUser(usernameEditText.text.toString())
-                                    ChatModel.createListerner();
+                                    ChatModel.initialiseChat();
                                     findNavController().navigate(R.id.action_resetFragment_to_MainMenuFragment)
                                 });
                             }
