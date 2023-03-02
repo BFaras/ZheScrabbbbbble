@@ -101,6 +101,18 @@ export class DatabaseService {
         return userId;
     }
 
+    async getUserName(userId: string) {
+        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<Document>)?.findOne({
+            _id: userId,
+        });
+        let username = '';
+
+        if (userAccountInfoDoc !== undefined && userAccountInfoDoc !== null) {
+            username = userAccountInfoDoc.username;
+        }
+        return username;
+    }
+
     async changeUserPassword(username: string, encryptedPassword: string): Promise<boolean> {
         let isChangeSuccess = true;
         await this.getCollection(CollectionType.USERACCOUNTS)
