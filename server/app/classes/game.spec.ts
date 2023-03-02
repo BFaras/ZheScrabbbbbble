@@ -7,10 +7,11 @@ import { Hand } from '@app/classes/hand';
 import { Letter } from '@app/classes/letter';
 import { Player } from '@app/classes/player';
 import { GameState, PlaceLetterCommandInfo } from '@app/constants/basic-interface';
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import { Game } from './game';
 import { ILLEGAL_COMMAND } from "@app/constants/error-code-constants";
 import { Direction } from "@app/constants/basic-constants";
+import sinon = require("sinon");
 
 describe('GameService', () => {
     let gameService: Game;
@@ -113,45 +114,48 @@ describe('GameService', () => {
     });
     
     it('should return an illegal placement message when placeLetter is called with letters that do not make a word', () => {
-        gameService['playerTurnIndex'] = 1;
-        gameService['players'][0]['hand'] = new Hand([new Letter('a', 15), new Letter('l', 15), new Letter('a', 15)]);
-        const placeLetterCommandInfo: PlaceLetterCommandInfo = { letterCoord: 7, numberCoord: 7, direction: Direction.Horizontal, letters: 'aa' };
-        const a = gameService.placeLetter(placeLetterCommandInfo).activePlayerMessage;
-        console.log(a);
-        expect(a).to.equals('a tenté de placer un mot invalide.');
+        gameService['playerTurnIndex'] = 0;
+        gameService['players'][0]['hand'] = new Hand([new Letter('a', 15), new Letter('l', 15), new Letter('b', 15)]);
+        const placeLetterCommandInfo: PlaceLetterCommandInfo = { letterCoord: 7, numberCoord: 7, direction: Direction.Horizontal, letters: 'ab' };
+        expect(gameService.placeLetter(placeLetterCommandInfo).activePlayerMessage).to.equals('a tenté de placer un mot invalide.');
     });
-    /*
+    
     it('should return an endGame message when placeLetter is called with letters that make a word and trigger the end conditions', () => {
-        gameService['players'][0].swapTurn();
+        gameService['playerTurnIndex'] = 0;
         gameService['reserve'].drawLetters(105);
         gameService['players'][0]['hand'].addLetters([new Letter('a', 1), new Letter('m', 5)]);
         const placeLetterCommandInfo: PlaceLetterCommandInfo = { letterCoord: 7, numberCoord: 7, direction: Direction.Horizontal, letters: 'ma' };
         expect(gameService.placeLetter(placeLetterCommandInfo).endGameMessage).to.not.equals(undefined);
     });
+    
     it('should return an empty message when placeLetter is called with letters that make a word', () => {
-        gameService['players'][0].swapTurn();
+        gameService['playerTurnIndex'] = 0;
         gameService['players'][0]['hand'].addLetters([new Letter('a', 1), new Letter('m', 5), new Letter('a', 1)]);
         const placeLetterCommandInfo: PlaceLetterCommandInfo = { letterCoord: 7, numberCoord: 7, direction: Direction.Vertical, letters: 'ma' };
         expect(gameService.placeLetter(placeLetterCommandInfo).activePlayerMessage).to.equals('');
     });
+    
     it('should return an error when swapLetter is called with an empty reserve', () => {
-        gameService['players'][0].swapTurn();
+        gameService['playerTurnIndex'] = 0;
         gameService['reserve'].drawLetters(105);
         gameService['players'][0]['hand'].addLetters([new Letter('a', 1), new Letter('m', 5), new Letter('a', 1)]);
-        expect(gameService.swapLetters('ma').errorType).to.equals(ErrorType.IllegalCommand);
+        expect(gameService.swapLetters('ma').errorType).to.equals(ILLEGAL_COMMAND);
     });
+
     it('should return an error when swapLetter is called with unowned letters', () => {
-        gameService['players'][0].swapTurn();
+        gameService['playerTurnIndex'] = 0;
         gameService['players'][0]['hand'].addLetters([new Letter('a', 1), new Letter('m', 5), new Letter('a', 1)]);
-        expect(gameService.swapLetters('mkdf').errorType).to.equals(ErrorType.IllegalCommand);
+        expect(gameService.swapLetters('mkdf').errorType).to.equals(ILLEGAL_COMMAND);
     });
+    
     it('should return an error when swapLetter is called with unowned letters', () => {
-        gameService['players'][0].swapTurn();
+        gameService['playerTurnIndex'] = 0;
         gameService['players'][0]['hand'].addLetters([new Letter('a', 1), new Letter('m', 5), new Letter('a', 1)]);
         expect(gameService.swapLetters('ma').activePlayerMessage).to.equals('a échangé les lettres ma.');
     });
+    
     it('should return an end message when passTurn is called for a sixth consecutive turn', () => {
-        gameService['players'][0].swapTurn();
+        gameService['playerTurnIndex'] = 0;
         gameService['incrementCounter']();
         gameService['incrementCounter']();
         gameService['incrementCounter']();
@@ -159,10 +163,12 @@ describe('GameService', () => {
         gameService['incrementCounter']();
         expect(gameService.passTurn().endGameMessage).to.not.equals(undefined);
     });
+    
     it('should return a pass message when passTurn is called', () => {
-        gameService['players'][0].swapTurn();
+        gameService['playerTurnIndex'] = 0;
         expect(gameService.passTurn().activePlayerMessage).to.equals('a passé son tour.');
     });
+    
     it('should verify the function getReservContent of the reserve is called when the one in gameRoom is called', () => {
         const spy = sinon.spy(gameService['reserve'], 'getReserveContent');
         gameService.getReserveContent();
@@ -174,9 +180,36 @@ describe('GameService', () => {
         expect(gameHistory).ownProperty('date');
         expect(gameHistory).ownProperty('time');
         expect(gameHistory).ownProperty('length');
-        expect(gameHistory).ownProperty('player1');
-        expect(gameHistory).ownProperty('player2');
-        expect(gameHistory).ownProperty('mode');
+        expect(gameHistory).ownProperty('players');
+        expect(gameHistory.players.length).to.equals(4);
+        expect(gameHistory).ownProperty('winnerIndex');
     });
-    */
+
+    it('should return the if it is a player turn when calling is player isPlayerTurn', () => {
+        gameService['playerTurnIndex'] = 0;
+        expect(gameService.isPlayerTurn('id1')).to.equals(true);
+        expect(gameService.isPlayerTurn('id2')).to.equals(false);
+        expect(gameService.isPlayerTurn('id3')).to.equals(false);
+        expect(gameService.isPlayerTurn('id4')).to.equals(false);
+        gameService.changeTurn();
+        expect(gameService.isPlayerTurn('id1')).to.equals(false);
+        expect(gameService.isPlayerTurn('id2')).to.equals(true);
+        expect(gameService.isPlayerTurn('id3')).to.equals(false);
+        expect(gameService.isPlayerTurn('id4')).to.equals(false);
+        gameService.changeTurn();
+        expect(gameService.isPlayerTurn('id1')).to.equals(false);
+        expect(gameService.isPlayerTurn('id2')).to.equals(false);
+        expect(gameService.isPlayerTurn('id3')).to.equals(true);
+        expect(gameService.isPlayerTurn('id4')).to.equals(false);
+        gameService.changeTurn();
+        expect(gameService.isPlayerTurn('id1')).to.equals(false);
+        expect(gameService.isPlayerTurn('id2')).to.equals(false);
+        expect(gameService.isPlayerTurn('id3')).to.equals(false);
+        expect(gameService.isPlayerTurn('id4')).to.equals(true);
+        gameService.changeTurn();
+        expect(gameService.isPlayerTurn('id1')).to.equals(true);
+        expect(gameService.isPlayerTurn('id2')).to.equals(false);
+        expect(gameService.isPlayerTurn('id3')).to.equals(false);
+        expect(gameService.isPlayerTurn('id4')).to.equals(false);
+    });
 });

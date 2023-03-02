@@ -1,4 +1,4 @@
 {
-    "mocha.files.glob": "app/**/game.spec.ts",
+    "mocha.files.glob": "app/**/*.spec.ts",
     "mocha.requires": ["ts-node/register", "tsconfig-paths/register", "source-map-support/register"]
 }
