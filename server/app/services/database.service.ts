@@ -15,7 +15,7 @@ import {
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
 import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
-import { Collection, Db, MongoClient, ObjectId } from 'mongodb';
+import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb';
 import 'reflect-metadata';
 import { Service } from 'typedi';
 
@@ -87,6 +87,30 @@ export class DatabaseService {
 
     async removeUserAccount(username: string) {
         await this.getCollection(CollectionType.USERACCOUNTS)?.deleteOne({ username });
+    }
+
+    async getUserId(username: string) {
+        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<Document>)?.findOne({
+            username,
+        });
+        let userId = '';
+
+        if (userAccountInfoDoc !== undefined && userAccountInfoDoc !== null) {
+            userId = userAccountInfoDoc._id.toString();
+        }
+        return userId;
+    }
+
+    async getUserName(userId: string) {
+        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<Document>)?.findOne({
+            _id: userId,
+        });
+        let username = '';
+
+        if (userAccountInfoDoc !== undefined && userAccountInfoDoc !== null) {
+            username = userAccountInfoDoc.username;
+        }
+        return username;
     }
 
     async changeUserPassword(username: string, encryptedPassword: string): Promise<boolean> {
@@ -217,6 +241,24 @@ export class DatabaseService {
     async isUserInChat(userId: string, chatId: string): Promise<boolean> {
         const thisChatWithUserInIt = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: new ObjectId(chatId), usersIds: userId });
         return Promise.resolve(!(thisChatWithUserInIt === undefined || thisChatWithUserInIt === null));
+    }
+
+    async isGlobalChatExistant(): Promise<boolean> {
+        const globalChatDoc = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ chatType: ChatType.GLOBAL });
+        return Promise.resolve(!(globalChatDoc === undefined || globalChatDoc === null));
+    }
+
+    async getGlobalChatId(): Promise<string> {
+        const globalChatDoc = await this.getCollection(CollectionType.CHATCANALS)?.findOne(
+            { chatType: ChatType.GLOBAL },
+            { projection: { chatType: 1, chatName: 1 } },
+        );
+        let chatId = '';
+
+        if (globalChatDoc !== undefined && globalChatDoc !== null) {
+            chatId = (globalChatDoc as unknown as ChatInfo)._id;
+        }
+        return chatId;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -13,7 +13,7 @@ import { DatabaseService } from './database.service';
 import Sinon = require('sinon');
 
 describe('Authentification Tests', async () => {
-    const testUsername = 'Test1276776';
+    const testUsername = 'Test12Test589';
     const testPassword = 'tE!s&to~';
     const testGoodEmail = 'myTestMail12564@poly.com';
     const urlString = 'http://localhost:3000';
@@ -32,6 +32,8 @@ describe('Authentification Tests', async () => {
     });
 
     afterEach(async () => {
+        const userId = await dbService.getUserId(testUsername);
+        await dbService.leaveChatCanal(userId, await dbService.getGlobalChatId());
         await dbService.removeUserAccount(testUsername);
         clientSocket.close();
         server['socketManager']['sio'].close();

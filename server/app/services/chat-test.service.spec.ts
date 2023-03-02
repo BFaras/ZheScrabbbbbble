@@ -45,40 +45,40 @@ describe('Chat Tests', async () => {
     });
 
     it('should create chat and user should be in it', async () => {
-        const chatCreationError = await chatService.createChat(testUserId, testChatName, testChatType);
-        chatIds.push((await chatService.getUserChats(testUserId))[0]._id);
+        const chatCreationResponse = await chatService.createChat(testUserId, testChatName, testChatType);
+        chatIds.push(chatCreationResponse.chatId);
 
-        expect(chatCreationError).to.deep.equals(NO_ERROR);
+        expect(chatCreationResponse.errorCode).to.deep.equals(NO_ERROR);
         expect(await dbService.isUserInChat(testUserId, chatIds[0])).to.be.true;
     });
 
     it('should leave chat canal and the user should not be in it anymore', async () => {
-        const chatCreationError = await chatService.createChat(testUserId, testChatName, testChatType);
-        chatIds.push((await chatService.getUserChats(testUserId))[0]._id);
+        const chatCreationResponse = await chatService.createChat(testUserId, testChatName, testChatType);
+        chatIds.push(chatCreationResponse.chatId);
         const chatLeaveError = await chatService.leaveChat(testUserId, chatIds[0]);
 
-        expect(chatCreationError).to.deep.equals(NO_ERROR);
+        expect(chatCreationResponse.errorCode).to.deep.equals(NO_ERROR);
         expect(chatLeaveError).to.deep.equals(NO_ERROR);
         expect(await dbService.isUserInChat(testUserId, chatIds[0])).to.be.false;
     });
 
     it('should be able to join a chat created by another user', async () => {
-        const chatCreationError = await chatService.createChat(testUserId, testChatName, testChatType);
-        chatIds.push((await chatService.getUserChats(testUserId))[0]._id);
+        const chatCreationResponse = await chatService.createChat(testUserId, testChatName, testChatType);
+        chatIds.push(chatCreationResponse.chatId);
         const chatJoinError = await chatService.joinChat(testUserId2, chatIds[0]);
 
-        expect(chatCreationError).to.deep.equals(NO_ERROR);
+        expect(chatCreationResponse.errorCode).to.deep.equals(NO_ERROR);
         expect(chatJoinError).to.deep.equals(NO_ERROR);
         expect(await dbService.isUserInChat(testUserId2, chatIds[0])).to.be.true;
     });
 
     it('should leave chat canal when other user is in it and one user should not be in it anymore while the other is still there', async () => {
-        const chatCreationError = await chatService.createChat(testUserId, testChatName, testChatType);
-        chatIds.push((await chatService.getUserChats(testUserId))[0]._id);
+        const chatCreationResponse = await chatService.createChat(testUserId, testChatName, testChatType);
+        chatIds.push(chatCreationResponse.chatId);
         const chatJoinError = await chatService.joinChat(testUserId2, chatIds[0]);
         const chatLeaveError = await chatService.leaveChat(testUserId, chatIds[0]);
 
-        expect(chatCreationError).to.deep.equals(NO_ERROR);
+        expect(chatCreationResponse.errorCode).to.deep.equals(NO_ERROR);
         expect(chatJoinError).to.deep.equals(NO_ERROR);
         expect(chatLeaveError).to.deep.equals(NO_ERROR);
         expect(await dbService.isUserInChat(testUserId, chatIds[0])).to.be.false;
@@ -87,12 +87,9 @@ describe('Chat Tests', async () => {
 
     it('should return a list of all the chats a user is in when calling getUserChats', async () => {
         for (let i = 0; i < numberOfChatsToCreateForTest; i++) {
-            await chatService.createChat(testUserIdCreatingChats, testChatName, testChatType);
+            const chatCreationResponse = await chatService.createChat(testUserIdCreatingChats, testChatName, testChatType);
+            chatIds.push(chatCreationResponse.chatId);
         }
-
-        (await chatService.getUserChats(testUserIdCreatingChats)).forEach((chatInfo: ChatInfo) => {
-            chatIds.push(chatInfo._id);
-        });
 
         for (let i = 0; i < chatIds.length; i++) {
             if (i % 2 === 0) {
@@ -126,12 +123,9 @@ describe('Chat Tests', async () => {
 
     it('should return a list of all the chats a user can join and is not in when calling getPublicChatsUserCanJoin', async () => {
         for (let i = 0; i < numberOfChatsToCreateForTest; i++) {
-            await chatService.createChat(testUserIdCreatingChats, testChatName, testChatType);
+            const chatCreationResponse = await chatService.createChat(testUserIdCreatingChats, testChatName, testChatType);
+            chatIds.push(chatCreationResponse.chatId);
         }
-
-        (await chatService.getUserChats(testUserIdCreatingChats)).forEach((chatInfo: ChatInfo) => {
-            chatIds.push(chatInfo._id);
-        });
 
         for (let i = 0; i < chatIds.length; i++) {
             if (i % 2 === 0) {
