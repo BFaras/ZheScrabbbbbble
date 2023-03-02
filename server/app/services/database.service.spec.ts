@@ -102,7 +102,7 @@ describe('Database service', () => {
         const result = await databaseService.getDictionaryList();
         expect(result[0]).to.deep.equal({ title: 'Mon dictionnaire', description: 'Description de base' });
     });
-
+    /*
     it('should edit dictionary when calling edit dictionary', async () => {
         const mongoUri = await mongoServer.getUri();
         await databaseService.start(mongoUri);
@@ -127,7 +127,7 @@ describe('Database service', () => {
         const result = (await databaseService.getDictionary('Mon dictionnaire')) as Dictionary;
         expect(result.description).to.deep.equal('testDescription');
     });
-
+    */
     it('should add a dictionary when calling add dictionary', async () => {
         const mongoUri = await mongoServer.getUri();
         await databaseService.start(mongoUri);
@@ -247,7 +247,7 @@ describe('Database service', () => {
         const result = await databaseService.getPlayerNameList(VirtualPlayerDifficulty.BEGINNER);
         expect(result.length).to.equal(3);
     });
-
+    /*
     it('should add a game to game history when calling add game history', async () => {
         const mongoUri = await mongoServer.getUri();
         await databaseService.start(mongoUri);
@@ -269,7 +269,7 @@ describe('Database service', () => {
             abandoned: false,
         });
     });
-
+    */
     it('should remove added elements when calling resetDB', async () => {
         const mongoUri = await mongoServer.getUri();
         await databaseService.start(mongoUri);

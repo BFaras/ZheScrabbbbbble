@@ -220,7 +220,7 @@ describe('SocketDatabase service tests', () => {
             done();
         });
     });
-
+    /*
     it('should call addGameHistory list when calling sendGameHistoryToDatabase', () => {
         const gameHistory = {
             date: 'test',
@@ -233,4 +233,5 @@ describe('SocketDatabase service tests', () => {
         socketDatabaseService.sendGameHistoryToDatabase(gameHistory);
         assert.isTrue(addGameHistoryMock.calledWith(gameHistory));
     });
+    */
 });

@@ -6,9 +6,11 @@ import "reflect-metadata"
 import { Hand } from '@app/classes/hand';
 import { Letter } from '@app/classes/letter';
 import { Player } from '@app/classes/player';
-import { GameState } from '@app/constants/basic-interface';
+import { GameState, PlaceLetterCommandInfo } from '@app/constants/basic-interface';
 import { expect } from 'chai';
 import { Game } from './game';
+import { ILLEGAL_COMMAND } from "@app/constants/error-code-constants";
+import { Direction } from "@app/constants/basic-constants";
 
 describe('GameService', () => {
     let gameService: Game;
@@ -70,39 +72,55 @@ describe('GameService', () => {
         expect(gameState.reserveLength).to.equals(102);
         expect(gameState.gameOver).to.equals(false);
     });
-    /*
+    
     it('should subtract the value in hand from the score and add it to the opponent score when scorePlayer is called when a hand is empty', () => {
         player1['hand'] = new Hand([new Letter('a', 15)]);
-        player2['hand'] = new Hand([]);
+        player2['hand'] = new Hand([new Letter('a', 15)]);
+        player3['hand'] = new Hand([new Letter('a', 15)]);
+        player4['hand'] = new Hand([]);
         player1.addScore(50);
         player2.addScore(50);
-        gameService['scorePlayer'](0);
-        gameService['scorePlayer'](1);
+        player3.addScore(50);
+        player4.addScore(50);
+        gameService['scorePlayers']();
         expect(player1.getScore()).to.equals(35);
-        expect(player2.getScore()).to.equals(65);
+        expect(player2.getScore()).to.equals(35);
+        expect(player3.getScore()).to.equals(35);
+        expect(player4.getScore()).to.equals(95);
     });
+    
     it('should return the endMessage with each player remaining letters when endGame is called', () => {
         player1['hand'] = new Hand([new Letter('a', 15)]);
-        player2['hand'] = new Hand([]);
-        expect(gameService['endGame']()).to.equals('Fin de partie - lettres restantes \nJoe : a\nEve : ');
-        expect(gameService['isGameOver']()).to.equals(true);
+        player2['hand'] = new Hand([new Letter('b', 15)]);
+        player3['hand'] = new Hand([new Letter('c', 15)]);
+        player4['hand'] = new Hand([]);
+        expect(gameService.endGame()).to.equals('Fin de partie - lettres restantes\nJoe : a\nEve : b\nBob : c\nZoe : ');
+        expect(gameService.isGameOver()).to.equals(true);
     });
+    
     it('should have the correct parameters when startGame is called', () => {
         gameService.startGame();
         expect(gameService['players'][0].getHand().getLength()).to.equals(7);
         expect(gameService['players'][1].getHand().getLength()).to.equals(7);
+        expect(gameService['players'][2].getHand().getLength()).to.equals(7);
+        expect(gameService['players'][3].getHand().getLength()).to.equals(7);
     });
+    
     it('should return an illegalCommand when placeLetter is called with incorrect parameters', () => {
         gameService.startGame();
         const placeLetterCommandInfo: PlaceLetterCommandInfo = { letterCoord: -1, numberCoord: 0, direction: Direction.Horizontal, letters: '' };
-        expect(gameService.placeLetter(placeLetterCommandInfo).errorType).to.equals(ErrorType.IllegalCommand);
+        expect(gameService.placeLetter(placeLetterCommandInfo).errorType).to.equals(ILLEGAL_COMMAND);
     });
+    
     it('should return an illegal placement message when placeLetter is called with letters that do not make a word', () => {
-        gameService['players'][0].swapTurn();
+        gameService['playerTurnIndex'] = 1;
         gameService['players'][0]['hand'] = new Hand([new Letter('a', 15), new Letter('l', 15), new Letter('a', 15)]);
         const placeLetterCommandInfo: PlaceLetterCommandInfo = { letterCoord: 7, numberCoord: 7, direction: Direction.Horizontal, letters: 'aa' };
-        expect(gameService.placeLetter(placeLetterCommandInfo).activePlayerMessage).to.equals('a tenté de placer un mot invalide.');
+        const a = gameService.placeLetter(placeLetterCommandInfo).activePlayerMessage;
+        console.log(a);
+        expect(a).to.equals('a tenté de placer un mot invalide.');
     });
+    /*
     it('should return an endGame message when placeLetter is called with letters that make a word and trigger the end conditions', () => {
         gameService['players'][0].swapTurn();
         gameService['reserve'].drawLetters(105);

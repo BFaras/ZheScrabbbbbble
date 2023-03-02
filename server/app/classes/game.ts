@@ -110,6 +110,7 @@ export class Game {
         for (const player of this.players) {
             endMessage += '\n' + player.getName() + ' : ' + player.getHand().getLettersToString();
         }
+        console.log(endMessage);
         return endMessage;
     }
 

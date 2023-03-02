@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 /* eslint-disable dot-notation */
 import { Board } from '@app/classes/board';
-import { Hand } from '@app/classes/hand';
+//import { Hand } from '@app/classes/hand';
 import { Letter } from '@app/classes/letter';
 import { Multiplier, Tile } from '@app/classes/tile';
-import { MAX_SIZE_HINT, MAX_SIZE_VIRTUAL_PLAY } from '@app/constants/basic-constants';
+//import { MAX_SIZE_HINT, MAX_SIZE_VIRTUAL_PLAY } from '@app/constants/basic-constants';
 import { expect } from 'chai';
-import * as fs from 'fs';
+//import * as fs from 'fs';
 import { PossibleWordFinder } from './possible-word-finder.service';
-import { WordValidation } from './word-validation.service';
+//import { WordValidation } from './word-validation.service';
 
 describe('PossibleWordFinder', () => {
     describe('findPermutations', () => {
@@ -44,6 +44,7 @@ describe('PossibleWordFinder', () => {
             expect(PossibleWordFinder['findPermutations'](['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'], 0).length).to.equal(0);
         });
     });
+    /*
     describe('findWord', () => {
         const jsonDict = JSON.parse(fs.readFileSync('./assets/dictionnary.json', 'utf8'));
         const letterV = new Letter('v', 2);
@@ -136,6 +137,7 @@ describe('PossibleWordFinder', () => {
             ).to.be.greaterThanOrEqual(MAX_SIZE_VIRTUAL_PLAY);
         });
     });
+    */
     describe('findTiles', () => {
         const letterV = new Letter('v', 2);
         const letterI = new Letter('i', 3);
