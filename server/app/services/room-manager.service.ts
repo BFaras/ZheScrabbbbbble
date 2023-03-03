@@ -21,15 +21,18 @@ export class RoomManagerService {
         return true;
     }
 
-    removePlayer(playerID: string, roomName: string) {
-        this.activeRooms[roomName].removePlayer(playerID);
-        if (this.activeRooms[roomName].getPlayerCount() === 0) {
-            delete this.activeRooms[roomName];
+    removePlayer(id: string, playerID: string) {
+        this.activeRooms[id].removePlayer(playerID);
+        if (this.activeRooms[id].getPlayerCount() === 0) {
+            delete this.activeRooms[id];
         }
     }
 
     verifyIfRoomExists(roomName: string): boolean {
-        return roomName in this.activeRooms;
+        for (const room of Object.values(this.activeRooms)) {
+            if(room.getName() === roomName) return true;
+        }
+        return false;
     }
 
     getGameRooms(): GameRoomInfo[] {
@@ -69,7 +72,7 @@ export class RoomManagerService {
         return null;
     }
 
-    deleteRoom(roomToDelete: string): void {
-        delete this.activeRooms[roomToDelete];
+    deleteRoom(id: string): void {
+        delete this.activeRooms[id];
     }
 }

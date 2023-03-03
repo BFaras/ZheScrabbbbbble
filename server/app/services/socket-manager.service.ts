@@ -154,7 +154,7 @@ export class SocketManager {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
                 socket.leave(currentRoom.getID());
-                this.roomManager.removePlayer(socket.id, currentRoom.getName());
+                this.roomManager.removePlayer(socket.id, currentRoom.getID());
                 if(currentRoom.getPlayerCount() === 1){
                     // TODO End game because of lack of players
                 }
