@@ -16,33 +16,37 @@
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="25dp">
 
-        <ScrollView
-            android:id="@+id/chatList"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:padding="30dp"
-            android:paddingBottom="50dp"
-            android:layout_marginTop="50dp"
-            app:layout_constraintBottom_toBottomOf="@id/viewBackground"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/viewBackground">
+            android:layout_height="match_parent">
 
+            <ScrollView
+                android:id="@+id/chatList"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:padding="30dp"
+                android:paddingBottom="50dp"
+                android:layout_marginTop="50dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+            </ScrollView>
             <Button
                 android:id="@+id/ManageChats"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="vertical"
-                android:overScrollMode="never"
-                android:scrollbars="vertical"
-                android:textSize="30dp"
+                android:layout_height="60dp"
+                android:textSize="18dp"
                 android:text="Manage Chats"
+                android:layout_marginTop="600dp"
+                android:layout_marginHorizontal="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

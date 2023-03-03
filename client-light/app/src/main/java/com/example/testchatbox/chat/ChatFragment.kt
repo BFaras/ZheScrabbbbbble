@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.MainActivity
+import com.example.testchatbox.R
 import com.example.testchatbox.databinding.FragmentChatBinding
 import com.example.testchatbox.login.model.LoggedInUser
 import java.util.*
@@ -49,6 +51,9 @@ class ChatFragment : Fragment(), Observer {
                 SocketHandler.getSocket().emit("New Chat Message", text, chatsList[selectedChatIndex]._id)
             }
         }
+        binding.ManageChats.setOnClickListener {
+            findNavController().navigate(R.id.action_ChatFragment_to_manageChatFragment)
+        }
     }
 
     private fun loadChatMessages(){
@@ -62,12 +67,11 @@ class ChatFragment : Fragment(), Observer {
     private fun loadList(){
         chatsList = ChatModel.getList();
         val chatListView = binding.chatList;
-        var i=0;
-        for(chat in chatsList){
+        chatListView.removeAllViews()
+        for((i, chat) in chatsList.withIndex()){
             val btn = Button((activity as MainActivity?)!!)
             btn.text = chat.chatName;
             btn.id = i;
-            i++;
             btn.textSize= 30F;
             btn.setOnClickListener{
                 if(selectedChatIndex!=btn.id){
