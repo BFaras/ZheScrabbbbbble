@@ -73,8 +73,10 @@ class ManageChatFragment : Fragment() {
                 btn.id = i;
                 btn.textSize= 30F;
                 btn.setOnClickListener{
-                    if(ChatModel.leaveChat(chatList[i]._id))
+                    if(ChatModel.leaveChat(chatList[i]._id)) {
+                        loadPublicList();
                         loadList();
+                    }
                 }
                 chatListView.addView(btn)
             }
