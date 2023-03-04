@@ -18,7 +18,7 @@ import java.util.*
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class ChatFragment : Fragment(), Observer {
+class ChatFragment : Fragment(), ObserverChat {
 
     private var _binding: FragmentChatBinding? = null
 
@@ -83,10 +83,15 @@ class ChatFragment : Fragment(), Observer {
         }
     }
 
-    override fun update(chatCode: String) {
-        loadList();
+    override fun updateMessage(chatCode: String) {
         if(chatsList[selectedChatIndex]._id == chatCode)
             loadChatMessages();
     }
+
+    override fun updateChannels() {
+        loadList();
+    }
+
+    override fun updatePublicChannels() {}
 
 }

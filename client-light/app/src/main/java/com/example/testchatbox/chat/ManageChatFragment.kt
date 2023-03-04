@@ -12,7 +12,7 @@ import com.example.testchatbox.databinding.FragmentManageChatBinding
 import java.util.*
 
 
-class ManageChatFragment : Fragment() {
+class ManageChatFragment : Fragment(), ObserverChat {
 
     private var _binding: FragmentManageChatBinding? = null
     private val binding get() = _binding!!
@@ -39,6 +39,7 @@ class ManageChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState);
+        ChatModel.addObserver(this);
         ChatModel.updatePublicList();
         binding.reloadChats.setOnClickListener{
             loadList()
@@ -50,8 +51,6 @@ class ManageChatFragment : Fragment() {
             val name = binding.chatName.text.toString().trim()
             if(name !=null) {
                 ChatModel.createPublicChat(name);
-                Thread.sleep(500);
-                loadList();
             }
         }
         loadList();
@@ -95,13 +94,20 @@ class ManageChatFragment : Fragment() {
                 btn.textSize= 30F;
                 btn.setOnClickListener{
                     ChatModel.joinPublicList(publicChatList[i]._id)
-                    Thread.sleep(500)
-                    loadPublicList()
-                    loadList()
                 }
                 chatListView.addView(btn)
             }
         }
+    }
+
+    override fun updateMessage(chatCode: String) {}
+
+    override fun updateChannels() {
+        loadList();
+    }
+
+    override fun updatePublicChannels() {
+        loadPublicList()
     }
 
 }

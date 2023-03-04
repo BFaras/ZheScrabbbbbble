@@ -54,7 +54,6 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="65dp"
-            android:layout_marginBotttom="65dp"
             android:background="@drawable/background_chat_input"
             android:ems="10"
             android:hint="Chat name"
