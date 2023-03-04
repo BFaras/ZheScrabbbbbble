@@ -7,20 +7,8 @@
     android:orientation="horizontal"
     tools:context=".chat.ManageChatFragment">
 
-    <Button
-        android:id="@+id/reloadChats"
-        android:layout_width="90dp"
-        android:layout_height="40dp"
-        android:layout_margin="50dp"
-        android:text="Reload"
-        android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        android:id="@+id/chatList"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:padding="30dp"
@@ -31,11 +19,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/viewBackground">
 
-
+        <LinearLayout
+            android:id="@+id/chatList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:overScrollMode="never"
+            android:scrollbars="vertical"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="25dp"/>
     </ScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="match_parent">
 
         <TextView
@@ -51,9 +47,8 @@
 
         <EditText
             android:id="@+id/chatName"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_marginTop="65dp"
             android:background="@drawable/background_chat_input"
             android:ems="10"
             android:hint="Chat name"
@@ -66,7 +61,12 @@
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@id/createChat" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.50" />
 
         <Button
             android:id="@+id/createChat"
@@ -77,11 +77,13 @@
             android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.603"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.65" />
 
         <Button
-            android:id="@+id/reloadPublicChat"
+            android:id="@+id/reloadChats"
             android:layout_width="90dp"
             android:layout_height="40dp"
             android:layout_margin="50dp"
@@ -89,12 +91,14 @@
             android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.603"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/chatName" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.75" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
-        android:id="@+id/publicChatList"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:padding="30dp"
@@ -105,6 +109,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/viewBackground">
 
+        <LinearLayout
+            android:id="@+id/publicChatList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:overScrollMode="never"
+            android:scrollbars="vertical"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="25dp"/>
 
     </ScrollView>
 

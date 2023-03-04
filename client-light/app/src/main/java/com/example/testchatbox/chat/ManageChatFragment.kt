@@ -1,14 +1,13 @@
 package com.example.testchatbox.chat
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.example.testchatbox.MainActivity
-import com.example.testchatbox.R
-import com.example.testchatbox.databinding.FragmentChatBinding
 import com.example.testchatbox.databinding.FragmentManageChatBinding
 import java.util.*
 
@@ -40,26 +39,27 @@ class ManageChatFragment : Fragment(), ObserverChat {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState);
-        ChatModel.addObserver(this);
-        ChatModel.updatePublicList();
-        binding.reloadChats.setOnClickListener{
-            loadList()
-        }
-        binding.reloadPublicChat.setOnClickListener{
-            loadPublicList()
-        }
         binding.createChat.setOnClickListener {
             val name = binding.chatName.text.toString().trim()
-            if(name !=null) {
+            if(!name.isEmpty()) {
                 ChatModel.createPublicChat(name);
+                binding.chatName.setText("");
             }
+        }
+        binding.createChat.setOnClickListener {
+            ChatModel.updatePublicList()
         }
         loadList();
         loadPublicList();
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStart() {
+        super.onStart()
+        ChatModel.addObserver(this);
+    }
+
+    override fun onStop() {
+        super.onStop()
         ChatModel.removeObserver(this);
     }
 
@@ -74,10 +74,7 @@ class ManageChatFragment : Fragment(), ObserverChat {
                 btn.id = i;
                 btn.textSize= 30F;
                 btn.setOnClickListener{
-                    if(ChatModel.leaveChat(chatList[i]._id)) {
-                        loadPublicList();
-                        loadList();
-                    }
+                    ChatModel.leaveChat(chatList[i]._id)
                 }
                 chatListView.addView(btn)
             }
@@ -85,7 +82,8 @@ class ManageChatFragment : Fragment(), ObserverChat {
     }
 
     private fun loadPublicList(){
-        publicChatList = ChatModel.getList();
+        publicChatList = ChatModel.getPublicList();
+        Log.i("list", publicChatList.toString());
         val chatListView = binding.publicChatList;
         chatListView.removeAllViews()
         for((i, chat) in publicChatList.withIndex()){
@@ -105,11 +103,15 @@ class ManageChatFragment : Fragment(), ObserverChat {
     override fun updateMessage(chatCode: String) {}
 
     override fun updateChannels() {
-        loadList();
+        activity?.runOnUiThread(Runnable {
+            loadList();
+        });
     }
 
     override fun updatePublicChannels() {
-        loadPublicList()
+        activity?.runOnUiThread(Runnable {
+            loadPublicList()
+        });
     }
 
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.MainActivity
@@ -40,7 +41,7 @@ class ChatFragment : Fragment(), ObserverChat {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState);
         loadList();
-        ChatModel.addObserver(this);
+        selectedChatIndex=0;
         binding.send.setOnClickListener {
             var text = binding.inputText.text.toString().trim();
             if(text.isNotEmpty()){
@@ -56,8 +57,13 @@ class ChatFragment : Fragment(), ObserverChat {
         loadChatMessages();
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStart() {
+        super.onStart()
+        ChatModel.addObserver(this);
+    }
+
+    override fun onStop() {
+        super.onStop()
         ChatModel.removeObserver(this);
     }
 
@@ -94,7 +100,9 @@ class ChatFragment : Fragment(), ObserverChat {
     }
 
     override fun updateChannels() {
-        loadList();
+        activity?.runOnUiThread(Runnable {
+            loadList();
+        });
     }
 
     override fun updatePublicChannels() {}

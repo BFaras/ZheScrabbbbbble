@@ -21,7 +21,6 @@
             android:layout_height="match_parent">
 
             <ScrollView
-                android:id="@+id/chatList"
                 android:layout_width="match_parent"
                 android:layout_height="500dp"
                 android:padding="30dp"
@@ -31,7 +30,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/chatList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:overScrollMode="never"
+                    android:scrollbars="vertical"
+                    tools:layout_editor_absoluteX="1dp"
+                    tools:layout_editor_absoluteY="25dp"/>
             </ScrollView>
+
             <Button
                 android:id="@+id/ManageChats"
                 android:layout_width="match_parent"

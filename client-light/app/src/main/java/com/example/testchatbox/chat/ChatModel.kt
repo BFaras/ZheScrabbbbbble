@@ -65,7 +65,7 @@ interface ObservableChat{
 
 object ChatModel : ObservableChat {
     private val chatList = LinkedHashMap<String,Chat> ();
-    val publicChatList = LinkedHashMap<String,Chat> ();
+    private val publicChatList = LinkedHashMap<String,Chat> ();
     override val observers: ArrayList<ObserverChat> = arrayListOf();
 
     fun updateList(){
@@ -76,7 +76,6 @@ object ChatModel : ObservableChat {
                 for (i in 0 until chats.length()) {
                     val chat = chats.getJSONObject(i)
                     if(!chatList.containsKey(chat.get("_id"))){
-                        Log.i("JSON", chat.toString());
                         chatList[chat.get("_id") as String]=(Chat(ChatType.fromInt(chat.get("chatType") as Int), chat.get("chatName") as String, chat.get("_id") as String))
                         changed=true;
                     }
@@ -91,12 +90,17 @@ object ChatModel : ObservableChat {
         SocketHandler.getSocket().once("Public Chat List Response") { args ->
             if(args[0] != null){
                 val chats = args[0] as JSONArray;
+                var changed= false
                 for (i in 0 until chats.length()) {
                     val chat = chats.getJSONObject(i)
-                    if(!publicChatList.containsKey(chat.get("_id")))
+                    Log.i("JSON", chat.toString())
+                    if(!publicChatList.containsKey(chat.get("_id"))){
                         publicChatList[chat.get("_id") as String]=(Chat(ChatType.fromInt(chat.get("chatType") as Int),
                             chat.get("chatName") as String, chat.get("_id") as String))
+                            changed=true;
+                    }
                 }
+                if(changed) notifyNewPublicChanel();
             }
         }
         SocketHandler.getSocket().emit("Public Chat List Response")
@@ -112,12 +116,12 @@ object ChatModel : ObservableChat {
 
     fun joinPublicList(_id:String){
         SocketHandler.getSocket().on("Join Chat Response") { args ->
-            if(args[0] != null && args[1] != null ){
+            if(args[0] != null ){
                 val errorMessage = args[0] as String;
                 if(errorMessage == "0"){
+                    updateList();
                     publicChatList.remove(_id);
                     notifyNewPublicChanel();
-                    updateList();
                 }
             }
         }
@@ -133,16 +137,28 @@ object ChatModel : ObservableChat {
                 }
             }
         }
-        SocketHandler.getSocket().emit("Create New Chat", name, 1)
+        SocketHandler.getSocket().emit("Create New Chat", name, 0)
     }
 
-    fun leaveChat(_id:String) :Boolean{
+    fun leaveChat(_id:String){
+        Log.i("Leave", _id)
+        SocketHandler.getSocket().on("Leave Chat Response") { args ->
+            if(args[0] != null){
+                val errorMessage = args[0] as String;
+                if(errorMessage == "0"){
+                    chatList.remove(_id)
+                    notifyNewChanel();
+                    updatePublicList() ;
+                    Log.i("Channels", chatList.toString())
+                }
+            }
+        }
         SocketHandler.getSocket().emit("Leave Public Chat", _id)
-        return (chatList.remove(_id) != null)
     }
 
     fun initialiseChat(){
         updateList();
+        updatePublicList();
         SocketHandler.getSocket().on("New Chat Message") { args ->
             if(args[0] != null && args[1] != null ){
                 val chatCode = args[0] as String;
