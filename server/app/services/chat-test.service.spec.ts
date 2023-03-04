@@ -6,14 +6,13 @@
 /* eslint-disable max-len */
 import { NO_ERROR } from '@app/constants/error-code-constants';
 import { ChatInfo, ChatType } from '@app/interfaces/chat-info';
-import { Server } from 'app/server';
 import { expect } from 'chai';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Container } from 'typedi';
 import { ChatService } from './chat.service';
 import { DatabaseService } from './database.service';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-import Sinon = require('sinon');
 
 describe('Chat Tests', async () => {
     const testUserId = 'Jhsdg15f45akdsa';
@@ -23,25 +22,33 @@ describe('Chat Tests', async () => {
     const testChatType = ChatType.PUBLIC;
     const numberOfChatsToCreateForTest = 3;
 
-    let server: Server;
+    let mongoServer: MongoMemoryServer;
     let chatService: ChatService;
     let dbService: DatabaseService;
     let chatIds: string[] = [];
 
-    beforeEach(async () => {
-        server = Container.get(Server);
-        chatService = Container.get(ChatService);
+    before(async () => {
         dbService = Container.get(DatabaseService);
-        await server.init(false);
+        mongoServer = new MongoMemoryServer();
+        await dbService.start(await mongoServer.getUri());
+    });
+
+    beforeEach(async () => {
+        chatService = Container.get(ChatService);
     });
 
     afterEach(async () => {
         chatIds.forEach(async (chatId: string) => {
             await dbService.removeChatCanal(chatId);
         });
+
         chatIds = [];
-        server['socketManager']['sio'].close();
-        Sinon.restore();
+    });
+
+    after(async () => {
+        if (dbService['client']) {
+            await dbService['client'].close();
+        }
     });
 
     it('should create chat and user should be in it', async () => {

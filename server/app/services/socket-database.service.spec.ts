@@ -5,13 +5,16 @@ import { GameType } from '@app/constants/basic-constants';
 import { CollectionType, TopScores, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
 import { Server } from '@app/server';
 import { assert } from 'chai';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as sinon from 'sinon';
 import { io as ioClient, Socket } from 'socket.io-client';
 import Container from 'typedi';
+import { DatabaseService } from './database.service';
 import { SocketDatabaseService } from './socket-database.service';
 import { SocketManager } from './socket-manager.service';
 
 describe('SocketDatabase service tests', () => {
+    let dbService: DatabaseService;
     let socketDatabaseService: SocketDatabaseService;
     let socketService: SocketManager;
     let server: Server;
@@ -19,6 +22,12 @@ describe('SocketDatabase service tests', () => {
 
     const urlString = 'http://localhost:3000';
     const RESPONSE_DELAY = 300;
+
+    before(async () => {
+        dbService = Container.get(DatabaseService);
+        const mongoServer = new MongoMemoryServer();
+        await dbService.start(await mongoServer.getUri());
+    });
 
     beforeEach(async () => {
         server = Container.get(Server);
@@ -32,6 +41,12 @@ describe('SocketDatabase service tests', () => {
         clientSocket.close();
         socketService['sio'].close();
         sinon.restore();
+    });
+
+    after(async () => {
+        if (dbService['client']) {
+            await dbService['client'].close();
+        }
     });
 
     it('should send both scores to database when sendScoreToDatabase is called with no disconnect', () => {
