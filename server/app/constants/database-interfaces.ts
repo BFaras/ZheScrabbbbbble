@@ -44,7 +44,6 @@ export interface AccountInfo {
     username: string;
     encryptedPassword: string;
     email: string;
-    userAvatar: string;
     securityQuestion: Question;
 }
 
@@ -60,4 +59,5 @@ export enum CollectionType {
     GAMES = 'gameHistory',
     USERACCOUNTS = 'userAccount',
     CHATCANALS = 'chatCanals',
+    PROFILEINFO = 'profileInfo',
 }

@@ -48,6 +48,7 @@ export class SocketManager {
         this.authSocketService = new AuthSocketService();
         this.accountInfoService = Container.get(AccountInfoService);
         this.onlineUsersService = Container.get(OnlineUsersService);
+        this.profileSocketService = Container.get(ProfileSocketService);
         this.databaseService = databaseService;
         this.timeoutRoom = {};
     }

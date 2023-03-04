@@ -13,12 +13,13 @@ import {
     VirtualPlayerDifficulty
 } from '@app/constants/database-interfaces';
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
-import { ProfileInfo } from '@app/interfaces/profile-info';
+import { ProfileInfo, ProfileInfoDB } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
 import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb';
 import 'reflect-metadata';
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
+import { ProfileService } from './profile.service';
 
 const DEFAULT_DICTIONARY = 'Mon dictionnaire';
 
@@ -68,13 +69,12 @@ export class DatabaseService {
     }
 
     // eslint-disable-next-line max-len, prettier/prettier
-    async addUserAccount(username: string, encryptedPassword: string, email: string, userAvatar: string, securityQuestion: Question): Promise<boolean> {
+    async addUserAccount(username: string, encryptedPassword: string, email: string, securityQuestion: Question): Promise<boolean> {
         let isAccountCreated = true;
         const accountInfo: AccountInfo = {
             username,
             encryptedPassword,
             email,
-            userAvatar,
             securityQuestion,
         };
 
@@ -87,7 +87,9 @@ export class DatabaseService {
     }
 
     async removeUserAccount(username: string) {
-        await this.getCollection(CollectionType.USERACCOUNTS)?.deleteOne({ username });
+        const userId = await this.getUserId(username);
+        await this.getCollection(CollectionType.USERACCOUNTS)?.deleteOne({ _id: new ObjectId(userId) });
+        await this.getCollection(CollectionType.PROFILEINFO)?.deleteOne({ _id: new ObjectId(userId) });
     }
 
     async getUserId(username: string) {
@@ -161,21 +163,29 @@ export class DatabaseService {
     }
 
     async getUserProfileInfo(userId: string): Promise<ProfileInfo> {
-        let profileInfo: ProfileInfo = {
-            // eslint-disable-next-line prettier/prettier
-            avatar: '', level: 0, userCode: '', stats: [], tournamentWins: [0, 0, 0], connectionHistory: [], gameHistory: [],
-        };
-        const userProfileInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<ProfileInfo>)?.findOne(
-            {
-                _id: new ObjectId(userId),
-            },
-            { projection: { _id: 0 } },
-        );
+        let profileInfo: ProfileInfo = Container.get(ProfileService).getDefaultProfileInformation();
+        const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
+            _id: new ObjectId(userId),
+        });
 
         if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
-            profileInfo = userProfileInfoDoc;
+            profileInfo = userProfileInfoDoc.profileInfo;
         }
         return profileInfo;
+    }
+
+    async addNewProfile(userId: string, profileInfo: ProfileInfo): Promise<boolean> {
+        const profileInfoDB: ProfileInfoDB = {
+            _id: new ObjectId(userId),
+            profileInfo,
+        };
+        let isCreationSuccess = true;
+        await this.getCollection(CollectionType.PROFILEINFO)
+            ?.insertOne(profileInfoDB)
+            .catch(() => {
+                isCreationSuccess = false;
+            });
+        return isCreationSuccess;
     }
 
     async addNewChatCanal(chatInfo: ChatInfoDB): Promise<string> {

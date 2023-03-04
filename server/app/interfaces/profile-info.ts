@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 export enum ConnectionType {
     CONNECTION,
     DISCONNECTION,
@@ -36,4 +38,9 @@ export interface ProfileInfo {
     tournamentWins: number[];
     connectionHistory: ConnectionInfo[];
     gameHistory: GameInfo[];
+}
+
+export interface ProfileInfoDB {
+    _id: ObjectId;
+    profileInfo: ProfileInfo;
 }
