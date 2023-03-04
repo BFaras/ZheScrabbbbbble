@@ -1,5 +1,5 @@
 <div class="container justified">
-    <div class="lang">
+    <div class="lang" style="color: var(--text-default);">
         {{'CHANGELANG.MESSAGE' | translate}} : 
         <select #selLang (change)="translateLanguageTo(selLang.value)" style="font-family: 'Courier New', Courier, monospace;">
             <option *ngFor="let language of translate.getLangs().slice(0,2).reverse()" [value]="language">{{ language }}</option>

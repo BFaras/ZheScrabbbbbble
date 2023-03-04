@@ -68,6 +68,8 @@ $indigo-pink-theme: mat.define-light-theme(
 
 /* You can add global styles to this file, and also import other style files */
 
+@import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
+
 html,
 
 body {
@@ -91,6 +93,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
     --background-default: #f7eddf;
     --background-secondary: #f1f1f1;
+    --background-tertiary: #d7e0cd;
 
     --text-default: black;
     --text-secondary: #001d7e;
@@ -118,4 +121,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     --tile-on-holder: #ECE7DD;
 
     --box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+
+    --logo-default: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Scrabble_American_logo.svg/1200px-Scrabble_American_logo.svg.png";
 }

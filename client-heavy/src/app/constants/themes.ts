@@ -17,6 +17,7 @@ export const classic: Theme = {
 
         "--background-default": "#f7eddf",
         "--background-secondary": " #f1f1f1",
+        "--background-tertiary": "#d7e0cd",
 
         "--text-default": "black",
         "--text-secondary": "#001d7e",
@@ -43,7 +44,9 @@ export const classic: Theme = {
         "--tile-on-board": "#cfcb9c",
         "--tile-on-holder": "#ECE7DD",
 
-        "--box-shadow": "0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11)"
+        "--box-shadow": "0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11)",
+
+        "--logo-default": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Scrabble_American_logo.svg/1200px-Scrabble_American_logo.svg.png",
     }
 };
 
@@ -61,10 +64,11 @@ export const inverted: Theme = {
 
         "--background-default": "#081220",
         "--background-secondary": "#0e0e0e",
+        "--background-tertiary": "#281f32",
 
         "--text-default": "white",
         "--text-secondary": "#ffe281",
-        "--input-highlight": "#30273b",
+        "--input-highlight": "#281f32",
 
         "--button-text-default": "#a1a1a1",
         "--button-text-hover": "white",
@@ -87,6 +91,9 @@ export const inverted: Theme = {
         "--tile-on-board": "#303463",
         "--tile-on-holder": "#131822",
 
-        "--box-shadow": "0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11)"
+        "--box-shadow": "0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11)",
+
+        "--logo-default": "scrabble_logo_inverted.png",
+
     }
 };

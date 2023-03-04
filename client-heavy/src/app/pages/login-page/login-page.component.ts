@@ -27,7 +27,6 @@ export class LoginPageComponent implements OnInit {
     } else {
       this.themeService.setInvertedTheme();
     }
-    console.log(this.themeService.getActiveTheme());
   }
 
 }
