@@ -21,7 +21,7 @@ export class AccountCreationService {
 
   getStatusOfAccountCreation():  Observable<boolean> {
     return new Observable((observer: Observer<boolean>) => {
-      this.socket.on('Creation result', (message: boolean) => {observer.next(message)
+      this.socket.once('Creation result', (message: boolean) => {observer.next(message)
       });
     });
     

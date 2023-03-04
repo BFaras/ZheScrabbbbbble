@@ -82,10 +82,10 @@ export class DatabaseService {
         return Promise.resolve(isAccountCreated);
     }
 
-    async changeUserPassword(username: string, encryptedPassword: string) {
+    async changeUserPassword(usernameUser: string, encryptedPasswordUser: string) {
         let isChangeSuccess = true;
         await this.getCollection(CollectionType.USERACCOUNTS)
-            ?.updateOne({ username }, { encryptedPassword })
+            ?.updateOne({ username: usernameUser }, { $set: { encryptedPassword: encryptedPasswordUser } })
             .catch(() => {
                 isChangeSuccess = false;
             });
@@ -121,7 +121,7 @@ export class DatabaseService {
             username,
         });
         let securityQuestionAnswer = '';
-
+        
         if (userAccountInfoDoc !== undefined && userAccountInfoDoc !== null) {
             securityQuestionAnswer = userAccountInfoDoc.securityQuestion.answer;
         }
