@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
-import { COLOUR_COORDINATES, COLUMNS, GRID_COLOURS, GRID_CONSTANTS, GRID_OFFSETS, GRID_WORDS, ROWS } from '@app/constants/grid-constants';
+import { COLOUR_COORDINATES, COLUMNS, GRID_COLOURS_CLASSIC, GRID_COLOURS_INVERTED, GRID_CONSTANTS, GRID_OFFSETS, GRID_WORDS, ROWS } from '@app/constants/grid-constants';
 import { HOLDER_MEASUREMENTS, LETTER_POINTS } from '@app/constants/letters-constants';
+import { classic } from '@app/constants/themes';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
+import { ThemesService } from '../themes-service/themes-service';
 
 const isCoordinateOf = (colourCoords: number[][], coord: number[]): boolean => {
     for (const square of colourCoords) {
@@ -29,17 +31,21 @@ export class GridService {
     gridContext: CanvasRenderingContext2D;
     horizontalArrow = '🢚';
     verticalArrow = '🢛';
+    GRID_COLOURS = GRID_COLOURS_CLASSIC;
     private boardState: string[][] = [];
     private canvasSize: Vec2 = { x: GRID_CONSTANTS.defaultWidth, y: GRID_CONSTANTS.defaultHeight };
 
-    constructor(private size: FontSizeService) {}
+    constructor(private size: FontSizeService, private theme: ThemesService) {
+        if (this.theme.getActiveTheme() !== classic) this.GRID_COLOURS = GRID_COLOURS_INVERTED;
+    }
 
     drawIdentificators() {
+
         this.gridContext.beginPath();
         this.gridContext.font = 'bold 27px Courier';
         this.gridContext.textAlign = 'center';
         this.gridContext.textBaseline = 'top';
-        this.gridContext.fillStyle = GRID_COLOURS.defaultDarkRed;
+        this.gridContext.fillStyle = this.GRID_COLOURS.defaultDarkRed;
 
         for (let x = GRID_CONSTANTS.defaultSide, i = 0; x < GRID_CONSTANTS.defaultHeight; x += GRID_CONSTANTS.defaultSide, i++) {
             const columnNumbers: string[] = Object.keys(COLUMNS);
@@ -48,7 +54,7 @@ export class GridService {
             this.gridContext.fillText(rowLetters[i], GRID_CONSTANTS.defaultSide / 2, x + GRID_CONSTANTS.defaultSide / 3);
         }
 
-        this.gridContext.strokeStyle = 'black';
+        this.gridContext.strokeStyle = this.GRID_COLOURS.defaultBlack;
         this.gridContext.stroke();
     }
 
@@ -59,7 +65,7 @@ export class GridService {
     drawSquare(column: number, row: number, colour: string, word: string, points: string) {
         this.gridContext.fillStyle = colour;
         this.gridContext.fillRect(column, row, GRID_CONSTANTS.defaultSide, GRID_CONSTANTS.defaultSide);
-        this.gridContext.fillStyle = GRID_COLOURS.defaultBlack;
+        this.gridContext.fillStyle = this.GRID_COLOURS.defaultBlack;
         if (this.isStartSquare(column, row))
             this.gridContext.fillText(
                 GRID_WORDS.startWord,
@@ -88,15 +94,15 @@ export class GridService {
                 y += GRID_CONSTANTS.defaultSide
             ) {
                 if (isCoordinateOf(COLOUR_COORDINATES.lightBlueCoordinates, [x, y])) {
-                    this.drawSquare(x, y, GRID_COLOURS.defaultLightBlue, GRID_WORDS.blueWord, GRID_WORDS.doubleWord);
+                    this.drawSquare(x, y, this.GRID_COLOURS.defaultLightBlue, GRID_WORDS.blueWord, GRID_WORDS.doubleWord);
                 } else if (isCoordinateOf(COLOUR_COORDINATES.blueCoordinates, [x, y])) {
-                    this.drawSquare(x, y, GRID_COLOURS.defaultBlue, GRID_WORDS.blueWord, GRID_WORDS.tripleWord);
+                    this.drawSquare(x, y, this.GRID_COLOURS.defaultBlue, GRID_WORDS.blueWord, GRID_WORDS.tripleWord);
                 } else if (isCoordinateOf(COLOUR_COORDINATES.pinkCoordinates, [x, y])) {
-                    this.drawSquare(x, y, GRID_COLOURS.defaultPink, GRID_WORDS.pinkRedWord, GRID_WORDS.doubleWord);
+                    this.drawSquare(x, y, this.GRID_COLOURS.defaultPink, GRID_WORDS.pinkRedWord, GRID_WORDS.doubleWord);
                 } else if (isCoordinateOf(COLOUR_COORDINATES.redCoordinates, [x, y])) {
-                    this.drawSquare(x, y, GRID_COLOURS.defaultRed, GRID_WORDS.pinkRedWord, GRID_WORDS.tripleWord);
+                    this.drawSquare(x, y, this.GRID_COLOURS.defaultRed, GRID_WORDS.pinkRedWord, GRID_WORDS.tripleWord);
                 } else {
-                    this.gridContext.fillStyle = GRID_COLOURS.defaultWhite;
+                    this.gridContext.fillStyle = this.GRID_COLOURS.defaultWhite;
                     this.gridContext.fillRect(x, y, GRID_CONSTANTS.defaultSide, GRID_CONSTANTS.defaultSide);
                 }
             }
@@ -112,7 +118,7 @@ export class GridService {
             this.gridContext.lineTo(GRID_CONSTANTS.defaultWidth, x);
         }
 
-        this.gridContext.strokeStyle = 'black';
+        this.gridContext.strokeStyle = this.GRID_COLOURS.defaultBlack;
         this.gridContext.stroke();
     }
 
@@ -127,10 +133,10 @@ export class GridService {
             this.gridContext.font = `bold ${this.size.getFontSize().get('gridLettersSize')}px Courier`;
             this.gridContext.textBaseline = 'bottom';
             this.gridContext.textAlign = 'center';
-            this.gridContext.fillStyle = GRID_COLOURS.defaultBackground;
+            this.gridContext.fillStyle = this.GRID_COLOURS.defaultBackground;
             this.gridContext.fillRect(COLUMNS[column], ROWS[checkedRow], GRID_CONSTANTS.defaultSide - 1, GRID_CONSTANTS.defaultSide - 1);
 
-            this.gridContext.fillStyle = GRID_COLOURS.defaultBlack;
+            this.gridContext.fillStyle = this.GRID_COLOURS.defaultBlack;
             this.gridContext.fillText(
                 blankHandledLetter.letter,
                 COLUMNS[column] + GRID_CONSTANTS.defaultSide / GRID_OFFSETS.letterOffsetH,
@@ -146,7 +152,7 @@ export class GridService {
                 ROWS[checkedRow] + HOLDER_MEASUREMENTS.tileSide / GRID_OFFSETS.pointOffsetV,
             );
 
-            this.gridContext.strokeStyle = 'black';
+            this.gridContext.strokeStyle = this.GRID_COLOURS.defaultBlack;
             this.gridContext.stroke();
         }
     }
@@ -206,7 +212,7 @@ export class GridService {
     }
 
     addArrow(column: number, row: string, direction: boolean) {
-        this.gridContext.fillStyle = 'black';
+        this.gridContext.fillStyle = this.GRID_COLOURS.defaultBlack;
         this.gridContext.font = '45px Courier';
         this.gridContext.textBaseline = 'bottom';
         const arrowDirection = direction ? this.horizontalArrow : this.verticalArrow;

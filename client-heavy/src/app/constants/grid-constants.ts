@@ -33,7 +33,7 @@ export const GRID_WORDS = {
     defaultFontSize: '11',
 };
 
-export const GRID_COLOURS = {
+export const GRID_COLOURS_CLASSIC = {
     defaultRed: '#cb654f',
     defaultPink: '#d3b1a7',
     defaultBlue: '#679089',
@@ -42,6 +42,17 @@ export const GRID_COLOURS = {
     defaultWhite: '#FAF5F1',
     defaultDarkRed: '#520000',
     defaultBackground: '#cfcb9c',
+};
+
+export const GRID_COLOURS_INVERTED = {
+    defaultRed: '#349ab0',
+    defaultPink: '#2c4e58',
+    defaultBlue: '#986f76',
+    defaultLightBlue: '#73415c',
+    defaultBlack: 'white',
+    defaultWhite: '#050a0e',
+    defaultDarkRed: '#adffff',
+    defaultBackground: '#303463',
 };
 
 export const ROWS: { [key: string]: number } = {};

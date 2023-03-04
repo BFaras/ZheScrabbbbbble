@@ -44,16 +44,14 @@ export const classic: Theme = {
         "--tile-on-board": "#cfcb9c",
         "--tile-on-holder": "#ECE7DD",
 
-        "--box-shadow": "0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11)",
-
-        "--logo-default": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Scrabble_American_logo.svg/1200px-Scrabble_American_logo.svg.png",
+        "--box-shadow": "0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11)"
     }
 };
 
 export const inverted: Theme = {
     name: "inverted",
     properties: {
-        "--accent-default": "##349ab0",
+        "--accent-default": "#349ab0",
         "--playarea-motx2": "#2c4e58",
         "--playarea-motx3": "#349ab0",
         "--playarea-letterx2": "#73415c",
@@ -91,9 +89,6 @@ export const inverted: Theme = {
         "--tile-on-board": "#303463",
         "--tile-on-holder": "#131822",
 
-        "--box-shadow": "0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11)",
-
-        "--logo-default": "scrabble_logo_inverted.png",
-
+        "--box-shadow": "0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11)"
     }
 };
