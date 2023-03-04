@@ -4,26 +4,60 @@ import com.example.testchatbox.Coordinates.COLUMNS
 import com.example.testchatbox.Coordinates.ROWS
 
 object GridConstants {
-    const val DEFAULT_WIDTH = 675F
-    const val DEFAULT_HEIGHT = 675F
+    const val DEFAULT_WIDTH = 650F
+    const val DEFAULT_HEIGHT = 650F
     const val DEFAULT_SIDE = DEFAULT_HEIGHT/15
     const val DEFAULT_LINE_WIDTH = 1F
     const val ROW_COLUMN_COUNT = 15
     const val LAST_LETTER = -1
 
 }
+
+object LetterPoints {
+    var letterPoints = mapOf(
+        "A" to 1,
+        "B" to 3,
+        "C" to 3,
+        "D" to 2,
+        "E" to 1,
+        "F" to 4,
+        "G" to 2,
+        "H" to 4,
+        "I" to 1,
+        "J" to 8,
+        "K" to 10,
+        "L" to 1,
+        "M" to 2,
+        "N" to 1,
+        "O" to 1,
+        "P" to 3,
+        "Q" to 8,
+        "R" to 1,
+        "S" to 1,
+        "T" to 1,
+        "U" to 1,
+        "V" to 4,
+        "W" to 10,
+        "X" to 10,
+        "Y" to 10,
+        "Z" to 10,
+        "BLANK" to 0
+    )
+}
+
+
 object Coordinates {
     var ROWS = mutableMapOf<String, Float>()
     var COLUMNS = mutableMapOf<Int, Float>()
 
     fun setCoordinates() {
-        var squareSizeIncrement = GridConstants.DEFAULT_SIDE-10
+        var squareSizeIncrement = 0F
         for (letter in 'A'.code..'O'.code) {
             val charLetter = letter.toChar()
             ROWS[charLetter.toString()] = squareSizeIncrement
             squareSizeIncrement += GridConstants.DEFAULT_SIDE
         }
-        squareSizeIncrement = GridConstants.DEFAULT_SIDE-10
+        squareSizeIncrement = 0F
         for (num in 1..GridConstants.ROW_COLUMN_COUNT) {
             COLUMNS[num] = squareSizeIncrement
             squareSizeIncrement += GridConstants.DEFAULT_SIDE
