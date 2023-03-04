@@ -1,8 +1,10 @@
 package com.example.testchatbox.chat
 
 import SocketHandler
+import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.system.exitProcess
 
 
 enum class  ChatType{
@@ -15,7 +17,11 @@ enum class  ChatType{
     }
 }
 
-class Message(val username:String, val timestamp:String, val message: String)
+class Message(val username:String, val timestamp:String, val message: String){
+    override fun toString() : String{
+        return "$timestamp | $username : $message"
+    }
+}
 
 class Chat(val chatType : ChatType, val chatName :String, val _id:String){
     var messages = arrayListOf<Message>();
@@ -38,6 +44,10 @@ interface ObservableChat{
 
     fun addObserver(observer: ObserverChat) {
         observers.add(observer)
+    }
+
+    fun removeObserver(observer: ObserverChat) {
+        observers.remove(observer)
     }
 
     fun notifyNewMessage(chatCode:String) {
@@ -66,6 +76,7 @@ object ChatModel : ObservableChat {
                 for (i in 0 until chats.length()) {
                     val chat = chats.getJSONObject(i)
                     if(!chatList.containsKey(chat.get("_id"))){
+                        Log.i("JSON", chat.toString());
                         chatList[chat.get("_id") as String]=(Chat(ChatType.fromInt(chat.get("chatType") as Int), chat.get("chatName") as String, chat.get("_id") as String))
                         changed=true;
                     }
@@ -115,14 +126,14 @@ object ChatModel : ObservableChat {
 
     fun createPublicChat(name: String){
         SocketHandler.getSocket().on("Chat Creation Response") { args ->
-            if(args[0] != null && args[1] != null ){
-                val errorMessage = args[0] as String;
-                if(errorMessage == "0"){
+            if(args[0] != null){
+                val errorMessage = args[0] as JSONObject;
+                if(errorMessage.get("errorCode") == "0"){
                     updateList();
                 }
             }
         }
-        SocketHandler.getSocket().emit("Create New Chat", name, ChatType.PUBLIC)
+        SocketHandler.getSocket().emit("Create New Chat", name, 1)
     }
 
     fun leaveChat(_id:String) :Boolean{

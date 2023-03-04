@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import com.example.testchatbox.MainActivity
 import com.example.testchatbox.R
+import com.example.testchatbox.databinding.FragmentChatBinding
 import com.example.testchatbox.databinding.FragmentManageChatBinding
 import java.util.*
 
@@ -32,8 +33,8 @@ class ManageChatFragment : Fragment(), ObserverChat {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_manage_chat, container, false)
+        _binding = FragmentManageChatBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
 
@@ -55,10 +56,11 @@ class ManageChatFragment : Fragment(), ObserverChat {
         }
         loadList();
         loadPublicList();
+    }
 
-
-
-
+    override fun onDestroy() {
+        super.onDestroy()
+        ChatModel.removeObserver(this);
     }
 
     private fun loadList(){

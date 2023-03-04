@@ -47,20 +47,25 @@ class ChatFragment : Fragment(), ObserverChat {
                 val currentDate = Calendar.getInstance().time.toString().split(' ')[3];
                 val userName = LoggedInUser.getName();
                 binding.inputText.setText("");
-                text = "$currentDate | $userName : $text";
                 SocketHandler.getSocket().emit("New Chat Message", text, chatsList[selectedChatIndex]._id)
             }
         }
         binding.ManageChats.setOnClickListener {
             findNavController().navigate(R.id.action_ChatFragment_to_manageChatFragment)
         }
+        loadChatMessages();
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ChatModel.removeObserver(this);
     }
 
     private fun loadChatMessages(){
         val messagesBox = binding.textView
         messagesBox.text = "";
         for(message in chatsList[selectedChatIndex].messages){
-            messagesBox.append(message + System.getProperty("line.separator"))
+            messagesBox.append(message.toString() + System.getProperty("line.separator"))
         }
     }
 
