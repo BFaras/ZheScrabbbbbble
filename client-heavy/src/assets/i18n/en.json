@@ -2,6 +2,9 @@
     "CHANGELANG":{
         "MESSAGE":"Change Language"
     },
+    "CHANGETHEME":{
+        "MESSAGE":"Change Theme"
+    },
     "LOGIN":{
         "AUTH":"Authentication",
         "LOGIN":"Log in",
