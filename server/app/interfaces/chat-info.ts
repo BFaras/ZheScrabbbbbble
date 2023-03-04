@@ -1,3 +1,5 @@
+export const PRIVATE_CHAT_IDS_SEPARATOR = ' & ';
+
 export enum ChatType {
     PUBLIC,
     PRIVATE,

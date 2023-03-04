@@ -23,9 +23,7 @@ export class AuthSocketService {
         socket.on('User authentification', async (username: string, password: string) => {
             const isAuthentificationSuccess = await this.authentificationService.authentifyUser(username, password);
             if (isAuthentificationSuccess) {
-                this.accountInfoService.setUsername(socket, username);
-                await this.joinUserChatRooms(socket);
-                this.accountInfoService.setUserId(socket, await this.authentificationService.getUserId(username));
+                await this.setupUser(socket, username);
                 console.log(new Date().toLocaleTimeString() + ' | Login successfull');
             }
             socket.emit('Authentification status', isAuthentificationSuccess);
@@ -42,8 +40,7 @@ export class AuthSocketService {
                     securityQuestion,
                 );
                 if (accountCreationStatus === NO_ERROR) {
-                    this.accountInfoService.setUsername(socket, username);
-                    this.accountInfoService.setUserId(socket, await this.authentificationService.getUserId(username));
+                    await this.setupUser(socket, username);
                     console.log(new Date().toLocaleTimeString() + ' | Register successfull');
                 }
                 socket.emit('Creation result', accountCreationStatus === NO_ERROR);
@@ -70,7 +67,14 @@ export class AuthSocketService {
         });
     }
 
-    async joinUserChatRooms(socket: io.Socket) {
+    private async setupUser(socket: io.Socket, username: string) {
+        this.accountInfoService.setUsername(socket, username);
+        this.accountInfoService.setUserId(socket, await this.authentificationService.getUserId(username));
+        await this.chatService.joinGlobalChat(this.accountInfoService.getUserId(socket));
+        await this.joinUserChatRooms(socket);
+    }
+
+    private async joinUserChatRooms(socket: io.Socket) {
         const userChats: ChatInfo[] = await this.chatService.getUserChats(this.accountInfoService.getUserId(socket));
         userChats.forEach((userChatInfo: ChatInfo) => {
             socket.join(userChatInfo._id);
