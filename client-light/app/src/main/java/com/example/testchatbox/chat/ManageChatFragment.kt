@@ -41,12 +41,12 @@ class ManageChatFragment : Fragment(), ObserverChat {
         super.onViewCreated(view, savedInstanceState);
         binding.createChat.setOnClickListener {
             val name = binding.chatName.text.toString().trim()
-            if(!name.isEmpty()) {
+            if(name.isNotEmpty()) {
                 ChatModel.createPublicChat(name);
                 binding.chatName.setText("");
             }
         }
-        binding.createChat.setOnClickListener {
+        binding.reloadChats.setOnClickListener {
             ChatModel.updatePublicList()
         }
         loadList();
