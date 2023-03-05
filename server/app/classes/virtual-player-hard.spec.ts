@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 /* eslint-disable dot-notation */
 
-/*
-import { Direction } from '@app/constants/basic-constants';
+import "reflect-metadata"
+import { Direction, RoomVisibility } from '@app/constants/basic-constants';
 import { PlaceLetterCommandInfo } from '@app/constants/basic-interface';
 import { PossibleWords } from '@app/services/possible-word-finder.service';
 import { assert, expect } from 'chai';
 import { describe } from 'mocha';
 import { GameRoom } from './game-room';
-import { GameSettings } from './game-settings';
 import { Hand } from './hand';
 import { Letter } from './letter';
 import { Player } from './player';
@@ -16,14 +15,11 @@ import { VirtualPlayer } from './virtual-player';
 import { VirtualPlayerHard } from './virtual-player-hard';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import Sinon = require('sinon');
-import { WordValidation } from '@app/services/word-validation.service';
-*/
+
 describe('VirtualPlayerHard', () => {
-    /*
     let virtualPlayer: VirtualPlayer;
     const name = '1';
     const dict: string[] = ['aime', 'amie', 'poly'];
-    const wordValidationService = new WordValidation(dict);
     let room: GameRoom;
     let realPlayer: Player;
     const firstWordCommandinfo: PlaceLetterCommandInfo = { letterCoord: 7, numberCoord: 7, direction: Direction.Horizontal, letters: 'a i m e' };
@@ -42,21 +38,13 @@ describe('VirtualPlayerHard', () => {
     const letterT = new Letter('t', 1);
 
     beforeEach(() => {
-        const gameSettings: GameSettings = {
-            hostPlayerName: 'HostPlayerNameTest',
-            isSoloMode: true,
-            timer: { minute: 1, second: 0 },
-            dictionary: 'DictionaryNameTest',
-            roomName: 'RoomNameTest',
-            virtualPlayerName: 'VirtualPlayerNameTest',
-            isEasyMode: true,
-        };
-        room = new GameRoom('testRoom', wordValidationService, gameSettings);
+        room = new GameRoom('id1', 'testRoom', RoomVisibility.Public);
         realPlayer = new Player('16783jc', 'real');
         virtualPlayer = new VirtualPlayerHard(name, room);
         room.addPlayer(virtualPlayer);
         room.addPlayer(realPlayer);
-        virtualPlayer.swapTurn();
+        room.getGame['playerTurnIndex'] = 0;
+        room.getGame['wordValidationService']['dictionary'] = dict;
     });
     it('getNumberToSwap should return 7 when the reserve is close to full', () => {
         expect(virtualPlayer['getNumberToSwap']()).to.be.equals(7);
@@ -87,5 +75,4 @@ describe('VirtualPlayerHard', () => {
         virtualPlayer.play();
         assert(spyPass.called);
     });
-    */
 });

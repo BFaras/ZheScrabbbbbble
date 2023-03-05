@@ -149,7 +149,7 @@ export class Game {
 
     findWords(virtualPlay: boolean): PossibleWords[] {
         return PossibleWordFinder.findWords(
-            { hand: this.players[this.playerTurnIndex].getHand(), wordValidation: this.wordValidationService, board: this.board },
+            { hand: this.players[this.playerTurnIndex].getHand(), board: this.board },
             virtualPlay,
         );
     }

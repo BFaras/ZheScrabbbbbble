@@ -1,10 +1,9 @@
 /* eslint-disable dot-notation */
 
-/*
+import "reflect-metadata"
 import { GameRoom } from '@app/classes/game-room';
-import { GameSettings } from '@app/classes/game-settings';
 import { Player } from '@app/classes/player';
-import { Direction, ErrorType } from '@app/constants/basic-constants';
+import { Direction, RoomVisibility } from '@app/constants/basic-constants';
 import { PossibleWords } from '@app/services/possible-word-finder.service';
 import { RoomManagerService } from '@app/services/room-manager.service';
 import { assert, expect } from 'chai';
@@ -12,10 +11,9 @@ import { describe } from 'mocha';
 import { CommandController } from './command.controller';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import Sinon = require('sinon');
-import { WordValidation } from '@app/services/word-validation.service';
-*/
+import { INVALID_COMMAND_SYNTAX, NOT_IN_GAME, NOT_YOUR_TURN, UNKNOWN_ACTION } from '@app/constants/error-code-constants';
+
 describe('CommandController', () => {
-    /*
     let commandController: CommandController;
     let roomManagerService: RoomManagerService;
     let gameRoom: GameRoom;
@@ -23,32 +21,23 @@ describe('CommandController', () => {
     let player2: Player;
 
     beforeEach(() => {
-        roomManagerService = new RoomManagerService(undefined);
-        const gameSettings: GameSettings = {
-            hostPlayerName: 'HostPlayerNameTest',
-            isSoloMode: false,
-            timer: { minute: 1, second: 0 },
-            dictionary: 'DictionaryNameTest',
-            roomName: 'RoomNameTest',
-            virtualPlayerName: 'VirtualPlayerNameTest',
-            isEasyMode: true,
-        };
-        const wordValidationService: WordValidation = new WordValidation(['ma']);
-        gameRoom = new GameRoom('testRoom', wordValidationService, gameSettings);
+        roomManagerService = new RoomManagerService();
+        gameRoom = new GameRoom('id1', 'testRoom', RoomVisibility.Public);
         player1 = new Player('id1', 'Joe');
         player2 = new Player('id2', 'Eve');
         gameRoom.addPlayer(player1);
         gameRoom.addPlayer(player2);
         gameRoom.getGame.startGame();
-        if (player1.hasTurn()) gameRoom.getGame['swapActivePlayer']();
+        gameRoom.getGame['playerTurnIndex'] = 1;
+        gameRoom.getGame['wordValidationService']['dictionary'] = ['ma'];
         roomManagerService['activeRooms']['testRoom'] = gameRoom;
         commandController = new CommandController(roomManagerService);
     });
     it('should return illegal command if the player is not in a room', () => {
-        expect(commandController.executeCommand({ commandType: 'Pass', args: '', playerID: 'id3' }).errorType).to.equals(ErrorType.IllegalCommand);
+        expect(commandController.executeCommand({ commandType: 'Pass', args: '', playerID: 'id3' }).errorType).to.equals(NOT_IN_GAME);
     });
     it('should return illegal command if it is not the player turn', () => {
-        expect(commandController.executeCommand({ commandType: 'Pass', args: '', playerID: 'id1' }).errorType).to.equals(ErrorType.IllegalCommand);
+        expect(commandController.executeCommand({ commandType: 'Pass', args: '', playerID: 'id1' }).errorType).to.equals(NOT_YOUR_TURN);
     });
     it('should return the pass message when pass is called correctly', () => {
         expect(commandController.executeCommand({ commandType: 'Pass', args: '', playerID: 'id2' }).activePlayerMessage).to.equals(
@@ -66,7 +55,7 @@ describe('CommandController', () => {
         assert(spy.called);
     });
     it('should return illegal syntax with incorrect argument in swap', () => {
-        expect(commandController['swapLetters']('aT', gameRoom.getGame).errorType).to.equals(ErrorType.InvalidSyntax);
+        expect(commandController['swapLetters']('aT', gameRoom.getGame).errorType).to.equals(INVALID_COMMAND_SYNTAX);
     });
     it('should call placeLetters if place is called correctly', () => {
         const spy = Sinon.spy(gameRoom.getGame, 'placeLetter');
@@ -79,10 +68,10 @@ describe('CommandController', () => {
         assert(spy.called);
     });
     it('should return illegal syntax with incorrect argument in place', () => {
-        expect(commandController['placeLetters']('3', gameRoom.getGame).errorType).to.equals(ErrorType.InvalidSyntax);
+        expect(commandController['placeLetters']('3', gameRoom.getGame).errorType).to.equals(INVALID_COMMAND_SYNTAX);
     });
     it('should return illegal command if the command is invalid', () => {
-        expect(commandController.executeCommand({ commandType: 'PasaaCW', args: '', playerID: 'id2' }).errorType).to.equals(ErrorType.IllegalCommand);
+        expect(commandController.executeCommand({ commandType: 'PasaaCW', args: '', playerID: 'id2' }).errorType).to.equals(UNKNOWN_ACTION);
     });
     it('should return the place message when place is called correctly', () => {
         expect(commandController['placeMessage']({ activePlayerMessage: '', otherPlayerMessage: '60' }, 'a').activePlayerMessage).to.equals(
@@ -165,5 +154,4 @@ describe('CommandController', () => {
             ]).otherPlayerMessage,
         ).to.equals('NotEndTurn');
     });
-    */
 });

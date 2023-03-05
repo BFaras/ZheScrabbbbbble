@@ -1,4 +1,10 @@
 {
     "mocha.files.glob": "app/**/*.spec.ts",
-    "mocha.requires": ["ts-node/register", "tsconfig-paths/register", "source-map-support/register"]
+    "mocha.requires": ["ts-node/register", "tsconfig-paths/register", "source-map-support/register"],
+    "mocha.sideBarOptions":{
+        "lens": true,
+        "decoration": true,
+        "autoUpdateTime": 10000,
+        "showDebugTestStatus": true
+    },
 }
