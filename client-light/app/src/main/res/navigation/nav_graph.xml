@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_fullscreenFragment"
+            app:destination="@id/fullscreenFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -50,4 +53,9 @@
             app:destination="@id/FirstFragment" />
 
     </fragment>
+    <fragment
+        android:id="@+id/fullscreenFragment"
+        android:name="com.example.testchatbox.FullscreenFragment"
+        android:label="fragment_fullscreen"
+        tools:layout="@layout/fragment_fullscreen" />
 </navigation>

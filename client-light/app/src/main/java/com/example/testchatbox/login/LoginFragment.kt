@@ -50,6 +50,8 @@ class LoginFragment : Fragment() {
         var registerButton = binding.register
         val loadingProgressBar = binding.loading
 
+        val gameTestButton = binding.gameTest
+
         loginViewModel.loginFormState.observe(viewLifecycleOwner,
             Observer { loginFormState ->
                 if (loginFormState == null) {
@@ -113,6 +115,10 @@ class LoginFragment : Fragment() {
         }
         registerButton.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+        }
+
+        gameTestButton.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_fullscreenFragment)
         }
     }
 
