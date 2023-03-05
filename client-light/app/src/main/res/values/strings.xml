@@ -26,4 +26,12 @@
     <string name="classique">CLASSIQUE</string>
     <string name="collaboratif">COLLABORATIF</string>
     <string name="disconnect">DECONNEXION</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="doubleLetter">DL</string>
+    <string name="tripleLetter">TL</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="doubleWord">DW</string>
+    <string name="tripleWord">TW</string>
+    <string name="abandonner">Abandonner</string>
 </resources>
