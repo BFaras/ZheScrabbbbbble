@@ -30,7 +30,8 @@ describe('WordValidation', () => {
         board.getTile(7, 6)?.placeLetter(letterV);
         board.getTile(7, 7)?.placeLetter(letterI);
         board.getTile(7, 8)?.placeLetter(letterE);
-        validationService = new WordValidation(dict);
+        validationService = new WordValidation();
+        validationService['dictionary'] = dict;
     });
     it('Should return the correct score when all is good', () => {
         const score = validationService.validation(newLetters, board, true);
