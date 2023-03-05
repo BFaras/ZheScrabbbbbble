@@ -55,7 +55,7 @@
     </fragment>
     <fragment
         android:id="@+id/fullscreenFragment"
-        android:name="com.example.testchatbox.FullscreenFragment"
+        android:name="com.example.testchatbox.GamePageFragment"
         android:label="fragment_fullscreen"
         tools:layout="@layout/fragment_fullscreen" />
 </navigation>
