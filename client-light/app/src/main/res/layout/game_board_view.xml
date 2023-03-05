@@ -9,8 +9,6 @@
         android:layout_height="650dp"
         android:background="@color/black"
         android:layout_gravity="top|center"
-        android:layout_marginTop="30dp"
-        app:exampleDrawable="@android:drawable/ic_menu_add"
-        app:exampleString="Hello, MyView" />
+        android:layout_marginTop="30dp" />
 
 </FrameLayout>
