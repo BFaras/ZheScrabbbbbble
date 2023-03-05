@@ -6,9 +6,9 @@
     align-items: center;
     padding: 20px;
     border-radius: 10px;
-    background-color: #faf5f1;
+    background-color: var(--background-quaternary);
     flex-direction: column;
-    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    box-shadow: var(--box-shadow);
     font-family: 'Courier New', Courier, monospace;
     font-weight: bolder;
     font-size: 16px;
@@ -30,7 +30,7 @@
 
 
 ul.checked {
-    color: #757272;
+    color: var(--button-text-default);
     text-decoration: line-through;
     font-style: italic;
 }
@@ -66,17 +66,17 @@ ul {
 /* Track */
 ::-webkit-scrollbar-track {
     border-radius: 20px;
-    background: #f1f1f1;
+    background: var(--background-secondary);
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
     border-radius: 20px;
-    background: #8cbea3;
+    background: var(--scroll-default);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #cb654f;
+    background: var(--scroll-hover);
 }
 

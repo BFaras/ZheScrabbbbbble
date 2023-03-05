@@ -29,11 +29,18 @@ export const LETTER_POINTS = {
     BLANK: 0,
 };
 
-export const TILE_COLOURS = {
+export const TILE_COLORS_CLASSIC = {
     textColour: '#520000',
     backgroundColour: '#ECE7DD',
-    selectionColour: 'rgba(255, 0, 0, 0.3)',
-    manipulationColor: 'rgba(75, 186, 52, 0.3)',
+    selectionColour: '#650505',
+    manipulationColor: '#1d4902',
+};
+
+export const TILE_COLORS_INVERTED = {
+    textColour: '#adffff',
+    backgroundColour: '#131822',
+    selectionColour: '#9afafa',
+    manipulationColor: '#e2b6fd',
 };
 
 export const HOLDER_MEASUREMENTS = {

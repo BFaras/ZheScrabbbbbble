@@ -92,8 +92,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     --playarea-grid: black;
 
     --background-default: #f7eddf;
-    --background-secondary: #f1f1f1;
+    --background-secondary: #fffbfb;
     --background-tertiary: #d7e0cd;
+    --background-quaternary: #faf5f1;
 
     --text-default: black;
     --text-secondary: #001d7e;
@@ -115,6 +116,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     --button-quaternary-hover: #cea261;
 
     --scroll-default: #8cbea3;
+    --scroll-background: #f1f1f1;
     --scroll-hover: #cb654f;
 
     --tile-on-board: #cfcb9c;

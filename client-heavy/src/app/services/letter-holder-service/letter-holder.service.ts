@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HOLDER_MEASUREMENTS, LETTER_POINTS, TILE_COLOURS } from '@app/constants/letters-constants';
+import { HOLDER_MEASUREMENTS, LETTER_POINTS, TILE_COLORS_CLASSIC, TILE_COLORS_INVERTED } from '@app/constants/letters-constants';
+import { classic } from '@app/constants/themes';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
+import { ThemesService } from '../themes-service/themes-service';
 
 @Injectable({
     providedIn: 'root',
@@ -9,9 +11,12 @@ export class LetterHolderService {
     holderContext: CanvasRenderingContext2D;
     letterLog = new Map<number, string>();
     holderState: string[] = [];
+    TILE_COLOURS = TILE_COLORS_CLASSIC;
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
 
-    constructor(private size: FontSizeService) {}
+    constructor(private size: FontSizeService, private theme: ThemesService) {
+        if (this.theme.getActiveTheme() !== classic) this.TILE_COLOURS = TILE_COLORS_INVERTED;
+    }
 
     drawLetter(letter: string, position: number) {
         const checkedLetter = this.validParams(letter, position);
@@ -22,9 +27,9 @@ export class LetterHolderService {
             this.holderContext.font = `800 ${this.size.getFontSize().get('tileLetterSize')}px Courier`;
             this.holderContext.textBaseline = 'bottom';
             this.holderContext.textAlign = 'center';
-            this.holderContext.fillStyle = TILE_COLOURS.backgroundColour;
+            this.holderContext.fillStyle = this.TILE_COLOURS.backgroundColour;
             this.holderContext.fillRect(pixelPosition, 0, HOLDER_MEASUREMENTS.tileSide, HOLDER_MEASUREMENTS.tileSide);
-            this.holderContext.fillStyle = TILE_COLOURS.textColour;
+            this.holderContext.fillStyle = this.TILE_COLOURS.textColour;
             if (letterPoint)
                 this.holderContext.fillText(
                     checkedLetter,
@@ -93,7 +98,7 @@ export class LetterHolderService {
         const pixelPosition = (position - 1) * (HOLDER_MEASUREMENTS.tileSide + HOLDER_MEASUREMENTS.spaceBetween);
         this.holderContext.beginPath();
         this.holderContext.lineWidth = 1;
-        this.holderContext.fillStyle = TILE_COLOURS.selectionColour;
+        this.holderContext.fillStyle = this.TILE_COLOURS.selectionColour;
         this.holderContext.fillRect(pixelPosition, 0, HOLDER_MEASUREMENTS.tileSide, HOLDER_MEASUREMENTS.tileSide);
         this.holderContext.stroke();
     }
@@ -102,7 +107,7 @@ export class LetterHolderService {
         const pixelPosition = (position - 1) * (HOLDER_MEASUREMENTS.tileSide + HOLDER_MEASUREMENTS.spaceBetween);
         this.holderContext.beginPath();
         this.holderContext.lineWidth = 1;
-        this.holderContext.fillStyle = TILE_COLOURS.manipulationColor;
+        this.holderContext.fillStyle = this.TILE_COLOURS.manipulationColor;
         this.holderContext.fillRect(pixelPosition, 0, HOLDER_MEASUREMENTS.tileSide, HOLDER_MEASUREMENTS.tileSide);
         this.holderContext.stroke();
     }

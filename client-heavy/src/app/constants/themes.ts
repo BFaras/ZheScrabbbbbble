@@ -16,8 +16,9 @@ export const classic: Theme = {
         "--playarea-grid": "black",
 
         "--background-default": "#f7eddf",
-        "--background-secondary": " #f1f1f1",
+        "--background-secondary": " #fffbfb",
         "--background-tertiary": "#d7e0cd",
+        "--background-quaternary": "#faf5f1",
 
         "--text-default": "black",
         "--text-secondary": "#001d7e",
@@ -39,6 +40,7 @@ export const classic: Theme = {
         "--button-quaternary-hover": "#cea261",
 
         "--scroll-default": "#8cbea3",
+        "--scroll-background": "#f1f1f1",
         "--scroll-hover": "#cb654f",
 
         "--tile-on-board": "#cfcb9c",
@@ -63,6 +65,7 @@ export const inverted: Theme = {
         "--background-default": "#081220",
         "--background-secondary": "#0e0e0e",
         "--background-tertiary": "#281f32",
+        "--background-quaternary": "#050a0e",
 
         "--text-default": "white",
         "--text-secondary": "#ffe281",
@@ -84,6 +87,7 @@ export const inverted: Theme = {
         "--button-quaternary-hover": "#315d9e",
 
         "--scroll-default": "#73415c",
+        "--scroll-background": "#0e0e0e",
         "--scroll-hover": "#349ab0",
 
         "--tile-on-board": "#303463",
