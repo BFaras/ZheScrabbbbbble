@@ -21,5 +21,24 @@ export class ProfileSocketService {
         socket.on('Change Avatar', async (newAvatar: string) => {
             socket.emit('Avatar Change Response', await this.profileService.changeAvatar(this.accountInfoService.getUserId(socket), newAvatar));
         });
+
+        socket.on('Get Theme and Language', async () => {
+            const userSettings = await this.profileService.getUserSettings(this.accountInfoService.getUserId(socket));
+            socket.emit('Theme and Language Response', userSettings.theme, userSettings.language);
+        });
+
+        socket.on('Change Theme', async (newTheme: string) => {
+            socket.emit(
+                'Theme Change Response',
+                await this.profileService.changeUserSettings(this.accountInfoService.getUserId(socket), newTheme, true),
+            );
+        });
+
+        socket.on('Change Language', async (newLanguage: string) => {
+            socket.emit(
+                'Language Change Response',
+                await this.profileService.changeUserSettings(this.accountInfoService.getUserId(socket), newLanguage, false, true),
+            );
+        });
     }
 }

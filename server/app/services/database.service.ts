@@ -13,7 +13,7 @@ import {
     VirtualPlayerDifficulty
 } from '@app/constants/database-interfaces';
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
-import { ProfileInfo, ProfileInfoDB } from '@app/interfaces/profile-info';
+import { ProfileInfo, ProfileInfoDB, ProfileSettings } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
 import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb';
@@ -174,10 +174,23 @@ export class DatabaseService {
         return profileInfo;
     }
 
-    async addNewProfile(userId: string, profileInfo: ProfileInfo): Promise<boolean> {
+    async getUserProfileSettings(userId: string): Promise<ProfileSettings> {
+        let profileSettings: ProfileSettings = Container.get(ProfileService).getDefaultProfileSettings();
+        const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
+            _id: new ObjectId(userId),
+        });
+
+        if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
+            profileSettings = userProfileInfoDoc.profileSettings;
+        }
+        return profileSettings;
+    }
+
+    async addNewProfile(userId: string, profileInfo: ProfileInfo, profileSettings: ProfileSettings): Promise<boolean> {
         const profileInfoDB: ProfileInfoDB = {
             _id: new ObjectId(userId),
             profileInfo,
+            profileSettings,
         };
         let isCreationSuccess = true;
         await this.getCollection(CollectionType.PROFILEINFO)
@@ -196,6 +209,16 @@ export class DatabaseService {
                 isProfileInfoChanged = false;
             });
         return isProfileInfoChanged;
+    }
+
+    async changeUserProfileSettings(userId: string, profileSettings: ProfileSettings): Promise<boolean> {
+        let isProfileSettingsChanged = true;
+        await this.getCollection(CollectionType.PROFILEINFO)
+            ?.updateOne({ _id: new ObjectId(userId) }, { $set: { profileSettings } })
+            .catch(() => {
+                isProfileSettingsChanged = false;
+            });
+        return isProfileSettingsChanged;
     }
 
     async addNewChatCanal(chatInfo: ChatInfoDB): Promise<string> {

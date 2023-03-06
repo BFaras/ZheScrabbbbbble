@@ -40,7 +40,13 @@ export interface ProfileInfo {
     gameHistory: GameInfo[];
 }
 
+export interface ProfileSettings {
+    theme: string;
+    language: string;
+}
+
 export interface ProfileInfoDB {
     _id: ObjectId;
     profileInfo: ProfileInfo;
+    profileSettings: ProfileSettings;
 }
