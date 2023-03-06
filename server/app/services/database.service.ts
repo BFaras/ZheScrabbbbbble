@@ -188,6 +188,16 @@ export class DatabaseService {
         return isCreationSuccess;
     }
 
+    async changeUserProfileInfo(userId: string, profileInfo: ProfileInfo): Promise<boolean> {
+        let isProfileInfoChanged = true;
+        await this.getCollection(CollectionType.PROFILEINFO)
+            ?.updateOne({ _id: new ObjectId(userId) }, { $set: { profileInfo } })
+            .catch(() => {
+                isProfileInfoChanged = false;
+            });
+        return isProfileInfoChanged;
+    }
+
     async addNewChatCanal(chatInfo: ChatInfoDB): Promise<string> {
         let chatId = '';
         let creationSuccess = true;

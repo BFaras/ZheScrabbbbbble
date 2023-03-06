@@ -1,3 +1,4 @@
+import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
 import { ProfileInfo } from '@app/interfaces/profile-info';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
@@ -32,5 +33,18 @@ export class ProfileService {
         const profileInfo: ProfileInfo = this.getDefaultProfileInformation();
         profileInfo.avatar = avatar;
         return await this.dbService.addNewProfile(userId, profileInfo);
+    }
+
+    async changeAvatar(userId: string, newAvatar: string) {
+        const profileInfo: ProfileInfo = await this.dbService.getUserProfileInfo(userId);
+        let errorCode: string = DATABASE_UNAVAILABLE;
+
+        if (profileInfo !== this.getDefaultProfileInformation()) {
+            profileInfo.avatar = newAvatar;
+            if (await this.dbService.changeUserProfileInfo(userId, profileInfo)) {
+                errorCode = NO_ERROR;
+            }
+        }
+        return errorCode;
     }
 }
