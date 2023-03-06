@@ -65,6 +65,6 @@ describe('Profile Tests', async () => {
         expectedProfileInfo.avatar = testAvatar;
         accountCreated = accountCreationError === NO_ERROR;
 
-        expect(await profileService.getProfileInformation(testUsername)).to.not.deep.equals(expectedProfileInfo);
+        expect(await profileService.getProfileInformation(testUsername)).to.deep.equals(expectedProfileInfo);
     });
 });
