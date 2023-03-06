@@ -29,12 +29,17 @@
     <string name="collaboratif">COLLABORATIF</string>
     <string name="disconnect">DECONNEXION</string>
     <!-- Strings related to errors -->
+    <!-- TODO: Create a universal error dictionnary -->
+    <string name="NO_ERROR">No error</string>
+    <string name="ERROR">Error</string>
     <string name="USERNAME_INVALID">The username is invalid</string>
     <string name="PASSWORD_INVALID">The password is invalid</string>
     <string name="EMAIL_INVALID">The email is invalid</string>
     <string name="USERNAME_TAKEN">The username is taken</string>
     <string name="DATABASE_UNAVAILABLE">The database is unavailable. Try again later</string>
     <string name="WRONG_SECURITY_ANSWER">Incorrect Answer</string>
+    <string name="ROOM_PASSWORD_INCORRECT">The password is incorrect</string>
+    <string name="JOIN_REQUEST_REFUSED">The host of the game did not accept your request to join</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

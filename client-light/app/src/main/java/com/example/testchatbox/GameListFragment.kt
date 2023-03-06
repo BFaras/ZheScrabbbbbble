@@ -52,7 +52,7 @@ class GameListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        updateGameList();
 
     }
 
@@ -87,23 +87,45 @@ class GameListFragment : Fragment() {
                     joinRoom(gameList[btn.id].id, null)
                 }else{
                     binding.passwordSection.visibility=View.VISIBLE;
+                    binding.gameListSection.visibility=View.GONE;
                     binding.joinBtn.setOnClickListener{
                         val password =binding.password.text.toString().trim()
                         if(password.isNotEmpty()){
                             binding.passwordSection.visibility=View.GONE;
                             joinRoom(gameList[btn.id].id, password)
                             binding.joinBtn.setOnClickListener(null);
+                            binding.gameListSection.visibility=View.VISIBLE;
                         }
                     }
                 }
             }
             gameListView.addView(btn)
         }
-
     }
 
     private fun joinRoom(id: String, password : String?){
-
+        SocketHandler.getSocket().once("Join Room Response"){ args ->
+            if(args[0] != null){
+                val errorMessage = when(args[0] as String){
+                    "0" -> R.string.NO_ERROR
+                    "ROOM-2" -> R.string.ROOM_PASSWORD_INCORRECT
+                    "ROOM-3" -> R.string.ROOM_PASSWORD_INCORRECT
+                    else -> R.string.ERROR
+                }
+                activity?.runOnUiThread(Runnable {
+                    if(errorMessage == R.string.NO_ERROR){
+                        val args = Bundle()
+                        args.putString("id",id)
+                        findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment, args )
+                    }else{
+                    val appContext = context?.applicationContext
+                    Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
+                    }
+                });
+            }
+        }
+        SocketHandler.getSocket().emit("Join Game Room", id, password)
+        //TODO : Implémenter PRIVATE cancel
     }
 
 

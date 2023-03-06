@@ -8,6 +8,7 @@
 
 
     <ScrollView
+        android:id="@+id/gameListSection"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:padding="30dp"
