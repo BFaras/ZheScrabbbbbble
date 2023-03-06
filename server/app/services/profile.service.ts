@@ -1,4 +1,5 @@
 import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
+import { DEFAULT_LANGUAGE, DEFAULT_THEME } from '@app/constants/profile-constants';
 import { ProfileInfo, ProfileSettings } from '@app/interfaces/profile-info';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
@@ -25,8 +26,8 @@ export class ProfileService {
 
     getDefaultProfileSettings(): ProfileSettings {
         return {
-            theme: 'Default',
-            language: 'fr',
+            theme: DEFAULT_THEME,
+            language: DEFAULT_LANGUAGE,
         };
     }
 
