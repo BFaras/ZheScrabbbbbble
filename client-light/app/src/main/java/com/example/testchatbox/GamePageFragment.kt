@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -71,23 +72,8 @@ class GamePageFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-// ArrayList of class ItemsViewModel
-
         _binding = FragmentFullscreenBinding.inflate(inflater, container, false)
 
-        val letterRack = binding.letterRack
-
-
-        for (i in 1..7) {
-            val letterTile = inflater.inflate(R.layout.letter_tile, letterRack, false)
-
-            val letter : TextView = letterTile.findViewById(R.id.letter)
-            val letterPoint: TextView = letterTile.findViewById(R.id.letterPoint)
-
-            letter.text = "A"
-            letterPoint.text = "2"
-            letterRack.addView(letterTile)
-        }
 
         return binding.root
 
@@ -95,6 +81,9 @@ class GamePageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val letterRack = binding.letterRack
+
 
         visible = true
 
@@ -108,6 +97,10 @@ class GamePageFragment : Fragment() {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         dummyButton?.setOnTouchListener(delayHideTouchListener)
+
+        updateRack(letterRack)
+
+
     }
 
     override fun onResume() {
@@ -201,4 +194,19 @@ class GamePageFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun updateRack(holder: LinearLayout) {
+        for (i in 1..7) { //à changer pour parcourir playerHand
+            val letterTile = layoutInflater.inflate(R.layout.letter_tile, holder, false)
+
+            val letter : TextView = letterTile.findViewById(R.id.letter)
+            val letterPoint: TextView = letterTile.findViewById(R.id.letterPoint)
+
+            letter.text = "A"
+
+            letterPoint.text = "2"
+            holder.addView(letterTile)
+        }
+    }
+
 }
