@@ -18,6 +18,7 @@
         android:fitsSystemWindows="true">
 
         <com.example.testchatbox.GameBoardView
+            android:id="@+id/gameBoard"
             android:layout_width="650dp"
             android:layout_height="650dp"
             android:layout_gravity="top|center"

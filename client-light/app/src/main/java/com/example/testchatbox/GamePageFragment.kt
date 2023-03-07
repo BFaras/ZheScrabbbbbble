@@ -1,12 +1,12 @@
 package com.example.testchatbox
 
+import android.content.ClipData
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.util.Log
+import android.view.*
+import android.view.View.*
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -75,6 +75,7 @@ class GamePageFragment : Fragment() {
         _binding = FragmentFullscreenBinding.inflate(inflater, container, false)
 
 
+
         return binding.root
 
     }
@@ -100,6 +101,54 @@ class GamePageFragment : Fragment() {
 
         updateRack(letterRack)
 
+        val dragListener = OnDragListener {
+                view, event ->
+            val tag = "Drag and drop"
+            val draggableItem = event.localState as View
+
+            event?.let {
+                var inBoard = false
+                when (event.action) {
+                    DragEvent.ACTION_DRAG_STARTED -> {
+                        true
+                    }
+                    DragEvent.ACTION_DRAG_ENTERED -> {
+                        inBoard = true
+                        true
+
+                        Log.d(tag, "ACTION_DRAG_ENDED")
+                    }
+                    DragEvent.ACTION_DRAG_EXITED -> {
+                        inBoard = false
+                        view.invalidate()
+                        true
+
+                        Log.d(tag, "ACTION_DRAG_ENDED")
+                    }
+                    DragEvent.ACTION_DROP -> {
+                        //if condition position accepté
+                    }
+
+                    DragEvent.ACTION_DRAG_ENDED -> {
+                        if (event.result) {
+                            draggableItem.visibility = INVISIBLE
+                        } else {
+                            draggableItem.visibility = VISIBLE
+                        }
+                        binding.gameBoard.alpha = 1.0f
+                        view.invalidate()
+                        true
+
+                        Log.d(tag, "ACTION_DRAG_ENDED")
+                    }
+                    else -> {
+                        false
+                    }
+                }
+            }
+            true
+        }
+        binding.gameBoard.setOnDragListener(dragListener)
 
     }
 
@@ -198,14 +247,28 @@ class GamePageFragment : Fragment() {
     private fun updateRack(holder: LinearLayout) {
         for (i in 1..7) { //à changer pour parcourir playerHand
             val letterTile = layoutInflater.inflate(R.layout.letter_tile, holder, false)
-
             val letter : TextView = letterTile.findViewById(R.id.letter)
             val letterPoint: TextView = letterTile.findViewById(R.id.letterPoint)
 
             letter.text = "A"
-
             letterPoint.text = "2"
+
             holder.addView(letterTile)
+            letterTile.setOnTouchListener(TouchListener())
+        }
+    }
+
+    private class TouchListener : OnTouchListener {
+        override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
+            return if (motionEvent?.action == MotionEvent.ACTION_DOWN) {
+                val data = ClipData.newPlainText("", "")
+                val shadowBuilder = DragShadowBuilder(view)
+                view?.startDragAndDrop(data, shadowBuilder, view, DRAG_FLAG_OPAQUE)
+                view?.visibility = INVISIBLE
+                true
+            } else {
+                false
+            }
         }
     }
 
