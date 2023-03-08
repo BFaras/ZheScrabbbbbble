@@ -18,9 +18,7 @@ export class MainPageComponent {
         this.accountService.setUpSocket()
         this.subscriptionProfileInformation = this.accountService.getUserProfileInformation().
         subscribe((userProfile)=>{
-            console.log('test1');
             this.accountService.setUpProfile(userProfile);
-            console.log(this.accountService.getProfile());
             this.router.navigate(['/profile']);
             })
         

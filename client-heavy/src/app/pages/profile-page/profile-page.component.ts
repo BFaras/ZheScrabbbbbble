@@ -16,7 +16,6 @@ export class ProfilePageComponent implements OnInit {
   accountUsername:string;
   subscriptionChangeAvatar:Subscription;
   constructor(private accountService:AccountService,public dialogAvatar:MatDialog) {
-    console.log(this.accountService.getProfile());
     this.subscriptionChangeAvatar = this.accountService.getAvatarChangeStatus()
     .subscribe((errorCode:string)=>{
       if (errorCode === NO_ERROR){
