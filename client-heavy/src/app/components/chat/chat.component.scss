@@ -6,6 +6,7 @@ ul {
 
 #title-chat {
     font-size: 24px;
+    color: var(--text-default);
 }
 
 .input-group {
@@ -24,6 +25,7 @@ input {
     font-weight: bolder;
     font-size: 15px;
     background-color: var(--background-secondary);
+    color: var(--button-text-default);
 }
 
 input:focus {
@@ -48,17 +50,18 @@ button {
 #chat-box {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 20px;
-    margin: 15px;
+    margin: 0px 15px;
     border-radius: 10px;
     height: 500px;
-    background-color: var(--background-secondary);
+    background-color: var(--background-quaternary);
     width: 350px;
     flex-direction: column;
     box-shadow: var(--box-shadow);
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Courier New', Courier, monospace;
     font-weight: bolder;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 #history-container {
@@ -69,22 +72,6 @@ button {
     border-radius: 7px;
     word-wrap: break-word;
     width: 100%;
-}
-
-#chat-box {
-    width: 350px;
-    height: 500px;
-    margin-top: 10%;
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: var(--background-quaternary);
-    flex-direction: column;
-    box-shadow: var(--box-shadow);
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bolder;
-    font-size: 16px;
 }
 
 /* width */

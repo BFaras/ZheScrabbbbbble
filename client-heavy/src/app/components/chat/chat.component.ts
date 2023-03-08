@@ -14,6 +14,7 @@ const LIMIT_OF_CHARACTERS = 512;
 export class ChatComponent implements OnInit, OnDestroy {
     @Output() receiver = new EventEmitter();
     switch = false;
+
     message: Message = {
         username: '',
         body: '',
@@ -111,5 +112,9 @@ export class ChatComponent implements OnInit, OnDestroy {
                 this.message.body = '';
                 break;
         }
+    }
+
+    goToLink() {
+        window.open('/profile-page', "_blank");
     }
 }

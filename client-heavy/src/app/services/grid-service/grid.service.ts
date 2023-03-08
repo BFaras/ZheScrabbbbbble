@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
-import { COLOUR_COORDINATES, COLUMNS, GRID_COLOURS_CLASSIC, GRID_COLOURS_INVERTED, GRID_CONSTANTS, GRID_OFFSETS, GRID_WORDS, ROWS } from '@app/constants/grid-constants';
+import { COLOUR_COORDINATES, COLUMNS, GRID_COLOURS_CLASSIC, GRID_COLOURS_INVERTED, GRID_CONSTANTS, GRID_OFFSETS, GRID_WORDS_EN, GRID_WORDS_FR, ROWS } from '@app/constants/grid-constants';
 import { HOLDER_MEASUREMENTS, LETTER_POINTS } from '@app/constants/letters-constants';
 import { classic } from '@app/constants/themes';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
+import { TranslateService } from '@ngx-translate/core';
 import { ThemesService } from '../themes-service/themes-service';
 
 const isCoordinateOf = (colourCoords: number[][], coord: number[]): boolean => {
@@ -32,15 +33,16 @@ export class GridService {
     horizontalArrow = '🢚';
     verticalArrow = '🢛';
     GRID_COLOURS = GRID_COLOURS_CLASSIC;
+    GRID_WORDS = GRID_WORDS_FR;
     private boardState: string[][] = [];
     private canvasSize: Vec2 = { x: GRID_CONSTANTS.defaultWidth, y: GRID_CONSTANTS.defaultHeight };
 
-    constructor(private size: FontSizeService, private theme: ThemesService) {
+    constructor(private size: FontSizeService, private theme: ThemesService, public translate: TranslateService) {
         if (this.theme.getActiveTheme() !== classic) this.GRID_COLOURS = GRID_COLOURS_INVERTED;
+        if (this.translate.currentLang === 'en') this.GRID_WORDS = GRID_WORDS_EN;
     }
 
     drawIdentificators() {
-
         this.gridContext.beginPath();
         this.gridContext.font = 'bold 27px Courier';
         this.gridContext.textAlign = 'center';
@@ -68,7 +70,7 @@ export class GridService {
         this.gridContext.fillStyle = this.GRID_COLOURS.defaultBlack;
         if (this.isStartSquare(column, row))
             this.gridContext.fillText(
-                GRID_WORDS.startWord,
+                this.GRID_WORDS.startWord,
                 column + GRID_CONSTANTS.defaultSide / 2,
                 row + GRID_CONSTANTS.defaultSide / GRID_OFFSETS.wordOffset,
             );
@@ -85,7 +87,7 @@ export class GridService {
     drawSquares() {
         this.gridContext.beginPath();
         this.gridContext.lineWidth = GRID_CONSTANTS.defaultLineWidth;
-        this.gridContext.font = `800 ${GRID_WORDS.defaultFontSize}px Arial`;
+        this.gridContext.font = `800 ${this.GRID_WORDS.defaultFontSize}px Arial`;
         this.gridContext.textBaseline = 'bottom';
         for (let x = GRID_CONSTANTS.defaultSide; x <= GRID_CONSTANTS.rowColumnCount * GRID_CONSTANTS.defaultSide; x += GRID_CONSTANTS.defaultSide) {
             for (
@@ -94,13 +96,13 @@ export class GridService {
                 y += GRID_CONSTANTS.defaultSide
             ) {
                 if (isCoordinateOf(COLOUR_COORDINATES.lightBlueCoordinates, [x, y])) {
-                    this.drawSquare(x, y, this.GRID_COLOURS.defaultLightBlue, GRID_WORDS.blueWord, GRID_WORDS.doubleWord);
+                    this.drawSquare(x, y, this.GRID_COLOURS.defaultLightBlue, this.GRID_WORDS.blueWord, this.GRID_WORDS.doubleWord);
                 } else if (isCoordinateOf(COLOUR_COORDINATES.blueCoordinates, [x, y])) {
-                    this.drawSquare(x, y, this.GRID_COLOURS.defaultBlue, GRID_WORDS.blueWord, GRID_WORDS.tripleWord);
+                    this.drawSquare(x, y, this.GRID_COLOURS.defaultBlue, this.GRID_WORDS.blueWord, this.GRID_WORDS.tripleWord);
                 } else if (isCoordinateOf(COLOUR_COORDINATES.pinkCoordinates, [x, y])) {
-                    this.drawSquare(x, y, this.GRID_COLOURS.defaultPink, GRID_WORDS.pinkRedWord, GRID_WORDS.doubleWord);
+                    this.drawSquare(x, y, this.GRID_COLOURS.defaultPink, this.GRID_WORDS.pinkRedWord, this.GRID_WORDS.doubleWord);
                 } else if (isCoordinateOf(COLOUR_COORDINATES.redCoordinates, [x, y])) {
-                    this.drawSquare(x, y, this.GRID_COLOURS.defaultRed, GRID_WORDS.pinkRedWord, GRID_WORDS.tripleWord);
+                    this.drawSquare(x, y, this.GRID_COLOURS.defaultRed, this.GRID_WORDS.pinkRedWord, this.GRID_WORDS.tripleWord);
                 } else {
                     this.gridContext.fillStyle = this.GRID_COLOURS.defaultWhite;
                     this.gridContext.fillRect(x, y, GRID_CONSTANTS.defaultSide, GRID_CONSTANTS.defaultSide);

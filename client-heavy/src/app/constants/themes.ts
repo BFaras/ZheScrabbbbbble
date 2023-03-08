@@ -62,7 +62,7 @@ export const inverted: Theme = {
         "--playarea-coords": "#adffff",
         "--playarea-grid": "white",
 
-        "--background-default": "#081220",
+        "--background-default": "#0b1b30",
         "--background-secondary": "#0e0e0e",
         "--background-tertiary": "#281f32",
         "--background-quaternary": "#050a0e",

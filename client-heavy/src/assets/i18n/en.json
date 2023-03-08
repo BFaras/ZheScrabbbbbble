@@ -60,8 +60,8 @@
     },
     "GAMEPAGE":{
         "MESSAGE":"Pick a Game Mode!",
-        "CLASSIC":"One on One",
-        "TURNAMENT":"Turnament",
+        "CLASSIC":"Play",
+        "TURNAMENT":"Tournament",
         "COLLABORATIVE":"Collaborative"
     }
 }

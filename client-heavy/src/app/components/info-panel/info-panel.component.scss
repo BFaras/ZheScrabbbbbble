@@ -26,6 +26,7 @@
 #title {
     font-size: 24px;
     margin-bottom: 10%;
+    color: var(--text-default);
 }
 
 
@@ -54,8 +55,14 @@ ul {
     padding: 0;
 }
 
-.name {
+.data {
     font-size: 19px;
+    color: var(--text-default);
+}
+
+.status {
+    font-size: 19px;
+    color: var(--accent-default);
 }
 
 /* width */

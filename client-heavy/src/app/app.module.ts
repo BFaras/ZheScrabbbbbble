@@ -1,3 +1,4 @@
+import { PortalModule } from '@angular/cdk/portal';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -29,6 +30,7 @@ import { LetterHolderComponent } from './components/letter-holder/letter-holder.
 import { LoginAreaComponent } from './components/login-area/login-area.component';
 import { SignUpAreaComponent } from './components/sign-up-area/sign-up-area.component';
 import { TimerComponent } from './components/timer/timer.component';
+import { WindowComponent } from './components/window/window.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { ChatPageComponent } from './pages/chat-page/chat-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
@@ -76,12 +78,14 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
         SignUpPageComponent,
         SignUpAreaComponent,
         ProfilePageComponent,
+        WindowComponent,
     ],
     imports: [
         AppMaterialModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         BrowserModule,
+        PortalModule,
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,

@@ -3,15 +3,15 @@
         <header id="title">{{'INFOBOARD.INFOBOARD' | translate}}</header>
         <div id="info">
             <div *ngFor="let player of playersInfo">
-                <span class="name">{{ player.name }}</span>
-                <span class="name" style="color: #cb654f" *ngIf="player.active">{{'INFOBOARD.TURN' | translate}}</span>
-                <span class="name" style="color: #cb654f" *ngIf="player.winner">{{'INFOBOARD.WIN' | translate}}</span>
+                <span class="data">{{ player.name }}</span>
+                <span class="status" *ngIf="player.active">{{'INFOBOARD.TURN' | translate}}</span>
+                <span class="status" *ngIf="player.winner">{{'INFOBOARD.WIN' | translate}}</span>
                 <br /><br />
-                <p>{{'INFOBOARD.SCORE' | translate}}{{ player.currentScore }}</p>
-                <p *ngIf="player.letterCount < 7">{{'INFOBOARD.LETTERSINHAND' | translate}}{{ player.letterCount }}</p>
+                <p class="data">{{'INFOBOARD.SCORE' | translate}}{{ player.currentScore }}</p>
+                <p class="data" *ngIf="player.letterCount < 7">{{'INFOBOARD.LETTERSINHAND' | translate}}{{ player.letterCount }}</p>
                 <br />
             </div>
-            <p>{{'INFOBOARD.LETTERSLEFT' | translate}}{{ roundInfo[0].lettersRemaining }}</p>
+            <p class="data">{{'INFOBOARD.LETTERSLEFT' | translate}}{{ roundInfo[0].lettersRemaining }}</p>
         </div>
         <br />
         <app-timer></app-timer>

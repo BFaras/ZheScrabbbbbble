@@ -24,10 +24,19 @@ export const GRID_OFFSETS = {
     arrowV: 0.95,
 };
 
-export const GRID_WORDS = {
+export const GRID_WORDS_FR = {
     pinkRedWord: 'MOT',
     startWord: 'DÉBUT',
     blueWord: 'LETTRE',
+    doubleWord: 'x2',
+    tripleWord: 'x3',
+    defaultFontSize: '11',
+};
+
+export const GRID_WORDS_EN = {
+    pinkRedWord: 'WORD',
+    startWord: 'START',
+    blueWord: 'LETTER',
     doubleWord: 'x2',
     tripleWord: 'x3',
     defaultFontSize: '11',

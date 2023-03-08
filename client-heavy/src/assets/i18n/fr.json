@@ -31,7 +31,7 @@
         "WIN":", vous avez gagné!"
     },
     "CHATBOX":{
-        "CHATBOX":"BOÎTE DE COMMUNICATION",
+        "CHATBOX":"BOÎTE DE CHAT",
         "DEFAULT":"Tapez une commande",
         "SEND":"Envoyer"
     },
@@ -54,7 +54,7 @@
     },
     "HOMEPAGE":{
         "MESSAGE":"Choisissez un mode de jeu!",
-        "CLASSIC":"Un à un",
+        "CLASSIC":"Jouer",
         "TURNAMENT":"Tournois",
         "COLLABORATIVE":"Collaboratif"
     }
