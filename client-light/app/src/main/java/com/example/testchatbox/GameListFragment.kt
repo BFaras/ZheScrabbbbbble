@@ -10,17 +10,23 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentGameListBinding
-import com.example.testchatbox.databinding.FragmentMainMenuBinding
 import com.example.testchatbox.login.model.LoggedInUser
 import org.json.JSONArray
 
 enum class Visibility{
-    PUBLIC,
     PRIVATE,
+    PUBLIC,
     PROTECTED;
 
     companion object {
         fun fromInt(value: Int) = Visibility.values().first { it.ordinal == value }
+        fun fromViewId(id: Int): Visibility {
+            if(id == R.id.publicRoom)
+                return Visibility.PUBLIC
+            if(id == R.id.privateRoom)
+                return Visibility.PRIVATE
+            return Visibility.PROTECTED
+        }
     }
 
 }
@@ -53,7 +59,14 @@ class GameListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateGameList();
-
+        binding.roomType.check(R.id.publicRoom)
+        binding.roomType.setOnCheckedChangeListener { radioGroup, i ->
+            when (radioGroup.checkedRadioButtonId) {
+                R.id.publicRoom -> binding.createPassword.visibility=View.INVISIBLE
+                R.id.privateRoom -> binding.createPassword.visibility=View.INVISIBLE
+                R.id.protectedRoom -> binding.createPassword.visibility=View.VISIBLE
+            }
+        }
     }
 
 
@@ -83,8 +96,8 @@ class GameListFragment : Fragment() {
             btn.id = i;
             btn.textSize= 30F;
             btn.setOnClickListener{
-                if(gameList[btn.id].visibility!=Visibility.PROTECTED) {
-                    joinRoom(gameList[btn.id].id, null)
+                if(gameRoom.visibility!=Visibility.PROTECTED) {
+                    joinRoom(gameList[btn.id].id, null, gameRoom.players)
                 }else{
                     binding.passwordSection.visibility=View.VISIBLE;
                     binding.gameListSection.visibility=View.GONE;
@@ -92,9 +105,9 @@ class GameListFragment : Fragment() {
                         val password =binding.password.text.toString().trim()
                         if(password.isNotEmpty()){
                             binding.passwordSection.visibility=View.GONE;
-                            joinRoom(gameList[btn.id].id, password)
                             binding.joinBtn.setOnClickListener(null);
                             binding.gameListSection.visibility=View.VISIBLE;
+                            joinRoom(gameRoom.id, password, gameRoom.players)
                         }
                     }
                 }
@@ -103,7 +116,7 @@ class GameListFragment : Fragment() {
         }
     }
 
-    private fun joinRoom(id: String, password : String?){
+    private fun joinRoom(id: String, password: String?, players: Array<String>){
         SocketHandler.getSocket().once("Join Room Response"){ args ->
             if(args[0] != null){
                 val errorMessage = when(args[0] as String){
@@ -115,7 +128,7 @@ class GameListFragment : Fragment() {
                 activity?.runOnUiThread(Runnable {
                     if(errorMessage == R.string.NO_ERROR){
                         val args = Bundle()
-                        args.putString("id",id)
+                        args.putStringArray("players", players)
                         findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment, args )
                     }else{
                     val appContext = context?.applicationContext
@@ -126,6 +139,40 @@ class GameListFragment : Fragment() {
         }
         SocketHandler.getSocket().emit("Join Game Room", id, password)
         //TODO : Implémenter PRIVATE cancel
+    }
+
+    private fun createRoom(){
+        val roomType =  Visibility.fromViewId(binding.roomType.checkedRadioButtonId);
+        val roomName = binding.name.text.toString().trim();
+        val roomPassword = binding.createPassword.text.toString().trim();
+        if(roomName.isEmpty() || (roomType==Visibility.PROTECTED && roomPassword.isEmpty())){
+            val appContext = context?.applicationContext ?: return
+            Toast.makeText(appContext, R.string.FIELD_EMPTY, Toast.LENGTH_LONG).show()
+        }
+        else{
+            binding.name.setText("")
+            binding.createPassword.setText("")
+            SocketHandler.getSocket().once("Room Creation Response") {args ->
+                if(args[0] != null){
+                    val errorMessage = when(args[0] as String){
+                        "0" -> R.string.NO_ERROR
+                        "ROOM-1" -> R.string.ROOM_NAME_TAKEN;
+                        else -> R.string.ERROR
+                    }
+                    activity?.runOnUiThread(Runnable {
+                        if(errorMessage == R.string.NO_ERROR){
+                            val args = Bundle()
+                            args.putStringArray("players", arrayOf(LoggedInUser.getName()));
+                            findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment, args )
+                        }else{
+                            val appContext = context?.applicationContext
+                            Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
+                        }
+                    });
+                }
+            }
+            SocketHandler.getSocket().emit("Create Game Room", roomName, roomType.ordinal, roomPassword)
+        }
     }
 
 

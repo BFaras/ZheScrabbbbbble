@@ -83,4 +83,85 @@
             app:layout_constraintVertical_bias="0.2" />
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/createSection"
+        android:layout_width="250dp"
+        android:layout_height="300dp"
+        android:layout_marginEnd="200dp"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintVertical_bias="0.15"
+        android:background="@color/DarkGray"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <RadioGroup
+            android:id="@+id/roomType"
+            android:layout_width="250dp"
+            android:layout_marginTop="50dp"
+            android:layout_height="300dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/privateRoom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Private"/>
+            <RadioButton
+                android:id="@+id/publicRoom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Public"/>
+            <RadioButton
+                android:id="@+id/protectedRoom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Protected"/>
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginEnd="70dp"
+            android:autofillHints="Room name"
+            android:hint="Room name"
+            android:inputType="text"
+            android:selectAllOnFocus="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/createPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="150dp"
+            android:autofillHints="@string/prompt_password"
+            android:hint="@string/prompt_password"
+            android:inputType="text"
+            android:selectAllOnFocus="true"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/name" />
+
+        <Button
+            android:id="@+id/createBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="220dp"
+            android:layout_marginEnd="70dp"
+            android:text="Create"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/createPassword" />
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
