@@ -7,7 +7,7 @@ import {
     POINTS_AVRG_STAT_NAME,
     WINS_NB_STAT_NAME
 } from '@app/constants/profile-constants';
-import { ProfileInfo, ProfileSettings, StatisticInfo } from '@app/interfaces/profile-info';
+import { ConnectionInfo, GameInfo, ProfileInfo, ProfileSettings, StatisticInfo } from '@app/interfaces/profile-info';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
 
@@ -95,6 +95,39 @@ export class ProfileService {
         profileInfo.stats = newUserStats;
         errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);
 
+        return errorCode;
+    }
+
+    async addConnection(userId: string, connectionInfo: ConnectionInfo): Promise<string> {
+        const profileInfo: ProfileInfo = await this.dbService.getUserProfileInfo(userId);
+        let errorCode: string = DATABASE_UNAVAILABLE;
+
+        if (profileInfo !== this.getDefaultProfileInformation()) {
+            profileInfo.connectionHistory.push(connectionInfo);
+            errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);
+        }
+        return errorCode;
+    }
+
+    async addTournamentVictory(userId: string, tournamentPosition: number) {
+        const profileInfo: ProfileInfo = await this.dbService.getUserProfileInfo(userId);
+        let errorCode: string = DATABASE_UNAVAILABLE;
+
+        if (profileInfo !== this.getDefaultProfileInformation()) {
+            profileInfo.tournamentWins[tournamentPosition]++;
+            errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);
+        }
+        return errorCode;
+    }
+
+    async addGameToHistory(userId: string, gameInfo: GameInfo): Promise<string> {
+        const profileInfo: ProfileInfo = await this.dbService.getUserProfileInfo(userId);
+        let errorCode: string = DATABASE_UNAVAILABLE;
+
+        if (profileInfo !== this.getDefaultProfileInformation()) {
+            profileInfo.gameHistory.push(gameInfo);
+            errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);
+        }
         return errorCode;
     }
 }
