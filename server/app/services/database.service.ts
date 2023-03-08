@@ -12,6 +12,7 @@ import {
     TopScores,
     VirtualPlayerDifficulty
 } from '@app/constants/database-interfaces';
+import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
 import { ProfileInfo, ProfileInfoDB, ProfileSettings } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
@@ -201,24 +202,24 @@ export class DatabaseService {
         return isCreationSuccess;
     }
 
-    async changeUserProfileInfo(userId: string, profileInfo: ProfileInfo): Promise<boolean> {
-        let isProfileInfoChanged = true;
+    async changeUserProfileInfo(userId: string, profileInfo: ProfileInfo): Promise<string> {
+        let errorCode = NO_ERROR;
         await this.getCollection(CollectionType.PROFILEINFO)
             ?.updateOne({ _id: new ObjectId(userId) }, { $set: { profileInfo } })
             .catch(() => {
-                isProfileInfoChanged = false;
+                errorCode = DATABASE_UNAVAILABLE;
             });
-        return isProfileInfoChanged;
+        return errorCode;
     }
 
-    async changeUserProfileSettings(userId: string, profileSettings: ProfileSettings): Promise<boolean> {
-        let isProfileSettingsChanged = true;
+    async changeUserProfileSettings(userId: string, profileSettings: ProfileSettings): Promise<string> {
+        let errorCode = NO_ERROR;
         await this.getCollection(CollectionType.PROFILEINFO)
             ?.updateOne({ _id: new ObjectId(userId) }, { $set: { profileSettings } })
             .catch(() => {
-                isProfileSettingsChanged = false;
+                errorCode = DATABASE_UNAVAILABLE;
             });
-        return isProfileSettingsChanged;
+        return errorCode;
     }
 
     async addNewChatCanal(chatInfo: ChatInfoDB): Promise<string> {

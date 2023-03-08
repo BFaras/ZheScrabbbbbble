@@ -1,4 +1,4 @@
-import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
+import { DATABASE_UNAVAILABLE } from '@app/constants/error-code-constants';
 import {
     DEFAULT_LANGUAGE,
     DEFAULT_THEME,
@@ -7,7 +7,7 @@ import {
     POINTS_AVRG_STAT_NAME,
     WINS_NB_STAT_NAME
 } from '@app/constants/profile-constants';
-import { ProfileInfo, ProfileSettings } from '@app/interfaces/profile-info';
+import { ProfileInfo, ProfileSettings, StatisticInfo } from '@app/interfaces/profile-info';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
 
@@ -48,6 +48,10 @@ export class ProfileService {
         return await this.dbService.getUserProfileInfo(userId);
     }
 
+    async getUserStats(userId: string): Promise<StatisticInfo[]> {
+        return (await this.getProfileInformation(userId)).stats;
+    }
+
     async getUserSettings(userId: string): Promise<ProfileSettings> {
         return this.dbService.getUserProfileSettings(userId);
     }
@@ -65,9 +69,7 @@ export class ProfileService {
 
         if (profileInfo !== this.getDefaultProfileInformation()) {
             profileInfo.avatar = newAvatar;
-            if (await this.dbService.changeUserProfileInfo(userId, profileInfo)) {
-                errorCode = NO_ERROR;
-            }
+            errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);
         }
         return errorCode;
     }
@@ -82,9 +84,17 @@ export class ProfileService {
             profileSettings.language = newSetting;
         }
 
-        if (await this.dbService.changeUserProfileSettings(userId, profileSettings)) {
-            errorCode = NO_ERROR;
-        }
+        errorCode = await this.dbService.changeUserProfileSettings(userId, profileSettings);
+        return errorCode;
+    }
+
+    async updateUserStats(userId: string, newUserStats: StatisticInfo[]): Promise<string> {
+        const profileInfo: ProfileInfo = await this.dbService.getUserProfileInfo(userId);
+        let errorCode = DATABASE_UNAVAILABLE;
+
+        profileInfo.stats = newUserStats;
+        errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);
+
         return errorCode;
     }
 }
