@@ -21,7 +21,7 @@ export class ProfileService {
 
     getDefaultProfileInformation(): ProfileInfo {
         return {
-            avatar: '',
+            avatar: '#000000',
             level: 0,
             userCode: '',
             stats: [

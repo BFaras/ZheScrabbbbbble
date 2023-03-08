@@ -33,6 +33,7 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
 import { ChatService } from './services/chat-service/chat.service';
+import { AvatarPopUpComponent } from './components/profil-pop-up/avatar-pop-up/avatar-pop-up.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -65,6 +66,7 @@ import { ChatService } from './services/chat-service/chat.service';
         SignUpPageComponent,
         SignUpAreaComponent,
         ProfilePageComponent,
+        AvatarPopUpComponent,
     ],
     imports: [
         AppMaterialModule,
