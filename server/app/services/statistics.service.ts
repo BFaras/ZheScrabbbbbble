@@ -14,16 +14,24 @@ export class StatisticService {
     }
 
     async incrementWins(userId: string): Promise<string> {
+        return this.updateStat(userId, WINS_NB_STAT_NAME, this.incrementStatAmount);
+    }
+
+    private async updateStat(userId: string, statName: string, changeStat: (userStat: StatisticInfo) => number): Promise<string> {
         const userStats: StatisticInfo[] = await this.profileService.getUserStats(userId);
         let errorCode = DATABASE_UNAVAILABLE;
 
         for (let i = 0; i < userStats.length; i++) {
-            if (userStats[i].name === WINS_NB_STAT_NAME) {
-                userStats[i].statAmount++;
+            if (userStats[i].name === statName) {
+                userStats[i].statAmount = changeStat(userStats[i]);
             }
         }
 
         errorCode = await this.profileService.updateUserStats(userId, userStats);
         return errorCode;
+    }
+
+    private incrementStatAmount(userStat: StatisticInfo): number {
+        return userStat.statAmount++;
     }
 }
