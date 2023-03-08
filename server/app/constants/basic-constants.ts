@@ -34,14 +34,11 @@ export const BETWEEN_THIRTEEN_TO_EIGHTEEN_PROBABILITY = 0.7;
 export const VALUE_FOR_SWAP = 0.1;
 export const VALUE_FOR_PASS = 0.9;
 
-export const NUMBER_LETTER_SWAP_GOAL = 15;
-export const TOTAL_NUMBER_GOALS = 4;
 export const MILLISECOND_IN_SECONDS = 1000;
 export const MILLISECOND_IN_MINUTES = 60000;
 export const MILLISECOND_IN_HOURS = 3600000;
 export const TIME_BASE = 60;
 export const DECIMAL_BASE = 10;
-export const CONSECUTIVE_ROUND_PLAY_GOAL = 5;
 
 export const FOUR_WORD_IN_A_PLACEMENT_SCORE = 30;
 export const FOUR_WORD = 4;
@@ -50,15 +47,15 @@ export const TEN_POINT_SCORE = 15;
 export const AT_LEAST_EIGHT_LETTER_CONST = 7;
 export const TWO_SPECIALS_CASES_CONSTANT = 2;
 
-export enum GameType {
-    CLASSIC = 'Classic',
-    LOG2990 = 'Log2990',
-}
-export enum ErrorType {
-    IllegalCommand,
-    InvalidSyntax,
-}
+export const MAX_NUMBER_OF_PLAYERS = 4;
+
 export enum Direction {
     Vertical,
     Horizontal,
+}
+
+export enum RoomVisibility {
+    Private,
+    Public,
+    Protected
 }

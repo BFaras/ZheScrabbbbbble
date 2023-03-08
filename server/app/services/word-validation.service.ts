@@ -2,6 +2,9 @@ import { Board } from '@app/classes/board';
 import { Letter } from '@app/classes/letter';
 import { Multiplier, Tile } from '@app/classes/tile';
 import { LetterPosition } from '@app/constants/basic-interface';
+import { Dictionary } from '@app/constants/database-interfaces';
+import * as fs from 'fs';
+import { Service } from 'typedi';
 
 const MAXIMUM_OF_LETTERS = 7;
 const BINGO = 50;
@@ -19,14 +22,15 @@ export interface WordScore {
     lettersScore: number[];
     wordMultiplier: number[];
 }
+@Service()
 export class WordValidation {
     protected newLetters: LetterPosition[];
     protected board: Board;
     private finnedWord: WordScore;
     private finnedWords: WordScore[];
     private dictionary: string[];
-    constructor(dictionary: string[]) {
-        this.dictionary = dictionary;
+    constructor() {
+        this.dictionary = (JSON.parse(fs.readFileSync('./assets/dictionnary.json', 'utf8')) as Dictionary).words;
     }
     validation(newLetters: LetterPosition[], board: Board, keepLetters: boolean): number {
         this.newLetters = newLetters;

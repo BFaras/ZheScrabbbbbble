@@ -15,5 +15,4 @@ export class AccountService {
     return this.username;
   }
 
-
 }

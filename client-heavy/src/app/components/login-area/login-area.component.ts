@@ -15,6 +15,7 @@ export class LoginAreaComponent implements OnInit {
     username : "",
     email : "",
     password : "",
+    securityQuestion: {question: "" , answer : ""},
   }
   subscription:Subscription
   hide:boolean = true;
@@ -44,11 +45,16 @@ export class LoginAreaComponent implements OnInit {
 
   showStatus(status:boolean){
     if (status == true){
-      this.account.setUsername(this.userAccount.username)
+      this.account.setUsername(this.userAccount.username);
       this.router.navigate(['home']);
     }else{
       alert("Échec de l'authentification");
     }
   }
+
+  moveToPassword(){
+    this.router.navigate(['password-lost']);
+  }
+
 
 }

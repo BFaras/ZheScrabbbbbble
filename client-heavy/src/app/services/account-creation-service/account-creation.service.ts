@@ -16,12 +16,12 @@ export class AccountCreationService {
     this.socket = this.socketManagerService.getSocket();
   }
   sendNewAccountInformation(account: Account): void {
-    this.socket.emit('Create user account',account.username,account.password,account.email);
+    this.socket.emit('Create user account',account.username,account.password,account.email, "avatar", account.securityQuestion);
   }
 
   getStatusOfAccountCreation():  Observable<boolean> {
     return new Observable((observer: Observer<boolean>) => {
-      this.socket.on('Creation result', (message: boolean) => {observer.next(message)
+      this.socket.once('Creation result', (message: boolean) => {observer.next(message)
       });
     });
     

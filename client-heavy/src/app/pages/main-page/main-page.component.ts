@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { GameType } from '@app/classes/game-settings';
 import { LeaderboardComponent } from '@app/components/leaderboard/leaderboard.component';
+import { GameType } from '@app/constants/game-types';
 import { GameModeService } from '@app/services/game-mode-service/game-mode.service';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 @Component({

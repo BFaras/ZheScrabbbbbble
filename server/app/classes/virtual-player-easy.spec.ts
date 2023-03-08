@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 /* eslint-disable dot-notation */
-
-import { Direction, GameType } from '@app/constants/basic-constants';
+import "reflect-metadata"
+import { Direction, RoomVisibility } from '@app/constants/basic-constants';
 import { PlaceLetterCommandInfo } from '@app/constants/basic-interface';
 import { CommandTypes } from '@app/controllers/command.controller';
-import { GoalsValidation } from '@app/services/goals-validation.service';
 import { PossibleWords } from '@app/services/possible-word-finder.service';
 import { assert, expect } from 'chai';
 import { describe } from 'mocha';
 import { GameRoom } from './game-room';
-import { GameSettings } from './game-settings';
 import { Hand } from './hand';
 import { Letter } from './letter';
 import { Player } from './player';
@@ -18,11 +16,11 @@ import { VirtualPlayerEasy } from './virtual-player-easy';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import Sinon = require('sinon');
 
+
 describe('VirtualPlayerEasy', () => {
     let virtualPlayer: VirtualPlayer;
     const name = '1';
     const dict: string[] = ['aime', 'amie', 'poly'];
-    const wordValidationService = new GoalsValidation(dict);
     let room: GameRoom;
     let realPlayer: Player;
     const firstWordCommandinfo: PlaceLetterCommandInfo = { letterCoord: 7, numberCoord: 7, direction: Direction.Horizontal, letters: 'a i m e' };
@@ -32,19 +30,8 @@ describe('VirtualPlayerEasy', () => {
     const secondPossibleWord: PossibleWords = { command: secondWordCommandinfo, value: 14 };
     const thirdPossibleword: PossibleWords = { command: thirdWordCommandinfo, value: 4 };
     const possibleWords: PossibleWords[] = [firstPossibleWord, secondPossibleWord, thirdPossibleword];
-
     beforeEach(() => {
-        const gameSettings: GameSettings = {
-            hostPlayerName: 'HostPlayerNameTest',
-            isSoloMode: true,
-            timer: { minute: 1, second: 0 },
-            dictionary: 'DictionaryNameTest',
-            roomName: 'RoomNameTest',
-            virtualPlayerName: 'VirtualPlayerNameTest',
-            isEasyMode: true,
-            gameType: GameType.CLASSIC,
-        };
-        room = new GameRoom('testRoom', wordValidationService, gameSettings);
+        room = new GameRoom('id1', 'testRoom', RoomVisibility.Public);
         realPlayer = new Player('16783jc', 'real');
         virtualPlayer = new VirtualPlayerEasy(name, room);
         room.addPlayer(virtualPlayer);
@@ -57,7 +44,8 @@ describe('VirtualPlayerEasy', () => {
         const letterN = new Letter('n', 1);
         const letterT = new Letter('t', 1);
         virtualPlayer['hand'] = new Hand([letterV, letterA, letterI, letterT, letterM, letterE, letterN]);
-        virtualPlayer.swapTurn();
+        room.getGame['playerTurnIndex'] = 0;
+        room.getGame['wordValidationService']['dictionary'] = dict;
     });
     it('getRange should return a tuple of number ', () => {
         const range = virtualPlayer['getRange']();
@@ -72,9 +60,8 @@ describe('VirtualPlayerEasy', () => {
     it('getValidWord should return a possible word ', () => {
         expect(possibleWords).to.include(virtualPlayer['getValidWord'](possibleWords));
     });
-    it('place should the right type of result', () => {
+    it('place should return the right type of result', () => {
         const commandDetails = virtualPlayer['place']();
-
         expect(commandDetails.result.activePlayerMessage).to.be.a('string');
         expect(commandDetails.result.otherPlayerMessage).to.be.a('string');
     });

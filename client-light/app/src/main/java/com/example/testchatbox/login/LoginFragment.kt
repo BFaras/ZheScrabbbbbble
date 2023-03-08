@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentLoginBinding
 
 import com.example.testchatbox.R
+import com.example.testchatbox.chat.ChatModel
 import com.example.testchatbox.login.model.LoggedInUser
 
 class LoginFragment : Fragment() {
@@ -48,6 +50,7 @@ class LoginFragment : Fragment() {
         val passwordEditText = binding.password
         val loginButton = binding.login
         var registerButton = binding.register
+        var resetButton = binding.reset
         val loadingProgressBar = binding.loading
 
         val gameTestButton = binding.gameTest
@@ -117,18 +120,19 @@ class LoginFragment : Fragment() {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
 
+        resetButton.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_resetFragment)
+        }
+
         gameTestButton.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_fullscreenFragment)
         }
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome) + model.displayName
-        // TODO : initiate successful logged in experience
+        ChatModel.initialiseChat();
         LoggedInUser.connectUser(model.displayName)
-        findNavController().navigate(R.id.action_loginFragment_to_FirstFragment)
-        //val appContext = context?.applicationContext ?: return
-        //Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
+        findNavController().navigate(R.id.action_loginFragment_to_MainMenuFragment)
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
