@@ -1,5 +1,6 @@
-import { ErrorType, SHUFFLING_CONSTANT } from '@app/constants/basic-constants';
+import { SHUFFLING_CONSTANT } from '@app/constants/basic-constants';
 import { PlaceLetterCommandInfo } from '@app/constants/basic-interface';
+import { ILLEGAL_COMMAND } from '@app/constants/error-code-constants';
 import { CommandResult } from '@app/controllers/command.controller';
 import { CommandVerificationService } from '@app/services/command-verification.service';
 import { PossibleWords } from '@app/services/possible-word-finder.service';
@@ -48,7 +49,7 @@ export abstract class VirtualPlayer extends Player {
     }
     protected place(): CommandDetails {
         const possibleWord: PossibleWords[] = this.gameRoom.getGame.findWords(true);
-        if (possibleWord.length === 0) return { command: '', result: { errorType: ErrorType.IllegalCommand } };
+        if (possibleWord.length === 0) return { command: '', result: { errorType: ILLEGAL_COMMAND } };
         const validWord: PossibleWords = this.getValidWord(possibleWord);
         const wordToPlace: PlaceLetterCommandInfo = validWord?.command as PlaceLetterCommandInfo;
         return { command: CommandVerificationService.recreateCommand(wordToPlace), result: this.gameRoom.getGame.placeLetter(wordToPlace) };
