@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ThemesService } from '@app/services/themes-service/themes-service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -8,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ProfilePageComponent implements OnInit {
 
-  constructor(public translate: TranslateService) {
+  constructor(public translate: TranslateService, private themeService: ThemesService) {
     translate.addLangs(['en', 'fr']);
   }
 
@@ -17,5 +18,13 @@ export class ProfilePageComponent implements OnInit {
 
   translateLanguageTo(lang: string) {
     this.translate.use(lang);
+  }
+
+  toggleTheme() {
+    if (this.themeService.isInvertedTheme()) {
+      this.themeService.setClassicTheme();
+    } else {
+      this.themeService.setInvertedTheme();
+    }
   }
 }

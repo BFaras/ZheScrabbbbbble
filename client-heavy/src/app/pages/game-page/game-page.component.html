@@ -1,23 +1,43 @@
 <div id="wrapper">
     <div class="container">
+        
         <section class="side-components">
             <div class="logo">Scrabble</div>
             <app-info-panel></app-info-panel>
+            <button (click)="this.showPortal = true">open</button>
+            <app-window *ngIf="showPortal">
+                <p>hi</p>
+                <h2>Hello world from amother window!!</h2>
+                <button (click)="this.showPortal = false">Close me!</button>
+            </app-window>
         </section>
-
+        
         <app-play-area class="play-area" tabindex="0" [receiver]="isReceiver"></app-play-area>
 
         <section class="side-components">
             <button *ngIf="!endGame; else other_content" (click)="alert()" class="button" id="abandonner">{{'GIVEUP.GIVEUP' | translate}}</button>
-            <div class="lang">
-                {{'CHANGELANG.MESSAGE' | translate}} : 
+            <div class="font-size-container">
+                {{'CHANGELANG.MESSAGE' | translate}} :
+                <button class="font-size" (click)="translateLanguageTo('en')">EN</button> 
+                <button class="font-size" (click)="translateLanguageTo('fr')">FR</button> 
+                <!--
                 <select #selLang (change)="translateLanguageTo(selLang.value)" style="font-family: 'Courier New', Courier, monospace;">
                     <option *ngFor="let language of translate.getLangs().slice(0,2).reverse()" [value]="language">{{ language }}</option>
                 </select>
+                -->
             </div>
             <ng-template #other_content><button class="button" (click)="goHome()" id="quitter">{{'GIVEUP.QUIT' | translate}}</button></ng-template>
-            <app-chat id="chatBox" (receiver)="setReceiver($event)"></app-chat>
-            <section id="font-size-container">
+            
+            <button class="open-button" (click)="toggle()">C  h  a  t</button>
+
+            <div class="chat-popup" id="myChat">
+                <form action="/action_page.php">
+                    <app-chat id="chatBox" (receiver)="setReceiver($event)"></app-chat>
+                </form>
+            </div>
+
+            <div class="ghost-chat"></div>
+            <section class="font-size-container">
                 <span>{{'BOARD.SIZE' | translate}}</span><br />
                 <button class="font-size" id="increase" (click)="onIncrease()">+</button>
                 <button class="font-size" id="decrease" (click)="onDecrease()">-</button>

@@ -18,6 +18,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
     playersInfo: Player[] = playersInfo;
     endGame: boolean = false;
     subscriptions: Subscription[] = [];
+    showPortal = false;
 
     constructor(
         private readonly gameStateService: GameStateService,
@@ -74,4 +75,14 @@ export class GamePageComponent implements OnInit, OnDestroy {
     translateLanguageTo(lang: string) {
         this.translate.use(lang);
     }
+
+    toggle() {
+        let element = document.getElementById("myChat");
+        if (element!.style.display == "block") {
+            element!.style.display = "none";
+        } else {
+            element!.style.display = "block";
+        }
+    }
+
 }
