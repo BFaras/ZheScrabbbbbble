@@ -12,6 +12,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.testchatbox.Coordinates.COLUMNS
+import com.example.testchatbox.Coordinates.ROWS
 import com.example.testchatbox.databinding.FragmentFullscreenBinding
 
 /**
@@ -73,18 +75,13 @@ class GamePageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentFullscreenBinding.inflate(inflater, container, false)
-
-
-
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val letterRack = binding.letterRack
-
 
         visible = true
 
@@ -105,21 +102,19 @@ class GamePageFragment : Fragment() {
                 view, event ->
             val tag = "Drag and drop"
             val draggableItem = event.localState as View
+            val dropArea = view as GameBoardView
 
             event?.let {
-                var inBoard = false
                 when (event.action) {
                     DragEvent.ACTION_DRAG_STARTED -> {
                         true
                     }
                     DragEvent.ACTION_DRAG_ENTERED -> {
-                        inBoard = true
                         true
 
                         Log.d(tag, "ACTION_DRAG_ENDED")
                     }
                     DragEvent.ACTION_DRAG_EXITED -> {
-                        inBoard = false
                         view.invalidate()
                         true
 
@@ -127,6 +122,38 @@ class GamePageFragment : Fragment() {
                     }
                     DragEvent.ACTION_DROP -> {
                         //if condition position accepté
+
+                        val parent = draggableItem.parent as LinearLayout
+                        parent.removeView(draggableItem)
+
+                        var col = 0
+                        var rowL = ""
+
+                        //a déplacer dans une fonction
+                        for(e in ROWS.values.zipWithNext()) {
+                            if(event.y in e.first..e.second) {
+                                rowL = ROWS.filter { e.first == it.value }.keys.first()
+                            }
+                        }
+
+                        for(e in COLUMNS.values.zipWithNext()) {
+                            if(event.x in e.first..e.second) {
+                                col = COLUMNS.filter { e.first == it.value }.keys.first()
+                            }
+                        }
+
+                        Log.d(tag, rowL)
+                        Log.d(tag, " " + event.y)
+
+                        dropArea.isInside = true
+
+                        dropArea.row = rowL
+                        dropArea.col = col
+                        dropArea.drawLetterList.add(Pair(col,rowL))
+
+                        dropArea.invalidate()
+
+                        Log.d(tag, "DROPPED")
                     }
 
                     DragEvent.ACTION_DRAG_ENDED -> {
@@ -136,7 +163,7 @@ class GamePageFragment : Fragment() {
                             draggableItem.visibility = VISIBLE
                         }
                         binding.gameBoard.alpha = 1.0f
-                        view.invalidate()
+                        dropArea.isInside = true
                         true
 
                         Log.d(tag, "ACTION_DRAG_ENDED")
@@ -149,7 +176,6 @@ class GamePageFragment : Fragment() {
             true
         }
         binding.gameBoard.setOnDragListener(dragListener)
-
     }
 
     override fun onResume() {
@@ -251,7 +277,7 @@ class GamePageFragment : Fragment() {
             val letterPoint: TextView = letterTile.findViewById(R.id.letterPoint)
 
             letter.text = "A"
-            letterPoint.text = "2"
+            letterPoint.text = "1"
 
             holder.addView(letterTile)
             letterTile.setOnTouchListener(TouchListener())

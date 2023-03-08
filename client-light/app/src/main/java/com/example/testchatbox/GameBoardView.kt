@@ -6,16 +6,23 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.DragEvent
 import android.view.View
+import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.example.testchatbox.Coordinates.COLUMNS
 import com.example.testchatbox.Coordinates.ROWS
 
 
-class GameBoardView : View {
+class GameBoardView : ConstraintLayout {
     var gridPaint = Paint()
     var textPaint = Paint()
     var letterPaint = Paint()
     var letterTextPaint = Paint()
+
+    var isInside: Boolean = false
+    var drawLetterList = ArrayList<Pair<Int,String>>()
+    var col: Int = 0
+    var row: String = ""
 
     private val boardState = Array(15) { IntArray(15) }
 
@@ -183,7 +190,7 @@ class GameBoardView : View {
     }
 
     //TODO: drawLetter après réception du dropEvent
-    private fun drawLetter(canvas: Canvas, column: Int, row: String, letter: String) {
+    fun drawLetter(canvas: Canvas, column: Int, row: String, letter: String) {
 //        if (this.checkParamsValidity(column, row, letter)) {
         val fullLetter = this.validLetter(letter)
         val blankHandledLetter = this.manageBlank(fullLetter)
@@ -245,16 +252,24 @@ class GameBoardView : View {
 
     }
 
-    constructor(context: Context) : super(context)
+    constructor(context: Context) : super(context) {
+        this.setWillNotDraw(false)
+    }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        this.setWillNotDraw(false);
+    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         Coordinates.setCoordinates()
         drawGridLines(canvas)
-        //drawLetter(canvas, 8, "h", "b") //pour exemple
 
+        if (isInside) {
+            for(e in drawLetterList) {
+                drawLetter(canvas, e.first, e.second, "a")
+            }
+        }
     }
 
     //TODO: Drop and Drag event
