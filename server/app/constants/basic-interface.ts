@@ -1,6 +1,5 @@
 import { Letter } from '@app/classes/letter';
-import { Direction } from './basic-constants';
-import { Goal } from './goal-constants';
+import { Direction, RoomVisibility } from './basic-constants';
 
 export interface LetterPosition {
     letter: Letter;
@@ -16,18 +15,17 @@ export interface PlaceLetterCommandInfo {
 
 export interface GameState {
     board: string[][];
-    hand: string[];
-    opponentHandLength: number;
-    isYourTurn: boolean;
-    yourScore: number;
-    opponentScore: number;
+    players: PlayerState[];
+    playerTurnIndex: number;
     reserveLength: number;
     gameOver: boolean;
-    boardWithInvalidWords?: string[][];
-    yourGoals?: Goal[];
-    oppenentGoals?: Goal[];
 }
 
+export interface PlayerState {
+    username: string;
+    hand: string[];
+    score: number;
+}
 export interface Message {
     username: string;
     body: string;
@@ -36,4 +34,11 @@ export interface Message {
 export class Timer {
     minute: number;
     second: number;
+}
+export interface GameRoomInfo {
+    name: string;
+    id: string;
+    visibility: RoomVisibility;
+    players: string[];
+    isStarted: boolean;
 }

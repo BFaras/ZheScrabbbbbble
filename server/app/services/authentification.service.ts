@@ -73,7 +73,11 @@ export class AuthentificationService {
 
     async changeUserPassword(username: string, newPassword: string) {
         const encryptedPassword = this.encryptPassword(newPassword);
-        return this.dbService.changeUserPassword(username, encryptedPassword);
+        return await this.dbService.changeUserPassword(username, encryptedPassword);
+    }
+
+    async getUserId(username: string) {
+        return await this.dbService.getUserId(username);
     }
 
     private async verifyAccountRequirements(username: string, password: string, email: string): Promise<string> {

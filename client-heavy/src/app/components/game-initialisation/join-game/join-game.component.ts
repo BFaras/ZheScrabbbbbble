@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { GameType } from '@app/classes/game-settings';
 import { WaitingRoom } from '@app/classes/waiting-room';
 import { JoinGameSetupComponent } from '@app/components/game-initialisation/join-game-setup/join-game-setup.component';
+import { GameType } from '@app/constants/game-types';
 import { GameModeService } from '@app/services/game-mode-service/game-mode.service';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 import { Subscription } from 'rxjs';

@@ -34,7 +34,7 @@ export class AccountAuthenticationService {
   getUserQuestion(username:string){
     this.socket.emit("Reset User Password",username);
     return new Observable((observer: Observer<string>) => {
-      this.socket.once('User Question', (question: string) => {
+      this.socket.once('User Account Question', (question: string) => {
         observer.next(question)
       });
     });

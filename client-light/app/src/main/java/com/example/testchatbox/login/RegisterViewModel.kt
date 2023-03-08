@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
-
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
 import com.example.testchatbox.R
+import org.json.JSONObject
+
 
 class RegisterViewModel() : ViewModel() {
 
@@ -15,43 +18,52 @@ class RegisterViewModel() : ViewModel() {
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun register(username: String, email: String, password: String) {
+    fun register(username: String, email: String, password: String, question : String, answer : String) {
         SocketHandler.getSocket().once("Creation result"){ args ->
             if(args[0] != null){
-                val success = args[0] as Boolean;
-                if(success){
-                    _loginResult.postValue(LoginResult(success = LoggedInUserView(displayName = username)))
-                } else {
-                    _loginResult.postValue(LoginResult(error = R.string.register_failed ))
+                val result = args[0] as String;
+                when(result.toInt()){
+                    0 -> _loginResult.postValue(LoginResult(success = LoggedInUserView(displayName = username)))
+                    1 -> _loginResult.postValue(LoginResult(error = R.string.USERNAME_INVALID ))
+                    2 -> _loginResult.postValue(LoginResult(error = R.string.EMAIL_INVALID ))
+                    3 -> _loginResult.postValue(LoginResult(error = R.string.PASSWORD_INVALID ))
+                    4 -> _loginResult.postValue(LoginResult(error = R.string.USERNAME_TAKEN ))
+                    5 -> _loginResult.postValue(LoginResult(error = R.string.DATABASE_UNAVAILABLE ))
                 }
             }
         }
-        SocketHandler.getSocket().emit("Create user account", username, password, email, "Avatar");
+        SocketHandler.getSocket().emit("Create user account", username, password, email, "Avatar",  JSONObject().put("question",question).put("answer", answer));
     }
 
-    fun loginDataChanged(username: String,email : String, password: String, ) {
-        if (!isUserNameValid(username)) {
+
+
+
+    fun loginDataChanged(username: String,email : String, password: String, question :String, answer : String) {
+        if (!isTextValid(username)) {
             _registerForm.value = RegisterFormState(usernameError = R.string.invalid_username)
-        } else if (!isUserNameValid(email)) {
+        } else if (!isEmailValid(email)) {
             _registerForm.value = RegisterFormState(emailError = R.string.invalid_email)
         } else if (!isPasswordValid(password)) {
             _registerForm.value = RegisterFormState(passwordError = R.string.invalid_password)
+        }else if (!isTextValid(question)) {
+            _registerForm.value = RegisterFormState(questionError = R.string.invalid_question)
+        }else if (!isTextValid(answer)) {
+            _registerForm.value = RegisterFormState(answerError = R.string.invalid_answer)
         } else {
             _registerForm.value = RegisterFormState(isDataValid = true)
         }
     }
 
-    // A placeholder username validation check
-    private fun isUserNameValid(username: String): Boolean {
-        return username.isNotBlank()
+    private fun isTextValid(text: String): Boolean {
+        return text.isNotBlank()
     }
 
     private fun isEmailValid(email: String): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
     }
 }
+

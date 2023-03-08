@@ -13,6 +13,7 @@ import {
     MAX_TIME_VIRTUAL_PLAY,
 } from '@app/constants/basic-constants';
 import { PlaceLetterCommandInfo } from '@app/constants/basic-interface';
+import Container from 'typedi';
 import { CommandFormattingService } from './command-formatting.service';
 import { WordValidation } from './word-validation.service';
 
@@ -31,11 +32,13 @@ export interface Position {
 }
 export interface GameInfo {
     hand: Hand;
-    wordValidation: WordValidation;
     board: Board;
 }
 
 export class PossibleWordFinder {
+    
+    private static wordValidation = Container.get(WordValidation);
+    
     static findWords(gameInfo: GameInfo, virtualPlay: boolean): PossibleWords[] {
         const originalHandSize: number = gameInfo.hand.getLength();
         const maxSize = virtualPlay ? MAX_SIZE_VIRTUAL_PLAY : MAX_SIZE_HINT;
@@ -168,7 +171,7 @@ export class PossibleWordFinder {
                 gameInfo.hand.getLetters(permutation, false),
             );
             if (letterPosition) {
-                const wordValue = gameInfo.wordValidation.validation(letterPosition, gameInfo.board, false);
+                const wordValue = this.wordValidation.validation(letterPosition, gameInfo.board, false);
                 if (wordValue > 0) words.push({ command: possiblePlacement, value: wordValue });
             }
         }
