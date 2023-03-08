@@ -1,5 +1,12 @@
 import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
-import { DEFAULT_LANGUAGE, DEFAULT_THEME } from '@app/constants/profile-constants';
+import {
+    DEFAULT_LANGUAGE,
+    DEFAULT_THEME,
+    GAMES_NB_STAT_NAME,
+    GAME_TIME_AVRG_STAT_NAME,
+    POINTS_AVRG_STAT_NAME,
+    WINS_NB_STAT_NAME
+} from '@app/constants/profile-constants';
 import { ProfileInfo, ProfileSettings } from '@app/interfaces/profile-info';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
@@ -17,7 +24,12 @@ export class ProfileService {
             avatar: '',
             level: 0,
             userCode: '',
-            stats: [], // Add the different stats that we need later
+            stats: [
+                { name: WINS_NB_STAT_NAME, statAmount: 0 },
+                { name: GAMES_NB_STAT_NAME, statAmount: 0 },
+                { name: POINTS_AVRG_STAT_NAME, statAmount: 0 },
+                { name: GAME_TIME_AVRG_STAT_NAME, statAmount: 0 },
+            ],
             tournamentWins: [0, 0, 0],
             connectionHistory: [],
             gameHistory: [],
