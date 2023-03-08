@@ -27,6 +27,9 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="50dp"
+            android:layout_gravity="right|top"
+            android:layout_marginRight="100dp"
+            android:layout_marginTop="30dp"
             android:text="@string/abandonner">
 
         </Button>
@@ -40,8 +43,27 @@
             android:padding="5dp"
             android:gravity="center"
             android:orientation="horizontal">
-
         </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonPass"
+            android:layout_width="75dp"
+            android:layout_height="60dp"
+            android:background="@drawable/background_letter_rack"
+            android:layout_gravity="center|bottom"
+            android:layout_marginLeft="400dp"
+            >
+        </Button>
+
+        <Button
+            android:id="@+id/buttonExchange"
+            android:layout_width="75dp"
+            android:layout_height="60dp"
+            android:background="@drawable/background_letter_rack"
+            android:layout_gravity="center|bottom"
+            android:layout_marginRight="400dp"
+            >
+        </Button>
 
 
         <LinearLayout
