@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {  MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { Dictionary } from '@app/classes/dictionary';
 import { GameSettings } from '@app/classes/game-settings';
@@ -30,12 +31,15 @@ export class CreateGameComponent implements OnInit, OnDestroy {
     filteredVirtualPlayerNameList: VirtualPlayerInfo[];
     selectedDifficulty: VirtualPlayerDifficulty;
     randomName: string;
-    roomName: string;
+    visibility: string = "Public";
+    IsProtectedRoom:boolean = false;
+    passwordRoom:string = "";
     dictionaryList: Dictionary[];
     subscriptionSettings: Subscription;
     subscriptionDictionary: Subscription;
     subscriptionNamesList: Subscription;
     subscriptionRoom: Subscription;
+    subscriptionRoomNameAvailable:Subscription;
 
     constructor(
         private waitingRoomManagerService: WaitingRoomManagerService,
@@ -62,6 +66,21 @@ export class CreateGameComponent implements OnInit, OnDestroy {
         this.subscriptionNamesList = this.gameModeService.getPlayerNameListObservable().subscribe((names) => this.updateVirtualPlayerNameList(names));
         this.subscriptionRoom = this.waitingRoomManagerService.getSoloRoomObservable().subscribe(async () => this.router.navigate(['/game']));
         this.gameModeService.getPlayerNameList();
+    }
+
+    getRadioButtonValue(event:MatRadioChange){
+        this.visibility = event.value;
+        this.verifyIsRoomProtected()
+
+    }
+
+    verifyIsRoomProtected(){
+        if (this.visibility === "Protected"){
+            this.IsProtectedRoom =true;
+        }
+        else{
+            this.IsProtectedRoom = false;
+        }
     }
 
     updateSettings(settings: Settings): void {
@@ -134,20 +153,33 @@ export class CreateGameComponent implements OnInit, OnDestroy {
         if (this.buttonDisabled) return;
         this.buttonDisabled = true;
         const roomNameValue = (document.getElementById('room-name') as HTMLInputElement).value;
-        const dictionaryIndex = (document.getElementById('dictionaries') as HTMLSelectElement)?.selectedIndex;
+        if (this.visibility === "Protected"){
+            this.passwordRoom = (document.getElementById("password-room") as HTMLInputElement).value;
+        }
+        //const dictionaryIndex = (document.getElementById('dictionaries') as HTMLSelectElement)?.selectedIndex;
         this.waitingRoomManagerService.setRoomToJoin(roomNameValue);
         this.waitingRoomManagerService.setHostPlayer(true);
         this.waitingRoomManagerService.setMessageSource("Veuillez attendre qu'un joueur rejoigne votre salle.");
-        const gameSettings: GameSettings = {
+        /*const gameSettings: GameSettings = {
             hostPlayerName: playerName,
             roomName: roomNameValue,
             isSoloMode: false,
             timer: this.timer,
             dictionary: this.dictionaryList[dictionaryIndex].title,
             gameType: this.gameModeService.scrabbleMode,
-        };
+        };*/
         sessionStorage.clear();
-        this.waitingRoomManagerService.createMultiRoom(gameSettings);
+        //raison inconnu cela ne fontionne plus socket Room Creation
+        /*this.subscriptionRoomNameAvailable = this.waitingRoomManagerService.verifyIfRoomNameAvailable()
+        .subscribe((RoomNameCodeError)=>{
+            console.log(RoomNameCodeError);
+            if (RoomNameCodeError !== "0"){
+                window.alert("Le nom de la salle est non valide");
+            }else{
+                window.alert("Le nom de la salle est valide"); 
+            }
+        })*/
+        this.waitingRoomManagerService.createMultiRoom(roomNameValue,this.visibility,this.passwordRoom);
         this.router.navigate(['/waiting-room']);
     }
 

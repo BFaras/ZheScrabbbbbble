@@ -23,21 +23,23 @@
                                 <div id="game-option">
                                     <div id="player-name-cell">
                                         <div id="player-name">
-                                            {{ waitingRoom.hostName }}
+                                            {{ waitingRoom.players[0]
+                                            }}
                                         </div>
                                     </div>
                                 </div>
                                 <div id="game-option">
                                     <div id="room-name-cell">
                                         <div id="room-name">
-                                            {{ waitingRoom.roomName }}
+                                            {{ waitingRoom.name }}
                                         </div>
                                     </div>
                                 </div>
                                 <div id="game-option">
                                     <div id="room-timer-cell">
                                         <div id="room-timer">
-                                            {{ waitingRoom.timer.minute + ':' + (waitingRoom.timer.second | number: '2.0-0') }}
+                                            <!--Ici il faut mettre le timer -->
+                                            {{ "00" + ':' + ("00" | number: '2.0-0') }}
                                         </div>
                                     </div>
                                 </div>

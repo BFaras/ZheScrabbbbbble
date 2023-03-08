@@ -17,7 +17,6 @@ export class JoinGameComponent implements OnDestroy, OnInit {
     @Input() roomName: string = '';
 
     waitingRooms: WaitingRoom[] = [];
-    guestPlayerName: string;
     joinGameSetUpComponent: JoinGameSetupComponent;
     subscription: Subscription;
     gameType: GameType;
@@ -30,19 +29,26 @@ export class JoinGameComponent implements OnDestroy, OnInit {
 
     ngOnInit() {
         this.gameType = this.gameModeService.scrabbleMode;
-        this.subscription = this.waitingRoomManagerService.getWaitingRoomObservable().subscribe((rooms) => this.filterRooms(rooms));
-        this.waitingRoomManagerService.askForWaitingRooms();
+        this.subscription = this.waitingRoomManagerService.getWaitingRoomObservable().
+        subscribe((rooms) => 
+        {this.waitingRooms = rooms;
+        console.log(rooms)});
+        this.waitingRoomManagerService.getGameRoomActive()
     }
-
-    filterRooms(rooms: WaitingRoom[]) {
+    //gameSetting a ete enlever je ne sais pas l utilite de ce truc la
+    /*filterRooms(rooms: WaitingRoom[]) {
         this.waitingRooms = rooms.filter((waitingRooms) => {
             return waitingRooms.gameType === this.gameType;
         });
-    }
+        console.log(this.waitingRooms);
+    }*/
 
     sendRoomData(room: WaitingRoom) {
-        this.waitingRoomManagerService.setHostPlayerName(room.hostName);
-        this.waitingRoomManagerService.setRoomToJoin(room.roomName);
+        /**changer tous les sets de waitingroom et getters pour avoir seulement WaitingRoom */
+        this.waitingRoomManagerService.setHostPlayerName(room.players[0]);
+        this.waitingRoomManagerService.setRoomToJoin(room.name);
+        this.waitingRoomManagerService.setVisibility(room.visibility);
+        this.waitingRoomManagerService.setIdRoom(room.id);
         this.router.navigate(['/join-game-setup']);
     }
 

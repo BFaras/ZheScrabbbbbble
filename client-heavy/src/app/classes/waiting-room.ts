@@ -1,9 +1,9 @@
-import { GameType } from './game-settings';
-import { Timer } from './timer';
 
+//ceci a ete modifier pour fit ce qui vient de serveur par contre je remarque que le cote serveur n a aps le timer est ce que c est normal
 export interface WaitingRoom {
-    hostName: string;
-    roomName: string;
-    timer: Timer;
-    gameType: GameType;
+    name: string;
+    id:string;
+    players:string[];
+    visibility: string;
+    isStarted:boolean;
 }

@@ -54,7 +54,7 @@ export class SocketManager {
                 }
                 const roomId = this.roomManager.createRoom(name, visibility, password);
                 const newUser = new Player(socket.id, this.accountInfoService.getUsername(socket));
-                this.roomManager.addPlayer(name, newUser, password);
+                this.roomManager.addPlayer(roomId, newUser, password);
                 socket.join(roomId);
                 socket.broadcast.emit('Room Creation Response', NO_ERROR);
             });
@@ -65,29 +65,50 @@ export class SocketManager {
 
             socket.on('Join Game Room', (roomCode: string, password?: string) => {
                 const username = this.accountInfoService.getUsername(socket);
+                /**PRIVATE*/
                 if(this.roomManager.getRoomVisibility(roomCode) === RoomVisibility.Private){
                     this.pendingJoinGameRequests.set(username, [roomCode, socket]);
+                    /**a faire apres */
                     this.sio.to(this.roomManager.getRoomHost(roomCode).getUUID()).emit('Join Room Request', username);
                     return;
                 }
+                /**PROTECTED */
                 if(!this.roomManager.addPlayer(roomCode, new Player(socket.id, username), password)){
+                    console.log('fdssdf');
                     socket.emit('Join Room Response', ROOM_PASSWORD_INCORRECT);
                     return;
                 }
+                /**PUBLIQUE */
                 socket.join(roomCode);
+                socket.to(roomCode).emit('guestPlayerIsWaiting', username, true);
                 const playerNames = this.roomManager.getRoomPlayerNames(roomCode);
+                /*pas certain quoi faire de celui ci qui est la , je pense c est pour game-room.ts*/
                 socket.to(roomCode).emit('Room Player Update', playerNames);
+                /**a faire apres */
                 socket.emit('Join Room Response', NO_ERROR, playerNames);
             });
+            /*repondre a guess player pour voir si on launch ou pas la partie */
+            socket.on('answerGuestPlayer', (room: string, accepted: boolean) => {
+                const roomOfGuest = this.roomManager.findRoomFromPlayer(socket.id);
+                if (accepted) {
+                    socket.to(roomOfGuest?.getID() as string).emit('guestAnswered', accepted);
+                    return;
+                }
+                const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
+                if (currentRoom) this.roomManager.removePlayer(currentRoom?.getPlayerFromIndex(1)?.getUUID(), room);
+            });
 
-            socket.on('Join Request Response', (response: boolean, username: string) => {
+            /**o\ a voir requestInfor je suppose ca ici c est pour private games*/
+            socket.on('Join Request Response', (response: boolean, username: string, roomId: string) => {
                 const requestInfo = this.pendingJoinGameRequests.get(username);
                 this.pendingJoinGameRequests.delete(username);
+                console.log(requestInfo);
                 if(!requestInfo) return;
                 if(!response){
                     requestInfo[1].emit('Join Room Response', JOIN_REQUEST_REFUSED);
                     return;
                 }
+                console.log(requestInfo);
                 this.roomManager.addPlayer(requestInfo[0], new Player(requestInfo[1].id, username));
                 requestInfo[1].join(requestInfo[0]);
                 const playerNames = this.roomManager.getRoomPlayerNames(requestInfo[0]);

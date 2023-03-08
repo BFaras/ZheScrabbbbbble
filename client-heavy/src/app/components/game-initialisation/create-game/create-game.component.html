@@ -20,6 +20,15 @@
             <p class="text-container">Nom de la salle:</p>
             <input class="input" id="room-name" placeholder="Saisir le nom de la salle" #roomName required />
         </div>
+        <mat-radio-group class="input-container" aria-label="Select an option">
+            <mat-radio-button [checked]="true" value="Public"  (change)="getRadioButtonValue($event)">Public</mat-radio-button>
+            <mat-radio-button value="Private"  (change)="getRadioButtonValue($event)">Privé</mat-radio-button>
+            <mat-radio-button value="Protected"  (change)="getRadioButtonValue($event)">Protégé</mat-radio-button>
+          </mat-radio-group>
+          <div *ngIf="!isSoloMode && IsProtectedRoom " class="input-container">
+            <p class="text-container">Mot de passe de la salle:</p>
+            <input class="input" id="password-room" placeholder="Saisir le not de passe de la salle" #passwordRoom />
+        </div>
         <div class="input-container">
             <p class="text-container">Dictionnaire:</p>
             <div *ngIf="dictionaryList.length">

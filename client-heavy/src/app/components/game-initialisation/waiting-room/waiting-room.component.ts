@@ -29,13 +29,13 @@ export class WaitingRoomComponent implements OnInit {
     }
 
     launchGame(): void {
-        this.waitingRoomManagerService.answerGuestPlayer(true, '');
+        this.waitingRoomManagerService.answerGuestPlayer(true);
         sessionStorage.clear();
         this.router.navigate(['/game']);
     }
 
     denyPlayer(): void {
-        this.waitingRoomManagerService.answerGuestPlayer(false, "Vous avez été rejeté(e) de la partie par l'hôte de la salle.");
+        this.waitingRoomManagerService.answerGuestPlayer(false);
         this.waitingRoomManagerService.setGuestPlayer(false);
         this.isGuestPlayerWaiting = false;
         this.waitingRoomManagerService.setMessageSource("Veuillez attendre qu'un joueur rejoigne votre salle.");
@@ -49,7 +49,7 @@ export class WaitingRoomComponent implements OnInit {
     }
 
     deleteRoom(): void {
-        this.waitingRoomManagerService.answerGuestPlayer(false, "L'hôte a supprimé la salle.");
+        this.waitingRoomManagerService.answerGuestPlayer(false);
         this.waitingRoomManagerService.deleteRoom();
         this.router.navigate(['/create-game']);
     }
@@ -59,16 +59,19 @@ export class WaitingRoomComponent implements OnInit {
         this.isGuestPlayerWaiting = false;
         this.waitingRoomManagerService.updateWaitingRoom("Veuillez attendre qu'un joueur rejoigne votre salle.");
         this.message = this.waitingRoomManagerService.getMessageSource();
+        this.waitingRoomManagerService.cancelJoinGameRoom()
         this.router.navigate(['/join-game']);
     }
 
     private updateJoinMessage(playerName: string) {
+        
         this.isGuestPlayerWaiting = this.waitingRoomManagerService.isGuestPlayer();
         if (this.isGuestPlayerWaiting) this.message = `${playerName} tente de rejoindre votre partie`;
         else this.message = "Veuillez attendre qu'un joueur rejoigne votre salle.";
     }
 
     private manageJoinResponse(answer: boolean) {
+        console.log(answer);
         if (answer) {
             sessionStorage.clear();
             this.router.navigate(['/game']);

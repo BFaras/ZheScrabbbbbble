@@ -3,12 +3,12 @@
     <h1 class="header-item">Configuration des paramètres de la partie</h1>
     <h2>{{message}}</h2>
     <div class="game-settings">
-        <div class="input-container">
-            <p>Nom du joueur:</p>
-            <input class="input" placeholder="Saisir le nom du joueur" maxlength="20" #guestPlayerName >
+        <div *ngIf="verifyIfProtectedRoom()" class="input-container">
+            <p>mot de passe de la salle :</p>
+            <input class="input" placeholder="Saisir le mot de passe" maxlength="20" [(ngModel)]="password" >
         </div>
         <div class="mode-buttons">
-            <button class="button" (click)="joinRoom(guestPlayerName.value)">Joindre la partie</button>
+            <button class="button" (click)="joinRoom()">Joindre la partie</button>
             <button class="button cancel" routerLink="/join-game">Retourner au menu précédent</button>
         </div>
     </div>
