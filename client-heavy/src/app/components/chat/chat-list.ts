@@ -1,9 +1,10 @@
-export interface Round {
-    timer: number;
-    lettersRemaining: number;
+export interface chat {
+    chatName: string;
+    _id: number;
+    chatType: ChatType;
 }
 
-export const roundInfo = [
+export const chatlist = [
     {
         timer: 0,
         lettersRemaining: 95,

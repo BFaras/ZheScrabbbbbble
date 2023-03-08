@@ -8,14 +8,28 @@ export interface Player {
 
 export const playersInfo = [
     {
-        name: 'Joueur 1',
+        name: '',
         currentScore: 0,
         letterCount: 0,
         active: false,
         winner: false
     },
     {
-        name: 'Joueur 2',
+        name: '',
+        currentScore: 0,
+        letterCount: 0,
+        active: false,
+        winner: false
+    },
+    {
+        name: '',
+        currentScore: 0,
+        letterCount: 0,
+        active: false,
+        winner: false
+    },
+    {
+        name: '',
         currentScore: 0,
         letterCount: 0,
         active: false,
