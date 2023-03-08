@@ -49,15 +49,17 @@ export class PasswordLostAreaComponent implements OnInit {
     this.subscriptionGetQuestion.unsubscribe();
 }
   changePassword(){
-    console.log(this.newPassword);
-    console.log(this.answerReset);
-    console.log(this.username);
+    const NO_ERROR = "0";
+    const DATABASE_UNAVAILABLE = "5";
     this.subscriptionModifyPassword = this.accountAuthenticationService.modifyPassword(this.username,this.newPassword,this.answerReset).subscribe(
       (isThereError:string)=>{
-        if (isThereError){
+        if (NO_ERROR){
           console.log(isThereError)
           //aleret
           window.alert('Veuillez entrer la bonne réponse à la question'); 
+        }
+        else if(DATABASE_UNAVAILABLE){
+          window.alert("La base de donnée n'est pas disponible"); 
         }
         else{
           window.alert('Votre mot de passe a été modifié'); 
