@@ -8,14 +8,28 @@
     "LOGIN":{
         "AUTH":"Authentification",
         "LOGIN":"Connexion",
-        "SIGNOUT": "Déconnexion"
+        "SIGNOUT": "Déconnexion",
+        "FORGOTTENPASS": "Oublié votre mot de passe?"
     },
     "SIGNUP":{
         "NEWACC":"Nouveau? Créez un compte!",
         "CONFIRM":"Confirmer",
         "EMAIL":"Adresse Email",
         "SHOWPASS":"Montrer le mot de passe",
-        "SIGNUP":"Inscription"
+        "SIGNUP":"Inscription",
+        "NEXT":"Continuer"
+    },
+    "SECURITYQ":{
+        "QUESTION":"Question de sécurité: ",
+        "ANSWER":"Réponse: ",
+        "MESSAGE":"Créez une question de sécurité",
+        "BACK":"Retour"
+    },
+    "FORGOTTENPASS":{
+        "MESSAGE":"Mot de passe oublié",
+        "QUESTION":"Voir question de sécurité",
+        "PASSWORD":"Changer de mot de passe",
+        "NEWPASS":"Nouveau mot de passe: "
     },
     "USERDATA":{
         "USERNAME":"Nom d'utilisateur",

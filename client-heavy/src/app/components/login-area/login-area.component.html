@@ -4,23 +4,21 @@
         <div>
             <form class="form">
                 <h1>{{'LOGIN.AUTH' | translate}}</h1>
-                    <mat-form-field class="username input-field" appearance="fill">
-                        <mat-label>{{'USERDATA.USERNAME' | translate}}</mat-label>
-                        <input matInput name = "username" [(ngModel)]="userAccount.username" >
-                    </mat-form-field>
-                    <mat-form-field class="pasword input-field" appearance="fill">
-                        <mat-label>{{'USERDATA.PASSWORD' | translate}}</mat-label>
-                        <input matInput [type]="changePasswordVisibility()" name = "password" [(ngModel)]="userAccount.password"> 
-                        <button title="{{'SIGNUP.SHOWPASS' | translate}}" class = "button-login" mat-icon-button matSuffix (click)="hide = !hide" >
-                            <mat-icon>{{changeIconVisibility()}}</mat-icon>
-                        </button>
-                    </mat-form-field>
-                    <button (click) = "loginToAccount()"class = "button-login" mat-raised-button>{{'LOGIN.LOGIN' | translate}}</button>
-            </form>
-            
-        </div>   
+                <mat-form-field class="username input-field" appearance="fill">
+                    <mat-label>{{'USERDATA.USERNAME' | translate}}</mat-label>
+                    <input matInput name = "username" [(ngModel)]="userAccount.username" >
+                </mat-form-field>
+                <mat-form-field class="pasword input-field" appearance="fill">
+                    <mat-label>{{'USERDATA.PASSWORD' | translate}}</mat-label>
+                    <input matInput [type]="changePasswordVisibility()" name = "password" [(ngModel)]="userAccount.password"> 
+                    <button title="{{'SIGNUP.SHOWPASS' | translate}}" class = "button-login" mat-icon-button matSuffix (click)="hide = !hide" >
+                        <mat-icon>{{changeIconVisibility()}}</mat-icon>
+                    </button>
+                </mat-form-field>
+                <h1 class = "password-lost-Link"(click) = moveToPassword()>{{'LOGIN.FORGOTTENPASS' | translate}}</h1>
+                <button (click) = "loginToAccount()"class = "button-login" mat-raised-button>{{'LOGIN.LOGIN' | translate}}</button>
+            </form>  
+        </div>
+
          <a routerLink = "/sign-up">{{'SIGNUP.NEWACC' | translate}}</a>
     </div>
-   
-
-

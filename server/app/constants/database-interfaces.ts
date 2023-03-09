@@ -1,4 +1,4 @@
-import { GameType } from './basic-constants';
+import { Question } from '@app/interfaces/question';
 
 export interface Score {
     username: string;
@@ -12,7 +12,7 @@ export interface TopScores {
 export interface Dictionary {
     title: string;
     description: string;
-    words?: string[];
+    words: string[];
 }
 
 export interface PlayerName {
@@ -25,10 +25,8 @@ export interface GameHistory {
     date: string;
     time: string;
     length: string;
-    player1: PlayerInfo;
-    player2: PlayerInfo;
-    mode: GameType;
-    abandoned?: boolean;
+    winnerIndex: number;
+    players: PlayerInfo[];
 }
 
 export interface PlayerInfo {
@@ -36,7 +34,6 @@ export interface PlayerInfo {
     score: number;
     virtual: boolean;
     difficulty?: VirtualPlayerDifficulty;
-    winner: boolean;
 }
 
 export interface AccountInfo {
@@ -44,6 +41,7 @@ export interface AccountInfo {
     encryptedPassword: string;
     email: string;
     userAvatar: string;
+    securityQuestion: Question;
 }
 
 export const enum VirtualPlayerDifficulty {
@@ -56,5 +54,6 @@ export enum CollectionType {
     DICTIONARY = 'dictionary',
     NAMES = 'playerNames',
     GAMES = 'gameHistory',
-    USERACCOUNTS = 'userAccount'
+    USERACCOUNTS = 'userAccount',
+    CHATCANALS = 'chatCanals',
 }

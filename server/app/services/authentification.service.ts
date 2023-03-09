@@ -1,12 +1,4 @@
 import {
-    CREATION_SUCCESS,
-    DATABASE_UNAVAILABLE,
-    EMAIL_INVALID,
-    PASSWORD_INVALID,
-    USERNAME_INVALID,
-    USERNAME_TAKEN
-} from '@app/constants/account-error-code-constants';
-import {
     CHAR_EMAIL_MUST_CONTAIN,
     MAX_ASCII_SYMBOL,
     MIN_ASCII_SYMBOL,
@@ -16,7 +8,16 @@ import {
     NEGATIVE_MULTIPLIER,
     POSITIVE_MULTIPLIER
 } from '@app/constants/authentification-constants';
+import {
+    DATABASE_UNAVAILABLE,
+    EMAIL_INVALID,
+    NO_ERROR,
+    PASSWORD_INVALID,
+    USERNAME_INVALID,
+    USERNAME_TAKEN
+} from '@app/constants/error-code-constants';
 import { AccountCreationState } from '@app/interfaces/account-creation-state';
+import { Question } from '@app/interfaces/question';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
 import { OnlineUsersService } from './online-users.service';
@@ -32,37 +33,55 @@ export class AuthentificationService {
 
     async authentifyUser(username: string, password: string): Promise<boolean> {
         if (this.onlineUsersService.isUserOnline(username)) {
-            console.log((new Date()).toLocaleTimeString() + ' | User is already connected on another device');
-            return false
+            console.log(new Date().toLocaleTimeString() + ' | User is already connected on another device');
+            return false;
         }
         const decryptedPasswordFromDB: string = this.decryptPassword(await this.dbService.getUserEncryptedPassword(username));
         if (decryptedPasswordFromDB.length > 0 && decryptedPasswordFromDB === password) {
             this.onlineUsersService.addOnlineUser(username);
             return true;
         }
-        console.log((new Date()).toLocaleTimeString() + ' | Incorrect password, login failed');
+        console.log(new Date().toLocaleTimeString() + ' | Incorrect password, login failed');
         return false;
     }
 
-    async createAccount(username: string, password: string, email: string, userAvatar: string): Promise<string> {
+    async createAccount(username: string, password: string, email: string, userAvatar: string, securityQuestion: Question): Promise<string> {
         let accountCreationState: string = await this.verifyAccountRequirements(username, password, email);
-        if (accountCreationState === CREATION_SUCCESS) {
-
+        if (accountCreationState === NO_ERROR) {
             const encryptedPassword: string = this.encryptPassword(password);
-            if (!await this.dbService.addUserAccount(username, encryptedPassword, email, userAvatar)) {
+            if (!(await this.dbService.addUserAccount(username, encryptedPassword, email, userAvatar, securityQuestion))) {
                 accountCreationState = DATABASE_UNAVAILABLE;
             }
         }
 
-        if (accountCreationState === CREATION_SUCCESS) {
+        if (accountCreationState === NO_ERROR) {
             this.onlineUsersService.addOnlineUser(username);
         }
 
         return Promise.resolve(accountCreationState);
     }
 
+    // To test in the future
+    async getUserSecurityQuestion(username: string) {
+        return await this.dbService.getUserSecurityQuestion(username);
+    }
+
+    async isSecurityQuestionAnswerRight(username: string, answerToQuestion: string): Promise<boolean> {
+        const realAnswer = await this.dbService.getSecurityQuestionAsnwer(username);
+        return answerToQuestion === realAnswer;
+    }
+
+    async changeUserPassword(username: string, newPassword: string) {
+        const encryptedPassword = this.encryptPassword(newPassword);
+        return await this.dbService.changeUserPassword(username, encryptedPassword);
+    }
+
+    async getUserId(username: string) {
+        return await this.dbService.getUserId(username);
+    }
+
     private async verifyAccountRequirements(username: string, password: string, email: string): Promise<string> {
-        let errorCode = CREATION_SUCCESS;
+        let errorCode = NO_ERROR;
         const accountCreationState: AccountCreationState = {
             isUsernameValid: username.length >= MIN_USERNAME_LENGTH,
             isEmailValid: email.includes(CHAR_EMAIL_MUST_CONTAIN),
@@ -71,16 +90,16 @@ export class AuthentificationService {
         };
 
         if (!accountCreationState.isUsernameValid) {
-            console.log((new Date()).toLocaleTimeString() + ' | Register failed, username too short');
+            console.log(new Date().toLocaleTimeString() + ' | Register failed, username too short');
             errorCode = USERNAME_INVALID;
         } else if (!accountCreationState.isEmailValid) {
-            console.log((new Date()).toLocaleTimeString() + ' | Register failed, invalid email');
+            console.log(new Date().toLocaleTimeString() + ' | Register failed, invalid email');
             errorCode = EMAIL_INVALID;
         } else if (!accountCreationState.isPasswordValid) {
-            console.log((new Date()).toLocaleTimeString() + ' | Register failed, password too short');
+            console.log(new Date().toLocaleTimeString() + ' | Register failed, password too short');
             errorCode = PASSWORD_INVALID;
         } else if (!accountCreationState.isUsernameFree) {
-            console.log((new Date()).toLocaleTimeString() + ' | Register failed, username taken');
+            console.log(new Date().toLocaleTimeString() + ' | Register failed, username taken');
             errorCode = USERNAME_TAKEN;
         }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { GameType } from '@app/classes/game-settings';
 import { VirtualPlayerInfo } from '@app/classes/virtual-player-info';
+import { GameType } from '@app/constants/game-types';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { Observable, Observer } from 'rxjs';
 import { Socket } from 'socket.io-client';

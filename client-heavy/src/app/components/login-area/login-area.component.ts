@@ -4,7 +4,6 @@ import { Account } from '@app/classes/account';
 import { VISIBILITY_CONSTANTS } from '@app/constants/visibility-constants';
 import { AccountAuthenticationService } from '@app/services/account-authentification-service/account-authentication.service';
 import { AccountService } from '@app/services/account-service/account.service';
-import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-login-area',
@@ -16,15 +15,14 @@ export class LoginAreaComponent implements OnInit {
     username: "",
     email: "",
     password: "",
+    securityQuestion: { question: "", answer: "" },
   }
   subscription: Subscription
   hide: boolean = true;
   isConnected: boolean = false;
 
-  constructor(private accountAuthenticationService: AccountAuthenticationService, private router: Router, private account: AccountService, public translate: TranslateService) {
+  constructor(private accountAuthenticationService: AccountAuthenticationService, private router: Router, private account: AccountService) {
     this.accountAuthenticationService.setUpSocket()
-    translate.addLangs(['english', 'francais']);
-    translate.setDefaultLang('en');
   }
 
   ngOnInit(): void {
@@ -47,15 +45,16 @@ export class LoginAreaComponent implements OnInit {
 
   showStatus(status: boolean) {
     if (status == true) {
-      this.account.setUsername(this.userAccount.username)
+      this.account.setUsername(this.userAccount.username);
       this.router.navigate(['home']);
     } else {
       alert("Échec de l'authentification");
     }
   }
 
-  translateLanguageTo(lang: string) {
-    this.translate.use(lang);
+  moveToPassword() {
+    this.router.navigate(['password-lost']);
   }
+
 
 }

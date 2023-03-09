@@ -1,9 +1,8 @@
 <div class="container justified">
     <div class="lang">
         {{'CHANGELANG.MESSAGE' | translate}} : 
-        <select #selLang (change)="translateLanguageTo(selLang.value)" style="font-family: 'Courier New', Courier, monospace;">
-            <option *ngFor="let language of translate.getLangs().slice(0,2).reverse()" [value]="language">{{ language }}</option>
-        </select>
+        <button class="lang-button" (click)="translateLanguageTo('en')">EN</button> 
+        <button class="lang-button" (click)="translateLanguageTo('fr')">FR</button> 
     </div>
     <div>
         <app-sign-up-area class="sign-up-component"></app-sign-up-area>

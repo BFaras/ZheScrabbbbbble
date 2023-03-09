@@ -28,12 +28,14 @@ import { WaitingRoomComponent } from './components/game-initialisation/waiting-r
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { LetterHolderComponent } from './components/letter-holder/letter-holder.component';
 import { LoginAreaComponent } from './components/login-area/login-area.component';
+import { PasswordLostAreaComponent } from './components/password-lost-area/password-lost-area.component';
 import { SignUpAreaComponent } from './components/sign-up-area/sign-up-area.component';
 import { TimerComponent } from './components/timer/timer.component';
 import { WindowComponent } from './components/window/window.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { ChatPageComponent } from './pages/chat-page/chat-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { PasswordLostPageComponent } from './pages/password-lost-page/password-lost-page.component';
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
 import { ChatService } from './services/chat-service/chat.service';
@@ -79,6 +81,8 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
         SignUpAreaComponent,
         ProfilePageComponent,
         WindowComponent,
+        PasswordLostPageComponent,
+        PasswordLostAreaComponent,
     ],
     imports: [
         AppMaterialModule,

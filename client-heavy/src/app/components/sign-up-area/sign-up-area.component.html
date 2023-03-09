@@ -1,5 +1,5 @@
 <div class="container">
-    <form class="form">
+    <form *ngIf = !isFormFinished  class="form-first-step">
         <h1>{{'SIGNUP.SIGNUP' | translate}}</h1>
             <mat-form-field class="username input-field" appearance="fill">
                 <mat-label>{{'USERDATA.USERNAME' | translate}}</mat-label>
@@ -16,6 +16,21 @@
                     <mat-icon>{{changeIconVisibility()}}</mat-icon>
                 </button>
             </mat-form-field>
-              <button class = "button-sign-up" mat-raised-button (click)="createNewAccount()">{{'SIGNUP.CONFIRM' | translate}}</button>
+            <button class = "button" mat-raised-button [disabled] = "verifyIfFirstPageFormFinished()" (click)="goToCreateQuestion()">{{'SIGNUP.NEXT' | translate}}</button>
+            <button class = "button" id="back1" mat-raised-button routerLink="/login">{{'SECURITYQ.BACK' | translate}}</button>
     </form>
-    </div>   
+<div>
+
+    <div *ngIf = isFormFinished class="form-first-step">
+        <h1>{{'SECURITYQ.MESSAGE' | translate}}</h1>
+        <mat-form-field class="username input-field" appearance="fill">
+            <mat-label >{{'SECURITYQ.QUESTION' | translate}}</mat-label>
+            <input matInput name = "question" [(ngModel)]="newAccount.securityQuestion.question" >
+        </mat-form-field>
+        <mat-form-field class="email input-field" appearance="fill">
+            <mat-label>{{'SECURITYQ.ANSWER' | translate}}</mat-label>
+            <input  matInput  name = "réponse" [(ngModel)]="newAccount.securityQuestion.answer">
+        </mat-form-field>
+        <button class = "button" mat-raised-button (click)="createNewAccount()">{{'SIGNUP.CONFIRM' | translate}}</button>
+        <button class = "button" id="back" mat-raised-button (click)="goToCreateQuestion()">{{'SECURITYQ.BACK' | translate}}</button>
+    </div>

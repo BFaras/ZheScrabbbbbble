@@ -11,6 +11,7 @@ const LIMIT_OF_CHARACTERS = 512;
     templateUrl: './chat.component.html',
     styleUrls: ['./chat.component.scss'],
 })
+
 export class ChatComponent implements OnInit, OnDestroy {
     @Output() receiver = new EventEmitter();
     switch = false;

@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/fragment_vertical_margin"
     android:paddingRight="@dimen/fragment_horizontal_margin"
     android:paddingBottom="@dimen/fragment_vertical_margin"
-    tools:context=".ui.login.LoginFragment">
+    tools:context=".login.LoginFragment">
 
     <EditText
         android:id="@+id/username"
@@ -97,4 +97,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/register_message" />
+
+    <Button
+        android:id="@+id/reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="120dp"
+        android:text="Reset Password"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/register" />
 </androidx.constraintlayout.widget.ConstraintLayout>

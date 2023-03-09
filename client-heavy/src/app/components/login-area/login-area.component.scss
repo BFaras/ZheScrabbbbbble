@@ -1,5 +1,5 @@
 .container{
-    height: 86%;
+    height: 90%;
     width: 100%;
     border-radius: 11px;
     margin-top: 7vh;
@@ -41,7 +41,6 @@ input {
 .form {
     padding : 1em;
     height: 30%;
-    
     gap: 14px;
     display:flex;
     flex-direction:column;
@@ -52,7 +51,6 @@ input {
     min-width: 300px;
     max-width: 500px;
     font-size: 18px;
-    
 }
 
 input:-webkit-autofill,
@@ -88,6 +86,15 @@ a {
     color: var(--button-text-default);
     transition: color 0.5s linear;
     -webkit-transition: color 0.2s linear;
+}
+
+.password-lost-Link{
+    font-size : 14px;
+    
+
+}
+.password-lost-Link:hover{
+    cursor:pointer;
 }
 
 .button-login:hover {

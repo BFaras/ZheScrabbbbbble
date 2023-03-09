@@ -1,6 +1,5 @@
 import {
     BETWEEN_THIRTEEN_TO_EIGHTEEN_PROBABILITY,
-    ErrorType,
     HIGH_RANGE,
     LESS_THAN_SIX_PROBABILITY,
     LOW_RANGE,
@@ -10,6 +9,7 @@ import {
     VALUE_FOR_PASS,
     VALUE_FOR_SWAP,
 } from '@app/constants/basic-constants';
+import { ILLEGAL_COMMAND } from '@app/constants/error-code-constants';
 import { CommandTypes } from '@app/controllers/command.controller';
 import { PossibleWords } from '@app/services/possible-word-finder.service';
 import { CommandDetails, VirtualPlayer } from './virtual-player';
@@ -38,7 +38,7 @@ export class VirtualPlayerEasy extends VirtualPlayer {
 
     private playAction(action: CommandTypes): CommandDetails {
         const minTime: number = Date.now() + MIN_PLAY_TIME;
-        let details: CommandDetails = { command: '', result: { errorType: ErrorType.IllegalCommand } };
+        let details: CommandDetails = { command: '', result: { errorType: ILLEGAL_COMMAND } };
         switch (action) {
             case CommandTypes.Place:
                 details = this.place();

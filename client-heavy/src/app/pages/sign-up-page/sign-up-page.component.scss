@@ -1,8 +1,7 @@
 .container {
     height: 100vh;
     font-size: 18px;
-    background-color: rgb(247, 237, 223);
-
+    background-color: var(--background-default);
 }
 
 .justified {
@@ -28,11 +27,37 @@ select {
     white-space: nowrap;
   }
 
-.lang {
+  .lang {
     font-family: 'Courier New', Courier, monospace;
     font-size: 20px;
     font-weight: bold;
     margin-top: 1%;
+    color: var(--text-default);
+}
+
+.lang-button {
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    padding: 5px;
+    background-color: var(--button-quaternary);
+    border-radius: 7px;
+    width: 40px;
+    font-size: 15px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    color: var(--button-text-default);
+    transition: color 0.5s linear;
+    -webkit-transition: color 0.2s linear;
+}
+
+.lang-button:hover {
+    color: var(---button-text-hover);
+    cursor: pointer;
+    background: var(--button-quaternary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
 }
 
 .sign-up-component{
@@ -40,4 +65,29 @@ select {
     display: flex;
     width: 544px;
     height: 658px;
+}
+
+.button-login {
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    padding: 10px;
+    background-color: rgb(204, 224, 183);
+    border-radius: 7px;
+    width: 25vh;
+    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    font-size: 17px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: rgb(94, 94, 94);
+    transition: color 0.5s linear;
+    -webkit-transition: color 0.2s linear;
+}
+
+.button-login:hover {
+    color: black;
+    cursor: pointer;
+    background: rgb(186, 204, 122);
+    transition-property: background-color;
+    transition-duration: 0.2s;
 }

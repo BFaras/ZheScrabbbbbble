@@ -1,3 +1,5 @@
+import { ChatType } from "./chat-info";
+
 export interface chat {
     chatName: string;
     _id: number;
@@ -5,8 +7,4 @@ export interface chat {
 }
 
 export const chatlist = [
-    {
-        timer: 0,
-        lettersRemaining: 95,
-    },
 ];
