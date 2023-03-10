@@ -1,6 +1,7 @@
 import { AfterContentChecked, ChangeDetectorRef, Component } from '@angular/core';
 import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { chat, chatlist } from './chats';
 
 @Component({
     selector: 'app-chat-page',
@@ -10,6 +11,7 @@ import { ChatService } from '@app/services/chat-service/chat.service';
 export class ChatPageComponent implements AfterContentChecked {
     chatText: string = '';
     nextMessage: string = '';
+    chatList: chat[] = chatlist;
 
     constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService) {
         chatService.getNewMessages().subscribe((message: string) => {

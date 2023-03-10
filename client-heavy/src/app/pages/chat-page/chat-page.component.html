@@ -1,7 +1,21 @@
-<div id="chat">
-    <textarea #textarea readonly rows="10" [scrollTop]="textarea.scrollHeight">{{chatText}}</textarea>
-    <div id="input">
-        <input [(ngModel)]="nextMessage" (keydown.enter)="sendMessage()"/>
-        <button (click)="sendMessage()">Send</button>
-    </div>
+<div id="container">
+    <section id="chat-list">
+        <div class="title">Chats</div>
+        <div class="chats-container">
+            <button class="chat-button" *ngFor="let chat of chatList"> 
+                <p>{{ chat.chatName }}</p>
+            </button>
+        </div>
+    </section>
+    <section id="chat-messages">
+        <div id="chat-box">
+            <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+                <div #textarea readonly rows="10" [scrollTop]="textarea.scrollHeight">{{chatText}}</div>
+            </div>
+            <div id="input-group">
+                <input [(ngModel)]="nextMessage" (keydown.enter)="sendMessage()"/>
+                <button (click)="sendMessage()">Send</button>
+            </div>
+        </div>
+    </section> 
 </div>
