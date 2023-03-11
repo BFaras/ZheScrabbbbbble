@@ -27,8 +27,7 @@ export class LanguageComponent implements OnInit {
 
   translateLanguageTo(lang: string) {
     this.translate.use(lang);
-    var currentLang = lang;
-    localStorage.setItem("currentLang", currentLang);
+    localStorage.setItem("currentLang", lang);
   }
 
   setActive(event: Event) {
@@ -37,8 +36,6 @@ export class LanguageComponent implements OnInit {
       languageButtons[i].className = languageButtons[i].className.replace(" active", "");
     }
     (event.currentTarget! as HTMLTextAreaElement).className += " active";
-    console.log(document.getElementById('fr')!.className);
-    console.log(document.getElementById('en')!.className);
   }
 
 }
