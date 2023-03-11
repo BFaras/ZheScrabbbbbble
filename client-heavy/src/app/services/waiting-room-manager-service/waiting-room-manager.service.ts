@@ -135,10 +135,10 @@ export class WaitingRoomManagerService {
     createMultiRoom(roomName: string, visibility: string, passwordRoom: string) {
         this.socket.emit('Create Game Room', roomName, visibility, passwordRoom);
     }
-    //raison inconnue cela ne marche plus
+
     createRoomResponse(): Observable<string> {
         return new Observable((observer: Observer<string>) => {
-            this.socket.once('Room Creation Response', (RoomNameCodeError) => observer.next(RoomNameCodeError));
+            this.socket.once('Room Creation Response', (errorCode) => observer.next(errorCode));
         });
     }
     //cancel Join room 

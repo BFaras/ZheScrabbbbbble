@@ -53,7 +53,7 @@ export class CreateGameComponent {
             this.passwordRoom = (document.getElementById("password-room") as HTMLInputElement).value;
         }
         sessionStorage.clear();
-        this.waitingRoomManagerService.createRoomResponse().subscribe(this.redirectPlayer);
+        this.waitingRoomManagerService.createRoomResponse().subscribe(this.redirectPlayer.bind(this));
         this.waitingRoomManagerService.createMultiRoom(roomNameValue, this.visibility, this.passwordRoom);
     }
 
@@ -63,12 +63,9 @@ export class CreateGameComponent {
 
     redirectPlayer(message: string) {
         if (message !== '0') {
-            console.log(message);
             alert('Error in room creation');
             return;
         }
-        console.log('Test');
-        console.log(this.router);
         this.router.navigate(['/waiting-room']);
     }
 }
