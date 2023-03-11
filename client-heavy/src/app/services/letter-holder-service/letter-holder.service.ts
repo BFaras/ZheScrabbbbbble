@@ -14,11 +14,10 @@ export class LetterHolderService {
     TILE_COLOURS = TILE_COLORS_CLASSIC;
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
 
-    constructor(private size: FontSizeService, private theme: ThemesService) {
-        if (this.theme.getActiveTheme() !== classic) this.TILE_COLOURS = TILE_COLORS_INVERTED;
-    }
+    constructor(private size: FontSizeService, private theme: ThemesService) {}
 
     drawLetter(letter: string, position: number) {
+        if (this.theme.getActiveTheme() !== classic) this.TILE_COLOURS = TILE_COLORS_INVERTED;
         const checkedLetter = this.validParams(letter, position);
         if (checkedLetter) {
             this.holderContext.beginPath();

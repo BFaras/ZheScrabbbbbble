@@ -32,15 +32,15 @@ export const LETTER_POINTS = {
 export const TILE_COLORS_CLASSIC = {
     textColour: '#520000',
     backgroundColour: '#ECE7DD',
-    selectionColour: '#650505',
-    manipulationColor: '#1d4902',
+    selectionColour: 'rgb(101, 5, 5, 0.5)',
+    manipulationColor: 'rgb(29, 73, 2, 0.5)',
 };
 
 export const TILE_COLORS_INVERTED = {
     textColour: '#adffff',
     backgroundColour: '#131822',
-    selectionColour: '#9afafa',
-    manipulationColor: '#e2b6fd',
+    selectionColour: 'rgb(154, 250, 250, 0.5)',
+    manipulationColor: 'rgb(226, 182, 253, 0.5)',
 };
 
 export const HOLDER_MEASUREMENTS = {

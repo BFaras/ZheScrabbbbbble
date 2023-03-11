@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
 import { COLOUR_COORDINATES, COLUMNS, GRID_COLOURS_CLASSIC, GRID_COLOURS_INVERTED, GRID_CONSTANTS, GRID_OFFSETS, GRID_WORDS_EN, GRID_WORDS_FR, ROWS } from '@app/constants/grid-constants';
 import { HOLDER_MEASUREMENTS, LETTER_POINTS } from '@app/constants/letters-constants';
@@ -28,7 +28,7 @@ const isCoordinateOf = (colourCoords: number[][], coord: number[]): boolean => {
 @Injectable({
     providedIn: 'root',
 })
-export class GridService implements OnInit {
+export class GridService {
     gridContext: CanvasRenderingContext2D;
     horizontalArrow = '🢚';
     verticalArrow = '🢛';
@@ -37,16 +37,15 @@ export class GridService implements OnInit {
     private boardState: string[][] = [];
     private canvasSize: Vec2 = { x: GRID_CONSTANTS.defaultWidth, y: GRID_CONSTANTS.defaultHeight };
 
-    constructor(private size: FontSizeService, private theme: ThemesService, public translate: TranslateService) {
+    constructor(private size: FontSizeService, private theme: ThemesService, public translate: TranslateService) {}
+
+    setGrids() {
         if (this.theme.getActiveTheme() !== classic) this.GRID_COLOURS = GRID_COLOURS_INVERTED;
         if (this.translate.currentLang === 'en') this.GRID_WORDS = GRID_WORDS_EN;
     }
 
-    ngOnInit() {
-        //this.deleteAndRedraw();
-    }
-
     drawIdentificators() {
+        this.setGrids();
         this.gridContext.beginPath();
         this.gridContext.font = 'bold 27px Courier';
         this.gridContext.textAlign = 'center';
