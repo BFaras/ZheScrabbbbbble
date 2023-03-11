@@ -17,7 +17,8 @@ describe('Profile Tests', async () => {
     const testUsername = 'testUser157Test';
     const testPassword = 'tE!s&to~';
     const testEmail = 'myTestMail12564@poly.com';
-    const testAvatar = '1238894';
+    const testAvatar = 'av111';
+    const testAvatar2 = 'av222';
     const testSecurityQuestion: Question = { question: 'Who are you?', answer: 'Me' };
 
     let mongoServer: MongoMemoryServer;
@@ -66,5 +67,23 @@ describe('Profile Tests', async () => {
         accountCreated = accountCreationError === NO_ERROR;
 
         expect(await profileService.getProfileInformation(testUsername)).to.deep.equals(expectedProfileInfo);
+    });
+
+    it('should change the user avatar and have the correct avatar in the DB on changeAvatar()', async () => {
+        const accountCreationError = await authService.createAccount(testUsername, testPassword, testEmail, testAvatar, testSecurityQuestion);
+
+        await profileService.changeAvatar(await dbService.getUserId(testUsername), testAvatar2);
+        accountCreated = accountCreationError === NO_ERROR;
+
+        expect((await profileService.getProfileInformation(testUsername)).avatar).to.deep.equals(testAvatar2);
+    });
+
+    it('should get the right user stats on getUserStats()', async () => {
+        const accountCreationError = await authService.createAccount(testUsername, testPassword, testEmail, testAvatar, testSecurityQuestion);
+        const expectedUserStats = profileService.getDefaultProfileInformation().stats;
+
+        accountCreated = accountCreationError === NO_ERROR;
+
+        expect(await profileService.getUserStats(await dbService.getUserId(testUsername))).to.deep.equals(expectedUserStats);
     });
 });
