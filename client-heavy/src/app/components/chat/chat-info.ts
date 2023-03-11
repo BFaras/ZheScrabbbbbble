@@ -22,3 +22,14 @@ export interface ChatCreationResponse {
     errorCode: string;
     chatId: string;
 }
+
+export interface ChatMessage {
+    message: string;
+    username: string;
+    timestamp: string;
+}
+
+export interface MessageInfo {
+    message: ChatMessage;
+    id: string;
+}

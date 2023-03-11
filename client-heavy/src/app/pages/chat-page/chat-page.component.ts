@@ -1,26 +1,44 @@
-import { AfterContentChecked, ChangeDetectorRef, Component } from '@angular/core';
-import { ChatType } from '@app/components/chat/chat-info';
+import { AfterContentChecked, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChatInfo, ChatType, MessageInfo } from '@app/components/chat/chat-info';
+import { classic, Theme } from '@app/constants/themes';
 import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
-import { chat, chatlist } from './chats';
+import { ThemesService } from '@app/services/themes-service/themes-service';
+//import { chat, chatlist } from './chats';
 
 @Component({
     selector: 'app-chat-page',
     templateUrl: './chat-page.component.html',
     styleUrls: ['./chat-page.component.scss'],
 })
-export class ChatPageComponent implements AfterContentChecked {
+export class ChatPageComponent implements AfterContentChecked, OnInit {
     chatText: string = '';
     nextMessage: string = '';
-    chatList: chat[] = chatlist;
+    chatList: ChatInfo[];
     public: ChatType = ChatType.PUBLIC;
     private: ChatType = ChatType.PRIVATE;
     visibility: ChatType;
 
-    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService) {
-        chatService.getNewMessages().subscribe((message: string) => {
-            this.chatText += message + '\n';
+    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService, private themes: ThemesService) {
+        chatService.getNewMessages().subscribe((messageInfo: MessageInfo) => {
+            this.chatText += messageInfo + '\n';
         })
+    }
+
+    ngOnInit() {
+        let current = localStorage.getItem("currentTheme");
+        if (current) {
+            this.themes.getAvailableThemes().forEach((theme: Theme) => {
+                if (theme.name.toString() === current) this.themes.setActiveTheme(theme);
+            });
+            localStorage.setItem("currentTheme", current);
+        }
+        else {
+            localStorage.setItem("currentTheme", classic.toString());
+        }
+        this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
+            this.chatList = chatList;
+        });
     }
 
     ngAfterContentChecked(): void {
