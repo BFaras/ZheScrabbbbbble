@@ -31,7 +31,7 @@ export const chatlist = [
     {
         chatName: "Cassie",
         _id: 123,
-        chatType: ChatType.PUBLIC,
+        chatType: ChatType.PRIVATE,
     },
     {
         chatName: "Nate",
@@ -64,27 +64,27 @@ export const chatlist = [
         chatType: ChatType.PRIVATE,
     },
     {
-        chatName: "John",
+        chatName: "Incels",
         _id: 123,
         chatType: ChatType.PUBLIC,
     },
     {
-        chatName: "Mary",
+        chatName: "BUCKAROOS",
         _id: 123,
         chatType: ChatType.PUBLIC,
     },
     {
-        chatName: "Ruby",
+        chatName: "butt",
         _id: 123,
         chatType: ChatType.PUBLIC,
     },
     {
-        chatName: "Eva",
+        chatName: "Tree huggers",
         _id: 123,
         chatType: ChatType.PUBLIC,
     },
     {
-        chatName: "Cassie",
+        chatName: "...",
         _id: 123,
         chatType: ChatType.PUBLIC,
     },

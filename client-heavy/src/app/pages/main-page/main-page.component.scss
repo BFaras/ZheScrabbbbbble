@@ -47,6 +47,9 @@ img {
 }
 
 .lang {
+    width: 40%;
+    display: flex;
+    justify-content: center;
     font-family: 'Courier New', Courier, monospace;
     font-size: 20px;
     font-weight: bold;
@@ -58,6 +61,7 @@ img {
     text-align: center;
     border: none;
     padding: 5px;
+    margin-right: 2%;
     background-color: var(--button-quaternary);
     border-radius: 7px;
     width: 40px;

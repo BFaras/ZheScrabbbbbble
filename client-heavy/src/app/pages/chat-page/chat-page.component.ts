@@ -1,6 +1,8 @@
 import { AfterContentChecked, ChangeDetectorRef, Component } from '@angular/core';
+import { ChatType } from '@app/components/chat/chat-info';
 import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { TranslateService } from '@ngx-translate/core';
 import { chat, chatlist } from './chats';
 
 @Component({
@@ -12,11 +14,16 @@ export class ChatPageComponent implements AfterContentChecked {
     chatText: string = '';
     nextMessage: string = '';
     chatList: chat[] = chatlist;
+    public: ChatType = ChatType.PUBLIC;
+    private: ChatType = ChatType.PRIVATE;
+    visibility: ChatType;
 
-    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService) {
+    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService, public translate: TranslateService) {
         chatService.getNewMessages().subscribe((message: string) => {
             this.chatText += message + '\n';
         })
+        translate.addLangs(['en', 'fr']);
+        translate.defaultLang = 'fr';
     }
 
     ngAfterContentChecked(): void {
@@ -34,5 +41,24 @@ export class ChatPageComponent implements AfterContentChecked {
 
     updateScroll(scroll: number): number {
         return scroll;
+    }
+
+    setVisibility(event: Event, newVisibility: ChatType) {
+        this.visibility = newVisibility;
+
+        let chatLinks;
+
+        chatLinks = document.getElementsByClassName("tabs");
+        for (let i = 0; i < chatLinks.length; i++) {
+            chatLinks[i].className = chatLinks[i].className.replace(" active", "");
+        }
+
+        (event.currentTarget! as HTMLTextAreaElement).className += " active";
+
+
+    }
+
+    translateLanguageTo(lang: string) {
+        this.translate.use(lang);
     }
 }

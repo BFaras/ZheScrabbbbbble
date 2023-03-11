@@ -18,6 +18,10 @@ textarea{
     height: 95%;
     background-color: var(--background-tertiary);
     border-radius: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #container {
@@ -103,21 +107,51 @@ button:hover {
 } 
 
 .title {
-    width: 10%;
-    margin: 7% 5%;
+    width: 100%;
+    height: 100%;
+    padding-top: 2%;
     font-family: "Shrikhand";
-    font-size: 50px;
+    font-size: 40px;
     color: var(--accent-default);
+    position: relative;
+    right: 5%;
+}
+
+#title-tabs {
+    padding-right: 3%;
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between; 
+    margin-top: 5%;
+}
+
+.tabs {
+    color: var(--accent-default);
+    font-family: "Shrikhand";
+    font-size: 20px;
+    padding-left: 5%;
+    cursor: pointer;
+}
+
+.tabs:hover {
+    color: var(--playarea-coords);
+}
+
+.active {
+    color: var(--playarea-coords);
 }
 
 .chats-container {
     overflow: auto;
-    height: 90%;
-    padding-top: 0px;
+    height: 81%;
+    position: relative;
+    margin-top: 3%;
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 2em;
 }
 
 /* Track */
@@ -138,30 +172,69 @@ button:hover {
 }
 
 .chat-button {
-    width: 85%;
+    width: 90%;
     position:relative;
-    top : 20%;
     text-decoration: none;
     text-align: center;
     border: none;
     padding: 1%;
-    padding-top: 3%;
+    padding-top: 5%;
     margin: 0% 5% 5%;
     background-color: var(--button-primary);
-    border-radius: 7px;
     box-shadow: var(--box-shadow);
+    border-radius: 7px;
     font-size: 17px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
     color: var(--button-text-default);
     transition: color 0.5s linear;
     -webkit-transition: color 0.2s linear;
+    cursor: pointer;
 }
 
 .chat-button:hover {
     color: var(--button-text-hover);
     cursor: pointer;
     background: var(--button-primary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+.chat-button button.active {
+    background-color: var(--button-primary-hover);
+  }
+
+.lang {
+    width: 80%;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 5%;
+    color: var(--text-default);
+}
+
+.lang-button {
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    padding: 5px;
+    margin-right: 2%;
+    background-color: var(--button-quaternary);
+    border-radius: 7px;
+    width: 40px;
+    font-size: 15px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    color: var(--button-text-default);
+    transition: color 0.5s linear;
+    -webkit-transition: color 0.2s linear;
+}
+
+.lang-button:hover {
+    color: var(---button-text-hover);
+    cursor: pointer;
+    background: var(--button-quaternary-hover);
     transition-property: background-color;
     transition-duration: 0.2s;
 }

@@ -1,10 +1,22 @@
 <div id="container">
     <section id="chat-list">
-        <div class="title">Chats</div>
+        <div id="title-tabs">"
+            <p class="title">Chats</p>
+            <p class="tabs" (click)="setVisibility($event, private)">{{ 'TABS.PRIVATE' | translate }}</p>
+            <p class="tabs" (click)="setVisibility($event, public)">{{ 'TABS.PUBLIC' | translate }}</p>
+        </div>
         <div class="chats-container">
-            <button class="chat-button" *ngFor="let chat of chatList"> 
-                <p>{{ chat.chatName }}</p>
-            </button>
+            <ng-container *ngFor="let chat of chatList">
+                <button class="chat-button" *ngIf="chat.chatType === visibility"> 
+                    <p class="chat-content">{{ chat.chatName }}</p>
+                </button>
+            </ng-container>          
+            
+        </div>
+        <div class="lang">
+            {{'CHANGELANG.MESSAGE' | translate}} : 
+            <button class="lang-button" (click)="translateLanguageTo('en')">EN</button> 
+            <button class="lang-button" (click)="translateLanguageTo('fr')">FR</button> 
         </div>
     </section>
     <section id="chat-messages">
@@ -14,7 +26,7 @@
             </div>
             <div id="input-group">
                 <input [(ngModel)]="nextMessage" (keydown.enter)="sendMessage()"/>
-                <button (click)="sendMessage()">Send</button>
+                <button (click)="sendMessage()">{{ 'CHATBOX.SEND' | translate}}</button>
             </div>
         </div>
     </section> 

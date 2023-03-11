@@ -71,5 +71,9 @@
         "CLASSIC":"Jouer",
         "TURNAMENT":"Tournois",
         "COLLABORATIVE":"Collaboratif"
+    },
+    "TABS":{
+        "PUBLIC": "Publiques",
+        "PRIVATE": "Privés"
     }
 }
