@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./language.component.scss']
 })
 export class LanguageComponent implements OnInit {
+  currentLang: string;
 
   constructor(public translate: TranslateService) {
     translate.addLangs(['fr', 'en']);
@@ -17,24 +18,33 @@ export class LanguageComponent implements OnInit {
     let current = localStorage.getItem("currentLang");
     if (current) {
       this.translate.use(current);
-      document.getElementById(current)!.className += " active";
+      this.currentLang = current;
+      //this.resetActive();
+      //document.getElementById(current)!.className += " active";
     }
     else {
+      this.currentLang = 'fr';
       localStorage.setItem("currentLang", 'fr');
-      document.getElementById('fr')!.className += " active";
+      //this.resetActive();
+      //document.getElementById('fr')!.className += " active";
     }
   }
 
   translateLanguageTo(lang: string) {
     this.translate.use(lang);
     localStorage.setItem("currentLang", lang);
+    this.currentLang = lang;
   }
 
-  setActive(event: Event) {
+  resetActive() {
     let languageButtons = document.getElementsByClassName("lang-button");
     for (let i = 0; i < languageButtons.length; i++) {
       languageButtons[i].className = languageButtons[i].className.replace(" active", "");
     }
+  }
+
+  setActive(event: Event) {
+    this.resetActive();
     (event.currentTarget! as HTMLTextAreaElement).className += " active";
   }
 

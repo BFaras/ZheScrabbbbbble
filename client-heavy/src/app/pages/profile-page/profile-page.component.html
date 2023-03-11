@@ -3,8 +3,8 @@
     <app-language></app-language>
     <div id="themes">
         {{'CHANGETHEME.MESSAGE' | translate}} : 
-        <button class="theme-button" id="classic" (click)="changeThemeTo('classic')" (click)="setActive($event)">Classic</button> 
-        <button class="theme-button" id="inverted" (click)="changeThemeTo('inverted')" (click)="setActive($event)">Inverted</button> 
+        <button class="theme-button" id="classic" (click)="changeThemeTo('classic')" (click)="setActive($event)">{{ 'CHANGETHEME.CLASSIC' | translate }}</button> 
+        <button class="theme-button" id="inverted" (click)="changeThemeTo('inverted')" (click)="setActive($event)">{{ 'CHANGETHEME.INVERTED' | translate }}</button> 
     </div>
     
 </div>

@@ -21,7 +21,7 @@ export class ProfilePageComponent implements OnInit {
       localStorage.setItem("currentTheme", classic.toString());
       document.getElementById('classic')!.className += " active";
     }
-  }
+  } //ne fonctionne que sur profile page
 
   changeThemeTo(newTheme: string) {
     this.themeService.getAvailableThemes().forEach((theme: Theme) => {

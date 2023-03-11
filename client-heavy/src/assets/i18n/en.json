@@ -3,7 +3,9 @@
         "MESSAGE":"Change Language"
     },
     "CHANGETHEME":{
-        "MESSAGE":"Change Theme"
+        "MESSAGE":"Change Theme",
+        "CLASSIC":"Classic",
+        "INVERTED":"Contrast"
     },
     "LOGIN":{
         "AUTH":"Authentication",
