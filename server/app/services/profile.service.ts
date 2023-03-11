@@ -49,7 +49,8 @@ export class ProfileService {
     }
 
     async getUserStats(userId: string): Promise<StatisticInfo[]> {
-        return (await this.getProfileInformation(userId)).stats;
+        const username: string = await this.dbService.getUsernameFromId(userId);
+        return (await this.getProfileInformation(username)).stats;
     }
 
     async getUserSettings(userId: string): Promise<ProfileSettings> {
