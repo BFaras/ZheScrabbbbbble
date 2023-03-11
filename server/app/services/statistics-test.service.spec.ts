@@ -12,7 +12,7 @@ import { DatabaseService } from './database.service';
 import { ProfileService } from './profile.service';
 import { StatisticService } from './statistics.service';
 
-describe('Profile Tests', async () => {
+describe('Statistics Tests', async () => {
     const testUsername = 'testUser157Test';
     const testPassword = 'tE!s&to~';
     const testEmail = 'myTestMail12564@poly.com';
