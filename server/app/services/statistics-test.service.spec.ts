@@ -1,6 +1,7 @@
 /* eslint-disable dot-notation */
 /* eslint-disable max-len */
 import { NO_ERROR } from '@app/constants/error-code-constants';
+import { GAMES_NB_STAT_NAME, GAME_TIME_AVRG_STAT_NAME, POINTS_AVRG_STAT_NAME, WINS_NB_STAT_NAME } from '@app/constants/profile-constants';
 import { StatisticInfo } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
 import { expect } from 'chai';
@@ -65,9 +66,9 @@ describe('Profile Tests', async () => {
         await statsService.updateGameStats(userId, testIsWin, testPointsObtained, testGameTime);
 
         const profileStats: StatisticInfo[] = await profileService.getUserStats(userId);
-        expect(profileStats[0]).to.equal(expectedNbOfWins);
-        expect(profileStats[1]).to.equal(expectedNbOfGamesPlayed);
-        expect(profileStats[2]).to.equal(expectedPointsAvrg);
-        expect(profileStats[3]).to.equal(expectedTimeAvrg);
+        expect(profileStats[statsService['getStatPosition'](profileStats, WINS_NB_STAT_NAME)]).to.equal(expectedNbOfWins);
+        expect(profileStats[statsService['getStatPosition'](profileStats, GAMES_NB_STAT_NAME)]).to.equal(expectedNbOfGamesPlayed);
+        expect(profileStats[statsService['getStatPosition'](profileStats, POINTS_AVRG_STAT_NAME)]).to.equal(expectedPointsAvrg);
+        expect(profileStats[statsService['getStatPosition'](profileStats, GAME_TIME_AVRG_STAT_NAME)]).to.equal(expectedTimeAvrg);
     });
 });
