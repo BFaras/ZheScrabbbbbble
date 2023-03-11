@@ -10,20 +10,17 @@ export interface Settings {
     timer: Timer;
 }
 
+export interface JoinResponse {
+    errorCode: string;
+    playerNames?: string[];
+}
+
 @Injectable({
     providedIn: 'root',
 })
 export class WaitingRoomManagerService {
     private playersInRoom: string[] = [];
     private socket: Socket;
-    private messageSource: string;
-    private alertMessage: string;
-    private hostPlayer: boolean;
-    private hostPlayerName: string;
-    private guestPlayerConnected: boolean;
-    private roomToJoin: string;
-    private visibility: string;
-    private idRoom: string;
     private waitingRoomObservable: Observable<WaitingRoom[]>;
 
     constructor(private socketManagerService: SocketManagerService) {
@@ -33,98 +30,28 @@ export class WaitingRoomManagerService {
                 observer.next(rooms)
             });
         });
-    }
-    /*modifier pour objet waiting room */
-    setIdRoom(id: string) {
-        this.idRoom = id;
-    }
-    /*modifier pour objet waiting room */
-    getIdRoom() {
-        this.idRoom;
-    }
-    /*modifier pour objet waiting room */
-    setVisibility(visibility: string) {
-        this.visibility = visibility;
-    }
-    /*modifier pour objet waiting room */
-    getVisibility() {
-        return this.visibility;
-    }
-    getGameRoomActive() {
-        this.socket.emit('Get Game Room List');
-    }
-
-    getMessageSource(): string {
-        return this.messageSource;
-    }
-
-    getAlertMessage(): string {
-        return this.alertMessage;
+        this.socket.on('Room Player Update', (playerNames) => {
+            this.playersInRoom = playerNames;
+        });
     }
 
     getPlayersInRoom() {
         return this.playersInRoom;
     }
 
-    setMessageSource(message: string) {
-        this.messageSource = message;
-    }
-
-    setAlertMessage(message: string) {
-        this.alertMessage = message;
-    }
-
     setPlayersInRoom(players: string[]) {
         this.playersInRoom = players;
     }
 
-    isHostPlayer(): boolean {
-        return this.hostPlayer;
+    getGameRoomActive() {
+        this.socket.emit('Get Game Room List');
     }
 
-    setHostPlayer(value: boolean) {
-        this.hostPlayer = value;
+    joinRoom(id: string, password?: string): void {
+        this.socket.emit('Join Game Room', id, password);
     }
 
-    setHostPlayerName(value: string) {
-        this.hostPlayerName = value;
-    }
-
-    isGuestPlayer(): boolean {
-        return this.guestPlayerConnected;
-    }
-
-    setGuestPlayer(value: boolean) {
-        this.guestPlayerConnected = value;
-    }
-
-    getRoomToJoin(): string {
-        return this.roomToJoin;
-    }
-
-    setRoomToJoin(room: string) {
-        this.roomToJoin = room;
-    }
-
-    guestAnswered(answer: boolean, observer: Observer<boolean>) {
-        console.log(answer)
-        observer.next(answer);
-    }
-
-    guestPlayerIsWaiting(isWaiting: boolean, message: string, observer: Observer<string>) {
-        this.guestPlayerConnected = isWaiting;
-        observer.next(message);
-    }
-
-    getHostPlayerName(): string {
-        return this.hostPlayerName;
-    }
-
-    joinRoom(password: string): void {
-        this.socket.emit('Join Game Room', this.idRoom, password);
-    }
-
-    deleteRoom(): void {
+    leaveRoom(): void {
         this.socket.emit('Leave Game Room');
     }
 
@@ -141,7 +68,13 @@ export class WaitingRoomManagerService {
             this.socket.once('Room Creation Response', (errorCode) => observer.next(errorCode));
         });
     }
-    //cancel Join room 
+
+    joinRoomResponse(): Observable<JoinResponse> {
+        return new Observable((observer: Observer<JoinResponse>) => {
+            this.socket.once('Join Room Response', (errorCode, playerNames) => observer.next({ errorCode, playerNames }));
+        });
+    }
+
     cancelJoinGameRoom() {
         this.socket.emit('Cancel Join Request');
     }

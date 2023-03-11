@@ -67,26 +67,30 @@ export class SocketManager {
             });
 
             socket.on('Join Game Room', (roomCode: string, password?: string) => {
+                console.log((new Date()).toLocaleTimeString() + ' | Room join request received');
                 const username = this.accountInfoService.getUsername(socket);
                 /**PRIVATE*/
                 if (this.roomManager.getRoomVisibility(roomCode) === RoomVisibility.Private) {
                     this.pendingJoinGameRequests.set(username, [roomCode, socket]);
+                    console.log((new Date()).toLocaleTimeString() + ' | Room is private. Request sent to host');
                     this.sio.to(this.roomManager.getRoomHost(roomCode).getUUID()).emit('Join Room Request', username);
                     return;
                 }
                 /**PROTECTED */
                 if (!this.roomManager.addPlayer(roomCode, new Player(socket.id, username), password)) {
+                    console.log((new Date()).toLocaleTimeString() + ' | Room is protected. Incorrect room password');
                     socket.emit('Join Room Response', ROOM_PASSWORD_INCORRECT);
                     return;
                 }
                 /**PUBLIQUE */
                 socket.join(roomCode);
                 const playerNames = this.roomManager.getRoomPlayerNames(roomCode);
+                console.log((new Date()).toLocaleTimeString() + ' | Room joined successfully');
                 socket.to(roomCode).emit('Room Player Update', playerNames);
                 socket.emit('Join Room Response', NO_ERROR, playerNames);
             });
             
-            socket.on('Join Request Response', (response: boolean, username: string, roomId: string) => {
+            socket.on('Join Request Response', (response: boolean, username: string) => {
                 const requestInfo = this.pendingJoinGameRequests.get(username);
                 this.pendingJoinGameRequests.delete(username);
                 console.log(requestInfo);

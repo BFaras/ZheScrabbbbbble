@@ -2,9 +2,8 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameType } from '@app/classes/game-settings';
 import { WaitingRoom } from '@app/classes/waiting-room';
-import { JoinGameSetupComponent } from '@app/components/game-initialisation/join-game-setup/join-game-setup.component';
 import { RoomVisibility } from '@app/constants/room-visibility';
-import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
+import { JoinResponse, WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -17,9 +16,9 @@ export class JoinGameComponent implements OnDestroy, OnInit {
     @Input() roomName: string = '';
 
     waitingRooms: WaitingRoom[] = [];
-    joinGameSetUpComponent: JoinGameSetupComponent;
     subscription: Subscription;
     gameType: GameType;
+    buttonDisabled : boolean = false;
 
     constructor(private waitingRoomManagerService: WaitingRoomManagerService, private router: Router) {}
 
@@ -45,16 +44,33 @@ export class JoinGameComponent implements OnDestroy, OnInit {
     }
 
     sendRoomData(room: WaitingRoom) {
+        if(this.buttonDisabled) return;
+        this.buttonDisabled = true;
         let password;
         if(room.visibility === RoomVisibility.PROTECTED){
             password = prompt('Cette salle est protégée. Veuillez entrer le mot de passe.');
+            if(!password){
+                alert('Le champ ne peux pas être vide');
+                this.buttonDisabled = false;
+                return;
+            }
         }
-        console.log(password);
-        /**changer tous les sets de waitingroom et getters pour avoir seulement WaitingRoom */
-        this.waitingRoomManagerService.setHostPlayerName(room.players[0]);
-        this.waitingRoomManagerService.setRoomToJoin(room.name);
-        this.waitingRoomManagerService.setVisibility(room.visibility);
-        this.waitingRoomManagerService.setIdRoom(room.id);
-        this.router.navigate(['/join-game-setup']);
+        this.waitingRoomManagerService.joinRoomResponse().subscribe(this.redirectPlayer.bind(this));
+        this.waitingRoomManagerService.joinRoom(room.id, password);
+    }
+
+    redirectPlayer(message : JoinResponse) {
+        this.buttonDisabled = false;
+        if (message.errorCode === 'ROOM-2') {
+            alert('Mot de passe incorrect');
+            return;
+        }
+        if(!message.playerNames){
+            // Should never reach here
+            alert('Fatal server error. No player name received');
+            return;
+        }
+        this.waitingRoomManagerService.setPlayersInRoom(message.playerNames);
+        this.router.navigate(['/waiting-room']);
     }
 }
