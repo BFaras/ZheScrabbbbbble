@@ -1,47 +1,39 @@
 import { Player } from '@app/classes/player';
-import { GameType } from '@app/constants/basic-constants';
-import { Timer } from '@app/constants/basic-interface';
-import { GoalsValidation } from '@app/services/goals-validation.service';
+import { MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
 import { Game } from './game';
-import { GameSettings } from './game-settings';
-import { VirtualPlayer } from './virtual-player';
-import { VirtualPlayerEasy } from './virtual-player-easy';
 
 export class GameRoom {
     private players: Player[];
+    private id: string;
     private name: string;
     private connectedPlayers: number;
-    private timer: Timer;
-    private isSoloGame: boolean;
     private game: Game;
-    private gameType: GameType;
+    private visibility: RoomVisibility;
+    private password: string;
+    private gameStarted: boolean;
 
-    constructor(name: string, wordValidationService: GoalsValidation, gameSettings: GameSettings) {
+    constructor(id: string, name: string, visibility: RoomVisibility, password?: string) {
+        this.id = id;
         this.name = name;
         this.players = [];
         this.connectedPlayers = 0;
-        this.isSoloGame = gameSettings.isSoloMode;
-        this.timer = gameSettings.timer;
-        this.game = new Game(wordValidationService, this.players, gameSettings.gameType);
-        this.gameType = gameSettings.gameType;
+        this.visibility = visibility;
+        if (visibility === RoomVisibility.Protected) {
+            if(!password) visibility = RoomVisibility.Public;
+            else this.password = password;
+        }
+        this.game = new Game(this.players);
+        this.gameStarted = false;
     }
 
     addPlayer(player: Player) {
-        if (this.players.length < 2) {
+        if (this.players.length < MAX_NUMBER_OF_PLAYERS) {
             this.players.push(player);
         }
     }
-    convertSoloGame(playerID: string, virtualPlayer: VirtualPlayerEasy) {
-        if (!this.getPlayer(playerID, false)) return;
-        const index: number = this.getPlayer(playerID, false) === this.players[0] ? 0 : 1;
-        virtualPlayer.copyPlayerState(this.players[index]);
-        this.players[index] = virtualPlayer;
-        this.isSoloGame = true;
-        this.game.convertSoloGame();
-    }
 
     removePlayer(playerID: string): boolean {
-        const player = this.getPlayer(playerID, false);
+        const player = this.getPlayer(playerID);
         if (!player) {
             return false;
         }
@@ -50,18 +42,8 @@ export class GameRoom {
         return true;
     }
 
-    removeVirtualPlayers() {
-        if (this.players[1] instanceof VirtualPlayer) this.players.splice(1, 1);
-        if (this.players[0] instanceof VirtualPlayer) this.players.splice(0, 1);
-    }
-
     isPlayerInRoom(playerID: string): boolean {
-        return this.getPlayer(playerID, false) !== null;
-    }
-
-    isPlayerTurn(playerID: string): boolean {
-        const player = this.getPlayer(playerID, false);
-        return player ? player.hasTurn() : false;
+        return this.getPlayer(playerID) !== null;
     }
 
     getPlayerCount(): number {
@@ -72,41 +54,57 @@ export class GameRoom {
         return this.name;
     }
 
-    getIsSoloGame(): boolean {
-        return this.isSoloGame;
-    }
-
-    getPlayer(playerID: string, otherPlayer: boolean): Player | null {
+    getPlayer(playerID: string): Player | null {
         for (const player of this.players) {
-            if ((player.getUUID() === playerID) !== otherPlayer) {
+            if (player.getUUID() === playerID) {
                 return player;
             }
         }
         return null;
     }
 
+    getHostPlayer(): Player {
+        return this.players[0];
+    }
+
     getPlayerFromIndex(playerIndex: number): Player {
         return this.players[playerIndex];
     }
 
-    getPlayerIndex(active: boolean): number {
-        if (active) {
-            return this.players[0].hasTurn() ? 0 : 1;
-        }
-        return this.players[0].hasTurn() ? 1 : 0;
-    }
-
     incrementConnectedPlayers(): boolean {
         this.connectedPlayers++;
-        return this.connectedPlayers === 2;
+        return this.connectedPlayers >= MAX_NUMBER_OF_PLAYERS;
     }
 
-    getTimeChosen(): Timer {
-        return this.timer;
+    getID(): string {
+        return this.id;
     }
 
-    getGameType(): GameType {
-        return this.gameType;
+    getVisibility(): RoomVisibility {
+        return this.visibility;
+    }
+
+    getPlayerNames(): string[] {
+        const names = [];
+        for (const player of this.players) {
+            names.push(player.getName());
+        }
+        return names;
+    }
+
+    verifyPassword(password?: string): boolean {
+        if(!this.password) return true;
+        return this.password === password;
+    }
+
+    startGame() {
+        if(this.gameStarted) return;
+        this.game.startGame();
+        this.gameStarted = true;
+    }
+
+    isGameStarted(){
+        return this.gameStarted;
     }
 
     get getGame(): Game {

@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-lines */
-import { GameType } from '@app/constants/basic-constants';
 import { DATABASE_NAME, DATABASE_URL } from '@app/constants/database-environment';
 import {
     AccountInfo,
@@ -42,8 +41,7 @@ export class DatabaseService {
     }
 
     async initialiseDB() {
-        await this.fillScoreCollection(GameType.CLASSIC);
-        await this.fillScoreCollection(GameType.LOG2990);
+        await this.fillScoreCollection();
         await this.insertDefaultDictionary();
         await this.insertDefaultPlayerNames();
     }
@@ -57,8 +55,8 @@ export class DatabaseService {
 
     async resetCollection(type: CollectionType) {
         if (type === CollectionType.SCORE) {
-            await this.getCollection(type, GameType.CLASSIC).deleteMany({});
-            await this.getCollection(type, GameType.LOG2990).deleteMany({});
+            await this.getCollection(type).deleteMany({});
+            await this.getCollection(type).deleteMany({});
         } else {
             await this.getCollection(type).deleteMany({});
         }
@@ -117,10 +115,10 @@ export class DatabaseService {
         return username;
     }
 
-    async changeUserPassword(username: string, encryptedPassword: string): Promise<boolean> {
+    async changeUserPassword(usernameUser: string, encryptedPasswordUser: string) {
         let isChangeSuccess = true;
         await this.getCollection(CollectionType.USERACCOUNTS)
-            ?.updateOne({ username }, { $set: { encryptedPassword } })
+            ?.updateOne({ username: usernameUser }, { $set: { encryptedPassword: encryptedPasswordUser } })
             .catch(() => {
                 isChangeSuccess = false;
             });
@@ -137,6 +135,10 @@ export class DatabaseService {
             encryptedPassword = userAccountInfoDoc.encryptedPassword;
         }
         return encryptedPassword;
+    }
+
+    async addScore(score: Score): Promise<void> {
+        await this.getCollection(CollectionType.SCORE)?.insertOne(score).catch();
     }
 
     async getUserSecurityQuestion(username: string): Promise<string> {
@@ -156,7 +158,7 @@ export class DatabaseService {
             username,
         });
         let securityQuestionAnswer = '';
-
+        
         if (userAccountInfoDoc !== undefined && userAccountInfoDoc !== null) {
             securityQuestionAnswer = userAccountInfoDoc.securityQuestion.answer;
         }
@@ -331,13 +333,9 @@ export class DatabaseService {
         });
         return mongoArray as ChatInfo[];
     }
-
-    async addScore(score: Score, gameType: GameType): Promise<void> {
-        await this.getCollection(CollectionType.SCORE, gameType)?.insertOne(score).catch();
-    }
-
-    async getTopScores(resultCount: number, gameType: GameType): Promise<TopScores> {
-        const dbResults = await (this.getCollection(CollectionType.SCORE, gameType) as Collection<Score>)
+    
+    async getTopScores(resultCount: number): Promise<TopScores> {
+        const dbResults = await (this.getCollection(CollectionType.SCORE) as Collection<Score>)
             ?.find({}, { projection: { _id: 0 } })
             .sort({ score: -1 })
             .toArray();
@@ -442,13 +440,13 @@ export class DatabaseService {
         return this.client.close();
     }
 
-    private getCollection<T>(collectionType: CollectionType, gameType?: GameType): Collection<T> {
-        return this.database?.collection(collectionType + (gameType ? gameType : ''));
+    private getCollection<T extends Document>(collectionType: CollectionType): Collection<T> {
+        return this.database?.collection(collectionType);
     }
 
-    private async fillScoreCollection(gameType: GameType): Promise<void> {
-        if ((await this.getCollection(CollectionType.SCORE, gameType)?.countDocuments()) === 0) {
-            await this.insertDefaultScores(this.getCollection(CollectionType.SCORE, gameType));
+    private async fillScoreCollection(): Promise<void> {
+        if ((await this.getCollection(CollectionType.SCORE)?.countDocuments()) === 0) {
+            await this.insertDefaultScores(this.getCollection(CollectionType.SCORE));
         }
     }
 

@@ -1,4 +1,5 @@
-import { GameType } from './game-settings';
+
+import { GameType } from '@app/constants/game-types';
 import { Timer } from './timer';
 
 export interface WaitingRoom {
