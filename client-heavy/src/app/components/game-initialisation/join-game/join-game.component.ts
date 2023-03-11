@@ -30,18 +30,12 @@ export class JoinGameComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.gameType = this.gameModeService.scrabbleMode;
         this.subscription = this.waitingRoomManagerService.getWaitingRoomObservable().
-        subscribe((rooms) => 
-        {this.waitingRooms = rooms;
-        console.log(rooms)});
+            subscribe((rooms) => {
+                this.waitingRooms = rooms;
+                console.log(rooms)
+            });
         this.waitingRoomManagerService.getGameRoomActive()
     }
-    //gameSetting a ete enlever je ne sais pas l utilite de ce truc la
-    /*filterRooms(rooms: WaitingRoom[]) {
-        this.waitingRooms = rooms.filter((waitingRooms) => {
-            return waitingRooms.gameType === this.gameType;
-        });
-        console.log(this.waitingRooms);
-    }*/
 
     sendRoomData(room: WaitingRoom) {
         /**changer tous les sets de waitingroom et getters pour avoir seulement WaitingRoom */

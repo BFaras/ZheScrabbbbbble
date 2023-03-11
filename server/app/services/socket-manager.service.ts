@@ -38,7 +38,6 @@ export class SocketManager {
         //this.timeoutRoom = {};
         this.commandController = new CommandController(this.roomManager);
     }
-  
 
     handleSockets(): void {
         this.sio.on('connection', (socket: io.Socket) => {
@@ -49,6 +48,7 @@ export class SocketManager {
 
             socket.on('Create Game Room', async (name: string, visibility: RoomVisibility, password?: string) => {
                 if (this.roomManager.verifyIfRoomExists(name)) {
+                    console.log(new Date().toLocaleTimeString() + ' | Error in room creation, name taken');
                     socket.emit('Room Creation Response', ROOM_NAME_TAKEN);
                     return;
                 }
@@ -56,6 +56,7 @@ export class SocketManager {
                 const newUser = new Player(socket.id, this.accountInfoService.getUsername(socket));
                 this.roomManager.addPlayer(roomId, newUser, password);
                 socket.join(roomId);
+                console.log(new Date().toLocaleTimeString() + ' | New room created');
                 socket.broadcast.emit('Room Creation Response', NO_ERROR);
             });
 
@@ -66,14 +67,14 @@ export class SocketManager {
             socket.on('Join Game Room', (roomCode: string, password?: string) => {
                 const username = this.accountInfoService.getUsername(socket);
                 /**PRIVATE*/
-                if(this.roomManager.getRoomVisibility(roomCode) === RoomVisibility.Private){
+                if (this.roomManager.getRoomVisibility(roomCode) === RoomVisibility.Private) {
                     this.pendingJoinGameRequests.set(username, [roomCode, socket]);
                     /**a faire apres */
                     this.sio.to(this.roomManager.getRoomHost(roomCode).getUUID()).emit('Join Room Request', username);
                     return;
                 }
                 /**PROTECTED */
-                if(!this.roomManager.addPlayer(roomCode, new Player(socket.id, username), password)){
+                if (!this.roomManager.addPlayer(roomCode, new Player(socket.id, username), password)) {
                     console.log('fdssdf');
                     socket.emit('Join Room Response', ROOM_PASSWORD_INCORRECT);
                     return;
@@ -103,8 +104,8 @@ export class SocketManager {
                 const requestInfo = this.pendingJoinGameRequests.get(username);
                 this.pendingJoinGameRequests.delete(username);
                 console.log(requestInfo);
-                if(!requestInfo) return;
-                if(!response){
+                if (!requestInfo) return;
+                if (!response) {
                     requestInfo[1].emit('Join Room Response', JOIN_REQUEST_REFUSED);
                     return;
                 }
@@ -122,10 +123,10 @@ export class SocketManager {
 
             socket.on('Leave Game Room', () => {
                 const room = this.roomManager.findRoomFromPlayer(socket.id);
-                if(!room) return;
+                if (!room) return;
                 room.removePlayer(socket.id);
                 socket.leave(room.getID());
-                if(room.getPlayerCount() === 0){
+                if (room.getPlayerCount() === 0) {
                     this.roomManager.deleteRoom(room.getID());
                     return;
                 }
@@ -170,13 +171,13 @@ export class SocketManager {
                 socket.emit('Game State Update', gameState);
                 socket.to(currentRoom.getID()).emit('Game State Update', gameState);
             });
-            
+
             socket.on('Abandon', async () => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
                 socket.leave(currentRoom.getID());
                 this.roomManager.removePlayer(socket.id, currentRoom.getID());
-                if(currentRoom.getPlayerCount() === 1){
+                if (currentRoom.getPlayerCount() === 1) {
                     // TODO End game because of lack of players
                 }
             });
