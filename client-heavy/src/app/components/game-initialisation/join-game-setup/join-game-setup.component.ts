@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { RoomVisibility } from '@app/constants/room-visibility';
 import { AccountService } from '@app/services/account-service/account.service';
 import { NameValidatorService } from '@app/services/name-validator-service/name-validator.service';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
@@ -30,8 +31,9 @@ export class JoinGameSetupComponent implements OnInit {
         this.visibility = this.waitingRoomManagerService.getVisibility();
         this.message = `La salle que vous allez rejoindre est : ${this.roomName}.\nL'hôte de la salle est : ${this.hostName}.`;
     }
+    
     verifyIfProtectedRoom(){
-        if(this.visibility === "Protected"){
+        if(this.visibility === RoomVisibility.PROTECTED){
             return true;
         }else{
             return false

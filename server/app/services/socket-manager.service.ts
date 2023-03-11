@@ -47,6 +47,7 @@ export class SocketManager {
             this.authSocketService.handleAuthSockets(socket);
 
             socket.on('Create Game Room', async (name: string, visibility: RoomVisibility, password?: string) => {
+                console.log(new Date().toLocaleTimeString() + ' | Room creation request received');
                 if (this.roomManager.verifyIfRoomExists(name)) {
                     console.log(new Date().toLocaleTimeString() + ' | Error in room creation, name taken');
                     socket.emit('Room Creation Response', ROOM_NAME_TAKEN);
@@ -56,8 +57,9 @@ export class SocketManager {
                 const newUser = new Player(socket.id, this.accountInfoService.getUsername(socket));
                 this.roomManager.addPlayer(roomId, newUser, password);
                 socket.join(roomId);
-                console.log(new Date().toLocaleTimeString() + ' | New room created');
+                console.log(new Date().toLocaleTimeString() + ' | New ' + visibility + ' room created');
                 socket.emit('Room Creation Response', NO_ERROR);
+                socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
             });
 
             socket.on('Get Game Room List', () => {
@@ -112,6 +114,7 @@ export class SocketManager {
                 socket.leave(room.getID());
                 if (room.getPlayerCount() === 0) {
                     this.roomManager.deleteRoom(room.getID());
+                    socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
                 const playerNames = this.roomManager.getRoomPlayerNames(room.getID());

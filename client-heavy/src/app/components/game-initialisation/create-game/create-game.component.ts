@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
+import { RoomVisibility } from '@app/constants/room-visibility';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-se
 export class CreateGameComponent {
     buttonDisabled: boolean;
     randomName: string;
-    visibility: string = "Public";
+    visibility: RoomVisibility = RoomVisibility.PUBLIC;
     IsProtectedRoom: boolean = false;
     passwordRoom: string = "";
 
@@ -28,16 +29,12 @@ export class CreateGameComponent {
     }
 
     verifyIsRoomProtected() {
-        if (this.visibility === "Protected") {
+        if (this.visibility === RoomVisibility.PROTECTED) {
             this.IsProtectedRoom = true;
         }
         else {
             this.IsProtectedRoom = false;
         }
-    }
-
-    checkSoloInput(playerName: string): boolean {
-        return playerName.trim() !== '';
     }
 
     checkMultiInput(): boolean {
@@ -49,7 +46,7 @@ export class CreateGameComponent {
         if (this.buttonDisabled) return;
         this.buttonDisabled = true;
         const roomNameValue = (document.getElementById('room-name') as HTMLInputElement).value;
-        if (this.visibility === "Protected") {
+        if (this.visibility === RoomVisibility.PROTECTED) {
             this.passwordRoom = (document.getElementById("password-room") as HTMLInputElement).value;
         }
         sessionStorage.clear();
@@ -62,6 +59,7 @@ export class CreateGameComponent {
     }
 
     redirectPlayer(message: string) {
+        this.buttonDisabled = false;
         if (message !== '0') {
             alert('Error in room creation');
             return;

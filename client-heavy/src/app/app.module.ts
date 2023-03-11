@@ -20,7 +20,6 @@ import { ChatComponent } from './components/chat/chat.component';
 import { CreateGameComponent } from './components/game-initialisation/create-game/create-game.component';
 import { JoinGameSetupComponent } from './components/game-initialisation/join-game-setup/join-game-setup.component';
 import { JoinGameComponent } from './components/game-initialisation/join-game/join-game.component';
-import { NameValidatorComponent } from './components/game-initialisation/name-validator/name-validator/name-validator.component';
 import { WaitingRoomComponent } from './components/game-initialisation/waiting-room/waiting-room.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { LetterHolderComponent } from './components/letter-holder/letter-holder.component';
@@ -49,7 +48,6 @@ import { ChatService } from './services/chat-service/chat.service';
         PlayAreaComponent,
         InfoPanelComponent,
         SoloMultiPageComponent,
-        NameValidatorComponent,
         CreateGameComponent,
         JoinGameComponent,
         WaitingRoomComponent,
