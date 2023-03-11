@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-underscore-dangle */
 /* eslint-disable dot-notation */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
 import { NO_ERROR } from '@app/constants/error-code-constants';
 import { ConnectionInfo, ConnectionType, GameInfo, PlayerGameInfo } from '@app/interfaces/profile-info';
