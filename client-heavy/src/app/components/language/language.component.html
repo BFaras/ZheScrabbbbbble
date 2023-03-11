@@ -1,5 +1,5 @@
 <div class="lang">
     {{'CHANGELANG.MESSAGE' | translate}} : 
-    <button class="lang-button" (click)="translateLanguageTo('en')" (click)="setActive($event, 'en')">EN</button> 
-    <button class="lang-button active" (click)="translateLanguageTo('fr')" (click)="setActive($event, 'fr')">FR</button> 
+    <button class="lang-button" id="en" (click)="translateLanguageTo('en')" (click)="setActive($event)">EN</button> 
+    <button class="lang-button" id="fr" (click)="translateLanguageTo('fr')" (click)="setActive($event)">FR</button> 
 </div>

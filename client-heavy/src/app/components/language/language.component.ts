@@ -14,22 +14,31 @@ export class LanguageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.translate.use('fr');
+    let current = localStorage.getItem("currentLang");
+    if (current) {
+      this.translate.use(current);
+      document.getElementById(current)!.className += " active";
+    }
+    else {
+      localStorage.setItem("currentLang", 'fr');
+      document.getElementById('fr')!.className += " active";
+    }
   }
 
   translateLanguageTo(lang: string) {
     this.translate.use(lang);
+    var currentLang = lang;
+    localStorage.setItem("currentLang", currentLang);
   }
 
-  setActive(event: Event, newLanguage: string) {
-    let languageButtons;
-
-    languageButtons = document.getElementsByClassName("lang-button");
+  setActive(event: Event) {
+    let languageButtons = document.getElementsByClassName("lang-button");
     for (let i = 0; i < languageButtons.length; i++) {
       languageButtons[i].className = languageButtons[i].className.replace(" active", "");
     }
-
     (event.currentTarget! as HTMLTextAreaElement).className += " active";
+    console.log(document.getElementById('fr')!.className);
+    console.log(document.getElementById('en')!.className);
   }
 
 }
