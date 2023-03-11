@@ -20,9 +20,10 @@ export class StatisticService {
         if (isWin) {
             userStats = this.incrementStat(userStats, WINS_NB_STAT_NAME);
         }
-        userStats = this.incrementStat(userStats, GAMES_NB_STAT_NAME);
+
         userStats = this.changeStatAverage(userStats, POINTS_AVRG_STAT_NAME, gamePointsObtained);
         userStats = this.changeStatAverage(userStats, GAME_TIME_AVRG_STAT_NAME, gameTime);
+        userStats = this.incrementStat(userStats, GAMES_NB_STAT_NAME);
 
         errorCode = await this.profileService.updateUserStats(userId, userStats);
         return errorCode;
