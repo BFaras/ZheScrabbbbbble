@@ -11,12 +11,15 @@ import {
     TopScores,
     VirtualPlayerDifficulty
 } from '@app/constants/database-interfaces';
+import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
+import { ProfileInfo, ProfileInfoDB, ProfileSettings } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
 import { Collection, Db, Document, MongoClient, ObjectId } from 'mongodb';
 import 'reflect-metadata';
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
+import { ProfileService } from './profile.service';
 
 const DEFAULT_DICTIONARY = 'Mon dictionnaire';
 
@@ -65,13 +68,12 @@ export class DatabaseService {
     }
 
     // eslint-disable-next-line max-len, prettier/prettier
-    async addUserAccount(username: string, encryptedPassword: string, email: string, userAvatar: string, securityQuestion: Question): Promise<boolean> {
+    async addUserAccount(username: string, encryptedPassword: string, email: string, securityQuestion: Question): Promise<boolean> {
         let isAccountCreated = true;
         const accountInfo: AccountInfo = {
             username,
             encryptedPassword,
             email,
-            userAvatar,
             securityQuestion,
         };
 
@@ -84,7 +86,9 @@ export class DatabaseService {
     }
 
     async removeUserAccount(username: string) {
-        await this.getCollection(CollectionType.USERACCOUNTS)?.deleteOne({ username });
+        const userId = await this.getUserId(username);
+        await this.getCollection(CollectionType.USERACCOUNTS)?.deleteOne({ _id: new ObjectId(userId) });
+        await this.getCollection(CollectionType.PROFILEINFO)?.deleteOne({ _id: new ObjectId(userId) });
     }
 
     async getUserId(username: string) {
@@ -99,9 +103,9 @@ export class DatabaseService {
         return userId;
     }
 
-    async getUserName(userId: string) {
-        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<Document>)?.findOne({
-            _id: userId,
+    async getUsernameFromId(userId: string) {
+        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<AccountInfo>)?.findOne({
+            _id: new ObjectId(userId),
         });
         let username = '';
 
@@ -159,6 +163,65 @@ export class DatabaseService {
             securityQuestionAnswer = userAccountInfoDoc.securityQuestion.answer;
         }
         return securityQuestionAnswer;
+    }
+
+    async getUserProfileInfo(userId: string): Promise<ProfileInfo> {
+        let profileInfo: ProfileInfo = Container.get(ProfileService).getDefaultProfileInformation();
+        const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
+            _id: new ObjectId(userId),
+        });
+
+        if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
+            profileInfo = userProfileInfoDoc.profileInfo;
+        }
+        return profileInfo;
+    }
+
+    async getUserProfileSettings(userId: string): Promise<ProfileSettings> {
+        let profileSettings: ProfileSettings = Container.get(ProfileService).getDefaultProfileSettings();
+        const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
+            _id: new ObjectId(userId),
+        });
+
+        if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
+            profileSettings = userProfileInfoDoc.profileSettings;
+        }
+        return profileSettings;
+    }
+
+    async addNewProfile(userId: string, profileInfo: ProfileInfo, profileSettings: ProfileSettings): Promise<boolean> {
+        const profileInfoDB: ProfileInfoDB = {
+            _id: new ObjectId(userId),
+            profileInfo,
+            profileSettings,
+        };
+        let isCreationSuccess = true;
+        await this.getCollection(CollectionType.PROFILEINFO)
+            ?.insertOne(profileInfoDB)
+            .catch(() => {
+                isCreationSuccess = false;
+            });
+        return isCreationSuccess;
+    }
+
+    async changeUserProfileInfo(userId: string, profileInfo: ProfileInfo): Promise<string> {
+        let errorCode = NO_ERROR;
+        await this.getCollection(CollectionType.PROFILEINFO)
+            ?.updateOne({ _id: new ObjectId(userId) }, { $set: { profileInfo } })
+            .catch(() => {
+                errorCode = DATABASE_UNAVAILABLE;
+            });
+        return errorCode;
+    }
+
+    async changeUserProfileSettings(userId: string, profileSettings: ProfileSettings): Promise<string> {
+        let errorCode = NO_ERROR;
+        await this.getCollection(CollectionType.PROFILEINFO)
+            ?.updateOne({ _id: new ObjectId(userId) }, { $set: { profileSettings } })
+            .catch(() => {
+                errorCode = DATABASE_UNAVAILABLE;
+            });
+        return errorCode;
     }
 
     async addNewChatCanal(chatInfo: ChatInfoDB): Promise<string> {

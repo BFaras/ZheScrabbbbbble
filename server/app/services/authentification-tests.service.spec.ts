@@ -5,12 +5,10 @@ import { NO_ERROR, WRONG_SECURITY_ANSWER } from '@app/constants/error-code-const
 import { Question } from '@app/interfaces/question';
 import { Server } from 'app/server';
 import { expect } from 'chai';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import { io as ioClient, Socket } from 'socket.io-client';
 import { Container } from 'typedi';
 import { DatabaseService } from './database.service';
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import Sinon = require('sinon');
 
 describe('Authentification Tests', async () => {
     const testUsername = 'Test12Test589';
@@ -20,14 +18,20 @@ describe('Authentification Tests', async () => {
     const testAvatar = '';
     const testSecurityQuestion: Question = { question: 'Who are you?', answer: 'Me' };
 
+    let mongoServer: MongoMemoryServer;
     let dbService: DatabaseService;
     let server: Server;
     let clientSocket: Socket;
 
+    before(async () => {
+        dbService = Container.get(DatabaseService);
+        mongoServer = new MongoMemoryServer();
+        await dbService.start(await mongoServer.getUri());
+    });
+
     beforeEach(async () => {
         server = Container.get(Server);
-        dbService = Container.get(DatabaseService);
-        await server.init(false);
+        await server.init(true);
         clientSocket = ioClient(urlString);
     });
 
@@ -37,7 +41,12 @@ describe('Authentification Tests', async () => {
         await dbService.removeUserAccount(testUsername);
         clientSocket.close();
         server['socketManager']['sio'].close();
-        Sinon.restore();
+    });
+
+    after(async () => {
+        if (dbService['client']) {
+            await dbService['client'].close();
+        }
     });
 
     it('Socket emit Create User Account should create a user account if it does not exist', (done) => {

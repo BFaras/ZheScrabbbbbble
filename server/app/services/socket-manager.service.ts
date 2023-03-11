@@ -8,8 +8,8 @@ import Container from 'typedi';
 import { AccountInfoService } from './account-info.service';
 import { AuthSocketService } from './auth-socket.service';
 import { ChatSocketService } from './chat-socket.service';
-import { DatabaseService } from './database.service';
 import { OnlineUsersService } from './online-users.service';
+import { ProfileSocketService } from './profile-socket.service';
 import { RoomManagerService } from './room-manager.service';
 import { SocketDatabaseService } from './socket-database.service';
 
@@ -22,30 +22,34 @@ export class SocketManager {
     private authSocketService: AuthSocketService;
     private onlineUsersService: OnlineUsersService;
     private accountInfoService: AccountInfoService;
+    private profileSocketService: ProfileSocketService;
     private pendingJoinGameRequests: Map<string, [string, io.Socket]>;
-    //private timeoutRoom: { [key: string]: NodeJS.Timeout };
+    // private timeoutRoom: { [key: string]: NodeJS.Timeout };
 
-    constructor(server: http.Server, databaseService: DatabaseService) {
+    constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
         this.socketDatabaseService = new SocketDatabaseService();
         this.chatSocketService = new ChatSocketService();
         this.authSocketService = new AuthSocketService();
         this.accountInfoService = Container.get(AccountInfoService);
         this.onlineUsersService = Container.get(OnlineUsersService);
+        this.profileSocketService = Container.get(ProfileSocketService);
+    }
+
+    async roomManagerSetup() {
+        this.roomManager = new RoomManagerService();
         this.roomManager = Container.get(RoomManagerService);
         this.pendingJoinGameRequests = new Map<string, [string, io.Socket]>();
-        //this.databaseService = databaseService;
-        //this.timeoutRoom = {};
         this.commandController = new CommandController(this.roomManager);
     }
-  
 
     handleSockets(): void {
         this.sio.on('connection', (socket: io.Socket) => {
-            console.log((new Date()).toLocaleTimeString() + ' | New device connection to server');
+            console.log(new Date().toLocaleTimeString() + ' | New device connection to server');
             this.socketDatabaseService.databaseSocketRequests(socket);
             this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
+            this.profileSocketService.handleProfileSockets(socket);
 
             socket.on('Create Game Room', async (name: string, visibility: RoomVisibility, password?: string) => {
                 if (this.roomManager.verifyIfRoomExists(name)) {
@@ -65,12 +69,12 @@ export class SocketManager {
 
             socket.on('Join Game Room', (roomCode: string, password?: string) => {
                 const username = this.accountInfoService.getUsername(socket);
-                if(this.roomManager.getRoomVisibility(roomCode) === RoomVisibility.Private){
+                if (this.roomManager.getRoomVisibility(roomCode) === RoomVisibility.Private) {
                     this.pendingJoinGameRequests.set(username, [roomCode, socket]);
                     this.sio.to(this.roomManager.getRoomHost(roomCode).getUUID()).emit('Join Room Request', username);
                     return;
                 }
-                if(!this.roomManager.addPlayer(roomCode, new Player(socket.id, username), password)){
+                if (!this.roomManager.addPlayer(roomCode, new Player(socket.id, username), password)) {
                     socket.emit('Join Room Response', ROOM_PASSWORD_INCORRECT);
                     return;
                 }
@@ -83,8 +87,8 @@ export class SocketManager {
             socket.on('Join Request Response', (response: boolean, username: string) => {
                 const requestInfo = this.pendingJoinGameRequests.get(username);
                 this.pendingJoinGameRequests.delete(username);
-                if(!requestInfo) return;
-                if(!response){
+                if (!requestInfo) return;
+                if (!response) {
                     requestInfo[1].emit('Join Room Response', JOIN_REQUEST_REFUSED);
                     return;
                 }
@@ -101,10 +105,10 @@ export class SocketManager {
 
             socket.on('Leave Game Room', () => {
                 const room = this.roomManager.findRoomFromPlayer(socket.id);
-                if(!room) return;
+                if (!room) return;
                 room.removePlayer(socket.id);
                 socket.leave(room.getID());
-                if(room.getPlayerCount() === 0){
+                if (room.getPlayerCount() === 0) {
                     this.roomManager.deleteRoom(room.getID());
                     return;
                 }
@@ -145,23 +149,23 @@ export class SocketManager {
                     color: COLOR_SYSTEM,
                 });
                 */
-                const gameState = currentRoom.getGame.createGameState()
+                const gameState = currentRoom.getGame.createGameState();
                 socket.emit('Game State Update', gameState);
                 socket.to(currentRoom.getID()).emit('Game State Update', gameState);
             });
-            
+
             socket.on('Abandon', async () => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
                 socket.leave(currentRoom.getID());
                 this.roomManager.removePlayer(socket.id, currentRoom.getID());
-                if(currentRoom.getPlayerCount() === 1){
+                if (currentRoom.getPlayerCount() === 1) {
                     // TODO End game because of lack of players
                 }
             });
 
             socket.on('disconnect', async () => {
-                console.log((new Date()).toLocaleTimeString() + ' | User Disconnected from server');
+                console.log(new Date().toLocaleTimeString() + ' | User Disconnected from server');
                 this.onlineUsersService.removeOnlineUser(this.accountInfoService.getUsername(socket));
                 /*
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
