@@ -61,14 +61,44 @@ describe('Profile Tests', async () => {
         const expectedNbOfWins = 1;
         const expectedNbOfGamesPlayed = 1;
         const expectedPointsAvrg = 105;
-        const expectedTimeAvrg = 105;
+        const expectedTimeAvrg = 1005;
 
         await statsService.updateGameStats(userId, testIsWin, testPointsObtained, testGameTime);
 
         const profileStats: StatisticInfo[] = await profileService.getUserStats(userId);
-        expect(profileStats[statsService['getStatPosition'](profileStats, WINS_NB_STAT_NAME)]).to.equal(expectedNbOfWins);
-        expect(profileStats[statsService['getStatPosition'](profileStats, GAMES_NB_STAT_NAME)]).to.equal(expectedNbOfGamesPlayed);
-        expect(profileStats[statsService['getStatPosition'](profileStats, POINTS_AVRG_STAT_NAME)]).to.equal(expectedPointsAvrg);
-        expect(profileStats[statsService['getStatPosition'](profileStats, GAME_TIME_AVRG_STAT_NAME)]).to.equal(expectedTimeAvrg);
+        expect(profileStats[statsService['getStatPosition'](profileStats, WINS_NB_STAT_NAME)].statAmount).to.equal(expectedNbOfWins);
+        expect(profileStats[statsService['getStatPosition'](profileStats, GAMES_NB_STAT_NAME)].statAmount).to.equal(expectedNbOfGamesPlayed);
+        expect(profileStats[statsService['getStatPosition'](profileStats, POINTS_AVRG_STAT_NAME)].statAmount).to.equal(expectedPointsAvrg);
+        expect(profileStats[statsService['getStatPosition'](profileStats, GAME_TIME_AVRG_STAT_NAME)].statAmount).to.equal(expectedTimeAvrg);
+    });
+
+    it('should calculate the game stats correctly when we add them for different games with updateGameStats()', async () => {
+        const userId = await dbService.getUserId(testUsername);
+        const nbOfGamesPlayed = 8;
+        const testBasePointsObtained = 105;
+        const testBaseGameTime = 1005;
+
+        let pointsAccumulated = 0;
+        let gameTimeAccumulated = 0;
+        let nbOfWinsNbOfWinsAccumulated = 0;
+
+        for (let i = 0; i < nbOfGamesPlayed; i++) {
+            const isWin = i % 2 === 0;
+            await statsService.updateGameStats(userId, isWin, testBasePointsObtained + i, testBaseGameTime + i);
+
+            if (isWin) {
+                nbOfWinsNbOfWinsAccumulated++;
+            }
+            pointsAccumulated += testBasePointsObtained + i;
+            gameTimeAccumulated += testBaseGameTime + i;
+        }
+
+        const profileStats: StatisticInfo[] = await profileService.getUserStats(userId);
+        const expectedPointsAvrg = pointsAccumulated / nbOfGamesPlayed;
+        const expectedTimeAvrg = gameTimeAccumulated / nbOfGamesPlayed;
+        expect(profileStats[statsService['getStatPosition'](profileStats, WINS_NB_STAT_NAME)].statAmount).to.equal(nbOfWinsNbOfWinsAccumulated);
+        expect(profileStats[statsService['getStatPosition'](profileStats, GAMES_NB_STAT_NAME)].statAmount).to.equal(nbOfGamesPlayed);
+        expect(profileStats[statsService['getStatPosition'](profileStats, POINTS_AVRG_STAT_NAME)].statAmount).to.equal(expectedPointsAvrg);
+        expect(profileStats[statsService['getStatPosition'](profileStats, GAME_TIME_AVRG_STAT_NAME)].statAmount).to.equal(expectedTimeAvrg);
     });
 });
