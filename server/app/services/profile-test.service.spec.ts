@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
 import { NO_ERROR } from '@app/constants/error-code-constants';
-import { ConnectionInfo, ConnectionType } from '@app/interfaces/profile-info';
+import { ConnectionInfo, ConnectionType, GameInfo, PlayerGameInfo } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
 import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -152,5 +152,34 @@ describe('Profile Tests', async () => {
         }
 
         expect((await profileService.getProfileInformation(testUsername)).tournamentWins[testTournamentPos - 1]).to.equal(nbOfVictoriesExpected);
+    });
+
+    it('should add a game to the history on addGameToHistory()', async () => {
+        const userId = await dbService.getUserId(testUsername);
+        const playersInGameInfo: PlayerGameInfo[] = [
+            {
+                name: 'Hello',
+                score: 105,
+            },
+            {
+                name: 'Problem',
+                score: 81,
+            },
+        ];
+        const newGameToAdd: GameInfo = {
+            date: 'MM/DD/YYYY',
+            time: 'HH:MM',
+            length: '15:25',
+            winnerIndex: 1,
+            players: playersInGameInfo,
+            gameMode: 'Classic',
+        };
+
+        await profileService.addGameToHistory(userId, newGameToAdd);
+        await profileService.addGameToHistory(userId, newGameToAdd);
+
+        const testGameHistory = (await profileService.getProfileInformation(testUsername)).gameHistory;
+        expect(testGameHistory[0]).to.deep.equal(newGameToAdd);
+        expect(testGameHistory[1]).to.deep.equal(newGameToAdd);
     });
 });
