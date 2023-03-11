@@ -13,11 +13,7 @@
             </ng-container>          
             
         </div>
-        <div class="lang">
-            {{'CHANGELANG.MESSAGE' | translate}} : 
-            <button class="lang-button" (click)="translateLanguageTo('en')">EN</button> 
-            <button class="lang-button" (click)="translateLanguageTo('fr')">FR</button> 
-        </div>
+        <app-language></app-language>
     </section>
     <section id="chat-messages">
         <div id="chat-box">

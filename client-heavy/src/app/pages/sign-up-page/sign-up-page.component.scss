@@ -27,42 +27,6 @@ select {
     white-space: nowrap;
   }
 
-  .lang {
-    width: 40%;
-    display: flex;
-    justify-content: center;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 1%;
-    color: var(--text-default);
-}
-
-.lang-button {
-    text-decoration: none;
-    text-align: center;
-    border: none;
-    padding: 5px;
-    margin: 0% 2%;
-    background-color: var(--button-quaternary);
-    border-radius: 7px;
-    width: 40px;
-    font-size: 15px;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
-    color: var(--button-text-default);
-    transition: color 0.5s linear;
-    -webkit-transition: color 0.2s linear;
-}
-
-.lang-button:hover {
-    color: var(---button-text-hover);
-    cursor: pointer;
-    background: var(--button-quaternary-hover);
-    transition-property: background-color;
-    transition-duration: 0.2s;
-}
 
 .sign-up-component{
     position:relative;

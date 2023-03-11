@@ -1,9 +1,5 @@
 <div class="container justified">
-    <div class="lang">
-        {{'CHANGELANG.MESSAGE' | translate}} : 
-        <button class="lang-button" (click)="translateLanguageTo('en')">EN</button> 
-        <button class="lang-button" (click)="translateLanguageTo('fr')">FR</button> 
-    </div>
+    <app-language></app-language>
     <div>
         <app-login-area class="login-component"></app-login-area>
     </div>

@@ -2,7 +2,6 @@ import { AfterContentChecked, ChangeDetectorRef, Component } from '@angular/core
 import { ChatType } from '@app/components/chat/chat-info';
 import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
-import { TranslateService } from '@ngx-translate/core';
 import { chat, chatlist } from './chats';
 
 @Component({
@@ -18,12 +17,10 @@ export class ChatPageComponent implements AfterContentChecked {
     private: ChatType = ChatType.PRIVATE;
     visibility: ChatType;
 
-    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService, public translate: TranslateService) {
+    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService) {
         chatService.getNewMessages().subscribe((message: string) => {
             this.chatText += message + '\n';
         })
-        translate.addLangs(['en', 'fr']);
-        translate.defaultLang = 'fr';
     }
 
     ngAfterContentChecked(): void {
@@ -54,11 +51,5 @@ export class ChatPageComponent implements AfterContentChecked {
         }
 
         (event.currentTarget! as HTMLTextAreaElement).className += " active";
-
-
-    }
-
-    translateLanguageTo(lang: string) {
-        this.translate.use(lang);
     }
 }

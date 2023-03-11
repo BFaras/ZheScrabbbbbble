@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sign-up-page',
@@ -8,16 +7,8 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class SignUpPageComponent implements OnInit {
 
-  constructor(public translate: TranslateService) {
-    translate.addLangs(['en', 'fr']);
-    //this.translate.setDefaultLang('en');
-  }
+  constructor() {}
 
   ngOnInit(): void {
   }
-
-  translateLanguageTo(lang: string) {
-    this.translate.use(lang);
-  }
-
 }

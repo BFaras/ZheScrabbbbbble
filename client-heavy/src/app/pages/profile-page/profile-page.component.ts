@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ThemesService } from '@app/services/themes-service/themes-service';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profile-page',
@@ -9,15 +8,9 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ProfilePageComponent implements OnInit {
 
-  constructor(public translate: TranslateService, private themeService: ThemesService) {
-    translate.addLangs(['en', 'fr']);
-  }
+  constructor(private themeService: ThemesService) {}
 
   ngOnInit(): void {
-  }
-
-  translateLanguageTo(lang: string) {
-    this.translate.use(lang);
   }
 
   toggleTheme() {

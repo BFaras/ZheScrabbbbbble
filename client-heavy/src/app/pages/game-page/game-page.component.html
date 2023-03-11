@@ -16,16 +16,7 @@
 
         <section class="side-components">
             <button *ngIf="!endGame; else other_content" (click)="alert()" class="button" id="abandonner">{{'GIVEUP.GIVEUP' | translate}}</button>
-            <div class="font-size-container">
-                {{'CHANGELANG.MESSAGE' | translate}} :
-                <button class="font-size" (click)="translateLanguageTo('en')">EN</button> 
-                <button class="font-size" (click)="translateLanguageTo('fr')">FR</button> 
-                <!--
-                <select #selLang (change)="translateLanguageTo(selLang.value)" style="font-family: 'Courier New', Courier, monospace;">
-                    <option *ngFor="let language of translate.getLangs().slice(0,2).reverse()" [value]="language">{{ language }}</option>
-                </select>
-                -->
-            </div>
+            <app-language></app-language>
             <ng-template #other_content><button class="button" (click)="goHome()" id="quitter">{{'GIVEUP.QUIT' | translate}}</button></ng-template>
             
             <button class="open-button" (click)="toggle()">C  h  a  t</button>

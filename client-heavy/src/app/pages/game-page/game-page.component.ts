@@ -5,7 +5,6 @@ import { FontSizeService } from '@app/services/font-size-service/font-size.servi
 import { GameStateService } from '@app/services/game-state-service/game-state.service';
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
-import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -25,11 +24,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
         private readonly letterHolderService: LetterHolderService,
         private readonly gridService: GridService,
         private readonly router: Router,
-        private readonly fontSize: FontSizeService,
-        public translate: TranslateService
-    ) {
-        translate.addLangs(['en', 'fr']);
-    }
+        private readonly fontSize: FontSizeService
+    ) {}
 
     ngOnInit() {
         const id = sessionStorage.getItem('playerID');
@@ -70,10 +66,6 @@ export class GamePageComponent implements OnInit, OnDestroy {
         this.fontSize.decreaseSize();
         this.letterHolderService.redrawTiles();
         this.gridService.deleteAndRedraw();
-    }
-
-    translateLanguageTo(lang: string) {
-        this.translate.use(lang);
     }
 
     toggle() {
