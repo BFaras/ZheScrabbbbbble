@@ -5,6 +5,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
 import { NO_ERROR } from '@app/constants/error-code-constants';
+import { ConnectionInfo, ConnectionType } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
 import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -117,5 +118,39 @@ describe('Profile Tests', async () => {
         await profileService.updateUserStats(userId, newTestUserStats);
 
         expect(await profileService.getUserStats(userId)).to.deep.equals(newTestUserStats);
+    });
+
+    it('should add a connection to the history on addConnection()', async () => {
+        const userId = await dbService.getUserId(testUsername);
+        const newConnectionTest: ConnectionInfo = {
+            connectionType: ConnectionType.CONNECTION,
+            date: 'MM/DD/YYYY',
+            time: 'HH:MM',
+        };
+
+        const newDisconnectionTest: ConnectionInfo = {
+            connectionType: ConnectionType.DISCONNECTION,
+            date: 'MM/DD/YYYY',
+            time: 'HH:MM',
+        };
+
+        await profileService.addConnection(userId, newConnectionTest);
+        await profileService.addConnection(userId, newDisconnectionTest);
+
+        const testConnectionHistory = (await profileService.getProfileInformation(testUsername)).connectionHistory;
+        expect(testConnectionHistory[0]).to.deep.equal(newConnectionTest);
+        expect(testConnectionHistory[1]).to.deep.equal(newDisconnectionTest);
+    });
+
+    it('should add a tournament victory to the rightful position to the profile on addTournamentVictory()', async () => {
+        const userId = await dbService.getUserId(testUsername);
+        const testTournamentPos = 2;
+        const nbOfVictoriesExpected = 4;
+
+        for (let i = 0; i < nbOfVictoriesExpected; i++) {
+            await profileService.addTournamentWin(userId, testTournamentPos);
+        }
+
+        expect((await profileService.getProfileInformation(testUsername)).tournamentWins[testTournamentPos - 1]).to.equal(nbOfVictoriesExpected);
     });
 });

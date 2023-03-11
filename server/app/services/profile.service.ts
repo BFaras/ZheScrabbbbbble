@@ -110,12 +110,12 @@ export class ProfileService {
         return errorCode;
     }
 
-    async addTournamentVictory(userId: string, tournamentPosition: number) {
+    async addTournamentWin(userId: string, tournamentPosition: number) {
         const profileInfo: ProfileInfo = await this.dbService.getUserProfileInfo(userId);
         let errorCode: string = DATABASE_UNAVAILABLE;
 
         if (profileInfo !== this.getDefaultProfileInformation()) {
-            profileInfo.tournamentWins[tournamentPosition]++;
+            profileInfo.tournamentWins[tournamentPosition - 1]++;
             errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);
         }
         return errorCode;
