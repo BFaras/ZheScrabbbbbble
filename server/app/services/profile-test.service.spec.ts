@@ -18,7 +18,6 @@ describe('Profile Tests', async () => {
     const testPassword = 'tE!s&to~';
     const testEmail = 'myTestMail12564@poly.com';
     const testAvatar = 'av111';
-    const testAvatar2 = 'av222';
     const testSecurityQuestion: Question = { question: 'Who are you?', answer: 'Me' };
 
     let mongoServer: MongoMemoryServer;
@@ -71,8 +70,10 @@ describe('Profile Tests', async () => {
 
     it('should change the user avatar and have the correct avatar in the DB on changeAvatar()', async () => {
         const accountCreationError = await authService.createAccount(testUsername, testPassword, testEmail, testAvatar, testSecurityQuestion);
+        const userId = await dbService.getUserId(testUsername);
+        const testAvatar2 = 'av222';
 
-        await profileService.changeAvatar(await dbService.getUserId(testUsername), testAvatar2);
+        await profileService.changeAvatar(userId, testAvatar2);
         accountCreated = accountCreationError === NO_ERROR;
 
         expect((await profileService.getProfileInformation(testUsername)).avatar).to.deep.equals(testAvatar2);
@@ -80,10 +81,43 @@ describe('Profile Tests', async () => {
 
     it('should get the right user stats on getUserStats()', async () => {
         const accountCreationError = await authService.createAccount(testUsername, testPassword, testEmail, testAvatar, testSecurityQuestion);
+        const userId = await dbService.getUserId(testUsername);
         const expectedUserStats = profileService.getDefaultProfileInformation().stats;
 
         accountCreated = accountCreationError === NO_ERROR;
 
-        expect(await profileService.getUserStats(await dbService.getUserId(testUsername))).to.deep.equals(expectedUserStats);
+        expect(await profileService.getUserStats(userId)).to.deep.equals(expectedUserStats);
+    });
+
+    it('should get the right user setting on getUserSettings()', async () => {
+        const accountCreationError = await authService.createAccount(testUsername, testPassword, testEmail, testAvatar, testSecurityQuestion);
+        const userId = await dbService.getUserId(testUsername);
+        const expectedUserSettings = profileService.getDefaultProfileSettings();
+
+        accountCreated = accountCreationError === NO_ERROR;
+
+        expect(await profileService.getUserSettings(userId)).to.deep.equals(expectedUserSettings);
+    });
+
+    it('should change the user language to the right value on changeUserSettings()', async () => {
+        const accountCreationError = await authService.createAccount(testUsername, testPassword, testEmail, testAvatar, testSecurityQuestion);
+        const userId = await dbService.getUserId(testUsername);
+        const newTestLanguage = 'en';
+
+        await profileService.changeUserSettings(userId, newTestLanguage, false, true);
+        accountCreated = accountCreationError === NO_ERROR;
+
+        expect(await (await profileService.getUserSettings(userId)).language).to.deep.equals(newTestLanguage);
+    });
+
+    it('should change the user theme to the right value on changeUserSettings()', async () => {
+        const accountCreationError = await authService.createAccount(testUsername, testPassword, testEmail, testAvatar, testSecurityQuestion);
+        const userId = await dbService.getUserId(testUsername);
+        const newTestTheme = 'Theme2';
+
+        await profileService.changeUserSettings(userId, newTestTheme, true);
+        accountCreated = accountCreationError === NO_ERROR;
+
+        expect(await (await profileService.getUserSettings(userId)).theme).to.deep.equals(newTestTheme);
     });
 });
