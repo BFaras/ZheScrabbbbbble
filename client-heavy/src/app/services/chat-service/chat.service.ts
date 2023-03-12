@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ChatInfo, ChatMessage, MessageInfo } from '@app/classes/chat-info';
+import { ChatInfo, ChatMessage } from '@app/classes/chat-info';
 import { Message } from '@app/classes/message';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { Observable, Observer } from 'rxjs';
@@ -26,6 +26,8 @@ export class ChatService {
     updateChatList(chatList: ChatInfo[]) {
         chatList.forEach((chat: ChatInfo) => {
             if (!this.messageLog.has(chat._id)) this.messageLog.set(chat._id, []);
+            console.log("hello");
+            console.log(this.messageLog);
         });
     }
 
@@ -33,23 +35,19 @@ export class ChatService {
         return this.socketManagerService.getSocket().id;
     }
 
-    sendMessage2(message: string) {
-        this.socketManagerService.getSocket().emit('Message Sent', message);
-    }
-
-    getNewMessages(): Observable<MessageInfo> {
-        return new Observable((observer: Observer<MessageInfo>) => {
+    getNewMessages(): Observable<Map<string, ChatMessage[]>> {
+        return new Observable((observer: Observer<Map<string, ChatMessage[]>>) => {
             this.socketManagerService.getSocket().on('New Chat Message', (id: string, message: ChatMessage) => {
                 if (this.messageLog.has(id)) {
-                    observer.next({ id, message });
                     this.messageLog.get(id)!.push(message);
+                    observer.next(this.messageLog);
                 }
             });
         });
     }
 
-    sendMessage(message: string, id: string) {
-        this.socketManagerService.getSocket().emit('New Chat Message', message, id);
+    sendMessage(message: string, ChatId: string) {
+        this.socketManagerService.getSocket().emit('New Chat Message', message, ChatId);
     }
 
     sendCommand(argument: string, command: string) {
