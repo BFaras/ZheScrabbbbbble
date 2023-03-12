@@ -18,7 +18,7 @@ export class JoinGameComponent implements OnDestroy, OnInit {
     waitingRooms: WaitingRoom[] = [];
     subscription: Subscription;
     gameType: GameType;
-    buttonDisabled : boolean = false;
+    buttonDisabled : boolean;
 
     constructor(private waitingRoomManagerService: WaitingRoomManagerService, private router: Router) {}
 
@@ -27,18 +27,21 @@ export class JoinGameComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
+        this.buttonDisabled = false;
         this.subscription = this.waitingRoomManagerService.getWaitingRoomObservable().subscribe((rooms : WaitingRoom[]) => {
             const waitingGames : WaitingRoom[] = [];
+            const fullGames : WaitingRoom[] = [];
             const startedGames : WaitingRoom[] = [];
             for(let room of rooms){
                 if(room.isStarted){
                     startedGames.push(room);
+                }else if(room.players.length >= 4){
+                    fullGames.push(room);
                 }else{
-                    waitingGames.push(room);
+                    waitingGames.push(room)
                 }
             }
-            waitingGames.concat(startedGames);
-            this.waitingRooms = waitingGames;
+            this.waitingRooms = waitingGames.concat(fullGames).concat(startedGames);
         });
         this.waitingRoomManagerService.getGameRoomActive()
     }
@@ -63,6 +66,10 @@ export class JoinGameComponent implements OnDestroy, OnInit {
         this.buttonDisabled = false;
         if (message.errorCode === 'ROOM-2') {
             alert('Mot de passe incorrect');
+            return;
+        }
+        if (message.errorCode === 'ROOM-4') {
+            alert('Cette salle de jeu est pleine');
             return;
         }
         if(!message.playerNames){

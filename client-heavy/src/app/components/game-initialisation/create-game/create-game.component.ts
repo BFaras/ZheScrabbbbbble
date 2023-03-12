@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { RoomVisibility } from '@app/constants/room-visibility';
@@ -10,7 +10,7 @@ import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-se
     templateUrl: './create-game.component.html',
     styleUrls: ['./create-game.component.scss'],
 })
-export class CreateGameComponent {
+export class CreateGameComponent implements OnInit{
     buttonDisabled: boolean;
     randomName: string;
     visibility: RoomVisibility = RoomVisibility.PUBLIC;
@@ -21,7 +21,9 @@ export class CreateGameComponent {
         private waitingRoomManagerService: WaitingRoomManagerService,
         private accountService: AccountService, 
         private router: Router,
-    ) {
+    ) {}
+
+    ngOnInit(){
         this.buttonDisabled = false;
     }
 

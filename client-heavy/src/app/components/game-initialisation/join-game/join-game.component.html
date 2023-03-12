@@ -62,7 +62,7 @@
                                     </div>
                                 </div>
                                 <div class="cell-btn">
-                                    <button class="button join" (click)="sendRoomData(waitingRoom)">Rejoindre</button>
+                                    <button class="button join" [style.visibility]="(waitingRoom.players.length >= 4 || waitingRoom.isStarted) ? 'hidden' : 'visible'" (click)="sendRoomData(waitingRoom)">Rejoindre</button>
                                 </div>
                                 <div class="cell-btn">
                                     <button class="button join" (click)="sendRoomData(waitingRoom)">Observer</button>

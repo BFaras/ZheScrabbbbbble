@@ -1,6 +1,6 @@
 import { Player } from '@app/classes/player';
 import { RoomVisibility } from '@app/constants/basic-constants';
-import { JOIN_REQUEST_REFUSED, NO_ERROR, ROOM_NAME_TAKEN, ROOM_PASSWORD_INCORRECT } from '@app/constants/error-code-constants';
+import { JOIN_REQUEST_REFUSED, NO_ERROR, ROOM_IS_FULL, ROOM_NAME_TAKEN, ROOM_PASSWORD_INCORRECT } from '@app/constants/error-code-constants';
 import { CommandController } from '@app/controllers/command.controller';
 import * as http from 'http';
 import * as io from 'socket.io';
@@ -69,6 +69,10 @@ export class SocketManager {
             socket.on('Join Game Room', (roomCode: string, password?: string) => {
                 console.log((new Date()).toLocaleTimeString() + ' | Room join request received');
                 const username = this.accountInfoService.getUsername(socket);
+                if(this.roomManager.isRoomFull(roomCode)){
+                    console.log((new Date()).toLocaleTimeString() + ' | Room is full');
+                    socket.emit('Join Room Response', ROOM_IS_FULL);
+                }
                 /**PRIVATE*/
                 if (this.roomManager.getRoomVisibility(roomCode) === RoomVisibility.Private) {
                     this.pendingJoinGameRequests.set(username, [roomCode, socket]);
@@ -86,6 +90,7 @@ export class SocketManager {
                 socket.join(roomCode);
                 const playerNames = this.roomManager.getRoomPlayerNames(roomCode);
                 console.log((new Date()).toLocaleTimeString() + ' | Room joined successfully');
+                socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                 socket.to(roomCode).emit('Room Player Update', playerNames);
                 socket.emit('Join Room Response', NO_ERROR, playerNames);
             });
@@ -103,6 +108,7 @@ export class SocketManager {
                 this.roomManager.addPlayer(requestInfo[0], new Player(requestInfo[1].id, username));
                 requestInfo[1].join(requestInfo[0]);
                 const playerNames = this.roomManager.getRoomPlayerNames(requestInfo[0]);
+                socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                 requestInfo[1].to(requestInfo[0]).emit('Room Player Update', playerNames);
                 requestInfo[1].emit('Join Room Response', NO_ERROR, playerNames);
             });
@@ -118,16 +124,18 @@ export class SocketManager {
                 socket.leave(room.getID());
                 if (room.getPlayerCount() === 0) {
                     this.roomManager.deleteRoom(room.getID());
-                    socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
                 const playerNames = this.roomManager.getRoomPlayerNames(room.getID());
+                socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                 socket.to(room.getID()).emit('Room Player Update', playerNames);
             });
 
             socket.on('Start Game', () => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
+                if(currentRoom.getHostPlayer().getName() !== this.accountInfoService.getUsername(socket)) return;
+                if(currentRoom.getPlayerCount() < 2) return;
                 // TODO Fill with virtual players
                 currentRoom.startGame();
                 socket.to(currentRoom.getID()).emit('Game Started');
@@ -176,6 +184,17 @@ export class SocketManager {
             socket.on('disconnect', async () => {
                 console.log((new Date()).toLocaleTimeString() + ' | User Disconnected from server');
                 this.onlineUsersService.removeOnlineUser(this.accountInfoService.getUsername(socket));
+                const room = this.roomManager.findRoomFromPlayer(socket.id);
+                if (!room) return;
+                room.removePlayer(socket.id);
+                socket.leave(room.getID());
+                if (room.getPlayerCount() === 0) {
+                    this.roomManager.deleteRoom(room.getID());
+                    return;
+                }
+                const playerNames = this.roomManager.getRoomPlayerNames(room.getID());
+                socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
+                socket.to(room.getID()).emit('Room Player Update', playerNames);
                 /*
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
