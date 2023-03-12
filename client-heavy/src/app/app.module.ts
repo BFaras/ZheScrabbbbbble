@@ -19,6 +19,7 @@ import { AdminPopUpComponent } from './components/admin-pop-up/admin-pop-up.comp
 import { ChatComponent } from './components/chat/chat.component';
 import { CreateGameComponent } from './components/game-initialisation/create-game/create-game.component';
 import { JoinGameComponent } from './components/game-initialisation/join-game/join-game.component';
+import { PendingRoomComponent } from './components/game-initialisation/pending-room-join/pending-room.component';
 import { WaitingRoomComponent } from './components/game-initialisation/waiting-room/waiting-room.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { LetterHolderComponent } from './components/letter-holder/letter-holder.component';
@@ -61,6 +62,7 @@ import { ChatService } from './services/chat-service/chat.service';
         SignUpPageComponent,
         SignUpAreaComponent,
         ProfilePageComponent,
+        PendingRoomComponent
     ],
     imports: [
         AppMaterialModule,

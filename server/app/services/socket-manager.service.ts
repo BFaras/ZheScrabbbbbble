@@ -72,6 +72,7 @@ export class SocketManager {
                 if(this.roomManager.isRoomFull(roomCode)){
                     console.log((new Date()).toLocaleTimeString() + ' | Room is full');
                     socket.emit('Join Room Response', ROOM_IS_FULL);
+                    return;
                 }
                 /**PRIVATE*/
                 if (this.roomManager.getRoomVisibility(roomCode) === RoomVisibility.Private) {
@@ -98,16 +99,16 @@ export class SocketManager {
             socket.on('Join Request Response', (response: boolean, username: string) => {
                 const requestInfo = this.pendingJoinGameRequests.get(username);
                 this.pendingJoinGameRequests.delete(username);
-                console.log(requestInfo);
                 if (!requestInfo) return;
                 if (!response) {
+                    console.log((new Date()).toLocaleTimeString() + ' | Join request refused');
                     requestInfo[1].emit('Join Room Response', JOIN_REQUEST_REFUSED);
                     return;
                 }
-                console.log(requestInfo);
                 this.roomManager.addPlayer(requestInfo[0], new Player(requestInfo[1].id, username));
                 requestInfo[1].join(requestInfo[0]);
                 const playerNames = this.roomManager.getRoomPlayerNames(requestInfo[0]);
+                console.log((new Date()).toLocaleTimeString() + ' | Join request accepted');
                 socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                 requestInfo[1].to(requestInfo[0]).emit('Room Player Update', playerNames);
                 requestInfo[1].emit('Join Room Response', NO_ERROR, playerNames);

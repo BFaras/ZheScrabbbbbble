@@ -1,24 +1,22 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { GameType } from '@app/classes/game-settings';
 import { WaitingRoom } from '@app/classes/waiting-room';
 import { RoomVisibility } from '@app/constants/room-visibility';
 import { JoinResponse, WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 import { Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 @Component({
     selector: 'app-join-game',
     templateUrl: './join-game.component.html',
     styleUrls: ['./join-game.component.scss'],
 })
-export class JoinGameComponent implements OnDestroy, OnInit {
+export class JoinGameComponent implements OnDestroy {
     @Input() hostName: string = '';
     @Input() roomName: string = '';
 
     waitingRooms: WaitingRoom[] = [];
     subscription: Subscription;
-    gameType: GameType;
-    buttonDisabled : boolean;
 
     constructor(private waitingRoomManagerService: WaitingRoomManagerService, private router: Router) {}
 
@@ -27,7 +25,6 @@ export class JoinGameComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
-        this.buttonDisabled = false;
         this.subscription = this.waitingRoomManagerService.getWaitingRoomObservable().subscribe((rooms : WaitingRoom[]) => {
             const waitingGames : WaitingRoom[] = [];
             const fullGames : WaitingRoom[] = [];
@@ -47,23 +44,23 @@ export class JoinGameComponent implements OnDestroy, OnInit {
     }
 
     sendRoomData(room: WaitingRoom) {
-        if(this.buttonDisabled) return;
-        this.buttonDisabled = true;
         let password;
         if(room.visibility === RoomVisibility.PROTECTED){
             password = prompt('Cette salle est protégée. Veuillez entrer le mot de passe.');
             if(!password){
                 alert('Le champ ne peux pas être vide');
-                this.buttonDisabled = false;
                 return;
             }
         }
-        this.waitingRoomManagerService.joinRoomResponse().subscribe(this.redirectPlayer.bind(this));
+        if(room.visibility !== RoomVisibility.PRIVATE) this.waitingRoomManagerService.joinRoomResponse().pipe(first()).subscribe(this.redirectPlayer.bind(this));
         this.waitingRoomManagerService.joinRoom(room.id, password);
+        if(room.visibility === RoomVisibility.PRIVATE){
+            this.waitingRoomManagerService.setRequestPending(true);
+            this.router.navigate(['/pending-room']);
+        }
     }
 
     redirectPlayer(message : JoinResponse) {
-        this.buttonDisabled = false;
         if (message.errorCode === 'ROOM-2') {
             alert('Mot de passe incorrect');
             return;

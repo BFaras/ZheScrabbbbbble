@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { RoomVisibility } from '@app/constants/room-visibility';
@@ -10,8 +10,8 @@ import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-se
     templateUrl: './create-game.component.html',
     styleUrls: ['./create-game.component.scss'],
 })
-export class CreateGameComponent implements OnInit{
-    buttonDisabled: boolean;
+export class CreateGameComponent {
+
     randomName: string;
     visibility: RoomVisibility = RoomVisibility.PUBLIC;
     IsProtectedRoom: boolean = false;
@@ -23,9 +23,6 @@ export class CreateGameComponent implements OnInit{
         private router: Router,
     ) {}
 
-    ngOnInit(){
-        this.buttonDisabled = false;
-    }
 
     getRadioButtonValue(event: MatRadioChange) {
         this.visibility = event.value;
@@ -47,8 +44,6 @@ export class CreateGameComponent implements OnInit{
     }
 
     createMultiRoom(): void {
-        if (this.buttonDisabled) return;
-        this.buttonDisabled = true;
         const roomNameValue = (document.getElementById('room-name') as HTMLInputElement).value;
         if (this.visibility === RoomVisibility.PROTECTED) {
             this.passwordRoom = (document.getElementById("password-room") as HTMLInputElement).value;
@@ -67,7 +62,6 @@ export class CreateGameComponent implements OnInit{
     }
 
     redirectPlayer(message: string) {
-        this.buttonDisabled = false;
         if (message !== '0') {
             alert('Erreur dans la création de la salle');
             return;

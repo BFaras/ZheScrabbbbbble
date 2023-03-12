@@ -19,9 +19,12 @@ export interface JoinResponse {
     providedIn: 'root',
 })
 export class WaitingRoomManagerService {
+    private requestPending : boolean = false;
     private playersInRoom: string[] = [];
     private socket: Socket;
     private waitingRoomObservable: Observable<WaitingRoom[]>;
+    private joinRequestObservable: Observable<string>;
+    private joinRoomResponseObservable : Observable<JoinResponse>;
 
     constructor(private socketManagerService: SocketManagerService) {
         this.socket = this.socketManagerService.getSocket();
@@ -30,9 +33,28 @@ export class WaitingRoomManagerService {
                 observer.next(rooms)
             });
         });
+        this.joinRequestObservable = new Observable((observer: Observer<string>) => {
+            this.socket.on('Join Room Request', (username) => {
+                observer.next(username)
+            });
+        });
+        this.joinRoomResponseObservable = new Observable((observer: Observer<JoinResponse>) => {
+            this.socket.on('Join Room Response', (errorCode, playerNames) => {
+                console.log('TEST 2');
+                observer.next({ errorCode, playerNames })
+            });
+        });
         this.socket.on('Room Player Update', (playerNames) => {
             this.playersInRoom = playerNames;
         });
+    }
+
+    isRequestPending(): boolean{
+        return this.requestPending;
+    }
+
+    setRequestPending(requestPending : boolean){
+        this.requestPending = requestPending;
     }
 
     getPlayersInRoom() {
@@ -59,6 +81,10 @@ export class WaitingRoomManagerService {
         return this.waitingRoomObservable;
     }
 
+    getJoinRoomRequestObservable(): Observable<string> {
+        return this.joinRequestObservable;
+    }
+
     createMultiRoom(roomName: string, visibility: string, passwordRoom: string) {
         this.socket.emit('Create Game Room', roomName, visibility, passwordRoom);
     }
@@ -70,12 +96,14 @@ export class WaitingRoomManagerService {
     }
 
     joinRoomResponse(): Observable<JoinResponse> {
-        return new Observable((observer: Observer<JoinResponse>) => {
-            this.socket.once('Join Room Response', (errorCode, playerNames) => observer.next({ errorCode, playerNames }));
-        });
+        return this.joinRoomResponseObservable;
     }
 
     cancelJoinGameRoom() {
         this.socket.emit('Cancel Join Request');
+    }
+
+    respondJoinRequest(answer : boolean, username: string){
+        this.socket.emit('Join Request Response', answer, username);
     }
 }
