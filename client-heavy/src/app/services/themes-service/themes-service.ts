@@ -39,4 +39,17 @@ export class ThemesService {
       );
     });
   }
+
+  rememberTheme() {
+    let current = localStorage.getItem("currentTheme");
+    if (current) {
+      this.getAvailableThemes().forEach((theme: Theme) => {
+        if (theme.name.toString() === current) this.setActiveTheme(theme);
+      });
+      localStorage.setItem("currentTheme", current);
+    }
+    else {
+      localStorage.setItem("currentTheme", classic.toString());
+    }
+  }
 }

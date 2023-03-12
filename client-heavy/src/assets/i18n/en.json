@@ -82,6 +82,7 @@
     },
     "TABS":{
         "PUBLIC": "Public",
-        "PRIVATE": "Private"
+        "PRIVATE": "Private",
+        "GLOBAL": "Global"
     }
 }

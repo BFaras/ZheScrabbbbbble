@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { ChatInfo, ChatMessage, MessageInfo } from '@app/classes/chat-info';
 import { Message } from '@app/classes/message';
-import { ChatInfo, ChatMessage, MessageInfo } from '@app/components/chat/chat-info';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { Observable, Observer } from 'rxjs';
 
@@ -48,7 +48,7 @@ export class ChatService {
         });
     }
 
-    sendMessage(message: Message, id: string) {
+    sendMessage(message: string, id: string) {
         this.socketManagerService.getSocket().emit('New Chat Message', message, id);
     }
 

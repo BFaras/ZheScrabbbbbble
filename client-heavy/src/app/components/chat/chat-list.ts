@@ -1,4 +1,4 @@
-import { ChatType } from "./chat-info";
+import { ChatType } from "../../classes/chat-info";
 
 export interface chat {
     chatName: string;

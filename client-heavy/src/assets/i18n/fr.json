@@ -76,6 +76,7 @@
     },
     "TABS":{
         "PUBLIC": "Publiques",
-        "PRIVATE": "Privés"
+        "PRIVATE": "Privés",
+        "GLOBAL": "Globaux"
     }
 }

@@ -4,21 +4,26 @@
             <p class="title">Chats</p>
             <p class="tabs" (click)="setVisibility($event, private)">{{ 'TABS.PRIVATE' | translate }}</p>
             <p class="tabs" (click)="setVisibility($event, public)">{{ 'TABS.PUBLIC' | translate }}</p>
+            <p class="tabs" (click)="setVisibility($event, global)">{{ 'TABS.GLOBAL' | translate }}</p>
         </div>
         <div class="chats-container">
             <ng-container *ngFor="let chat of chatList">
-                <button class="chat-button" *ngIf="chat.chatType === visibility"> 
+                <button class="chat-button" *ngIf="chat.chatType === visibility" (click)="selectChat($event, chat._id)"> 
                     <p class="chat-content">{{ chat.chatName }}</p>
                 </button>
-            </ng-container>          
-            
+            </ng-container>
         </div>
         <app-language></app-language>
     </section>
     <section id="chat-messages">
         <div id="chat-box">
             <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
-                <div #textarea readonly rows="10" [scrollTop]="textarea.scrollHeight">{{chatText}}</div>
+                <div class="message-bubble" *ngFor="let message of chatLog.get(selectedChat)">
+                    <div id="name-time">
+                       <span class="message username">{{ message.username }}</span><span class="message timestamp">{{ message.timestamp }}</span> 
+                    </div>
+                    <p class="message content">{{ message.message }}</p>
+                </div>
             </div>
             <div id="input-group">
                 <input [(ngModel)]="nextMessage" (keydown.enter)="sendMessage()"/>

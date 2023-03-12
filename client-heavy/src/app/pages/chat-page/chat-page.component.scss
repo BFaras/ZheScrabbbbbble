@@ -1,7 +1,7 @@
 #chat-messages{
     background-color: var(--background-tertiary);
     border-radius: 20px;
-    width: 72%;
+    width: 70%;
     height: 95%;
     right: 1%;
     position: fixed;
@@ -11,7 +11,7 @@
 #chat-list {
     position: fixed;
     left: 1%;
-    width: 25%;
+    width: 27%;
     height: 95%;
     background-color: var(--background-tertiary);
     border-radius: 20px;
@@ -145,10 +145,11 @@ button:hover {
     height: 81%;
     position: relative;
     margin-top: 3%;
+    width: 90%;
 }
 
 ::-webkit-scrollbar {
-    width: 2em;
+    width: 1em;
 }
 
 /* Track */
@@ -169,7 +170,7 @@ button:hover {
 }
 
 .chat-button {
-    width: 100%;
+    width: 90%;
     position:relative;
     text-decoration: none;
     text-align: center;
@@ -197,8 +198,42 @@ button:hover {
     transition-duration: 0.2s;
 }
 
+.selected {
+    color: var(--button-text-hover);
+    background: var(--button-primary-hover);
+}
+
 .chat-button button.active {
     background-color: var(--button-primary-hover);
   }
 
+.message {
+    color: var(--text-default);
+}
 
+.content {
+    margin-bottom: 0%;
+    font-size: 16px;
+    margin-left: 2px;
+}
+
+.timestamp {
+    font-size: 14px;
+    opacity: .5;
+}
+
+.username {
+    font-size: 20px;
+    margin-right: 2%;
+}
+
+.message-bubble {
+    padding: 1%;
+    background-color: var(--tile-on-holder);
+    margin-bottom: 1px;
+    //border-radius: 7px;
+}
+
+#name-time {
+    padding-bottom: 1%;
+}
