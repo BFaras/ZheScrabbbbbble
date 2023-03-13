@@ -1,10 +1,12 @@
 import { Component, Input, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { WaitingRoom } from '@app/classes/waiting-room';
 import { RoomVisibility } from '@app/constants/room-visibility';
 import { JoinResponse, WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
+import { PasswordInputComponent } from '../password-input-dialog/password-input.component';
 
 @Component({
     selector: 'app-join-game',
@@ -18,7 +20,7 @@ export class JoinGameComponent implements OnDestroy {
     waitingRooms: WaitingRoom[] = [];
     subscription: Subscription;
 
-    constructor(private waitingRoomManagerService: WaitingRoomManagerService, private router: Router) {}
+    constructor(private waitingRoomManagerService: WaitingRoomManagerService, private router: Router, private dialog: MatDialog) {}
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
@@ -44,27 +46,24 @@ export class JoinGameComponent implements OnDestroy {
     }
 
     sendRoomData(room: WaitingRoom) {
-        let password;
         if(room.visibility === RoomVisibility.PROTECTED){
-            password = prompt('Cette salle est protégée. Veuillez entrer le mot de passe.');
-            if(!password){
-                alert('Le champ ne peux pas être vide');
-                return;
-            }
-        }
-        if(room.visibility !== RoomVisibility.PRIVATE) this.waitingRoomManagerService.joinRoomResponse().pipe(first()).subscribe(this.redirectPlayer.bind(this));
-        this.waitingRoomManagerService.joinRoom(room.id, password);
-        if(room.visibility === RoomVisibility.PRIVATE){
+            const passwordDialog = this.dialog.open(PasswordInputComponent, {data:room.id, width: '30%', height: '200px'});
+            passwordDialog.afterClosed().subscribe(result => {
+                if(!result) return;
+                this.waitingRoomManagerService.setPlayersInRoom(result);
+                this.router.navigate(['/waiting-room']);
+            });
+        }else if(room.visibility === RoomVisibility.PRIVATE){
+            this.waitingRoomManagerService.joinRoom(room.id);
             this.waitingRoomManagerService.setRequestPending(true);
             this.router.navigate(['/pending-room']);
+        }else{
+            this.waitingRoomManagerService.joinRoomResponse().pipe(first()).subscribe(this.redirectPlayer.bind(this));
+            this.waitingRoomManagerService.joinRoom(room.id);
         }
     }
 
     redirectPlayer(message : JoinResponse) {
-        if (message.errorCode === 'ROOM-2') {
-            alert('Mot de passe incorrect');
-            return;
-        }
         if (message.errorCode === 'ROOM-4') {
             alert('Cette salle de jeu est pleine');
             return;
