@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TestChatBox</string>
+    <string name="tournois">LETTERS LEFT IN RESERVE</string>
+    <string name="classique">CLASSIC</string>
+    <string name="disconnect">DISCONNECT</string>
+    <string name="doubleLetter">DL</string>
+    <string name="doubleWord">DW</string>
+    <string name="tripleWord">TW</string>
+    <string name="tripleLetter">TL</string>
+    <string name="abandonner">Give Up</string>
+    <string name="USERNAME_INVALID">Invalid username</string>
+    <string name="PASSWORD_INVALID">Invalid password</string>
+    <string name="EMAIL_INVALID">Invalid email</string>
+    <string name="USERNAME_TAKEN">The username is taken</string>
+    <string name="DATABASE_UNAVAILABLE">The database is unavailable. Try again later.</string>
+    <string name="WRONG_SECURITY_ANSWER">Incorrect Answer</string>
+    <string name="swap">Swap</string>
+    <string name="reserveText">LETTERS LEFT IN RESERVE</string>
+    <string name="pass">Pass</string>
+    <string name="tillNextRound">TILL NEXT ROUND</string>
+    <string name="play">Play</string>
+</resources>
