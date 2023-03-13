@@ -43,6 +43,20 @@ export const TILE_COLORS_INVERTED = {
     manipulationColor: 'rgb(226, 182, 253, 0.5)',
 };
 
+export const TILE_COLORS_GREEN = {
+    textColour: '#cdffad',
+    backgroundColour: '#142213',
+    selectionColour: 'rgb(178, 250, 154, 0.5)',
+    manipulationColor: 'rgb(240, 253, 182, 0.5)',
+};
+
+export const TILE_COLORS_PINK = {
+    textColour: '#520027',
+    backgroundColour: '#f7dfed',
+    selectionColour: 'rgb(250, 154, 187, 0.5)',
+    manipulationColor: 'rgb(226, 182, 253, 0.5)',
+};
+
 export const HOLDER_MEASUREMENTS = {
     tileSide: 60,
     defaultLetterSize: 27,

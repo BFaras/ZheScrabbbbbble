@@ -69,7 +69,7 @@ export const inverted: Theme = {
 
         "--text-default": "white",
         "--text-secondary": "#ffe281",
-        "--input-highlight": "#281f32",
+        "--input-highlight": "#271d32",
 
         "--button-text-default": "#a1a1a1",
         "--button-text-hover": "white",
@@ -110,13 +110,13 @@ export const green: Theme = {
         "--playarea-grid": "white",
 
         "--background-default": "#19300b",
-        "--background-secondary": "#1f201f",
+        "--background-secondary": "#122912",
         "--background-tertiary": "#1f321f",
-        "--background-quaternary": "#060e05",
+        "--background-quaternary": "#0b1c09",
 
         "--text-default": "white",
         "--text-secondary": "#c7ff81",
-        "--input-highlight": "#1f321f",
+        "--input-highlight": "#1e301e",
 
         "--button-text-default": "#cbe4c9",
         "--button-text-hover": "white",
@@ -169,7 +169,7 @@ export const pink: Theme = {
         "--button-text-hover": "black",
 
         "--button-primary": "#e0b7ce",
-        "--button-primary-hover": "#cc7ac8",
+        "--button-primary-hover": "#cc7aa4",
 
         "--button-secondary": "#d3a7bc",
         "--button-secondary-hover": "#cb4f7f",

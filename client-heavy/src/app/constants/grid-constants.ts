@@ -64,6 +64,28 @@ export const GRID_COLOURS_INVERTED = {
     defaultBackground: '#303463',
 };
 
+export const GRID_COLOURS_GREEN = {
+    defaultRed: '#89b034',
+    defaultPink: '#3d582c',
+    defaultBlue: '#74986f',
+    defaultLightBlue: '#417344',
+    defaultBlack: 'white',
+    defaultWhite: '#050a0e',
+    defaultDarkRed: '#cdffad',
+    defaultBackground: '#0e5600',
+};
+
+export const GRID_COLOURS_PINK = {
+    defaultRed: '#cb4f7f',
+    defaultPink: '#d3a7bc',
+    defaultBlue: '#a75c8c',
+    defaultLightBlue: '#be8cb1',
+    defaultBlack: 'black',
+    defaultWhite: '#faf1fa',
+    defaultDarkRed: '#520027',
+    defaultBackground: '#cf9cad',
+};
+
 export const ROWS: { [key: string]: number } = {};
 export const COLUMNS: { [key: string]: number } = {};
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
-import { COLOUR_COORDINATES, COLUMNS, GRID_COLOURS_CLASSIC, GRID_COLOURS_INVERTED, GRID_CONSTANTS, GRID_OFFSETS, GRID_WORDS_EN, GRID_WORDS_FR, ROWS } from '@app/constants/grid-constants';
+import { COLOUR_COORDINATES, COLUMNS, GRID_COLOURS_CLASSIC, GRID_COLOURS_GREEN, GRID_COLOURS_INVERTED, GRID_COLOURS_PINK, GRID_CONSTANTS, GRID_OFFSETS, GRID_WORDS_EN, GRID_WORDS_FR, ROWS } from '@app/constants/grid-constants';
 import { HOLDER_MEASUREMENTS, LETTER_POINTS } from '@app/constants/letters-constants';
-import { classic } from '@app/constants/themes';
+import { classic, green, inverted, pink } from '@app/constants/themes';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ThemesService } from '../themes-service/themes-service';
@@ -40,7 +40,21 @@ export class GridService {
     constructor(private size: FontSizeService, private theme: ThemesService, public translate: TranslateService) {}
 
     setGrids() {
-        if (this.theme.getActiveTheme() !== classic) this.GRID_COLOURS = GRID_COLOURS_INVERTED;
+        switch (this.theme.getActiveTheme()) {
+            case classic:
+                this.GRID_COLOURS = GRID_COLOURS_CLASSIC;
+                break;
+            case inverted:
+                this.GRID_COLOURS = GRID_COLOURS_INVERTED;
+                break;
+            case green:
+                this.GRID_COLOURS = GRID_COLOURS_GREEN;
+                break;
+            case pink:
+                this.GRID_COLOURS = GRID_COLOURS_PINK;
+                break;
+            default:
+        }
         if (this.translate.currentLang === 'en') this.GRID_WORDS = GRID_WORDS_EN;
     }
 

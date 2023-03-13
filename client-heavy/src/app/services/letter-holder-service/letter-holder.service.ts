@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HOLDER_MEASUREMENTS, LETTER_POINTS, TILE_COLORS_CLASSIC, TILE_COLORS_INVERTED } from '@app/constants/letters-constants';
-import { classic } from '@app/constants/themes';
+import { HOLDER_MEASUREMENTS, LETTER_POINTS, TILE_COLORS_CLASSIC, TILE_COLORS_GREEN, TILE_COLORS_INVERTED, TILE_COLORS_PINK } from '@app/constants/letters-constants';
+import { classic, green, inverted, pink } from '@app/constants/themes';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
 import { ThemesService } from '../themes-service/themes-service';
 
@@ -16,8 +16,26 @@ export class LetterHolderService {
 
     constructor(private size: FontSizeService, private theme: ThemesService) {}
 
+    setGrids() {
+        switch (this.theme.getActiveTheme()) {
+            case classic:
+                this.TILE_COLOURS = TILE_COLORS_CLASSIC;
+                break;
+            case inverted:
+                this.TILE_COLOURS = TILE_COLORS_INVERTED;
+                break;
+            case green:
+                this.TILE_COLOURS = TILE_COLORS_GREEN;
+                break;
+            case pink:
+                this.TILE_COLOURS = TILE_COLORS_PINK;
+                break;
+            default:
+        }
+    }
+
     drawLetter(letter: string, position: number) {
-        if (this.theme.getActiveTheme() !== classic) this.TILE_COLOURS = TILE_COLORS_INVERTED;
+        this.setGrids();
         const checkedLetter = this.validParams(letter, position);
         if (checkedLetter) {
             this.holderContext.beginPath();
