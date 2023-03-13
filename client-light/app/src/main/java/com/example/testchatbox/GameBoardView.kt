@@ -4,30 +4,33 @@ import android.content.ClipData
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.DragEvent
 import android.view.View
-import android.widget.FrameLayout
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
+import android.view.ViewGroup
+import android.widget.RelativeLayout
 import com.example.testchatbox.Coordinates.COLUMNS
 import com.example.testchatbox.Coordinates.ROWS
 
 
-class GameBoardView : ConstraintLayout {
+class GameBoardView : RelativeLayout {
     var gridPaint = Paint()
     var textPaint = Paint()
     var letterPaint = Paint()
     var letterTextPaint = Paint()
 
     var isInside: Boolean = false
-    var drawLetterList = ArrayList<Pair<Int,String>>()
-    var col: Int = 0
-    var row: String = ""
+    var drawLetterList = ArrayList<GamePageFragment.LetterInHand>()
 
     private val boardState = Array(15) { IntArray(15) }
 
     private fun isStartSquare(column: Float?, row: Float?): Boolean {
         return column == COLUMNS[8] && row == ROWS["H"]
+    }
+
+    init {
+        layoutParams =
+            LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     }
 
     private fun drawSquare(canvas: Canvas, column: Float?, row: Float?, colour: Int, word: String) {
@@ -79,11 +82,24 @@ class GameBoardView : ConstraintLayout {
 
     private fun drawSquares(canvas: Canvas) {
 //        Code suivant à utiliser pour les thèmes
-//        val typedValue = TypedValue()
-//        context.theme.resolveAttribute(android.R.attr.colorAccent, typedValue, true)
-//        bgPaint.color = typedValue.data
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(com.google.android.material.R.attr.colorOnPrimary, typedValue, true)
+        gridPaint.color = typedValue.data
 
-        gridPaint.color = ContextCompat.getColor(context, R.color.AntiqueWhite)
+
+        val redTile = TypedValue()
+        context.theme.resolveAttribute(com.google.android.material.R.attr.colorPrimaryVariant, redTile, true)
+
+        val pinkTile = TypedValue()
+        context.theme.resolveAttribute(R.attr.pinkTile, pinkTile, true)
+
+        val blueTile = TypedValue()
+        context.theme.resolveAttribute(R.attr.blueTile, blueTile, true)
+
+        val lightBlueTile = TypedValue()
+        context.theme.resolveAttribute(R.attr.lightBlueTile, lightBlueTile, true)
+
+        //gridPaint.color = ContextCompat.getColor(context, R.color.AntiqueWhite)
         gridPaint.style = Paint.Style.FILL
         canvas.drawRect(
             0F,
@@ -98,7 +114,7 @@ class GameBoardView : ConstraintLayout {
                 canvas,
                 square.second,
                 square.first,
-                Color.CYAN, //à changer pour le thème
+                lightBlueTile.data, //à changer pour le thème
                 context.getString(R.string.doubleLetter)
             )
         }
@@ -107,7 +123,7 @@ class GameBoardView : ConstraintLayout {
                 canvas,
                 square.second,
                 square.first,
-                Color.RED, //à changer pour le thème
+                redTile.data,
                 context.getString(R.string.tripleWord)
             )
         }
@@ -116,7 +132,7 @@ class GameBoardView : ConstraintLayout {
                 canvas,
                 square.second,
                 square.first,
-                Color.MAGENTA, //à changer pour le thème
+                pinkTile.data,
                 context.getString(R.string.doubleWord)
             )
         }
@@ -125,7 +141,7 @@ class GameBoardView : ConstraintLayout {
                 canvas,
                 square.second,
                 square.first,
-                Color.BLUE, //à changer pour le thème
+                blueTile.data,
                 context.getString(R.string.tripleLetter)
             )
         }
@@ -163,7 +179,8 @@ class GameBoardView : ConstraintLayout {
 
     private fun validLetter(letter: String): String {
         return if (letter >= "A" && letter <= "Z") letter
-        else if (letter.substring(0, letter.length - 1) === "blank") letter.uppercase()
+        //else if (letter.substring(0, letter.length - 1) === "blank") letter.uppercase()
+        else if (letter.substring(0, letter.length) === "") "BLANK"
         else if (letter >= "a" && letter <= "z") letter.uppercase()
         else ""
     }
@@ -179,23 +196,27 @@ class GameBoardView : ConstraintLayout {
 //        return Boolean(this.validLetter(letter)) && Boolean(this.validRowColumn(column, row));
 //    }
 
-    private fun manageBlank(letter: String): Pair<String, String> {
-        if (this.validLetter(letter).length > 1)
-            return Pair(
-                letter.substring(0, letter.length - 1),
-                letter.substring(letter.length - 1, letter.length)
-            )
-        //return { points: letter.substring(0, letter.length - 1), letter: letter.substring(letter.length - 1, letter.length) };
-        return Pair(letter, letter) //points,letter
-    }
+//    private fun manageBlank(letter: String): Pair<String, String> {
+//        if (this.validLetter(letter).length > 1)
+//            return Pair(
+//                letter.substring(0, letter.length - 1),
+//                letter.substring(letter.length - 1, letter.length)
+//            )
+//        //return { points: letter.substring(0, letter.length - 1), letter: letter.substring(letter.length - 1, letter.length) };
+//        return Pair(letter, letter) //points,letter
+//    }
 
     //TODO: drawLetter après réception du dropEvent
-    fun drawLetter(canvas: Canvas, column: Int, row: String, letter: String) {
+    private fun drawLetter(canvas: Canvas, column: Int, row: String, letter: String) {
 //        if (this.checkParamsValidity(column, row, letter)) {
-        val fullLetter = this.validLetter(letter)
-        val blankHandledLetter = this.manageBlank(fullLetter)
+        var fullLetter = this.validLetter(letter)
+        //val blankHandledLetter = this.manageBlank(fullLetter)
         val checkedRow: String = this.validRowColumn(column, row)
-        val letterPoint: Int? = LetterPoints.letterPoints[blankHandledLetter.first]
+        val letterPoint: Int? = LetterPoints.letterPoints[fullLetter]
+        if (fullLetter == "BLANK") {
+            fullLetter = ""
+        }
+
         //var letterPoint: number = LETTER_POINTS[blankHandledLetter.points as keyof typeof LETTER_POINTS];
 
         letterPaint.color = Color.WHITE
@@ -213,6 +234,17 @@ class GameBoardView : ConstraintLayout {
             letterPaint
         ) //draw letter tile
 
+        letterPaint.color = Color.BLACK
+        letterPaint.style = Paint.Style.STROKE
+        canvas.drawRect(
+            col,
+            row,
+            col + GridConstants.DEFAULT_SIDE,
+            row + GridConstants.DEFAULT_SIDE,
+            letterPaint
+        )
+
+
         letterTextPaint.color = Color.BLACK
         letterTextPaint.textSize = 25F
         letterTextPaint.isAntiAlias = true
@@ -220,11 +252,11 @@ class GameBoardView : ConstraintLayout {
         letterTextPaint.typeface = Typeface.DEFAULT_BOLD
 
         val bounds = Rect()
-        letterTextPaint.getTextBounds(blankHandledLetter.second, 0, blankHandledLetter.second.length, bounds)
+        letterTextPaint.getTextBounds(fullLetter, 0, fullLetter.length, bounds)
         val calculateBounds = (bounds.bottom - bounds.top) / 2
 
         canvas.drawText(
-            blankHandledLetter.second,
+            fullLetter,
             col + GridConstants.DEFAULT_SIDE / 2,
             row + GridConstants.DEFAULT_SIDE / 2 + calculateBounds,
             letterTextPaint
@@ -257,20 +289,29 @@ class GameBoardView : ConstraintLayout {
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        this.setWillNotDraw(false);
+        this.setWillNotDraw(false)
     }
+
+//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+//        val width = MeasureSpec.getSize(widthMeasureSpec)
+//        val height = MeasureSpec.getSize(heightMeasureSpec)
+//        val size = width.coerceAtMost(height)
+//        val measureSpec = MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY)
+//        super.onMeasure(measureSpec, measureSpec)
+//    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         Coordinates.setCoordinates()
         drawGridLines(canvas)
 
-        if (isInside) {
-            for(e in drawLetterList) {
-                drawLetter(canvas, e.first, e.second, "a")
-            }
-        }
+//        if (isInside) {
+//            for(letter in drawLetterList) {
+//                drawLetter(canvas, letter.col, letter.row, letter.letter)
+//            }
+//        }
     }
+
 
     //TODO: Drop and Drag event
     fun onDrop(v: View?, event: DragEvent) {
