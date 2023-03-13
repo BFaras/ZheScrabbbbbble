@@ -13,6 +13,7 @@ import {
 } from '@app/constants/database-interfaces';
 import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
+import { FriendsDB } from '@app/interfaces/friend-info';
 import { ProfileInfo, ProfileInfoDB, ProfileSettings } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
@@ -76,7 +77,6 @@ export class DatabaseService {
             email,
             securityQuestion,
         };
-
         await this.getCollection(CollectionType.USERACCOUNTS)
             ?.insertOne(accountInfo)
             .catch(() => {
@@ -222,6 +222,20 @@ export class DatabaseService {
                 errorCode = DATABASE_UNAVAILABLE;
             });
         return errorCode;
+    }
+
+    async addFriendDoc(userId: string): Promise<boolean> {
+        const friendsInfo: FriendsDB = {
+            _id: new ObjectId(userId),
+            friendsId: [],
+        };
+        let isCreationSuccess = true;
+        await this.getCollection(CollectionType.FRIENDS)
+            ?.insertOne(friendsInfo)
+            .catch(() => {
+                isCreationSuccess = false;
+            });
+        return isCreationSuccess;
     }
 
     async isFriendCodeTaken(friendCodeToCheck: string): Promise<boolean> {

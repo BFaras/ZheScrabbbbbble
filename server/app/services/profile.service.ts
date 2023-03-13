@@ -60,8 +60,7 @@ export class ProfileService {
         return this.dbService.getUserProfileSettings(userId);
     }
 
-    async createNewProfile(username: string, avatar: string): Promise<boolean> {
-        const userId: string = await this.dbService.getUserId(username);
+    async createNewProfile(userId: string, avatar: string): Promise<boolean> {
         const profileInfo: ProfileInfo = this.getDefaultProfileInformation();
 
         profileInfo.avatar = avatar;

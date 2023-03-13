@@ -56,7 +56,9 @@ export class AuthentificationService {
             if (!(await this.dbService.addUserAccount(username, encryptedPassword, email, securityQuestion))) {
                 accountCreationState = DATABASE_UNAVAILABLE;
             } else {
-                await this.profileService.createNewProfile(username, userAvatar);
+                const userId: string = await this.dbService.getUserId(username);
+                await this.profileService.createNewProfile(userId, userAvatar);
+                await this.dbService.addFriendDoc(userId);
             }
         }
 

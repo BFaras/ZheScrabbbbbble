@@ -13,7 +13,7 @@ export class FriendSocketService {
         this.accountInfoService = Container.get(AccountInfoService);
     }
 
-    handleProfileSockets(socket: io.Socket) {
+    handleFriendSockets(socket: io.Socket) {
         socket.on('Get Profile Information', async () => {});
     }
 }
