@@ -19,12 +19,13 @@
 
         <com.example.testchatbox.GameBoardView
             android:id="@+id/gameBoard"
-            android:layout_width="650dp"
-            android:layout_height="650dp"
+            android:layout_width="675dp"
+            android:layout_height="675dp"
             android:layout_gravity="top|center"
             android:layout_marginTop="30dp" />
 
         <Button
+            android:id="@+id/abandonButton"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_gravity="right|top"
@@ -34,37 +35,200 @@
 
         </Button>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/shrikhand"
+            android:text="SCRABBLE"
+            android:textSize="45dp">
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="INFO PANEL"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="115dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/background_letter_rack">
+
+        </TextView>
+
+        <LinearLayout
+            android:layout_height="500dp"
+            android:layout_width="280dp"
+            android:background="@drawable/background_player_panel"
+            android:layout_gravity="left|center"
+            android:orientation="vertical"
+            android:paddingTop="50dp">
+
+            <LinearLayout
+                android:id="@+id/playersInfoHolder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+            </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                >
+                <TextView
+                    android:id="@+id/minutesTimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="00"
+                    android:textSize="40dp"
+                    android:textColor="?colorOnPrimary"
+                    android:layout_gravity="center|bottom">
+                </TextView>
+                <TextView
+                    android:id="@+id/secondsTimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00"
+                    android:textSize="40dp"
+                    android:layout_gravity="center|bottom">
+                </TextView>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="@string/tillNextRound"
+                android:textColor="?colorOnPrimary"
+                android:layout_gravity="center|bottom">
+            </TextView>
+
+        </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/reserveLength"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00"
+                    android:textStyle="bold"
+                    android:layout_gravity="center|bottom"
+                    android:textSize="25dp"
+                    android:textAlignment="center"
+                    >
+                </TextView>
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="@string/reserveText"
+                    android:textColor="?colorOnPrimary"
+                    android:layout_gravity="center|bottom">
+                </TextView>
+            </LinearLayout>
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/letterRack"
             android:layout_width="600dp"
-            android:layout_height="100dp"
+            android:layout_height="75dp"
             android:background="@drawable/background_letter_rack"
             android:layout_gravity="center|bottom"
             android:padding="5dp"
             android:gravity="center"
+            android:showDividers="middle"
+            android:divider="@drawable/letters_hand_divider"
             android:orientation="horizontal">
+
         </LinearLayout>
 
         <Button
             android:id="@+id/buttonPass"
-            android:layout_width="75dp"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="85dp"
+            android:drawableTop="@drawable/ic_pass"
+            android:text="@string/pass"
+            android:paddingBottom="10sp"
+            android:textSize="10sp"
+            android:singleLine="true"
+            android:drawableTint="?colorOnPrimary"
             android:background="@drawable/background_letter_rack"
             android:layout_gravity="center|bottom"
-            android:layout_marginLeft="400dp"
+            android:layout_marginLeft="500dp"
             >
         </Button>
 
         <Button
-            android:id="@+id/buttonExchange"
-            android:layout_width="75dp"
-            android:layout_height="60dp"
+            android:id="@+id/buttonPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="85dp"
+            android:drawableTop="@drawable/ic_play"
+            android:text="@string/play"
+            android:enabled="false"
+            android:paddingBottom="10sp"
+            android:textSize="10sp"
+            android:singleLine="true"
+            android:drawableTint="?colorOnPrimary"
             android:background="@drawable/background_letter_rack"
             android:layout_gravity="center|bottom"
-            android:layout_marginRight="400dp"
+            android:layout_marginLeft="380dp"
             >
         </Button>
 
+        <ImageButton
+            android:id="@+id/backInHand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_player_panel"
+            android:layout_gravity="center|right"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="8dp"
+            android:visibility="gone"
+            android:paddingBottom="12dp"
+            android:src="@drawable/ic_hand"
+            android:layout_marginTop="200dp"
+            android:layout_marginRight="243dp">
+
+        </ImageButton>
+
+
+        <Button
+            android:id="@+id/buttonExchange"
+            android:layout_width="wrap_content"
+            android:layout_height="85dp"
+            android:enabled="false"
+            android:layout_gravity="center|bottom"
+            android:layout_marginRight="400dp"
+            android:background="@drawable/background_letter_rack"
+            android:drawableTop="@drawable/ic_swap"
+            android:drawableTint="?colorOnPrimary"
+            android:singleLine="true"
+            android:text="@string/swap"
+            android:paddingBottom="10sp"
+            android:textSize="10sp"></Button>
 
         <LinearLayout
             android:id="@+id/fullscreen_content_controls"
@@ -73,8 +237,8 @@
             android:layout_gravity="bottom|center_horizontal"
             android:orientation="vertical"
             tools:ignore="UselessParent">
-
         </LinearLayout>
+
     </FrameLayout>
 
 </FrameLayout>
