@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="pinkTile" format="reference" />
+    <attr name="blueTile" format="reference" />
+    <attr name="lightBlueTile" format="reference" />
+    <attr name="playerSelection" format="reference" />
+</resources>

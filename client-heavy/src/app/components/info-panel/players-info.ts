@@ -8,22 +8,3 @@ export interface Player {
     winner: boolean;
     objectives: Goal[];
 }
-
-export const playersInfo = [
-    {
-        name: 'Joueur 1',
-        currentScore: 0,
-        letterCount: 0,
-        active: false,
-        winner: false,
-        objectives: [],
-    },
-    {
-        name: 'Joueur 2',
-        currentScore: 0,
-        letterCount: 0,
-        active: false,
-        winner: false,
-        objectives: [],
-    },
-];

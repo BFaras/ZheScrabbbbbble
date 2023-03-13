@@ -48,6 +48,9 @@
         <action
             android:id="@+id/action_loginFragment_to_resetFragment"
             app:destination="@id/resetFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_fullscreenFragment"
+            app:destination="@id/fullscreenFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -74,6 +77,11 @@
         android:name="com.example.testchatbox.chat.ManageChatFragment"
         android:label="fragment_manage_chat"
         tools:layout="@layout/fragment_manage_chat" />
+    <fragment
+        android:id="@+id/fullscreenFragment"
+        android:name="com.example.testchatbox.GamePageFragment"
+        android:label="fragment_fullscreen"
+        tools:layout="@layout/fragment_fullscreen" />
     <fragment
         android:id="@+id/gameListFragment"
         android:name="com.example.testchatbox.GameListFragment"
