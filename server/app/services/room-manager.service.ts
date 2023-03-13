@@ -1,6 +1,6 @@
 import { GameRoom } from '@app/classes/game-room';
 import { Player } from '@app/classes/player';
-import { RoomVisibility } from '@app/constants/basic-constants';
+import { MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
 import { GameRoomInfo } from '@app/constants/basic-interface';
 import crypto = require('crypto');
 import { Service } from 'typedi';
@@ -49,6 +49,10 @@ export class RoomManagerService {
             }
         }
         return gameRooms;
+    }
+
+    isRoomFull(id : string): boolean {
+        return this.activeRooms[id].getPlayerCount() >= MAX_NUMBER_OF_PLAYERS;
     }
 
     getRoomPlayerNames(id: string): string[] {

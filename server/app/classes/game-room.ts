@@ -19,8 +19,11 @@ export class GameRoom {
         this.connectedPlayers = 0;
         this.visibility = visibility;
         if (visibility === RoomVisibility.Protected) {
-            if(!password) visibility = RoomVisibility.Public;
-            else this.password = password;
+            if(!password){
+                this.visibility = RoomVisibility.Public
+            }else{
+                this.password = password;
+            } 
         }
         this.game = new Game(this.players);
         this.gameStarted = false;
