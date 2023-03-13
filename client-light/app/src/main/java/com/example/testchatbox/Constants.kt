@@ -4,8 +4,8 @@ import com.example.testchatbox.Coordinates.COLUMNS
 import com.example.testchatbox.Coordinates.ROWS
 
 object GridConstants {
-    const val DEFAULT_WIDTH = 650F
-    const val DEFAULT_HEIGHT = 650F
+    const val DEFAULT_WIDTH = 675F
+    const val DEFAULT_HEIGHT = 675F
     const val DEFAULT_SIDE = DEFAULT_HEIGHT/15
     const val DEFAULT_LINE_WIDTH = 1F
     const val ROW_COLUMN_COUNT = 15
@@ -47,8 +47,11 @@ object LetterPoints {
 
 
 object Coordinates {
-    var ROWS = mutableMapOf<String, Float>()
-    var COLUMNS = mutableMapOf<Int, Float>()
+    var ROWS = sortedMapOf<String, Float>()
+    var COLUMNS = sortedMapOf<Int, Float>()
+
+    var rowsPos =  mutableListOf<Pair<Float, Float>>()
+    var columnsPos =  mutableListOf<Pair<Float, Float>>()
 
     fun setCoordinates() {
         var squareSizeIncrement = 0F
@@ -62,7 +65,18 @@ object Coordinates {
             COLUMNS[num] = squareSizeIncrement
             squareSizeIncrement += GridConstants.DEFAULT_SIDE
         }
+        rowsPos = ROWS.values.zipWithNext() as MutableList
+        val lastRow = rowsPos.last().second
+
+        columnsPos = COLUMNS.values.zipWithNext() as MutableList
+        val lastElementCol = columnsPos.last().second
+
+        rowsPos.add(Pair(lastRow,lastRow + GridConstants.DEFAULT_SIDE))
+        columnsPos.add(Pair(lastElementCol,lastElementCol + GridConstants.DEFAULT_SIDE))
     }
+
+
+
 
     fun isCoordinateOf(colourCoords:  List<Pair<Float?, Float?>>, coord: Pair<Float, Float>): Boolean {
         for (square in colourCoords) {
