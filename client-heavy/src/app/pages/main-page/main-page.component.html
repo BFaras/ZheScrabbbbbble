@@ -1,15 +1,12 @@
+<app-navigation-bar></app-navigation-bar>
 <div class="container justified">
-    <app-language></app-language>
     <div class="logo">Scrabble</div>
     <div id="button-container">
         <section id="game-modes" class="justified">
             <p class="paragraph">{{'HOMEPAGE.MESSAGE' | translate}}</p>
-            <button class="button" routerLink="/solo-multi" (click)="setScrabbleMode(gameTypeEnum.CLASSIC)">{{'HOMEPAGE.CLASSIC' | translate}}</button>
-            <button class="button" routerLink="/solo-multi" (click)="setScrabbleMode(gameTypeEnum.LOG2990)">{{'HOMEPAGE.TURNAMENT' | translate}} (LOG2990)</button>
-            <button class="button" (click)="openScores()">{{'HOMEPAGE.COLLABORATIVE'   | translate}} (scores)</button>
-            <button class="button" routerLink="/chat">Chat</button>
-            <button class="button" routerLink="/profile-page">Profile</button>
-            <button class="button" (click) = "disconnectUser()"routerLink="/login">Déconnexion</button>
+            <button class="button" routerLink="/solo-multi" (click)="setScrabbleMode(gameTypeEnum.CLASSIC)">{{ 'HOMEPAGE.CLASSIC' | translate }}</button>
+            <button class="button" routerLink="/solo-multi" (click)="setScrabbleMode(gameTypeEnum.LOG2990)">{{ 'HOMEPAGE.TOURNAMENT' | translate }} (LOG2990)</button>
+            <button class="button" (click)="openScores()">{{ 'HOMEPAGE.COLLABORATIVE' | translate }} (scores)</button>
         </section>
     </div>
 </div>

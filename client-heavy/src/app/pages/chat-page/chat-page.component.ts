@@ -2,6 +2,7 @@ import { AfterContentChecked, ChangeDetectorRef, Component, OnInit } from '@angu
 import { ChatInfo, ChatMessage, ChatType } from '@app/classes/chat-info';
 //import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { Subscription } from 'rxjs';
 //import { chat, chatlist } from './chats';
 
 @Component({
@@ -19,23 +20,27 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
     global: ChatType = ChatType.GLOBAL;
     visibility: ChatType;
     selectedChat: string;
+    subscriptions: Subscription[] = [];
 
     constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, /*private account: AccountService*/) {}
 
     ngOnInit() {
-        this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
+        this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
             this.chatList = chatList;
             this.chatLog = this.chatService.messageLog;
-        });
-        this.chatService.getNewMessages().subscribe((messageLog: Map<string, ChatMessage[]>) => {
+        }));
+        this.subscriptions.push(this.chatService.getNewMessages().subscribe((messageLog: Map<string, ChatMessage[]>) => {
             this.chatLog = messageLog;
-        });
+        }));
     }
 
     ngAfterContentChecked(): void {
         this.changeDetector.detectChanges();
     }
 
+    ngOnDestroy(): void {
+        for (const subscription of this.subscriptions) subscription.unsubscribe();
+    }
 
     sendMessage() {
         this.nextMessage = this.nextMessage.trim();
@@ -62,25 +67,6 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
 
         console.log(this.chatList);
         console.log(this.chatLog);
-        /*
-        this.chatLog.set("6403648f2ac642cda023ef88", [{ message: "hello", username: "daria", timestamp: "12:00", },
-        { message: "hi", username: "frank", timestamp: "12:00", },
-        { message: "how are you", username: "daria", timestamp: "12:00", },
-        { message: "good you", username: "frank", timestamp: "12:00", },
-        { message: "yes same", username: "daria", timestamp: "12:00", },
-        { message: "hi", username: "frank", timestamp: "12:00", },
-        { message: "how are you", username: "daria", timestamp: "12:00", },
-        { message: "good you", username: "frank", timestamp: "12:00", },
-        { message: "yes, i am very well. I want to write a super long message", username: "daria", timestamp: "12:00", },
-        { message: "hi", username: "frank", timestamp: "12:00", },
-        { message: "how are you", username: "daria", timestamp: "12:00", },
-        { message: "good you", username: "frank", timestamp: "12:00", },
-        { message: "yes same", username: "daria", timestamp: "12:00", },
-        { message: "hi", username: "frank", timestamp: "12:00", },
-        { message: "how are you", username: "daria", timestamp: "12:00", },
-        { message: "good you", username: "frank", timestamp: "12:00", },
-        { message: "yes same", username: "daria", timestamp: "12:00", },]);
-        */
     }
 
     selectChat(event: Event, id: string) {

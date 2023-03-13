@@ -26,8 +26,6 @@ export class ChatService {
     updateChatList(chatList: ChatInfo[]) {
         chatList.forEach((chat: ChatInfo) => {
             if (!this.messageLog.has(chat._id)) this.messageLog.set(chat._id, []);
-            console.log("hello");
-            console.log(this.messageLog);
         });
     }
 
@@ -41,6 +39,7 @@ export class ChatService {
                 if (this.messageLog.has(id)) {
                     this.messageLog.get(id)!.push(message);
                     observer.next(this.messageLog);
+                    console.log(message);
                 }
             });
         });

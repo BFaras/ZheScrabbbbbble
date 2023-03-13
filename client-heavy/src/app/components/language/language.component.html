@@ -1,5 +1,4 @@
 <div class="lang">
-    {{'CHANGELANG.MESSAGE' | translate}} : 
-    <button class="lang-button" id="en" (click)="translateLanguageTo('en')" *ngIf="currentLang === 'fr'">EN</button> 
-    <button class="lang-button" id="fr" (click)="translateLanguageTo('fr')" *ngIf="currentLang === 'en'">FR</button> 
+    <p class="lang-p" id="en" (click)="translateLanguageTo('en')" *ngIf="currentLang === 'fr'">EN</p> 
+    <p class="lang-p" id="fr" (click)="translateLanguageTo('fr')" *ngIf="currentLang === 'en'">FR</p> 
 </div>

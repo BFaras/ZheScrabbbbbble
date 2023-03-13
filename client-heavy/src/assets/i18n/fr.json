@@ -49,7 +49,8 @@
     "CHATBOX":{
         "CHATBOX":"BOÎTE DE CHAT",
         "DEFAULT":"Tapez une commande",
-        "SEND":"Envoyer"
+        "SEND":"Envoyer",
+        "JOIN":"Joindre des chats publics"
     },
     "LETTERHOLDER":{
         "PASS":"Passer",
@@ -71,12 +72,18 @@
     "HOMEPAGE":{
         "MESSAGE":"Choisissez un mode de jeu!",
         "CLASSIC":"Jouer",
-        "TURNAMENT":"Tournois",
+        "TOURNAMENT":"Tournois",
         "COLLABORATIVE":"Collaboratif"
     },
     "TABS":{
         "PUBLIC": "Publiques",
         "PRIVATE": "Privés",
         "GLOBAL": "Globaux"
+    },
+    "NAVBAR":{
+        "HOME": "Menu",
+        "PROFILE": "Profil",
+        "CHAT": "Chat",
+        "SIGNOUT": "Déconnexion"
     }
 }

@@ -40,6 +40,7 @@ import { ProfilePageComponent } from './pages/profile-page/profile-page.componen
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
 import { ChatService } from './services/chat-service/chat.service';
 import { LanguageComponent } from './components/language/language.component';
+import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -85,6 +86,7 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
         PasswordLostPageComponent,
         PasswordLostAreaComponent,
         LanguageComponent,
+        NavigationBarComponent,
     ],
     imports: [
         AppMaterialModule,

@@ -1,6 +1,6 @@
 
 .container {
-    height: 100vh;
+    height: 94vh;
     font-size: 18px;
     background-color: var(--background-default);
 }
@@ -46,33 +46,11 @@ img {
     transition-duration: 0.2s;
 }
 
-.team-name {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-    color: green;
-}
-
-.header-item {
-    justify-content: center;
-    text-align: center;
-}
-
 .logo {
-
+    margin-top: 8%;
     font-family: "Shrikhand";
-    font-size: 85px;
+    font-size: 95px;
     color: var(--text-default);
-}
-
-.footer-item {
-    text-align: center;
-}
-
-.footer-item p :nth-child(even) {
-    color: black;
-}
-.footer-item p :nth-child(odd) {
-    color: grey;
 }
 
 #button-container {
@@ -87,7 +65,7 @@ img {
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     flex-direction: column;
     margin-bottom: 20%;
 }
