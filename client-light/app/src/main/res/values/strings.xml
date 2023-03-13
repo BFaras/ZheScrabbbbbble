@@ -43,6 +43,7 @@
     <string name="ROOM_NAME_TAKEN">The room name is already taken</string>
     <string name="ROOM_PASSWORD_INCORRECT">The password is incorrect</string>
     <string name="JOIN_REQUEST_REFUSED">The host of the game did not accept your request to join</string>
+    <string name="ROOM_IS_FULL">The room is already full</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

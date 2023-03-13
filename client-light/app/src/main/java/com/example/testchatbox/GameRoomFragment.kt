@@ -64,7 +64,7 @@ class GameRoomFragment : Fragment() {
     private fun updateNames(){
         val playerView = arrayOf(binding.player1,binding.player2, binding.player3, binding.player4)
         for(i in 0..3){
-            if(players[i]!=null)
+            if(i<players.size)
                 playerView[i].text = players[i];
             else
                 playerView[i].text = "";
