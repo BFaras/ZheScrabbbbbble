@@ -19,13 +19,23 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     subscription: Subscription;
     mouseIsIn: boolean = false;
     mousePosition: Vec2 = { x: 0, y: 0 };
+    viewLoaded : boolean = false;
+    private initialGameState: GameState;
     private canvasSize = { x: GRID_CONSTANTS.defaultWidth, y: GRID_CONSTANTS.defaultHeight };
 
     constructor(
         private readonly gridService: GridService,
         private readonly gameStateService: GameStateService,
         private readonly letterAdderService: LetterAdderService,
-    ) {}
+    ) {
+        this.subscription = this.gameStateService.getGameStateObservable().subscribe(async (gameState) => {
+            if(this.viewLoaded){
+                this.updateBoardState(gameState)
+            }else{
+                this.initialGameState = gameState;
+            }
+        });
+    }
 
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
@@ -38,11 +48,12 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     }
 
     ngAfterViewInit(): void {
+        this.viewLoaded = true;
         this.gridService.gridContext = this.gridCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.gridService.drawIdentificators();
         this.gridService.drawSquares();
         this.gridService.drawGridLines();
-        this.subscription = this.gameStateService.getGameStateObservable().subscribe(async (gameState) => this.updateBoardState(gameState));
+        this.updateBoardState(this.initialGameState);
     }
 
     ngOnChanges() {

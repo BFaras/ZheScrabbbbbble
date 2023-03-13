@@ -32,8 +32,10 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     counter: number = 0;
     initialPosition: number = 0;
     subscription: Subscription;
+    viewLoaded = false;
 
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
+    private initialGameState : GameState;
 
     constructor(
         private readonly accountService : AccountService,
@@ -44,7 +46,13 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         private letterAdderService: LetterAdderService,
         private manipulationRack: ManipulationRackService,
     ) {
-        this.subscription = this.gameStateService.getGameStateObservable().subscribe((gameState) => this.updateHolder(gameState));
+        this.subscription = this.gameStateService.getGameStateObservable().subscribe((gameState) => {
+            if(this.viewLoaded){
+                this.updateHolder(gameState)
+            }else{
+                this.initialGameState = gameState;
+            }
+        });
     }
 
     @HostListener('click', ['$event'])
@@ -140,7 +148,10 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
+        this.viewLoaded = true;
         this.letterHolderService.holderContext = this.letterHolder.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        console.log("View Init Done");
+        this.updateHolder(this.initialGameState);
     }
 
     updateHolder(gameState: GameState) {
