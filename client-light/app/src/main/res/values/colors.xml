@@ -10,6 +10,14 @@
     <color name="yellow">#FFFF00</color>
     <color name="fuchsia">#FF00FF</color>
     <color name="red">#FF0000</color>
+    <color name="beige">#f7eddf</color>
+    <color name="lightBeige">#faf5f1</color>
+    <color name="lightCorail">#d3b1a7</color>
+    <color name="forestGreen">#679089</color>
+    <color name="darkForestGreen">#2e3a37</color>
+    <color name="lightForest">#8cbea3</color>
+    <color name="corail">#cb654f</color>
+    <color name="darkCorail">#af4a3d</color>
     <color name="silver">#C0C0C0</color>
     <color name="gray">#808080</color>
     <color name="olive">#808000</color>
