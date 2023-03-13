@@ -142,14 +142,17 @@ export class SocketManager {
                 if(currentRoom.isGameStarted()) return;
                 // TODO Fill with virtual players
                 currentRoom.startGame();
+                console.log(new Date().toLocaleTimeString() + ' | New game started');
                 socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                 socket.to(currentRoom.getID()).emit('Game Started');
                 socket.emit('Game Started');
             });
 
             socket.on('Request Game State', () => {
+                console.log(new Date().toLocaleTimeString() + ' | Game state requested');
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
+                console.log(new Date().toLocaleTimeString() + ' | Game state sent');
                 socket.emit('Game State Update', currentRoom.getGame.createGameState());
             });
 

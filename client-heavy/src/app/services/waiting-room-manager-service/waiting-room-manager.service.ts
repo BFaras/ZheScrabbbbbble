@@ -41,7 +41,6 @@ export class WaitingRoomManagerService {
         });
         this.joinRoomResponseObservable = new Observable((observer: Observer<JoinResponse>) => {
             this.socket.on('Join Room Response', (errorCode, playerNames) => {
-                console.log('TEST 2');
                 observer.next({ errorCode, playerNames })
             });
         });
