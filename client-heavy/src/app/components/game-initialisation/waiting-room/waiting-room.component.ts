@@ -14,11 +14,16 @@ export class WaitingRoomComponent {
 
     constructor(private waitingRoomManagerService: WaitingRoomManagerService, private accountService: AccountService, private router: Router) {
         this.waitingRoomManagerService.getJoinRoomRequestObservable().subscribe(this.newJoinRequest.bind(this));
+        this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this))
     }
 
     launchGame(): void {
-        //this.refuseEveryone();
-        //this.router.navigate(['/game']);
+        this.refuseEveryone();
+        this.waitingRoomManagerService.startGame();
+    }
+
+    goToGame(){
+        this.router.navigate(['/game']);
     }
 
     leaveRoom(): void {

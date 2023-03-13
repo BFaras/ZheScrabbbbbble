@@ -25,6 +25,7 @@ export class WaitingRoomManagerService {
     private waitingRoomObservable: Observable<WaitingRoom[]>;
     private joinRequestObservable: Observable<string>;
     private joinRoomResponseObservable : Observable<JoinResponse>;
+    private gameStartObservable : Observable<null>;
 
     constructor(private socketManagerService: SocketManagerService) {
         this.socket = this.socketManagerService.getSocket();
@@ -42,6 +43,11 @@ export class WaitingRoomManagerService {
             this.socket.on('Join Room Response', (errorCode, playerNames) => {
                 console.log('TEST 2');
                 observer.next({ errorCode, playerNames })
+            });
+        });
+        this.gameStartObservable = new Observable((observer: Observer<null>) => {
+            this.socket.on('Game Started', () => {
+                observer.next(null);
             });
         });
         this.socket.on('Room Player Update', (playerNames) => {
@@ -85,8 +91,16 @@ export class WaitingRoomManagerService {
         return this.joinRequestObservable;
     }
 
+    getStartGameObservable(): Observable<null> {
+        return this.gameStartObservable;
+    }
+
     createMultiRoom(roomName: string, visibility: string, passwordRoom: string) {
         this.socket.emit('Create Game Room', roomName, visibility, passwordRoom);
+    }
+
+    startGame() {
+        this.socket.emit('Start Game');
     }
 
     createRoomResponse(): Observable<string> {

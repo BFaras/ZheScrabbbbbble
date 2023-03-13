@@ -137,8 +137,10 @@ export class SocketManager {
                 if (!currentRoom) return;
                 if(currentRoom.getHostPlayer().getName() !== this.accountInfoService.getUsername(socket)) return;
                 if(currentRoom.getPlayerCount() < 2) return;
+                if(currentRoom.isGameStarted()) return;
                 // TODO Fill with virtual players
                 currentRoom.startGame();
+                socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                 socket.to(currentRoom.getID()).emit('Game Started');
                 socket.emit('Game Started');
             });
