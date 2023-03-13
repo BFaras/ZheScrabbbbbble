@@ -32,7 +32,7 @@ enum class Visibility{
 
 }
 
-data class GameRoom(val name:String, val id:String, val visibility: Visibility, val players: Array<String>, val hasStarted : Boolean)
+data class GameRoom(val name:String, val id:String, val visibility: Visibility, var players: Array<String>, var hasStarted : Boolean)
 
 
 class GameListFragment : Fragment() {
@@ -123,9 +123,8 @@ class GameListFragment : Fragment() {
                 }
                 activity?.runOnUiThread(Runnable {
                     if(errorMessage == R.string.NO_ERROR){
-                        val args = Bundle()
-                        args.putStringArray("players", gameRoom.players)
-                        findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment, args )
+                        GameRoomModel.initialise(gameRoom)
+                        findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment)
                     }else{
                     val appContext = context?.applicationContext
                     Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
@@ -158,9 +157,8 @@ class GameListFragment : Fragment() {
                     }
                     activity?.runOnUiThread(Runnable {
                         if(errorMessage == R.string.NO_ERROR){
-                            val args = Bundle()
-                            args.putStringArray("players", arrayOf(LoggedInUser.getName()));
-                            findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment, args )
+                            GameRoomModel.initialise(GameRoom(roomName,"-1", roomType, arrayOf(LoggedInUser.getName()),false))
+                            findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment )
                         }else{
                             val appContext = context?.applicationContext
                             Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()

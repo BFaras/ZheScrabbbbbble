@@ -2,11 +2,13 @@ package com.example.testchatbox
 
 import SocketHandler
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.example.testchatbox.chat.ChatModel
 import com.example.testchatbox.databinding.FragmentGameListBinding
 import com.example.testchatbox.databinding.FragmentGameRoomBinding
 import org.json.JSONArray
@@ -14,7 +16,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class GameRoomFragment : Fragment() {
+class GameRoomFragment : Fragment(), Observer {
 
     private var _binding: FragmentGameRoomBinding? = null
     private val binding get() = _binding!!
@@ -46,19 +48,26 @@ class GameRoomFragment : Fragment() {
         binding.startGame.setOnClickListener {
             SocketHandler.getSocket().emit("Start Game")
         }
-        SocketHandler.getSocket().on("Room Player Update"){ args ->
-            if(args[0] != null){
-                players = arrayOf()
-                val playersArray = args[0] as JSONArray;
-                for(i in 0 until playersArray.length()){
-                    players = players.plus(playersArray.getString(i))
-                }
-                updateNames()
-            }
-        }
-        SocketHandler.getSocket().once("Game Started") {
-            //TODO: Go to game
-        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        GameRoomModel.addObserver(this);
+    }
+
+    override fun onStop() {
+        super.onStop()
+        GameRoomModel.removeObserver(this);
+    }
+
+    override fun update() {
+        activity?.runOnUiThread(Runnable {
+            if(GameRoomModel.gameRoom!!.hasStarted)
+            //TODO : Go to game page
+                Log.i("TODO", "Go to game page")
+            updateNames()
+        });
     }
 
     private fun updateNames(){
@@ -70,5 +79,6 @@ class GameRoomFragment : Fragment() {
                 playerView[i].text = "";
         }
     }
+
 
 }
