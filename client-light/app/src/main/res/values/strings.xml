@@ -6,7 +6,7 @@
     <string name="second_fragment_label">Chatbox</string>
     <string name="next">Chat</string>
     <string name="previous">Previous</string>
-    <string name="reset_fragment_label">Rest Password</string>
+    <string name="reset_fragment_label">Reset Password</string>
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- Strings related to login -->
@@ -24,17 +24,26 @@
     <string name="login_failed">"Login failed"</string>
     <string name="register_failed">"Failed to register new account"</string>
     <string name="tapez_quelque_chose">Tapez quelque chose...</string>
+    <string name="game">Game</string>
     <string name="tournois">TOURNOIS</string>
     <string name="classique">CLASSIQUE</string>
     <string name="collaboratif">COLLABORATIF</string>
     <string name="disconnect">DECONNEXION</string>
     <!-- Strings related to errors -->
+    <!-- TODO: Create a universal error dictionnary -->
+    <string name="NO_ERROR">No error</string>
+    <string name="ERROR">Error</string>
+    <string name="FIELD_EMPTY"> you  left a field empty</string>
     <string name="USERNAME_INVALID">The username is invalid</string>
     <string name="PASSWORD_INVALID">The password is invalid</string>
     <string name="EMAIL_INVALID">The email is invalid</string>
     <string name="USERNAME_TAKEN">The username is taken</string>
     <string name="DATABASE_UNAVAILABLE">The database is unavailable. Try again later</string>
     <string name="WRONG_SECURITY_ANSWER">Incorrect Answer</string>
+    <string name="ROOM_NAME_TAKEN">The room name is already taken</string>
+    <string name="ROOM_PASSWORD_INCORRECT">The password is incorrect</string>
+    <string name="JOIN_REQUEST_REFUSED">The host of the game did not accept your request to join</string>
+    <string name="ROOM_IS_FULL">The room is already full</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
