@@ -15,6 +15,7 @@ import { assert } from 'console';
 import { AuthentificationService } from './authentification.service';
 import { DatabaseService } from './database.service';
 import { OnlineUsersService } from './online-users.service';
+import { ProfileService } from './profile.service';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import Sinon = require('sinon');
@@ -82,11 +83,12 @@ describe('AuthentificationService Tests', () => {
         expect(await authService.createAccount(testUsername, testPassword, goodTestEmail, testAvatar, testSecurityQuestion)).to.deep.equal(testError);
     });
 
-    it('createAccount should should return NO_ERROR if the account was created successfully', async () => {
+    it('createAccount should return NO_ERROR if the account was created successfully', async () => {
         const testError = NO_ERROR;
         const accountCreatedInDB = true;
         Sinon.stub(AuthentificationService.prototype, 'verifyAccountRequirements' as any).returns(Promise.resolve(NO_ERROR));
         Sinon.stub(DatabaseService.prototype, 'addUserAccount').returns(Promise.resolve(accountCreatedInDB));
+        Sinon.stub(ProfileService.prototype, 'createNewProfile').returns(Promise.resolve(accountCreatedInDB));
         Sinon.stub(OnlineUsersService.prototype, 'addOnlineUser');
         expect(await authService.createAccount(testUsername, testPassword, goodTestEmail, testAvatar, testSecurityQuestion)).to.deep.equal(testError);
     });
