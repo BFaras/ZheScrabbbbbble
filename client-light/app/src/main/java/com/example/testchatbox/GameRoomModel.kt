@@ -1,5 +1,6 @@
 package com.example.testchatbox
 
+import android.util.Log
 import org.json.JSONArray
 
 interface Observer{

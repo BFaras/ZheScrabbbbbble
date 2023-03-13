@@ -1,56 +1,23 @@
 <resources>
-    <string name="app_name">TestChatBox</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">Main menu</string>
-    <string name="second_fragment_label">Chatbox</string>
-    <string name="next" translatable="false">Chat</string>
-    <string name="previous">Previous</string>
-    <string name="reset_fragment_label">Reset Password</string>
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <!-- Strings related to login -->
-    <string name="prompt_email" translatable="false">Email</string>
-    <string name="prompt_username">Username</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome!"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_email">Not a valid email</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="invalid_question">Do not leave the question field empty</string>
-    <string name="invalid_answer">Do not leave the answer field empty</string>
-    <string name="login_failed">"Login failed"</string>
-    <string name="register_failed">"Failed to register new account"</string>
+    <string name="app_name" translatable="false">SCRBBLE</string>
+
+    <string name="action_settings">Paramètres</string>
     <string name="tapez_quelque_chose">Tapez quelque chose...</string>
-    <string name="game">Game</string>
+    <string name="game">Jeu</string>
     <string name="tournois">TOURNOIS</string>
     <string name="classique">CLASSIQUE</string>
     <string name="collaboratif">COLLABORATIF</string>
     <string name="disconnect">DECONNEXION</string>
     <string name="doubleLetter">DL</string>
     <string name="tripleLetter">TL</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="dummy_button" translatable="false">Dummy Button</string>
+    <string name="dummy_content" translatable="false">DUMMY\nCONTENT</string>
     <string name="doubleWord">DM</string>
     <string name="tripleWord">TM</string>
+    <string name="reserve">LETTRES RESTANTES DANS LA RÉSERVE</string>
     <string name="abandonner">Abandonner</string>
-    <!-- Strings related to errors -->
-    <!-- TODO: Create a universal error dictionnary -->
-    <string name="NO_ERROR">No error</string>
-    <string name="ERROR">Error</string>
-    <string name="FIELD_EMPTY"> you  left a field empty</string>
-    <string name="USERNAME_INVALID">The username is invalid</string>
-    <string name="PASSWORD_INVALID">The password is invalid</string>
-    <string name="EMAIL_INVALID">The email is invalid</string>
-    <string name="USERNAME_TAKEN">The username is taken</string>
-    <string name="DATABASE_UNAVAILABLE">The database is unavailable. Try again later</string>
-    <string name="WRONG_SECURITY_ANSWER">Incorrect Answer</string>
-    <string name="ROOM_NAME_TAKEN">The room name is already taken</string>
-    <string name="ROOM_PASSWORD_INCORRECT">The password is incorrect</string>
-    <string name="JOIN_REQUEST_REFUSED">The host of the game did not accept your request to join</string>
-    <string name="ROOM_IS_FULL">The room is already full</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="swap">Échanger</string>
@@ -58,4 +25,41 @@
     <string name="pass">Passer</string>
     <string name="tillNextRound">JUSQU\'AU PROCHAIN TOUR</string>
     <string name="play">Jouer</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">Menu principal</string>
+    <string name="second_fragment_label">Boîte de clavardage</string>
+    <string name="next" >Clavardage</string>
+    <string name="previous">Précédant</string>
+    <string name="reset_fragment_label">Mot de passe oublié</string>
+
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Courriel</string>
+    <string name="prompt_username">Nom d\'utilisateur</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="action_sign_in">Connection</string>
+    <string name="action_sign_in_short">Connection</string>
+    <string name="welcome">"Bienvenue!"</string>
+    <string name="invalid_username">Pas un nom valid</string>
+    <string name="invalid_email">Pas un courriel valid</string>
+    <string name="invalid_password">Le mot de passe doit contenir au moins 5 caractères</string>
+    <string name="invalid_question">La question ne peut être vide</string>
+    <string name="invalid_answer">La réponse ne peut être vide</string>
+    <string name="login_failed">"Échec de la connexion"</string>
+    <string name="register_failed">"Échec de l'enregistrement"</string>
+    <!-- Strings related to errors -->
+    <string name="NO_ERROR">Aucune erreur </string>
+    <string name="ERROR">Erreur</string>
+    <string name="FIELD_EMPTY"> Une entrée est vide</string>
+    <string name="USERNAME_INVALID">Le nom est invalid</string>
+    <string name="PASSWORD_INVALID">Le mot de passe est invalid</string>
+    <string name="EMAIL_INVALID">Le courriel est invalid</string>
+    <string name="USERNAME_TAKEN">Le nom est déjà utilisé</string>
+    <string name="DATABASE_UNAVAILABLE">La base de données est indisponible. Veuillez réessayer plus tard.</string>
+    <string name="WRONG_SECURITY_ANSWER">Mauvaise réponse</string>
+    <string name="ROOM_NAME_TAKEN">Le nom est déjà utilisé</string>
+    <string name="ROOM_PASSWORD_INCORRECT">Le mot de passe est incorrect</string>
+    <string name="JOIN_REQUEST_REFUSED">Votre demande d\'adhésion a été refusée</string>
+    <string name="ROOM_IS_FULL">La salle est déjà pleine</string>
 </resources>

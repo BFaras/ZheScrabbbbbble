@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.chat.ChatModel
 import com.example.testchatbox.databinding.FragmentGameListBinding
 import com.example.testchatbox.databinding.FragmentGameRoomBinding
+import com.example.testchatbox.login.model.LoggedInUser
 import org.json.JSONArray
 import java.util.*
 import kotlin.collections.ArrayList
@@ -21,13 +22,10 @@ class GameRoomFragment : Fragment(), Observer {
     private var _binding: FragmentGameRoomBinding? = null
     private val binding get() = _binding!!
 
-    private var players = arrayOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            players = it.getStringArray("players") as Array<String>
-        }
+
     }
 
     override fun onCreateView(
@@ -66,8 +64,7 @@ class GameRoomFragment : Fragment(), Observer {
     override fun update() {
         activity?.runOnUiThread(Runnable {
             if(GameRoomModel.gameRoom!!.hasStarted)
-            //TODO : Go to game page
-                Log.i("TODO", "Go to game page")
+                findNavController().navigate(R.id.action_gameRoomFragment_to_fullscreenFragment)
             updateNames()
         });
     }
@@ -75,11 +72,13 @@ class GameRoomFragment : Fragment(), Observer {
     private fun updateNames(){
         val playerView = arrayOf(binding.player1,binding.player2, binding.player3, binding.player4)
         for(i in 0..3){
-            if(i<players.size)
-                playerView[i].text = players[i];
+            if(i< GameRoomModel.gameRoom!!.players.size)
+                playerView[i].text = GameRoomModel.gameRoom!!.players[i];
             else
                 playerView[i].text = "";
         }
+        if(LoggedInUser.getName()==GameRoomModel.gameRoom!!.players[1])
+            binding.startGame.visibility=View.VISIBLE
     }
 
 

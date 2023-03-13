@@ -62,7 +62,7 @@ class ChatFragment : Fragment(), ObserverChat {
         var text = binding.inputText.text.toString().trim()
         if(text.isNotEmpty()){
             binding.inputText.setText("")
-            SocketHandler.getSocket().emit("Message Sent", text)
+            SocketHandler.getSocket().emit("New Chat Message", text, chatsList[selectedChatIndex]._id)
             binding.scrollView.fullScroll(View.FOCUS_DOWN)
         }
     }
@@ -84,7 +84,6 @@ class ChatFragment : Fragment(), ObserverChat {
         for(message in chatsList[selectedChatIndex].messages){
             messagesBox.append(message.toString() + System.getProperty("line.separator"))
         }
-        binding.scrollView.fullScroll(View.FOCUS_DOWN);
     }
 
     private fun loadList(){

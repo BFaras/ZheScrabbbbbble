@@ -28,7 +28,6 @@ data class PlayersState (
 
 class GameStateModel: ViewModel() {
 
-    private lateinit var player2Mock : PlayersState
 
     private var _gameState = MutableLiveData<GameState>()
     val gameState: LiveData<GameState>
@@ -38,21 +37,30 @@ class GameStateModel: ViewModel() {
     val timer: LiveData<Timer>
         get() = _timer
 
+    //Valeur test, à retirer
     private var gameMock: GameState
 
     init {
-//        SocketHandler.getSocket().once("Game State Update") { args ->
+//        SocketHandler.getSocket().on("Game State Update") { args ->
 //            if(args[0] != null) {
 //                _gameState.value = args[0] as GameState
 //            }
 //        }
-//        SocketHandler.getSocket().emit("Request Game State")
+//        SocketHandler.getSocket().on("hereIsTheTimer") { args ->
+ //           if(args[0] != null) {
+ //               _timer.value = args[0] as Timer
+   //         }
+    //    }
+//        getGameState()
+//        getTimer()
 
+
+        //Mock
         val player1Mock = PlayersState("player1Mock", arrayListOf("a", "c", "d", "e", "blank", "", "f"), 120)
         val player2Mock =  PlayersState("player2Mock", arrayListOf("b", "e", "f", "z", "", "j"), 20)
         gameMock = GameState(
             populateBoard(),
-            arrayListOf(player1Mock, player2Mock),
+            arrayListOf(player1Mock, player2Mock, player2Mock, player1Mock),
             1,
             52,
             false
@@ -63,21 +71,13 @@ class GameStateModel: ViewModel() {
     fun getGameState() {
 
 //        SocketHandler.getSocket().emit("Request Game State")
-//        SocketHandler.getSocket().on("Game State Update") { args ->
-//            if(args[0] != null) {
-//                _gameState.value = args[0] as GameState
-//            }
-//        }
+
+        //Mock
         gameMock.reserveLength = 10
         _gameState.value = gameMock
     }
 
     fun getTimer() {
-        SocketHandler.getSocket().once("hereIsTheTimer") { args ->
-            if(args[0] != null) {
-                _timer.value = args[0] as Timer
-            }
-        }
         SocketHandler.getSocket().emit("sendTimer")
     }
 
