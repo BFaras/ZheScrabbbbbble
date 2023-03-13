@@ -2,6 +2,7 @@ package com.example.testchatbox
 
 import SocketHandler
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -60,7 +61,8 @@ class GameListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         updateGameList();
         binding.roomType.check(R.id.publicRoom)
-        binding.roomType.setOnCheckedChangeListener { radioGroup, _ ->
+        binding.roomType.setOnCheckedChangeListener { radioGroup, i ->
+            Log.i("Radio", i.toString())
             when (radioGroup.checkedRadioButtonId) {
                 R.id.publicRoom -> binding.createPassword.visibility=View.INVISIBLE
                 R.id.privateRoom -> binding.createPassword.visibility=View.INVISIBLE
