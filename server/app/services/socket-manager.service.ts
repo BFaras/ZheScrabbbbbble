@@ -8,8 +8,8 @@ import Container from 'typedi';
 import { AccountInfoService } from './account-info.service';
 import { AuthSocketService } from './auth-socket.service';
 import { ChatSocketService } from './chat-socket.service';
-import { DatabaseService } from './database.service';
 import { OnlineUsersService } from './online-users.service';
+import { ProfileSocketService } from './profile-socket.service';
 import { RoomManagerService } from './room-manager.service';
 import { SocketDatabaseService } from './socket-database.service';
 
@@ -22,10 +22,11 @@ export class SocketManager {
     private authSocketService: AuthSocketService;
     private onlineUsersService: OnlineUsersService;
     private accountInfoService: AccountInfoService;
+    private profileSocketService: ProfileSocketService;
     private pendingJoinGameRequests: Map<string, [string, io.Socket]>;
-    //private timeoutRoom: { [key: string]: NodeJS.Timeout };
+    // private timeoutRoom: { [key: string]: NodeJS.Timeout };
 
-    constructor(server: http.Server, databaseService: DatabaseService) {
+    constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
         this.socketDatabaseService = new SocketDatabaseService();
         this.chatSocketService = new ChatSocketService();
@@ -33,18 +34,19 @@ export class SocketManager {
         this.accountInfoService = Container.get(AccountInfoService);
         this.onlineUsersService = Container.get(OnlineUsersService);
         this.roomManager = Container.get(RoomManagerService);
+        this.profileSocketService = Container.get(ProfileSocketService);
         this.pendingJoinGameRequests = new Map<string, [string, io.Socket]>();
-        //this.databaseService = databaseService;
-        //this.timeoutRoom = {};
         this.commandController = new CommandController(this.roomManager);
     }
 
+
     handleSockets(): void {
         this.sio.on('connection', (socket: io.Socket) => {
-            console.log((new Date()).toLocaleTimeString() + ' | New device connection to server');
+            console.log(new Date().toLocaleTimeString() + ' | New device connection to server');
             this.socketDatabaseService.databaseSocketRequests(socket);
             this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
+            this.profileSocketService.handleProfileSockets(socket);
 
             socket.on('Create Game Room', async (name: string, visibility: RoomVisibility, password?: string) => {
                 console.log(new Date().toLocaleTimeString() + ' | Room creation request received');
@@ -169,7 +171,7 @@ export class SocketManager {
                     color: COLOR_SYSTEM,
                 });
                 */
-                const gameState = currentRoom.getGame.createGameState()
+                const gameState = currentRoom.getGame.createGameState();
                 socket.emit('Game State Update', gameState);
                 socket.to(currentRoom.getID()).emit('Game State Update', gameState);
             });
@@ -185,7 +187,7 @@ export class SocketManager {
             });
 
             socket.on('disconnect', async () => {
-                console.log((new Date()).toLocaleTimeString() + ' | User Disconnected from server');
+                console.log(new Date().toLocaleTimeString() + ' | User Disconnected from server');
                 this.onlineUsersService.removeOnlineUser(this.accountInfoService.getUsername(socket));
                 const room = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!room) return;

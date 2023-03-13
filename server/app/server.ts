@@ -42,7 +42,7 @@ export class Server {
             }
         }
 
-        this.socketManager = new SocketManager(this.server, this.databaseService);
+        this.socketManager = new SocketManager(this.server);
         this.socketManager.handleSockets();
 
         this.server.listen(Server.appPort);
