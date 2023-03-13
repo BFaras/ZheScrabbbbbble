@@ -23,13 +23,16 @@
     </fragment>
     <fragment
         android:id="@+id/ChatFragment"
-        android:name="com.example.testchatbox.ChatFragment"
+        android:name="com.example.testchatbox.chat.ChatFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_chat" >
 
         <action
             android:id="@+id/action_ChatFragment_to_MainMenuFragment"
             app:destination="@id/MainMenuFragment" />
+        <action
+            android:id="@+id/action_ChatFragment_to_manageChatFragment"
+            app:destination="@id/manageChatFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -66,6 +69,11 @@
             app:destination="@id/MainMenuFragment" />
 
     </fragment>
+    <fragment
+        android:id="@+id/manageChatFragment"
+        android:name="com.example.testchatbox.chat.ManageChatFragment"
+        android:label="fragment_manage_chat"
+        tools:layout="@layout/fragment_manage_chat" />
     <fragment
         android:id="@+id/gameListFragment"
         android:name="com.example.testchatbox.GameListFragment"

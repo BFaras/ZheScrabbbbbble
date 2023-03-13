@@ -45,6 +45,15 @@
     -webkit-transition: color 0.2s linear;
 }
 
+.password-lost-Link{
+    font-size : 14px;
+    
+
+}
+.password-lost-Link:hover{
+    cursor:pointer;
+}
+
 .button-login:hover {
     color: black;
     cursor: pointer;

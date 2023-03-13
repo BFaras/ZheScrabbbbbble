@@ -52,8 +52,8 @@ export class AuthSocketService {
             socket.emit('User Account Question', await this.authentificationService.getUserSecurityQuestion(username));
         });
 
-        socket.on('Account Question Answer', async (answerToQuestion: string, newPassword: string) => {
-            const usernameForReset = socket.data.usernameResettingPassword;
+        socket.on('Account Question Answer', async (username: string, answerToQuestion: string, newPassword: string) => {
+            const usernameForReset = username;
             let errorCode = WRONG_SECURITY_ANSWER;
             if (await this.authentificationService.isSecurityQuestionAnswerRight(usernameForReset, answerToQuestion)) {
                 errorCode = DATABASE_UNAVAILABLE;

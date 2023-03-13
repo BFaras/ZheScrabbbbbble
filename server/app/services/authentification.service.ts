@@ -21,14 +21,18 @@ import { Question } from '@app/interfaces/question';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
 import { OnlineUsersService } from './online-users.service';
+import { ProfileService } from './profile.service';
 
 @Service()
 export class AuthentificationService {
     private readonly dbService: DatabaseService;
     private readonly onlineUsersService: OnlineUsersService;
+    private readonly profileService: ProfileService;
+
     constructor() {
         this.dbService = Container.get(DatabaseService);
         this.onlineUsersService = Container.get(OnlineUsersService);
+        this.profileService = Container.get(ProfileService);
     }
 
     async authentifyUser(username: string, password: string): Promise<boolean> {
@@ -49,8 +53,10 @@ export class AuthentificationService {
         let accountCreationState: string = await this.verifyAccountRequirements(username, password, email);
         if (accountCreationState === NO_ERROR) {
             const encryptedPassword: string = this.encryptPassword(password);
-            if (!(await this.dbService.addUserAccount(username, encryptedPassword, email, userAvatar, securityQuestion))) {
+            if (!(await this.dbService.addUserAccount(username, encryptedPassword, email, securityQuestion))) {
                 accountCreationState = DATABASE_UNAVAILABLE;
+            } else {
+                await this.profileService.createNewProfile(username, userAvatar);
             }
         }
 
@@ -58,7 +64,7 @@ export class AuthentificationService {
             this.onlineUsersService.addOnlineUser(username);
         }
 
-        return Promise.resolve(accountCreationState);
+        return accountCreationState;
     }
 
     // To test in the future

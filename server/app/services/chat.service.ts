@@ -87,6 +87,6 @@ export class ChatService {
     private async renamePrivateChat(currentChatName: string, userId: string): Promise<string> {
         const idsInChatName: string[] = currentChatName.split(PRIVATE_CHAT_IDS_SEPARATOR);
         const friendUserId = idsInChatName[0] !== userId ? idsInChatName[0] : idsInChatName[1];
-        return this.dbService.getUserName(friendUserId);
+        return this.dbService.getUsernameFromId(friendUserId);
     }
 }
