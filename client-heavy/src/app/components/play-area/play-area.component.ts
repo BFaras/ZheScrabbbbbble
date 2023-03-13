@@ -7,8 +7,6 @@ import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
 import { Subscription } from 'rxjs';
 
-const SHOW_WRONG_LETTERS_DELAY = 3000;
-
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',
@@ -81,14 +79,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     }
 
     private async updateBoardState(gameState: GameState) {
-        if (!gameState.boardWithInvalidWords) {
-            this.gridService.setBoardState(gameState.board);
-            this.letterAdderService.setBoardState(gameState.board);
-            this.letterAdderService.removeAll();
-        } else {
-            this.gridService.setBoardState(gameState.boardWithInvalidWords);
-            await this.delay(SHOW_WRONG_LETTERS_DELAY);
-            this.gridService.setBoardState(gameState.board);
-        }
+        this.gridService.setBoardState(gameState.board);
+        this.letterAdderService.setBoardState(gameState.board);
+        this.letterAdderService.removeAll();
     }
 }

@@ -22,7 +22,6 @@ export class PendingRoomComponent {
     }
 
     receiveResponse(message : JoinResponse) {
-        console.log('TEST');
         if(message.errorCode === 'ROOM-3'){
             this.waitingRoomManagerService.setRequestPending(false);
             return;

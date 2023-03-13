@@ -49,13 +49,9 @@ export class PasswordLostAreaComponent implements OnInit {
     this.subscriptionGetQuestion.unsubscribe();
 }
   changePassword(){
-    console.log(this.newPassword);
-    console.log(this.answerReset);
-    console.log(this.username);
     this.subscriptionModifyPassword = this.accountAuthenticationService.modifyPassword(this.username,this.newPassword,this.answerReset).subscribe(
       (isThereError:string)=>{
         if (isThereError){
-          console.log(isThereError)
           //aleret
           window.alert('Veuillez entrer la bonne réponse à la question'); 
         }
