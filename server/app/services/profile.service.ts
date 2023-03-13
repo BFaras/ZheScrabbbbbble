@@ -10,13 +10,16 @@ import {
 import { ConnectionInfo, GameInfo, ProfileInfo, ProfileSettings, StatisticInfo } from '@app/interfaces/profile-info';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
+import { FriendService } from './friend.service';
 
 @Service()
 export class ProfileService {
     private readonly dbService: DatabaseService;
+    private readonly friendService: FriendService;
 
     constructor() {
         this.dbService = Container.get(DatabaseService);
+        this.friendService = Container.get(FriendService);
     }
 
     getDefaultProfileInformation(): ProfileInfo {
@@ -60,7 +63,9 @@ export class ProfileService {
     async createNewProfile(username: string, avatar: string): Promise<boolean> {
         const userId: string = await this.dbService.getUserId(username);
         const profileInfo: ProfileInfo = this.getDefaultProfileInformation();
+
         profileInfo.avatar = avatar;
+        profileInfo.userCode = await this.friendService.generateUniqueFriendCode();
         return await this.dbService.addNewProfile(userId, profileInfo, this.getDefaultProfileSettings());
     }
 

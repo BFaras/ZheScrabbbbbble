@@ -158,7 +158,7 @@ export class DatabaseService {
             username,
         });
         let securityQuestionAnswer = '';
-        
+
         if (userAccountInfoDoc !== undefined && userAccountInfoDoc !== null) {
             securityQuestionAnswer = userAccountInfoDoc.securityQuestion.answer;
         }
@@ -222,6 +222,13 @@ export class DatabaseService {
                 errorCode = DATABASE_UNAVAILABLE;
             });
         return errorCode;
+    }
+
+    async isFriendCodeTaken(friendCodeToCheck: string): Promise<boolean> {
+        const userWithFriendCode = await ((await this.getCollection(CollectionType.PROFILEINFO)) as Collection<ProfileInfoDB>)?.findOne({
+            profileInfo: { $elemMatch: { userCode: friendCodeToCheck } },
+        });
+        return Promise.resolve(!(userWithFriendCode === undefined || userWithFriendCode === null));
     }
 
     async addNewChatCanal(chatInfo: ChatInfoDB): Promise<string> {
@@ -333,7 +340,7 @@ export class DatabaseService {
         });
         return mongoArray as ChatInfo[];
     }
-    
+
     async getTopScores(resultCount: number): Promise<TopScores> {
         const dbResults = await (this.getCollection(CollectionType.SCORE) as Collection<Score>)
             ?.find({}, { projection: { _id: 0 } })
