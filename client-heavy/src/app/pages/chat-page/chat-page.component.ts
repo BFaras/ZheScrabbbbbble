@@ -1,5 +1,6 @@
 import { AfterContentChecked, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ChatInfo, ChatMessage, ChatType } from '@app/classes/chat-info';
+import { AccountService } from '@app/services/account-service/account.service';
 //import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { Subscription } from 'rxjs';
@@ -21,8 +22,11 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
     visibility: ChatType;
     selectedChat: string;
     subscriptions: Subscription[] = [];
+    username: string;
 
-    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, /*private account: AccountService*/) {}
+    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService) {
+        this.username = this.account.getUsername();
+    }
 
     ngOnInit() {
         this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {

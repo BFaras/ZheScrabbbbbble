@@ -5,7 +5,9 @@
     "CHANGETHEME":{
         "MESSAGE":"Change Theme",
         "CLASSIC":"Classic",
-        "INVERTED":"Contrast"
+        "INVERTED":"Contrast",
+        "GREEN":"Green",
+        "PINK":"Pink"
     },
     "LOGIN":{
         "AUTH":"Authentication",

@@ -21,7 +21,9 @@
             <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
                 <div class="message-bubble" *ngFor="let message of chatLog.get(selectedChat)">
                     <div id="name-time">
-                       <span class="message username">{{ message.username }}</span><span class="message timestamp">{{ message.timestamp }}</span> 
+                       <span class="message username" *ngIf="message.username !== username" style="color: var(--playarea-coords)">{{ message.username }}</span>
+                       <span class="message username" *ngIf="message.username === username">{{ message.username }}</span>
+                       <span class="message timestamp">{{ message.timestamp }}</span> 
                     </div>
                     <p class="message content">{{ message.message }}</p>
                 </div>
