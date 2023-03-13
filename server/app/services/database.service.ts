@@ -238,6 +238,18 @@ export class DatabaseService {
         return isCreationSuccess;
     }
 
+    async getUserFriendList(userId: string): Promise<string[]> {
+        let friendsList: string[] = [];
+        const userFriendsDoc = await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)?.findOne({
+            _id: new ObjectId(userId),
+        });
+
+        if (userFriendsDoc !== undefined && userFriendsDoc !== null) {
+            friendsList = userFriendsDoc.friendsId;
+        }
+        return friendsList;
+    }
+
     async isFriendCodeTaken(friendCodeToCheck: string): Promise<boolean> {
         const userWithFriendCode = await ((await this.getCollection(CollectionType.PROFILEINFO)) as Collection<ProfileInfoDB>)?.findOne({
             profileInfo: { $elemMatch: { userCode: friendCodeToCheck } },

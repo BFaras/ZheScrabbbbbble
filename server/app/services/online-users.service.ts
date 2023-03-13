@@ -3,20 +3,33 @@ import { Service } from 'typedi';
 @Service()
 export class OnlineUsersService {
     private readonly onlineUsers: Set<string>;
+    private readonly usersInGame: Set<string>;
 
     constructor() {
         this.onlineUsers = new Set<string>();
     }
 
-    addOnlineUser(username: string) {
-        this.onlineUsers.add(username);
+    addOnlineUser(userId: string) {
+        this.onlineUsers.add(userId);
     }
 
-    removeOnlineUser(username: string) {
-        this.onlineUsers.delete(username);
+    removeOnlineUser(userId: string) {
+        this.onlineUsers.delete(userId);
     }
 
-    isUserOnline(username: string): boolean {
-        return this.onlineUsers.has(username);
+    isUserOnline(userId: string): boolean {
+        return this.onlineUsers.has(userId);
+    }
+
+    addUserToInGameList(userId: string) {
+        this.usersInGame.add(userId);
+    }
+
+    removeUserFromInGameList(userId: string) {
+        this.usersInGame.delete(userId);
+    }
+
+    isUserInGame(userId: string): boolean {
+        return this.usersInGame.has(userId);
     }
 }

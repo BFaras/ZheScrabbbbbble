@@ -36,13 +36,14 @@ export class AuthentificationService {
     }
 
     async authentifyUser(username: string, password: string): Promise<boolean> {
-        if (this.onlineUsersService.isUserOnline(username)) {
+        const userId = await this.dbService.getUserId(username);
+        if (this.onlineUsersService.isUserOnline(userId)) {
             console.log(new Date().toLocaleTimeString() + ' | User is already connected on another device');
             return false;
         }
         const decryptedPasswordFromDB: string = this.decryptPassword(await this.dbService.getUserEncryptedPassword(username));
         if (decryptedPasswordFromDB.length > 0 && decryptedPasswordFromDB === password) {
-            this.onlineUsersService.addOnlineUser(username);
+            this.onlineUsersService.addOnlineUser(userId);
             return true;
         }
         console.log(new Date().toLocaleTimeString() + ' | Incorrect password, login failed');
@@ -51,19 +52,20 @@ export class AuthentificationService {
 
     async createAccount(username: string, password: string, email: string, userAvatar: string, securityQuestion: Question): Promise<string> {
         let accountCreationState: string = await this.verifyAccountRequirements(username, password, email);
+        let userId = '';
         if (accountCreationState === NO_ERROR) {
             const encryptedPassword: string = this.encryptPassword(password);
             if (!(await this.dbService.addUserAccount(username, encryptedPassword, email, securityQuestion))) {
                 accountCreationState = DATABASE_UNAVAILABLE;
             } else {
-                const userId: string = await this.dbService.getUserId(username);
+                userId = await this.dbService.getUserId(username);
                 await this.profileService.createNewProfile(userId, userAvatar);
                 await this.dbService.addFriendDoc(userId);
             }
         }
 
-        if (accountCreationState === NO_ERROR) {
-            this.onlineUsersService.addOnlineUser(username);
+        if (accountCreationState === NO_ERROR && userId !== '') {
+            this.onlineUsersService.addOnlineUser(userId);
         }
 
         return accountCreationState;
