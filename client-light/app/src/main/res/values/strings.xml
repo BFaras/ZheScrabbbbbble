@@ -6,7 +6,7 @@
     <string name="second_fragment_label">Chatbox</string>
     <string name="next">Chat</string>
     <string name="previous">Previous</string>
-    <string name="reset_fragment_label">Rest Password</string>
+    <string name="reset_fragment_label">Reset Password</string>
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- Strings related to login -->
@@ -24,6 +24,7 @@
     <string name="login_failed">"Login failed"</string>
     <string name="register_failed">"Failed to register new account"</string>
     <string name="tapez_quelque_chose">Tapez quelque chose...</string>
+    <string name="game">Game</string>
     <string name="tournois">TOURNOIS</string>
     <string name="classique">CLASSIQUE</string>
     <string name="collaboratif">COLLABORATIF</string>
