@@ -18,9 +18,9 @@ import { SoloMultiPageComponent } from '@app/pages/solo-multi-page/solo-multi-pa
 import { AdminPopUpComponent } from './components/admin-pop-up/admin-pop-up.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { CreateGameComponent } from './components/game-initialisation/create-game/create-game.component';
-import { JoinGameSetupComponent } from './components/game-initialisation/join-game-setup/join-game-setup.component';
 import { JoinGameComponent } from './components/game-initialisation/join-game/join-game.component';
-import { NameValidatorComponent } from './components/game-initialisation/name-validator/name-validator/name-validator.component';
+import { PasswordInputComponent } from './components/game-initialisation/password-input-dialog/password-input.component';
+import { PendingRoomComponent } from './components/game-initialisation/pending-room-join/pending-room.component';
 import { WaitingRoomComponent } from './components/game-initialisation/waiting-room/waiting-room.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { LetterHolderComponent } from './components/letter-holder/letter-holder.component';
@@ -51,14 +51,12 @@ import { PasswordLostAreaComponent } from './components/password-lost-area/passw
         PlayAreaComponent,
         InfoPanelComponent,
         SoloMultiPageComponent,
-        NameValidatorComponent,
         CreateGameComponent,
         JoinGameComponent,
         WaitingRoomComponent,
         ChatComponent,
         LetterHolderComponent,
         TimerComponent,
-        JoinGameSetupComponent,
         LeaderboardComponent,
         AdminPageComponent,
         AdminPopUpComponent,
@@ -67,6 +65,8 @@ import { PasswordLostAreaComponent } from './components/password-lost-area/passw
         SignUpPageComponent,
         SignUpAreaComponent,
         ProfilePageComponent,
+        PendingRoomComponent,
+        PasswordInputComponent,
         PasswordLostPageComponent,
         PasswordLostAreaComponent,
     ],
