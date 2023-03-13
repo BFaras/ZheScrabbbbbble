@@ -48,7 +48,9 @@ class GameRoomFragment : Fragment(), Observer {
         binding.startGame.setOnClickListener {
             SocketHandler.getSocket().emit("Start Game")
         }
-
+        binding.buttonchat.setOnClickListener {
+            findNavController().navigate(R.id.action_gameRoomFragment_to_ChatFragment)
+        }
     }
 
     override fun onStart() {
