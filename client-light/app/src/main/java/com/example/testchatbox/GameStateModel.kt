@@ -51,14 +51,17 @@ class GameStateModel: ViewModel() {
 
         val player1Mock = PlayersState("player1Mock", arrayListOf("a", "c", "d", "e", "blank", "", "f"), 120)
         val player2Mock =  PlayersState("player2Mock", arrayListOf("b", "e", "f", "z", "", "j"), 20)
+        val player3Mock =  PlayersState("player2Mock", arrayListOf("b", "e", "f", "z", "", "j"), 500)
+        val player4Mock =  PlayersState("player2Mock", arrayListOf("b", "e", "f", "z", "", "j"), 0)
+
         gameMock = GameState(
             arrayOf(
                 arrayOf("", "*", "c"),
                 arrayOf("", "a", ""),
                 arrayOf("", "", "b")
             ),
-            arrayListOf(player1Mock, player2Mock),
-            1,
+            arrayListOf(player1Mock, player2Mock, player3Mock, player4Mock),
+            3,
             52,
             false
         )
