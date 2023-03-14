@@ -512,11 +512,6 @@ class GamePageFragment : Fragment() {
         for (row in gameBoardCoord.indices) { //row
             for (col in 0 until gameBoardCoord[row].size) { //col
                 if (gameBoardCoord[row][col] != "") {
-//                    val letterTile = layoutInflater.inflate(R.layout.letter_tile, binding.gameBoard, false)
-//                    val letter : TextView = letterTile.findViewById(R.id.letter)
-//                    val letterPoint: TextView = letterTile.findViewById(R.id.letterPoint)
-//                    val background: CardView = letterTile.findViewById(R.id.letterTileBg)
-
                     val columnCoordinates = columnsPos[col].first
                     val rowCoordinates = rowsPos[row].first
 
@@ -543,9 +538,13 @@ class GamePageFragment : Fragment() {
         letterPoint.text = letterPoints[letter.text].toString()
         background.setCardBackgroundColor(backgroundColor)
 
-        if (letterToDraw == "*")
-        {
+        if (letterToDraw == "*") {
             letter.text = ""
+            letterPoint.text = letterPoints["BLANK"].toString()
+        }
+
+        if (letterToDraw[0].isUpperCase()) {
+            letter.text = letterToDraw
             letterPoint.text = letterPoints["BLANK"].toString()
         }
         return letterTile
