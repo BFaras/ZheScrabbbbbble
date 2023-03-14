@@ -17,6 +17,7 @@
         <item name="pinkTile">@color/lightCorail</item>
         <item name="blueTile">@color/forestGreen</item>
         <item name="lightBlueTile">@color/lightForest</item>
+        <item name="lettersOnBoard">@color/NavajoWhite</item>
     </style>
     <style name="Theme.TestChatBox.NoActionBar">
         <item name="windowActionBar">false</item>
