@@ -55,7 +55,7 @@ export enum Direction {
 }
 
 export enum RoomVisibility {
-    Private,
-    Public,
-    Protected
+    Private = 'Private',
+    Public = 'Public',
+    Protected = 'Protected'
 }

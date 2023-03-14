@@ -5,34 +5,3 @@ export interface Player {
     active: boolean;
     winner: boolean;
 }
-
-export const playersInfo = [
-    {
-        name: '',
-        currentScore: 0,
-        letterCount: 0,
-        active: false,
-        winner: false
-    },
-    {
-        name: '',
-        currentScore: 0,
-        letterCount: 0,
-        active: false,
-        winner: false
-    },
-    {
-        name: '',
-        currentScore: 0,
-        letterCount: 0,
-        active: false,
-        winner: false
-    },
-    {
-        name: '',
-        currentScore: 0,
-        letterCount: 0,
-        active: false,
-        winner: false
-    },
-];

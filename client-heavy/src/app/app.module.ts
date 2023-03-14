@@ -21,13 +21,15 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AdminPopUpComponent } from './components/admin-pop-up/admin-pop-up.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { CreateGameComponent } from './components/game-initialisation/create-game/create-game.component';
-import { JoinGameSetupComponent } from './components/game-initialisation/join-game-setup/join-game-setup.component';
 import { JoinGameComponent } from './components/game-initialisation/join-game/join-game.component';
-import { NameValidatorComponent } from './components/game-initialisation/name-validator/name-validator/name-validator.component';
+import { PasswordInputComponent } from './components/game-initialisation/password-input-dialog/password-input.component';
+import { PendingRoomComponent } from './components/game-initialisation/pending-room-join/pending-room.component';
 import { WaitingRoomComponent } from './components/game-initialisation/waiting-room/waiting-room.component';
+import { LanguageComponent } from './components/language/language.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { LetterHolderComponent } from './components/letter-holder/letter-holder.component';
 import { LoginAreaComponent } from './components/login-area/login-area.component';
+import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { PasswordLostAreaComponent } from './components/password-lost-area/password-lost-area.component';
 import { SignUpAreaComponent } from './components/sign-up-area/sign-up-area.component';
 import { TimerComponent } from './components/timer/timer.component';
@@ -39,8 +41,6 @@ import { PasswordLostPageComponent } from './pages/password-lost-page/password-l
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
 import { ChatService } from './services/chat-service/chat.service';
-import { LanguageComponent } from './components/language/language.component';
-import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -66,14 +66,12 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
         PlayAreaComponent,
         InfoPanelComponent,
         SoloMultiPageComponent,
-        NameValidatorComponent,
         CreateGameComponent,
         JoinGameComponent,
         WaitingRoomComponent,
         ChatComponent,
         LetterHolderComponent,
         TimerComponent,
-        JoinGameSetupComponent,
         LeaderboardComponent,
         AdminPageComponent,
         AdminPopUpComponent,
@@ -83,6 +81,8 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
         SignUpAreaComponent,
         ProfilePageComponent,
         WindowComponent,
+        PendingRoomComponent,
+        PasswordInputComponent,
         PasswordLostPageComponent,
         PasswordLostAreaComponent,
         LanguageComponent,

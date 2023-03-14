@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AccountService } from '@app/services/account-service/account.service';
+import { GameStateService } from '@app/services/game-state-service/game-state.service';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 
 @Component({
@@ -7,74 +9,57 @@ import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-se
     templateUrl: './waiting-room.component.html',
     styleUrls: ['./waiting-room.component.scss'],
 })
-export class WaitingRoomComponent implements OnInit {
-    message: string = '';
-    alertMessage: string = '';
-    isHostPlayerWaiting: boolean = false;
-    isGuestPlayerWaiting: boolean = false;
+export class WaitingRoomComponent {
 
-    constructor(private waitingRoomManagerService: WaitingRoomManagerService, private router: Router) {}
+    pendingRequests: string[] = [];
 
-    ngOnInit(): void {
-        this.message = this.waitingRoomManagerService.getMessageSource();
-        this.isHostPlayerWaiting = this.waitingRoomManagerService.isHostPlayer();
-        this.waitingRoomManagerService.getJoinedPlayer().subscribe((playerName) => this.updateJoinMessage(playerName));
-        this.waitingRoomManagerService.getJoinResponse().subscribe((answer) => this.manageJoinResponse(answer));
-        this.waitingRoomManagerService.getGuestPlayerLeft().subscribe((answer) => this.updateWaitingStatus(answer));
-    }
-
-    updateWaitingStatus(answer: string): void {
-        this.isGuestPlayerWaiting = false;
-        this.message = answer;
+    constructor(private waitingRoomManagerService: WaitingRoomManagerService, private accountService: AccountService, private router: Router, private gameStateService: GameStateService) {
+        this.waitingRoomManagerService.getJoinRoomRequestObservable().subscribe(this.newJoinRequest.bind(this));
+        this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this))
     }
 
     launchGame(): void {
-        this.waitingRoomManagerService.answerGuestPlayer(true, '');
-        sessionStorage.clear();
-        this.router.navigate(['/game']);
+        this.refuseEveryone();
+        this.waitingRoomManagerService.startGame();
     }
 
-    denyPlayer(): void {
-        this.waitingRoomManagerService.answerGuestPlayer(false, "Vous avez été rejeté(e) de la partie par l'hôte de la salle.");
-        this.waitingRoomManagerService.setGuestPlayer(false);
-        this.isGuestPlayerWaiting = false;
-        this.waitingRoomManagerService.setMessageSource("Veuillez attendre qu'un joueur rejoigne votre salle.");
-        this.message = this.waitingRoomManagerService.getMessageSource();
-    }
-
-    convertMultiToSolo(): void {
-        this.waitingRoomManagerService.convertMultiToSolo();
-        this.router.navigate(['/create-game']);
-        this.waitingRoomManagerService.deleteRoom();
-    }
-
-    deleteRoom(): void {
-        this.waitingRoomManagerService.answerGuestPlayer(false, "L'hôte a supprimé la salle.");
-        this.waitingRoomManagerService.deleteRoom();
-        this.router.navigate(['/create-game']);
+    goToGame(){
+        this.router.navigate(['/game']).then(() => {
+            this.gameStateService.requestGameState();
+        });
     }
 
     leaveRoom(): void {
-        this.waitingRoomManagerService.setGuestPlayer(false);
-        this.isGuestPlayerWaiting = false;
-        this.waitingRoomManagerService.updateWaitingRoom("Veuillez attendre qu'un joueur rejoigne votre salle.");
-        this.message = this.waitingRoomManagerService.getMessageSource();
-        this.router.navigate(['/join-game']);
+        this.refuseEveryone();
+        this.waitingRoomManagerService.leaveRoom();
+        this.router.navigate(['/home']);
     }
 
-    private updateJoinMessage(playerName: string) {
-        this.isGuestPlayerWaiting = this.waitingRoomManagerService.isGuestPlayer();
-        if (this.isGuestPlayerWaiting) this.message = `${playerName} tente de rejoindre votre partie`;
-        else this.message = "Veuillez attendre qu'un joueur rejoigne votre salle.";
+    getPlayersInRoom(): string[] {
+        return this.waitingRoomManagerService.getPlayersInRoom();
     }
 
-    private manageJoinResponse(answer: boolean) {
-        if (answer) {
-            sessionStorage.clear();
-            this.router.navigate(['/game']);
-        } else {
-            alert(this.waitingRoomManagerService.getAlertMessage());
-            this.router.navigate(['/join-game']);
+    isHostPlayer(): boolean{
+        return this.waitingRoomManagerService.getPlayersInRoom()[0] === this.accountService.getUsername();
+    }
+
+    newJoinRequest(username: string){
+        this.pendingRequests.push(username);
+    }
+
+    respondNextRequest(response: boolean){
+        const username = this.pendingRequests.shift();
+        if(!username) return;
+        this.waitingRoomManagerService.respondJoinRequest(response, username);
+        if(response && this.waitingRoomManagerService.getPlayersInRoom().length >= 3){
+            this.refuseEveryone();
         }
+    }
+
+    private refuseEveryone(){
+        for(let username of this.pendingRequests){
+            this.waitingRoomManagerService.respondJoinRequest(false, username);
+        }
+        this.pendingRequests = [];
     }
 }

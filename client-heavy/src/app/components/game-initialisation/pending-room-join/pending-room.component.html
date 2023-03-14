@@ -1,0 +1,14 @@
+<div class="container justified">
+    <img src="https://bit.ly/3m206ss" width="400" height="80" alt="Logo Scrabble" />
+    <h1 class="header-item" *ngIf="isRequestPending()">En attente d'une réponse de l'hôte</h1>
+    <h1 class="header-item" *ngIf="!isRequestPending()">L'hôte a refusé votre requête</h1>
+    <div id="page-content">
+        <div [style.visibility]="isRequestPending() ? 'visible' : 'hidden'" id="spinner-container">
+            <mat-spinner></mat-spinner>
+        </div>
+        <div class="mode-buttons">
+            <button *ngIf="isRequestPending()" class="button cancel" (click)="cancelDemand()">Annuler la demande</button>
+            <button *ngIf="!isRequestPending()" class="button cancel" (click)="returnToMenu()">Retourner aux salles de jeu</button>
+        </div>
+    </div>
+</div>

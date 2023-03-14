@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Player, playersInfo } from '@app/components/info-panel/players-info';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
 import { GameStateService } from '@app/services/game-state-service/game-state.service';
 import { GridService } from '@app/services/grid-service/grid.service';
@@ -14,7 +13,6 @@ import { Subscription } from 'rxjs';
 })
 export class GamePageComponent implements OnInit, OnDestroy {
     isReceiver: string;
-    playersInfo: Player[] = playersInfo;
     endGame: boolean = false;
     subscriptions: Subscription[] = [];
     showPortal = false;
@@ -28,11 +26,14 @@ export class GamePageComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
+        this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => (this.endGame = gameState.gameOver)));
+        //Reconnection code
+        /*
         const id = sessionStorage.getItem('playerID');
         if (id) this.gameStateService.reconnect(id);
         this.subscriptions.push(this.gameStateService.getPlayerID().subscribe((newID) => sessionStorage.setItem('playerID', newID)));
-        this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => (this.endGame = gameState.gameOver)));
         this.gameStateService.requestId();
+        */
     }
 
     ngOnDestroy(): void {

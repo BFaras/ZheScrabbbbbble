@@ -7,8 +7,6 @@ import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
 import { Subscription } from 'rxjs';
 
-const SHOW_WRONG_LETTERS_DELAY = 3000;
-
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',
@@ -21,13 +19,23 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     subscription: Subscription;
     mouseIsIn: boolean = false;
     mousePosition: Vec2 = { x: 0, y: 0 };
+    viewLoaded : boolean = false;
+    private initialGameState: GameState;
     private canvasSize = { x: GRID_CONSTANTS.defaultWidth, y: GRID_CONSTANTS.defaultHeight };
 
     constructor(
         private readonly gridService: GridService,
         private readonly gameStateService: GameStateService,
         private readonly letterAdderService: LetterAdderService,
-    ) {}
+    ) {
+        this.subscription = this.gameStateService.getGameStateObservable().subscribe(async (gameState) => {
+            if(this.viewLoaded){
+                this.updateBoardState(gameState)
+            }else{
+                this.initialGameState = gameState;
+            }
+        });
+    }
 
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
@@ -40,11 +48,12 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     }
 
     ngAfterViewInit(): void {
+        this.viewLoaded = true;
         this.gridService.gridContext = this.gridCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.gridService.drawIdentificators();
         this.gridService.drawSquares();
         this.gridService.drawGridLines();
-        this.subscription = this.gameStateService.getGameStateObservable().subscribe(async (gameState) => this.updateBoardState(gameState));
+        this.updateBoardState(this.initialGameState);
     }
 
     ngOnChanges() {
@@ -81,14 +90,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     }
 
     private async updateBoardState(gameState: GameState) {
-        if (!gameState.boardWithInvalidWords) {
-            this.gridService.setBoardState(gameState.board);
-            this.letterAdderService.setBoardState(gameState.board);
-            this.letterAdderService.removeAll();
-        } else {
-            this.gridService.setBoardState(gameState.boardWithInvalidWords);
-            await this.delay(SHOW_WRONG_LETTERS_DELAY);
-            this.gridService.setBoardState(gameState.board);
-        }
+        this.gridService.setBoardState(gameState.board);
+        this.letterAdderService.setBoardState(gameState.board);
+        this.letterAdderService.removeAll();
     }
 }

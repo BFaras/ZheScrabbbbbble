@@ -48,19 +48,6 @@
     padding: 100px;
 }
 
-.footer-item {
-    position: absolute;
-    text-align: center;
-    bottom: 0;
-}
-
-.footer-item p :nth-child(even) {
-    color: black;
-}
-.footer-item p :nth-child(odd) {
-    color: grey;
-}
-
 .mode-buttons {
     justify-content: center;
     align-items: center;

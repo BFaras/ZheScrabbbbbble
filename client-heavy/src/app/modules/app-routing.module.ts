@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateGameComponent } from '@app/components/game-initialisation/create-game/create-game.component';
-import { JoinGameSetupComponent } from '@app/components/game-initialisation/join-game-setup/join-game-setup.component';
 import { JoinGameComponent } from '@app/components/game-initialisation/join-game/join-game.component';
+import { PendingRoomComponent } from '@app/components/game-initialisation/pending-room-join/pending-room.component';
 import { WaitingRoomComponent } from '@app/components/game-initialisation/waiting-room/waiting-room.component';
 import { AdminPageComponent } from '@app/pages/admin-page/admin-page.component';
 import { ChatPageComponent } from '@app/pages/chat-page/chat-page.component';
@@ -28,9 +28,9 @@ const routes: Routes = [
     { path: 'sign-up', component: SignUpPageComponent },
     { path: 'create-game', component: CreateGameComponent },
     { path: 'join-game', component: JoinGameComponent },
-    { path: 'join-game-setup', component: JoinGameSetupComponent },
     { path: 'waiting-room', component: WaitingRoomComponent },
     { path: 'profile-page', component: ProfilePageComponent },
+    { path: 'pending-room', component: PendingRoomComponent },
     { path: '**', redirectTo: '/login' },
 ];
 
