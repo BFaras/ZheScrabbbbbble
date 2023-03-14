@@ -87,5 +87,27 @@
         "PROFILE": "Profil",
         "CHAT": "Chat",
         "SIGNOUT": "Déconnexion"
+    },
+    "SOLO-MULTI":{
+        "MESSAGE": "Créez ou joignez une partie!",
+        "CREATE": "Créer une partie multijoueur",
+        "JOIN": "Joindre une partie multijoueur"
+    },
+    "CREATE-GAME":{
+        "MESSAGE": "Configuration de la partie",
+        "ROOM": "Nom de la salle: ",
+        "PASSWORD": "Mot de passe de la salle: ",
+        "PUBLIC": "Public",
+        "PRIVATE": "Privé",
+        "PROTECTED": "Protégé",
+        "CREATE": "Créer une partie"
+    },
+    "WAITING-ROOM":{
+        "MESSAGE": "Salle de jeu",
+        "LEAVE": "Quitter la salle",
+        "JOIN": " essaie de joindre la salle de jeu.",
+        "ACCEPT": "Accepter",
+        "DECLINE": "Refuser",
+        "START": "Démarrer"
     }
 }

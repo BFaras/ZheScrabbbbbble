@@ -87,5 +87,27 @@
         "PROFILE": "Profile",
         "CHAT": "Chat",
         "SIGNOUT": "Sign Out"
+    },
+    "SOLO-MULTI":{
+        "MESSAGE": "Create or join a game!",
+        "CREATE": "Create a multiplayer game",
+        "JOIN": "Join a multiplater game"
+    },
+    "CREATE-GAME":{
+        "MESSAGE": "Game Configuration",
+        "ROOM": "Room's name: ",
+        "PASSWORD": "Room's password: ",
+        "PUBLIC": "Public",
+        "PRIVATE": "Private",
+        "PROTECTED": "Protected",
+        "CREATE": "Create the game"
+    },
+    "WAITING-ROOM":{
+        "MESSAGE": "Game Room",
+        "LEAVE": "Leave the room",
+        "JOIN": " is trying to join the game room.",
+        "ACCEPT": "Accept",
+        "DECLINE": "Decline",
+        "START": "Start"
     }
 }
