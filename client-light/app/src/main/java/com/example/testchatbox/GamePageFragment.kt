@@ -119,7 +119,7 @@ class GamePageFragment : Fragment() {
         binding.apply {
             buttonPass.setOnClickListener {
                 SocketHandler.getSocket().emit("Play Turn", "Pass", "")
-                resetGame()
+                updateTurn()
 //                binding.gameBoard.removeAllViews()
 //                updateRack(playerHand)
 //                updateBoard(lettersOnBoard)
@@ -141,7 +141,7 @@ class GamePageFragment : Fragment() {
                 // val lettersAdded = binding.gameBoard.childCount
                 // if(invalidePosition()) {
                 SocketHandler.getSocket().emit("Play Turn", "Place", "") //a vérifier
-                resetGame()
+                updateTurn()
 //                binding.gameBoard.removeAllViews()
 //                updateRack(playerHand)
 //                updateBoard(lettersOnBoard)
@@ -153,7 +153,7 @@ class GamePageFragment : Fragment() {
             }
 
             backInHand.setOnClickListener{
-                resetGame()
+                updateTurn()
 //                binding.gameBoard.removeAllViews() //remplacer par updateBoard()
 //                updateRack(playerHand)
 //                updateBoard(lettersOnBoard)
@@ -549,7 +549,7 @@ class GamePageFragment : Fragment() {
         return letterTile
     }
 
-    private fun resetGame() {
+    private fun updateTurn() {
         updateBoard(lettersOnBoard)
         updateRack(playerHand)
         binding.buttonPlay.isEnabled = false
