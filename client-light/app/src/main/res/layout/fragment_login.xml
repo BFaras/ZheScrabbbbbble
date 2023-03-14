@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/fragment_vertical_margin"
     android:paddingRight="@dimen/fragment_horizontal_margin"
     android:paddingBottom="@dimen/fragment_vertical_margin"
-    tools:context=".ui.login.LoginFragment">
+    tools:context=".login.LoginFragment">
 
     <EditText
         android:id="@+id/username"
@@ -98,16 +98,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/register_message" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:id="@+id/gameTest"
-        android:text="GameTest"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_height="50dp">
-
-    </Button>
 
     <Button
         android:id="@+id/reset"

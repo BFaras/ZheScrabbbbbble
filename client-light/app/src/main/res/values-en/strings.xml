@@ -1,20 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TestChatBox</string>
-    <string name="tournois">LETTERS LEFT IN RESERVE</string>
+    <string name="action_settings">Settings</string>
+    <string name="tapez_quelque_chose">Enter something ...</string>
+    <string name="game">Game</string>
+    <string name="tournois">TOURNAMENT</string>
+    <string name="collaboratif">COOP</string>
     <string name="classique">CLASSIC</string>
     <string name="disconnect">DISCONNECT</string>
+    <string name="rejoindre">want to join your game</string>
+    <string name="accepter">Accept</string>
+    <string name="refuser">Reject</string>
+
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">Main menu</string>
+    <string name="second_fragment_label">Chatbox</string>
+    <string name="next" >Chat</string>
+    <string name="previous">Previous</string>
+    <string name="reset_fragment_label">Reset Password</string>
+    <string name="reserve">LETTERS LEFT IN RESERVE</string>
     <string name="doubleLetter">DL</string>
     <string name="doubleWord">DW</string>
     <string name="tripleWord">TW</string>
     <string name="tripleLetter">TL</string>
     <string name="abandonner">Give Up</string>
-    <string name="USERNAME_INVALID">Invalid username</string>
-    <string name="PASSWORD_INVALID">Invalid password</string>
-    <string name="EMAIL_INVALID">Invalid email</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_email">Not a valid email</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="invalid_question">Do not leave the question field empty</string>
+    <string name="invalid_answer">Do not leave the answer field empty</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="register_failed">"Failed to register new account"</string>
+    <!-- Strings related to errors -->
+    <string name="NO_ERROR">No error</string>
+    <string name="ERROR">Error</string>
+    <string name="FIELD_EMPTY"> you  left a field empty</string>
+    <string name="USERNAME_INVALID">The username is invalid</string>
+    <string name="PASSWORD_INVALID">The password is invalid</string>
+    <string name="EMAIL_INVALID">The email is invalid</string>
     <string name="USERNAME_TAKEN">The username is taken</string>
-    <string name="DATABASE_UNAVAILABLE">The database is unavailable. Try again later.</string>
+    <string name="DATABASE_UNAVAILABLE">The database is unavailable. Try again later</string>
     <string name="WRONG_SECURITY_ANSWER">Incorrect Answer</string>
+    <string name="ROOM_NAME_TAKEN">The room name is already taken</string>
+    <string name="ROOM_PASSWORD_INCORRECT">The password is incorrect</string>
+    <string name="JOIN_REQUEST_REFUSED">The host of the game did not accept your request to join</string>
+    <string name="ROOM_IS_FULL">The room is already full</string>
     <string name="swap">Swap</string>
     <string name="reserveText">LETTERS LEFT IN RESERVE</string>
     <string name="pass">Pass</string>
