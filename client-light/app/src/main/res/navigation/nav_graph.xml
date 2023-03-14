@@ -82,6 +82,9 @@
         <action
             android:id="@+id/action_fullscreenFragment_to_ChatFragment"
             app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_fullscreenFragment_to_MainMenuFragment"
+            app:destination="@id/MainMenuFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameListFragment"

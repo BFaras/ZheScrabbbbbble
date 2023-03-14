@@ -15,24 +15,33 @@ import com.example.testchatbox.login.model.LoggedInUser
 import org.json.JSONArray
 
 enum class Visibility{
-    PRIVATE,
-    PUBLIC,
-    PROTECTED;
+    Private,
+    Public,
+    Protected;
 
     companion object {
         fun fromInt(value: Int) = Visibility.values().first { it.ordinal == value }
         fun fromViewId(id: Int): Visibility {
             if(id == R.id.publicRoom)
-                return Visibility.PUBLIC
+                return Visibility.Public
             if(id == R.id.privateRoom)
-                return Visibility.PRIVATE
-            return Visibility.PROTECTED
+                return Visibility.Private
+            return Visibility.Protected
         }
+        fun fromNameIgnoreCase(input: String) = values().first { it.name.equals(input, true) }
     }
 
 }
 
-data class GameRoom(val name:String, val id:String, val visibility: Visibility, var players: Array<String>, var hasStarted : Boolean)
+class GameRoom(val name:String, val id:String, val visibility: Visibility, var players: Array<String>, var hasStarted : Boolean){
+    fun getPlayersNames():String {
+        var names = ""
+        for (player in players){
+            names= "$names$player, "
+        }
+        return names
+    }
+}
 
 
 class GameListFragment : Fragment() {
@@ -82,7 +91,12 @@ class GameListFragment : Fragment() {
                 gameList= arrayListOf();
                 for (i in 0 until list.length()) {
                     val gameRoom = list.getJSONObject(i)
-                    gameList.add(GameRoom(gameRoom.get("name") as String, gameRoom.get("id") as String, Visibility.fromInt(gameRoom.get("visibility") as Int), gameRoom.get("players") as Array<String>, gameRoom.get("isStarted") as Boolean))
+                    val playersArray = gameRoom.get("players") as JSONArray
+                    var players = arrayOf<String>()
+                    for (j in 0 until playersArray.length()){
+                        players=players.plus(playersArray.get(j) as String)
+                    }
+                    gameList.add(GameRoom(gameRoom.get("name") as String, gameRoom.get("id") as String, Visibility.fromNameIgnoreCase(gameRoom.get("visibility") as String), players , gameRoom.get("isStarted") as Boolean))
                 }
                 activity?.runOnUiThread(Runnable {
                     loadListView();
@@ -97,11 +111,12 @@ class GameListFragment : Fragment() {
         gameListView.removeAllViews()
         for((i, gameRoom) in gameList.withIndex()){
             val btn = Button((activity as MainActivity?)!!)
-            btn.text = gameRoom.name +" | "+gameRoom.visibility + " | "+ gameRoom.players + " | " + gameRoom.hasStarted;
+            val status = if(gameRoom.hasStarted) "Started" else "Waiting for players"
+            btn.text = gameRoom.name +" | "+gameRoom.visibility + " | "+ gameRoom.getPlayersNames()+ " | " + status;
             btn.id = i;
-            btn.textSize= 30F;
+            btn.textSize= 18F;
             btn.setOnClickListener{
-                if(gameRoom.visibility!=Visibility.PROTECTED) {
+                if(gameRoom.visibility!=Visibility.Protected) {
                     joinRoom(gameRoom, null)
                 }else{
                     showPasswordPrompt(gameRoom)
@@ -133,7 +148,7 @@ class GameListFragment : Fragment() {
             }
         }
         SocketHandler.getSocket().emit("Join Game Room", gameRoom.id, password)
-        if(gameRoom.visibility==Visibility.PRIVATE)
+        if(gameRoom.visibility==Visibility.Private)
             showCancelPrompt();
     }
 
@@ -141,7 +156,7 @@ class GameListFragment : Fragment() {
         val roomType =  Visibility.fromViewId(binding.roomType.checkedRadioButtonId);
         val roomName = binding.name.text.toString().trim();
         val roomPassword = binding.createPassword.text.toString().trim();
-        if(roomName.isEmpty() || (roomType==Visibility.PROTECTED && roomPassword.isEmpty())){
+        if(roomName.isEmpty() || (roomType==Visibility.Protected && roomPassword.isEmpty())){
             val appContext = context?.applicationContext ?: return
             Toast.makeText(appContext, R.string.FIELD_EMPTY, Toast.LENGTH_LONG).show()
         }
@@ -157,7 +172,7 @@ class GameListFragment : Fragment() {
                     }
                     activity?.runOnUiThread(Runnable {
                         if(errorMessage == R.string.NO_ERROR){
-                            GameRoomModel.initialise(GameRoom(roomName,"-1", roomType, arrayOf(LoggedInUser.getName()),false))
+                            GameRoomModel.initialise(GameRoom(roomName,"-1", roomType, arrayOf(),false))
                             findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment )
                         }else{
                             val appContext = context?.applicationContext
@@ -166,7 +181,7 @@ class GameListFragment : Fragment() {
                     });
                 }
             }
-            SocketHandler.getSocket().emit("Create Game Room", roomName, roomType.ordinal, roomPassword)
+            SocketHandler.getSocket().emit("Create Game Room", roomName, roomType, roomPassword)
         }
     }
     private fun showPasswordPrompt(gameRoom: GameRoom) {

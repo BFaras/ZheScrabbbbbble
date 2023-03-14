@@ -84,6 +84,10 @@ class ChatFragment : Fragment(), ObserverChat {
         for(message in chatsList[selectedChatIndex].messages){
             messagesBox.append(message.toString() + System.getProperty("line.separator"))
         }
+        activity?.runOnUiThread(Runnable {
+            messagesBox.invalidate();
+            messagesBox.requestLayout();
+        });
     }
 
     private fun loadList(){

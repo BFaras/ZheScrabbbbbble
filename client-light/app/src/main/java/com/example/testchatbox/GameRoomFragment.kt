@@ -65,6 +65,8 @@ class GameRoomFragment : Fragment(), Observer {
         activity?.runOnUiThread(Runnable {
             if(GameRoomModel.gameRoom!!.hasStarted)
                 findNavController().navigate(R.id.action_gameRoomFragment_to_fullscreenFragment)
+            if(GameRoomModel.joinRequest.isNotEmpty())
+                showJoinSection()
             updateNames()
         });
     }
@@ -77,8 +79,29 @@ class GameRoomFragment : Fragment(), Observer {
             else
                 playerView[i].text = "";
         }
-        if(LoggedInUser.getName()==GameRoomModel.gameRoom!!.players[1])
+        if(LoggedInUser.getName()==GameRoomModel.gameRoom!!.players[0])
             binding.startGame.visibility=View.VISIBLE
+    }
+
+    private fun showJoinSection(){
+        binding.joinSection.visibility=View.VISIBLE
+        binding.playerName.text=GameRoomModel.joinRequest[0]+" "+binding.playerName.text
+        binding.startGame.isClickable=false
+        binding.cancelButton.setOnClickListener {
+            hideJoinSection(false)
+        }
+        binding.acceptButton.setOnClickListener {
+            hideJoinSection(true)
+        }
+    }
+    private fun hideJoinSection(response: Boolean){
+        SocketHandler.getSocket().emit("Join Request Response", response, GameRoomModel.joinRequest.removeAt(0))
+        binding.joinSection.visibility=View.GONE
+        binding.playerName.setText(R.string.rejoindre)
+        binding.startGame.isClickable=true
+        binding.cancelButton.setOnClickListener(null)
+        binding.acceptButton.setOnClickListener(null)
+        if (GameRoomModel.joinRequest.isNotEmpty()) showJoinSection()
     }
 
 

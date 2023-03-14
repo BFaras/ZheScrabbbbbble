@@ -16,6 +16,9 @@
     <string name="tripleWord">TM</string>
     <string name="reserve">LETTRES RESTANTES DANS LA RÉSERVE</string>
     <string name="abandonner">Abandonner</string>
+    <string name="rejoindre">veut rejoindre votre partie</string>
+    <string name="accepter">Accepter</string>
+    <string name="refuser">Refuser</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

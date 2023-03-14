@@ -20,6 +20,7 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.Coordinates.COLUMNS
 import com.example.testchatbox.Coordinates.ROWS
 import com.example.testchatbox.Coordinates.columnsPos
@@ -127,6 +128,7 @@ class GamePageFragment : Fragment() {
             abandonButton.setOnClickListener {
                 gameModel.getGameState()
                 SocketHandler.getSocket().emit("Abandon")
+                findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
             }
 
             buttonExchange.setOnClickListener {

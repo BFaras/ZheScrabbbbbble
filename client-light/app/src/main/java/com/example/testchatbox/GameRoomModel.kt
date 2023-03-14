@@ -1,6 +1,7 @@
 package com.example.testchatbox
 
 import android.util.Log
+import com.example.testchatbox.login.model.LoggedInUser
 import org.json.JSONArray
 
 interface Observer{
@@ -25,10 +26,12 @@ interface Observable{
 
 object GameRoomModel :Observable{
     var gameRoom: GameRoom? = null;
+    var joinRequest: ArrayList<String> = arrayListOf();
     override var observers: ArrayList<Observer> = arrayListOf();
 
     fun initialise(gameRoom: GameRoom){
         this.gameRoom = gameRoom;
+        gameRoom.players=gameRoom.players.plus(LoggedInUser.getName())
         SocketHandler.getSocket().on("Room Player Update"){ args ->
             if(args[0] != null){
                 gameRoom.players = arrayOf()
@@ -44,10 +47,20 @@ object GameRoomModel :Observable{
             gameRoom.hasStarted=true;
             notifyObserver()
         }
+        Log.i("Join", "init")
+        SocketHandler.getSocket().on("Join Room Request") {args ->
+            Log.i("Join", args[0] as String)
+            if(args[0] != null){
+                Log.i("Join", args[0] as String)
+                joinRequest.add(args[0] as String)
+                notifyObserver()
+            }
+        }
     }
 
     fun leaveRoom(){
         gameRoom=null;
+        joinRequest= arrayListOf()
         observers = arrayListOf();
     }
 
