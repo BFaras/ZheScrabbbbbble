@@ -1,6 +1,7 @@
 package com.example.testchatbox
 
 import SocketHandler
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -51,7 +52,11 @@ class GameStateModel: ViewModel() {
         val player1Mock = PlayersState("player1Mock", arrayListOf("a", "c", "d", "e", "blank", "", "f"), 120)
         val player2Mock =  PlayersState("player2Mock", arrayListOf("b", "e", "f", "z", "", "j"), 20)
         gameMock = GameState(
-            populateBoard(),
+            arrayOf(
+                arrayOf("", "*", "c"),
+                arrayOf("", "a", ""),
+                arrayOf("", "", "b")
+            ),
             arrayListOf(player1Mock, player2Mock),
             1,
             52,
@@ -68,8 +73,8 @@ class GameStateModel: ViewModel() {
 //                _gameState.value = args[0] as GameState
 //            }
 //        }
-        gameMock.reserveLength = 10
-        _gameState.value = gameMock
+//        gameMock.reserveLength = 10
+//        _gameState.value = gameMock
     }
 
     fun getTimer() {
