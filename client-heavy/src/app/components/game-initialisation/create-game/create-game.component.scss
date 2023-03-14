@@ -48,8 +48,12 @@
     width: 72%;
 }
 
+.mat-radio-button::ng-deep circle {
+    stroke: var(--accent-default);
+}
+
 mat-radio-button {
-    margin-right: 10%;
+    margin-right: 12%;
 }
 
 .logo {

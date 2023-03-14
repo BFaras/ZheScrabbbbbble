@@ -103,11 +103,37 @@
         "CREATE": "Create the game"
     },
     "WAITING-ROOM":{
-        "MESSAGE": "Game Room",
+        "MESSAGE": "Players in the Game Room",
         "LEAVE": "Leave the room",
         "JOIN": " is trying to join the game room.",
         "ACCEPT": "Accept",
         "DECLINE": "Decline",
         "START": "Start"
+    },
+    "JOIN-GAME":{
+        "HOST": "Host",
+        "ROOM": "Room",
+        "VISIBILITY": "Visibility",
+        "PLAYERS": "Number of players",
+        "STATUS": "Game status",
+        "MESSAGE": "Join a multiplater game",
+        "UNAVAILABLE": "No multiplayer game is currently available.",
+        "JOIN": "Join",
+        "OBSERVE": "Observe",
+        "BEGAN": "In progress",
+        "WAIT": "Pending"
+    },
+    "PENDING-ROOM":{
+        "PENDING": "Waiting for the host's approval",
+        "DECLINE": "The host declined your request",
+        "CANCEL": "Cancel request",
+        "RETURN": "Return to game rooms"
+    },
+    "PASSWORD-PAGE":{
+        "INPUT": "Please enter the password",
+        "CONFIRM": "Confirm",
+        "INCORRECT": "The password is incorrect",
+        "FULL": "The room is full",
+        "MESSAGE": "Error : this message shouldn't show up"
     }
 }

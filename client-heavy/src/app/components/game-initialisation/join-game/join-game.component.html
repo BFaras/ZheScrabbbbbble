@@ -1,30 +1,29 @@
+<app-navigation-bar></app-navigation-bar>
 <div class="container justified">
-    <img src="https://bit.ly/3m206ss" width="400" height="80" alt="Logo Scrabble" />
-    <h1 class="header-item">Rejoindre une partie multijoueur</h1>
+    <div class="logo">Scrabble</div>
+    <h1 class="header-item text">{{ 'JOIN-GAME.MESSAGE' | translate }}</h1>
     <div class="content-wrapper">
         <div class="table-wrapper">
             <div class="waiting-rooms">
-                <div class="waiting-rooms-information">
-                    <table>
+                    <table class="waiting-rooms-information">
                         <tr>
-                            <th class="room-information">Nom de l'hôte</th>
-                            <th class="room-information">Nom de la salle</th>
-                            <th class="room-information">Visibilité</th>
-                            <th class="room-information">Nombre de joueurs</th>
-                            <th class="room-information">Status de la partie</th>
+                            <th class="room-information text">{{ 'JOIN-GAME.HOST' | translate }}</th>
+                            <th class="room-information text">{{ 'JOIN-GAME.ROOM' | translate }}</th>
+                            <th class="room-information text">{{ 'JOIN-GAME.VISIBILITY' | translate }}</th>
+                            <th class="room-information text">{{ 'JOIN-GAME.PLAYERS' | translate }}</th>
+                            <th class="room-information text">{{ 'JOIN-GAME.STATUS' | translate }}</th>
                         </tr>
                     </table>
-                </div>
                 <div class="waiting-players">
-                    <div class="noGameFound" *ngIf="!waitingRooms.length">
-                        <p>Aucune partie multijoueur n'est disponible.</p>
+                    <div class="noGameFound text" *ngIf="!waitingRooms.length">
+                        <p>{{ 'JOIN-GAME.UNAVAILABLE' | translate }}</p>
                     </div>
                     <div *ngIf="waitingRooms.length">
                         <div *ngFor="let waitingRoom of waitingRooms">
                             <div class="waiting-player">
                                 <div class="game-option">
                                     <div id="player-name-cell">
-                                        <div id="player-name">
+                                        <div id="player-name" class="text">
                                             {{ waitingRoom.players[0]
                                             }}
                                         </div>
@@ -32,14 +31,14 @@
                                 </div>
                                 <div class="game-option">
                                     <div id="room-name-cell">
-                                        <div id="room-name">
+                                        <div id="room-name" class="text">
                                             {{ waitingRoom.name }}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="game-option">
                                     <div id="room-visibility-cell">
-                                        <div id="room-timer">
+                                        <div id="room-timer" class="text"> 
                                             <!--Ici il faut mettre le timer -->
                                             {{ waitingRoom.visibility }}
                                         </div>
@@ -47,7 +46,7 @@
                                 </div>
                                 <div class="game-option">
                                     <div id="room-length-cell">
-                                        <div id="room-timer">
+                                        <div id="room-timer" class="text">
                                             <!--Ici il faut mettre le timer -->
                                             {{ waitingRoom.players.length + "/4" }}
                                         </div>
@@ -55,26 +54,25 @@
                                 </div>
                                 <div class="game-option">
                                     <div id="room-status-cell">
-                                        <div id="room-timer">
+                                        <div id="room-timer" class="text" *ngIf="waitingRoom.isStarted">
                                             <!--Ici il faut mettre le timer -->
-                                            {{ waitingRoom.isStarted ? "En cours" : "En attente" }}
+                                           {{ 'JOIN-GAME.BEGAN' | translate }}
+                                        </div>
+                                        <div id="room-timer" class="text" *ngIf="!waitingRoom.isStarted">
+                                            <!--Ici il faut mettre le timer -->
+                                           {{ 'JOIN-GAME.WAIT' | translate }}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="cell-btn">
-                                    <button class="button join" [style.visibility]="(waitingRoom.players.length >= 4 || waitingRoom.isStarted) ? 'hidden' : 'visible'" (click)="sendRoomData(waitingRoom)">Rejoindre</button>
-                                </div>
-                                <div class="cell-btn">
-                                    <button class="button join" (click)="sendRoomData(waitingRoom)">Observer</button>
+                                    <button class="button join text" [style.visibility]="(waitingRoom.players.length >= 4 || waitingRoom.isStarted) ? 'hidden' : 'visible'" (click)="sendRoomData(waitingRoom)">{{ 'JOIN-GAME.JOIN' | translate }}</button>
+                                    <button class="button join text" (click)="sendRoomData(waitingRoom)">{{ 'JOIN-GAME.OBSERVE' | translate }}</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="mode-buttons">
-            <button class="button cancel" routerLink="/home">Retourner au menu principal</button>
         </div>
     </div>
 </div>

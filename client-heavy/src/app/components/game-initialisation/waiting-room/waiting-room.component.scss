@@ -1,7 +1,7 @@
 .container {
     background-color: var(--background-default);
-    height: 53%;
-    padding: 10%;
+    height: 57.1%;
+    padding: 8% 10% 10% 10%;
 }
 
 .justified {
@@ -53,12 +53,6 @@ h2{
     margin: 0;
 }
 
-.team-name {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-    color: green;
-}
-
 #join-requests{
     display: flex;
     align-items: center;
@@ -75,7 +69,7 @@ h2{
 .header-item {
     justify-content: center;
     text-align: center;
-    padding: 100px;
+    padding: 100px 0px 50px 0px;
 }
 
 .mode-buttons {
@@ -97,6 +91,10 @@ h2{
     font-family: 'Courier New', Courier, monospace;
     font-size: 25px;
     font-weight: bold;
+}
+
+.players {
+    font-size: 20px;
 }
 
 mat-list {
