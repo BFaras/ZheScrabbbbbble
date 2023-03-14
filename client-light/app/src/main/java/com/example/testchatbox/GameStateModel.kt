@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.json.JSONArray
+import org.json.JSONObject
 
 data class GameState (
     var board: Array<Array<String>>,
@@ -29,7 +31,6 @@ data class PlayersState (
 
 class GameStateModel: ViewModel() {
 
-    private lateinit var player2Mock : PlayersState
 
     private var _gameState = MutableLiveData<GameState>()
     val gameState: LiveData<GameState>
@@ -39,53 +40,58 @@ class GameStateModel: ViewModel() {
     val timer: LiveData<Timer>
         get() = _timer
 
-    private var gameMock: GameState
+    //Valeur test, à retirer
+    private lateinit var gameMock: GameState
 
     init {
-//        SocketHandler.getSocket().once("Game State Update") { args ->
-//            if(args[0] != null) {
-//                _gameState.value = args[0] as GameState
-//            }
-//        }
-//        SocketHandler.getSocket().emit("Request Game State")
+        getGameState()
+        SocketHandler.getSocket().on("Game State Update") { args ->
+            try {
+                val gameJSON = args[0] as JSONObject
+                Log.i("gameState", gameJSON.toString())
+                var gameStateTemp:GameState = GameState(arrayOf(), arrayListOf(), -1, -1, false);
+                for (i in 0..14){
+                    gameStateTemp.board =gameStateTemp.board.plus(Array(15){""})
+                    for (j in 0..14){
+                        gameStateTemp.board[i][j]=((gameJSON.get("board") as JSONArray).get(i) as JSONArray).get(j) as String
+                    }
+                }
+                val playerArray = gameJSON.get("players") as JSONArray
+                for (i in 0 until playerArray.length()){
+                    val playerState = playerArray.get(i) as JSONObject
+                    val handArray = playerState.get("hand") as JSONArray
+                    var hand : ArrayList<String> = arrayListOf()
+                    for(j in 0 until handArray.length()){
+                        hand.add(handArray.get(j) as String)
+                    }
+                    gameStateTemp.players.add(PlayersState(playerState.get("username") as String,hand ,playerState.get("score") as Int))
+                }
+                gameStateTemp.playerTurnIndex=gameJSON.get("playerTurnIndex") as Int
+                gameStateTemp.reserveLength=gameJSON.get("reserveLength") as Int
+                gameStateTemp.gameOver=gameJSON.get("gameOver") as Boolean
+                _gameState.postValue(gameStateTemp);
+            }
+            catch (e:Exception){
+                Log.e("Game State", e.toString())
+            }
+        }
+//        SocketHandler.getSocket().on("hereIsTheTimer") { args ->
+ //           if(args[0] != null) {
+ //               _timer.value = args[0] as Timer
+   //         }
+    //    }
+        getGameState()
+//        getTimer()
 
-        val player1Mock = PlayersState("player1Mock", arrayListOf("a", "c", "d", "e", "blank", "", "f"), 120)
-        val player2Mock =  PlayersState("player2Mock", arrayListOf("b", "e", "f", "z", "", "j"), 20)
-        val player3Mock =  PlayersState("player2Mock", arrayListOf("b", "e", "f", "z", "", "j"), 500)
-        val player4Mock =  PlayersState("player2Mock", arrayListOf("b", "e", "f", "z", "", "j"), 0)
 
-        gameMock = GameState(
-            arrayOf(
-                arrayOf("", "*", "c"),
-                arrayOf("", "a", ""),
-                arrayOf("", "", "b")
-            ),
-            arrayListOf(player1Mock, player2Mock, player3Mock, player4Mock),
-            3,
-            52,
-            false
-        )
-        _gameState.value = gameMock
+
     }
 
     fun getGameState() {
-
-//        SocketHandler.getSocket().emit("Request Game State")
-//        SocketHandler.getSocket().on("Game State Update") { args ->
-//            if(args[0] != null) {
-//                _gameState.value = args[0] as GameState
-//            }
-//        }
-//        gameMock.reserveLength = 10
-//        _gameState.value = gameMock
+        SocketHandler.getSocket().emit("Request Game State")
     }
 
     fun getTimer() {
-        SocketHandler.getSocket().once("hereIsTheTimer") { args ->
-            if(args[0] != null) {
-                _timer.value = args[0] as Timer
-            }
-        }
         SocketHandler.getSocket().emit("sendTimer")
     }
 

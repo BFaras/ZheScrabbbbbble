@@ -53,7 +53,6 @@ class LoginFragment : Fragment() {
         var resetButton = binding.reset
         val loadingProgressBar = binding.loading
 
-        val gameTestButton = binding.gameTest
 
         loginViewModel.loginFormState.observe(viewLifecycleOwner,
             Observer { loginFormState ->
@@ -124,9 +123,6 @@ class LoginFragment : Fragment() {
             findNavController().navigate(R.id.action_loginFragment_to_resetFragment)
         }
 
-        gameTestButton.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_fullscreenFragment)
-        }
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {

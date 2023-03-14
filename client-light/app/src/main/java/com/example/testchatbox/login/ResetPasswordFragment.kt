@@ -100,10 +100,10 @@ class ResetPasswordFragment : Fragment() {
                                 });
                             }
                             val errorMessage = when(error.toInt()){
-                                3 -> R.string.PASSWORD_INVALID.toString()
-                                5 -> R.string.DATABASE_UNAVAILABLE.toString()
-                                6 -> R.string.WRONG_SECURITY_ANSWER.toString()
-                                else -> "Error"
+                                3 -> R.string.PASSWORD_INVALID
+                                5 -> R.string.DATABASE_UNAVAILABLE
+                                6 -> R.string.WRONG_SECURITY_ANSWER
+                                else -> R.string.ERROR
                             }
                             activity?.runOnUiThread(Runnable {
                                 val appContext = context?.applicationContext
