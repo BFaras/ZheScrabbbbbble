@@ -3,7 +3,7 @@
 </section>
 <section id="chat-messages">
     <div id="chat-box" (click)="isReceiver()">
-        <p id="title-chat">{{'CHATBOX.CHATBOX' | translate}}</p><button (click)="goToLink()">chat</button>
+        <p id="title-chat">{{'CHATBOX.CHATBOX' | translate}}</p><!--<button (click)="goToLink()">chat</button>-->
         <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
             <div *ngFor="let message of messageHistory">
                 <ul [ngStyle]="{ color: message.color }">
