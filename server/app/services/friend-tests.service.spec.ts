@@ -61,4 +61,22 @@ describe('Profile Tests', async () => {
         const randomInexsitantCode = 'DJS45sa';
         expect(await friendService.isFriendCodeExistant(randomInexsitantCode)).to.be.false;
     });
+
+    it('should add a friend id to the list for both accounts that are friends on addFriend()', async () => {
+        const testUsername2 = 'Test2User';
+        await authService.createAccount(testUsername2, testPassword, testEmail, testAvatar, testSecurityQuestion);
+
+        const user1Id = await dbService.getUserId(testUsername);
+        const user2Id = await dbService.getUserId(testUsername2);
+        const user2FriendCode = (await profileService.getProfileInformation(testUsername)).userCode;
+
+        await friendService.addFriend(user1Id, user2FriendCode);
+
+        const user1FriendList: string[] = await friendService.getFriendsIds(user1Id);
+        const user2FriendList: string[] = await friendService.getFriendsIds(user2Id);
+
+        await dbService.removeUserAccount(testUsername2);
+        expect(user1FriendList).to.contain(user2Id);
+        expect(user2FriendList).to.contain(user1Id);
+    });
 });
