@@ -5,11 +5,13 @@ import { ConnectivityStatus, Friend } from '@app/interfaces/friend-info';
 import { Question } from '@app/interfaces/question';
 import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import * as io from 'socket.io';
 import { Container } from 'typedi';
 import { AuthentificationService } from './authentification.service';
 import { DatabaseService } from './database.service';
 import { FriendService } from './friend.service';
 import { ProfileService } from './profile.service';
+import { UsersStatusService } from './users-status.service';
 
 describe('Profile Tests', async () => {
     const testUsername = 'testUser157Test';
@@ -24,6 +26,7 @@ describe('Profile Tests', async () => {
     let authService: AuthentificationService;
     let profileService: ProfileService;
     let friendService: FriendService;
+    let usersStatusService: UsersStatusService;
 
     let accountCreated = false;
     let account2Created = false;
@@ -42,6 +45,7 @@ describe('Profile Tests', async () => {
         authService = Container.get(AuthentificationService);
         profileService = Container.get(ProfileService);
         friendService = Container.get(FriendService);
+        usersStatusService = Container.get(UsersStatusService);
 
         const accountCreationError = await authService.createAccount(testUsername, testPassword, testEmail, testAvatar, testSecurityQuestion);
         const accountCreationError2 = await authService.createAccount(testUsername2, testPassword, testEmail, testAvatar, testSecurityQuestion);
@@ -52,6 +56,8 @@ describe('Profile Tests', async () => {
         user2Id = await dbService.getUserId(testUsername2);
         user1FriendCode = (await profileService.getProfileInformation(testUsername2)).userCode;
         user2FriendCode = (await profileService.getProfileInformation(testUsername)).userCode;
+        usersStatusService.addOnlineUser(user1Id, {} as unknown as io.Socket);
+        usersStatusService.addOnlineUser(user2Id, {} as unknown as io.Socket);
     });
 
     afterEach(async () => {
@@ -132,5 +138,23 @@ describe('Profile Tests', async () => {
 
         expect(user1FriendList[0]).to.deep.equals(expectedUser1Friend);
         expect(user2FriendList[0]).to.deep.equals(expectedUser2Friend);
+    });
+
+    it('should return the right user status if the user is offline', async () => {
+        await friendService.addFriend(user1Id, user2FriendCode);
+        usersStatusService.removeOnlineUser(user2Id);
+
+        const user1FriendList: Friend[] = await friendService.getFriendList(user1Id);
+
+        expect(user1FriendList[0].status).to.deep.equals(ConnectivityStatus.OFFLINE);
+    });
+
+    it('should return the right user status if the user is in game', async () => {
+        await friendService.addFriend(user1Id, user2FriendCode);
+        usersStatusService.addUserToInGameList(user2Id);
+
+        const user1FriendList: Friend[] = await friendService.getFriendList(user1Id);
+
+        expect(user1FriendList[0].status).to.deep.equals(ConnectivityStatus.INGAME);
     });
 });
