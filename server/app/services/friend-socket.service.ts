@@ -20,7 +20,13 @@ export class FriendSocketService {
 
     handleFriendSockets(socket: io.Socket, sio: io.Server) {
         this.sio = sio;
-        socket.on('Get Profile Information', async () => {});
+        socket.on('Get Friend List', async () => {
+            socket.emit('Friend List Response', this.friendService.getFriendList(this.accountInfoService.getUserId(socket)));
+        });
+
+        socket.on('Send Friend Request', async (friendCode: string) => {
+            socket.emit('Send Request Response', this.friendService.addFriend(this.accountInfoService.getUserId(socket), friendCode));
+        });
     }
 
     async updateFriendsWithNewStatus(userId: string, newUserStatus: ConnectivityStatus) {
