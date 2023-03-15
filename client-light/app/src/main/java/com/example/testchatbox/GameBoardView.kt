@@ -37,8 +37,12 @@ class GameBoardView : RelativeLayout {
 
         val bounds = Rect()
 
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(R.attr.coords, typedValue, true)
+        gridPaint.color = typedValue.data
+
         gridPaint.color = colour
-        textPaint.color = Color.BLACK
+        textPaint.color = typedValue.data
         textPaint.textSize = 20F
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.typeface = Typeface.DEFAULT_BOLD
@@ -83,7 +87,7 @@ class GameBoardView : RelativeLayout {
     private fun drawSquares(canvas: Canvas) {
 //        Code suivant à utiliser pour les thèmes
         val typedValue = TypedValue()
-        context.theme.resolveAttribute(com.google.android.material.R.attr.colorOnPrimary, typedValue, true)
+        context.theme.resolveAttribute(R.attr.boardBackground, typedValue, true)
         gridPaint.color = typedValue.data
 
 
@@ -91,13 +95,13 @@ class GameBoardView : RelativeLayout {
         context.theme.resolveAttribute(com.google.android.material.R.attr.colorPrimaryVariant, redTile, true)
 
         val pinkTile = TypedValue()
-        context.theme.resolveAttribute(R.attr.pinkTile, pinkTile, true)
+        context.theme.resolveAttribute(R.attr.doubleWord, pinkTile, true)
 
         val blueTile = TypedValue()
-        context.theme.resolveAttribute(R.attr.blueTile, blueTile, true)
+        context.theme.resolveAttribute(R.attr.tripleWord, blueTile, true)
 
         val lightBlueTile = TypedValue()
-        context.theme.resolveAttribute(R.attr.lightBlueTile, lightBlueTile, true)
+        context.theme.resolveAttribute(R.attr.doubleLetter, lightBlueTile, true)
 
         //gridPaint.color = ContextCompat.getColor(context, R.color.AntiqueWhite)
         gridPaint.style = Paint.Style.FILL
@@ -152,7 +156,10 @@ class GameBoardView : RelativeLayout {
         //Coordinates.setCoordinates()
         drawSquares(canvas)
 
-        gridPaint.color = Color.BLACK
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(R.attr.grid, typedValue, true)
+        gridPaint.color = typedValue.data
+
         gridPaint.strokeWidth = GridConstants.DEFAULT_LINE_WIDTH
         gridPaint.style = Paint.Style.FILL
         gridPaint.isAntiAlias = true
