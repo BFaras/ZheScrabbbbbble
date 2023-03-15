@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 
 @Service()
-export class OnlineUsersService {
+export class UsersStatusService {
     private readonly onlineUsers: Set<string>;
     private readonly usersInGame: Set<string>;
 

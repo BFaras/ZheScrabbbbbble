@@ -5,17 +5,17 @@ import { ConnectivityStatus, Friend } from '@app/interfaces/friend-info';
 import { Container, Service } from 'typedi';
 import { ChatService } from './chat.service';
 import { DatabaseService } from './database.service';
-import { OnlineUsersService } from './online-users.service';
+import { UsersStatusService } from './users-status.service';
 
 @Service()
 export class FriendService {
     private readonly dbService: DatabaseService;
-    private readonly onlineUsersService: OnlineUsersService;
+    private readonly usersStatusService: UsersStatusService;
     private readonly chatService: ChatService;
 
     constructor() {
         this.dbService = Container.get(DatabaseService);
-        this.onlineUsersService = Container.get(OnlineUsersService);
+        this.usersStatusService = Container.get(UsersStatusService);
         this.chatService = Container.get(ChatService);
     }
 
@@ -76,9 +76,9 @@ export class FriendService {
     private getUserStatus(userId: string): ConnectivityStatus {
         let userStatus = ConnectivityStatus.OFFLINE;
 
-        if (this.onlineUsersService.isUserOnline(userId)) {
+        if (this.usersStatusService.isUserOnline(userId)) {
             userStatus = ConnectivityStatus.ONLINE;
-            if (this.onlineUsersService.isUserInGame(userId)) {
+            if (this.usersStatusService.isUserInGame(userId)) {
                 userStatus = ConnectivityStatus.INGAME;
             }
         }

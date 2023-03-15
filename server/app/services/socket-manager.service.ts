@@ -8,10 +8,10 @@ import Container from 'typedi';
 import { AccountInfoService } from './account-info.service';
 import { AuthSocketService } from './auth-socket.service';
 import { ChatSocketService } from './chat-socket.service';
-import { OnlineUsersService } from './online-users.service';
 import { ProfileSocketService } from './profile-socket.service';
 import { RoomManagerService } from './room-manager.service';
 import { SocketDatabaseService } from './socket-database.service';
+import { UsersStatusService } from './users-status.service';
 
 export class SocketManager {
     private sio: io.Server;
@@ -20,7 +20,7 @@ export class SocketManager {
     private socketDatabaseService: SocketDatabaseService;
     private chatSocketService: ChatSocketService;
     private authSocketService: AuthSocketService;
-    private onlineUsersService: OnlineUsersService;
+    private usersStatusService: UsersStatusService;
     private accountInfoService: AccountInfoService;
     private profileSocketService: ProfileSocketService;
     private pendingJoinGameRequests: Map<string, [string, io.Socket]>;
@@ -32,7 +32,7 @@ export class SocketManager {
         this.chatSocketService = new ChatSocketService();
         this.authSocketService = new AuthSocketService();
         this.accountInfoService = Container.get(AccountInfoService);
-        this.onlineUsersService = Container.get(OnlineUsersService);
+        this.usersStatusService = Container.get(UsersStatusService);
         this.roomManager = Container.get(RoomManagerService);
         this.profileSocketService = Container.get(ProfileSocketService);
         this.pendingJoinGameRequests = new Map<string, [string, io.Socket]>();
@@ -190,7 +190,7 @@ export class SocketManager {
 
             socket.on('disconnect', async () => {
                 console.log(new Date().toLocaleTimeString() + ' | User Disconnected from server');
-                this.onlineUsersService.removeOnlineUser(this.accountInfoService.getUserId(socket));
+                this.usersStatusService.removeOnlineUser(this.accountInfoService.getUserId(socket));
                 const room = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!room) return;
                 room.removePlayer(socket.id);

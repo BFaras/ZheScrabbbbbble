@@ -20,30 +20,30 @@ import { AccountCreationState } from '@app/interfaces/account-creation-state';
 import { Question } from '@app/interfaces/question';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
-import { OnlineUsersService } from './online-users.service';
 import { ProfileService } from './profile.service';
+import { UsersStatusService } from './users-status.service';
 
 @Service()
 export class AuthentificationService {
     private readonly dbService: DatabaseService;
-    private readonly onlineUsersService: OnlineUsersService;
+    private readonly usersStatusService: UsersStatusService;
     private readonly profileService: ProfileService;
 
     constructor() {
         this.dbService = Container.get(DatabaseService);
-        this.onlineUsersService = Container.get(OnlineUsersService);
+        this.usersStatusService = Container.get(UsersStatusService);
         this.profileService = Container.get(ProfileService);
     }
 
     async authentifyUser(username: string, password: string): Promise<boolean> {
         const userId = await this.dbService.getUserId(username);
-        if (this.onlineUsersService.isUserOnline(userId)) {
+        if (this.usersStatusService.isUserOnline(userId)) {
             console.log(new Date().toLocaleTimeString() + ' | User is already connected on another device');
             return false;
         }
         const decryptedPasswordFromDB: string = this.decryptPassword(await this.dbService.getUserEncryptedPassword(username));
         if (decryptedPasswordFromDB.length > 0 && decryptedPasswordFromDB === password) {
-            this.onlineUsersService.addOnlineUser(userId);
+            this.usersStatusService.addOnlineUser(userId);
             return true;
         }
         console.log(new Date().toLocaleTimeString() + ' | Incorrect password, login failed');
@@ -65,7 +65,7 @@ export class AuthentificationService {
         }
 
         if (accountCreationState === NO_ERROR && userId !== '') {
-            this.onlineUsersService.addOnlineUser(userId);
+            this.usersStatusService.addOnlineUser(userId);
         }
 
         return accountCreationState;
