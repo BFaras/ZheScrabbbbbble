@@ -1,5 +1,4 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Goal } from '@app/classes/goal';
 import { GameState, GameStateService } from '@app/services/game-state-service/game-state.service';
 import { Subscription } from 'rxjs';
 import { Player } from './players-info';
@@ -16,9 +15,7 @@ import { Round, roundInfo } from './round-info';
 export class InfoPanelComponent implements OnDestroy {
     playersInfo: Player[] = [];
     roundInfo: Round[] = roundInfo;
-    onGoingPublicObjectives: Goal[] = [];
     subscriptions: Subscription[] = [];
-    areGoals: boolean = false;
 
     constructor(private readonly gameStateService: GameStateService) {
         this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => {
@@ -34,12 +31,12 @@ export class InfoPanelComponent implements OnDestroy {
 
     private endGame(gameState: GameState) {
         let highestScore = -Infinity;
-        for(const player of gameState.players){
-            if(player.score > highestScore){
+        for (const player of gameState.players) {
+            if (player.score > highestScore) {
                 highestScore = player.score;
             }
         }
-        for(let i = 0; i < gameState.players.length; i++){
+        for (let i = 0; i < gameState.players.length; i++) {
             this.playersInfo[i].active = false;
             this.playersInfo[i].winner = gameState.players[i].score === highestScore;
             this.playersInfo[i].currentScore = gameState.players[i].score;
@@ -48,14 +45,13 @@ export class InfoPanelComponent implements OnDestroy {
 
     private updateTurnDisplay(gameState: GameState) {
         const initialLength = this.playersInfo.length;
-        for(let i = 0; i < (gameState.players.length - initialLength); i++){
+        for (let i = 0; i < (gameState.players.length - initialLength); i++) {
             this.playersInfo.push({
                 name: 'Joueur',
                 currentScore: 0,
                 letterCount: 0,
                 active: false,
                 winner: false,
-                objectives: [],
             });
         }
         this.roundInfo[0].lettersRemaining = gameState.reserveLength;
@@ -63,7 +59,7 @@ export class InfoPanelComponent implements OnDestroy {
             this.endGame(gameState);
             return;
         }
-        for(let i = 0; i < gameState.players.length; i++){
+        for (let i = 0; i < gameState.players.length; i++) {
             this.playersInfo[i].winner = false;
             this.playersInfo[i].currentScore = gameState.players[i].score;
             this.playersInfo[i].active = gameState.playerTurnIndex === i;

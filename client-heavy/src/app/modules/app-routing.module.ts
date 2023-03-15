@@ -11,12 +11,13 @@ import { LoginPageComponent } from '@app/pages/login-page/login-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { PasswordLostPageComponent } from '@app/pages/password-lost-page/password-lost-page.component';
+import { ProfilePageComponent } from '@app/pages/profile-page/profile-page.component';
 import { SignUpPageComponent } from '@app/pages/sign-up-page/sign-up-page.component';
 import { SoloMultiPageComponent } from '@app/pages/solo-multi-page/solo-multi-page.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
-    {path:"password-lost", component: PasswordLostPageComponent},
+    { path: "password-lost", component: PasswordLostPageComponent },
     { path: 'admin', component: AdminPageComponent },
     { path: 'chat', component: ChatPageComponent },
     { path: 'home', component: MainPageComponent },
@@ -28,6 +29,7 @@ const routes: Routes = [
     { path: 'create-game', component: CreateGameComponent },
     { path: 'join-game', component: JoinGameComponent },
     { path: 'waiting-room', component: WaitingRoomComponent },
+    { path: 'profile-page', component: ProfilePageComponent },
     { path: 'pending-room', component: PendingRoomComponent },
     { path: '**', redirectTo: '/login' },
 ];

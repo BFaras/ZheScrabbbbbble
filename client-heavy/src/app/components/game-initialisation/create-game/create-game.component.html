@@ -1,37 +1,29 @@
+<app-navigation-bar></app-navigation-bar>
 <div class="container justified">
-    <img src="https://bit.ly/3m206ss" width="400" height="80" alt="Logo Scrabble" />
-    <h1 class="header-item">Configuration des paramètres de la partie</h1>
-    <h2>Mode multijoueur</h2>
+    <div class="logo">Scrabble</div>
     <div class="game-settings">
+        <h1 class="header-item text" style="font-size: 27px;">{{ 'CREATE-GAME.MESSAGE' | translate }}</h1>
         <div class="input-container">
-            <p class="text-container">Nom de la salle:</p>
-            <input class="input" id="room-name" placeholder="Saisir le nom de la salle" #roomName required />
+            <p class="text-container text">{{ 'CREATE-GAME.ROOM' | translate }}</p>
+            <input class="input" id="room-name" #roomName required />
         </div>
-        <mat-radio-group class="input-container" aria-label="Select an option">
-            <mat-radio-button [checked]="true" value="Public"  (change)="getRadioButtonValue($event)">Public</mat-radio-button>
-            <mat-radio-button value="Private"  (change)="getRadioButtonValue($event)">Privé</mat-radio-button>
-            <mat-radio-button value="Protected"  (change)="getRadioButtonValue($event)">Protégé</mat-radio-button>
+        <mat-radio-group class="input-container" id="radio-btn" aria-label="Select an option">
+            <mat-radio-button class="text" [checked]="true" value="Public"  (change)="getRadioButtonValue($event)">{{ 'CREATE-GAME.PUBLIC' | translate }}</mat-radio-button>
+            <mat-radio-button class="text" value="Private"  (change)="getRadioButtonValue($event)">{{ 'CREATE-GAME.PRIVATE' | translate }}</mat-radio-button>
+            <mat-radio-button class="text" value="Protected"  (change)="getRadioButtonValue($event)">{{ 'CREATE-GAME.PROTECTED' | translate }}</mat-radio-button>
         </mat-radio-group>
         <div *ngIf="IsProtectedRoom " class="input-container">
-            <p class="text-container">Mot de passe de la salle:</p>
-            <input class="input" id="password-room" placeholder="Saisir le mot de passe de la salle" #passwordRoom />
+            <p class="text-container text">{{ 'CREATE-GAME.PASSWORD' | translate }}</p>
+            <input class="input" id="password-room" #passwordRoom />
         </div>
         <div class="mode-buttons">
             <button
-                class="button"
+                class="button text"
                 id="createGame"
                 (click)="checkMultiInput() ? createMultiRoom() : alertFalseInput()"
             >
-                Créer une partie
+            {{ 'CREATE-GAME.CREATE' | translate }}
             </button>
-            <button class="button cancel" [routerLink]="['/home']">Retourner au menu principal</button>
         </div>
-    </div>
-    <div class="footer-item">
-        <h4 class="team-name">Équipe 206</h4>
-        <p>
-            <span>Ioana Daria Danciu</span>, <span>Arnaud Delage-Reid</span>, <span>Manuel Ramirez-Evrard</span>, <span>Kaboungala Bintou Seni</span>,
-            <span>Pablo Sepulveda Solis</span>, <span>Imane Znadi</span>
-        </p>
     </div>
 </div>

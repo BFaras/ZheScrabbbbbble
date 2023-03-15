@@ -11,7 +11,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgb(247, 237, 223);
+    background-color: var(--background-default);
     height: 100%;
 }
 
@@ -22,7 +22,37 @@
     flex-direction: column;
 }
 
-#font-size-container {
+.logo {
+    width: 400px;
+    margin-top: 12%;
+    margin-bottom: 5%;
+    font-family: "Shrikhand";
+    font-size: 85px;
+    color: var(--text-default);
+}
+
+select {
+    border-radius: 5px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    -webkit-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px; 
+    border: 1px solid #AAA;
+    color: #555;
+    font-size: inherit;
+    margin-top: 5%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ghost-chat  {
+    height: 570px;
+    width: 350px;
+}
+
+.font-size-container {
     margin-top: 5%;
     display: flex;
     align-items: center;
@@ -32,6 +62,7 @@
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
     width: 380px;
+    color: var(--text-default);
 }
 
 .font-size {
@@ -39,22 +70,22 @@
     text-align: center;
     border: none;
     padding: 5px;
-    background-color: #cfcb9c;
+    background-color: var(--button-quaternary);
     border-radius: 7px;
     width: 40px;
     font-size: 15px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
     box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
-    color: rgb(94, 94, 94);
+    color: var(--button-text-default);
     transition: color 0.5s linear;
     -webkit-transition: color 0.2s linear;
 }
 
 .font-size:hover {
-    color: black;
+    color: var(---button-text-hover);
     cursor: pointer;
-    background: #cea261;
+    background: var(--button-quaternary-hover);
     transition-property: background-color;
     transition-duration: 0.2s;
 }
@@ -64,28 +95,32 @@
     outline: none;
 }
 
+#abandonner {
+    margin-bottom: 8%;
+}
+
 .button {
     text-decoration: none;
-    margin: 50px 0px 30px;
+    margin-top: 10%;
     text-align: center;
     border: none;
     padding: 10px;
-    background-color: #d3b1a7;
+    background-color: var(--button-secondary);
     border-radius: 7px;
     width: 150px;
     font-size: 20px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
     box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
-    color: rgb(94, 94, 94);
+    color: var(--button-text-default);
     transition: color 0.5s linear;
     -webkit-transition: color 0.2s linear;
 }
 
 .button:hover {
-    color: black;
+    color: var(---button-text-hover);
     cursor: pointer;
-    background: #cb654f;
+    background: var(--button-secondary-hover);
     transition-property: background-color;
     transition-duration: 0.2s;
 }
@@ -98,3 +133,50 @@
 img {
     margin-top: 6%;
 }
+
+body {font-family: Arial, Helvetica, sans-serif;}
+    * {box-sizing: border-box;}
+
+    /* Button used to open the chat form - fixed at the bottom of the page */
+    .open-button {
+        text-align: center;
+        border: none;
+        padding: 10px;
+        width: 160px;
+        height: 40px;
+        background: var(--button-primary);
+        box-shadow: var(--box-shadow);
+        z-index:15;
+        border-radius: 7px 7px 0px 0px;;
+        -moz-transform:rotate(-90deg);
+        -ms-transform:rotate(-90deg);
+        -o-transform:rotate(-90deg);
+        -webkit-transform:rotate(-90deg);
+        font-size: 20px;
+        font-weight: bolder;
+        font-family: 'Courier New', Courier, monospace;
+        color: var(--button-text-default);
+        transition: color 0.5s linear;
+        -webkit-transition: color 0.2s linear;
+        transform-origin: bottom right;
+        position: fixed;
+        right: 0px;
+        bottom: 60%;
+    }
+    
+    .open-button:hover {
+        color: var(--button-text-hover);
+        cursor: pointer;
+        background: var(--button-primary-hover);
+        transition-property: background-color;
+        transition-duration: 0.2s;
+    }
+
+    /* The popup chat - hidden by default */
+    .chat-popup {
+        display: none;
+        position: fixed;
+        bottom: 195px;
+        right: 55px;
+        z-index: 9;
+    }
