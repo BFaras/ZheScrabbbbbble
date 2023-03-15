@@ -15,13 +15,14 @@ export class GamePageComponent implements OnInit, OnDestroy {
     isReceiver: string;
     endGame: boolean = false;
     subscriptions: Subscription[] = [];
+    showPortal = false;
 
     constructor(
         private readonly gameStateService: GameStateService,
         private readonly letterHolderService: LetterHolderService,
         private readonly gridService: GridService,
         private readonly router: Router,
-        private readonly fontSize: FontSizeService,
+        private readonly fontSize: FontSizeService
     ) {}
 
     ngOnInit() {
@@ -67,4 +68,14 @@ export class GamePageComponent implements OnInit, OnDestroy {
         this.letterHolderService.redrawTiles();
         this.gridService.deleteAndRedraw();
     }
+
+    toggle() {
+        let element = document.getElementById("myChat");
+        if (element!.style.display == "block") {
+            element!.style.display = "none";
+        } else {
+            element!.style.display = "block";
+        }
+    }
+
 }

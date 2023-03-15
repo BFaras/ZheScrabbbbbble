@@ -9,17 +9,17 @@ import { first } from "rxjs/operators";
     styleUrls: ['./password-input.component.scss'],
 })
 export class PasswordInputComponent {
-    password : string;
-    messageType : number = 0;
+    password: string;
+    messageType: number = 0;
 
-    constructor(private dialogRef: MatDialogRef<PasswordInputComponent>, private waitingRoomManagerService: WaitingRoomManagerService, @Inject(MAT_DIALOG_DATA) private data: string,){}
+    constructor(private dialogRef: MatDialogRef<PasswordInputComponent>, private waitingRoomManagerService: WaitingRoomManagerService, @Inject(MAT_DIALOG_DATA) private data: string,) {}
 
-    submitPassword(){
+    submitPassword() {
         this.waitingRoomManagerService.joinRoomResponse().pipe(first()).subscribe(this.terminateDialog.bind(this));
         this.waitingRoomManagerService.joinRoom(this.data, this.password);
     }
 
-    terminateDialog(message : JoinResponse){
+    terminateDialog(message: JoinResponse) {
         if (message.errorCode === 'ROOM-2') {
             this.messageType = 1;
             return;
@@ -28,14 +28,14 @@ export class PasswordInputComponent {
             this.messageType = 2;
             return;
         }
-        if(!message.playerNames){
+        if (!message.playerNames) {
             this.messageType = 3;
             return;
         }
         this.dialogRef.close(message.playerNames);
     }
 
-    closeDialog(){
+    closeDialog() {
         this.dialogRef.close();
     }
 }

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { LeaderboardComponent } from '@app/components/leaderboard/leaderboard.component';
+import { GameType } from '@app/constants/game-types';
+
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 @Component({
     selector: 'app-main-page',
@@ -16,7 +18,11 @@ export class MainPageComponent {
             height: '500px',
         });
     }
-    
+
+    get gameTypeEnum(): typeof GameType {
+        return GameType;
+    }
+
     disconnectUser() {
         this.socketManager.getSocket().disconnect();
         this.socketManager.createSocket();

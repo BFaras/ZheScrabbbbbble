@@ -19,13 +19,13 @@ export interface JoinResponse {
     providedIn: 'root',
 })
 export class WaitingRoomManagerService {
-    private requestPending : boolean = false;
+    private requestPending: boolean = false;
     private playersInRoom: string[] = [];
     private socket: Socket;
     private waitingRoomObservable: Observable<WaitingRoom[]>;
     private joinRequestObservable: Observable<string>;
-    private joinRoomResponseObservable : Observable<JoinResponse>;
-    private gameStartObservable : Observable<null>;
+    private joinRoomResponseObservable: Observable<JoinResponse>;
+    private gameStartObservable: Observable<null>;
 
     constructor(private socketManagerService: SocketManagerService) {
         this.socket = this.socketManagerService.getSocket();
@@ -54,11 +54,11 @@ export class WaitingRoomManagerService {
         });
     }
 
-    isRequestPending(): boolean{
+    isRequestPending(): boolean {
         return this.requestPending;
     }
 
-    setRequestPending(requestPending : boolean){
+    setRequestPending(requestPending: boolean) {
         this.requestPending = requestPending;
     }
 
@@ -116,7 +116,7 @@ export class WaitingRoomManagerService {
         this.socket.emit('Cancel Join Request');
     }
 
-    respondJoinRequest(answer : boolean, username: string){
+    respondJoinRequest(answer: boolean, username: string) {
         this.socket.emit('Join Request Response', answer, username);
     }
 }

@@ -11,9 +11,11 @@ const LIMIT_OF_CHARACTERS = 512;
     templateUrl: './chat.component.html',
     styleUrls: ['./chat.component.scss'],
 })
+
 export class ChatComponent implements OnInit, OnDestroy {
     @Output() receiver = new EventEmitter();
     switch = false;
+
     message: Message = {
         username: '',
         body: '',
@@ -59,7 +61,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     sendMessage() {
         if (this.message.body.length >= LIMIT_OF_CHARACTERS) {
-            this.chatService.sendMessage(this.messageInvalidArgument);
+            //this.chatService.sendMessage(this.messageInvalidArgument);
             this.message.body = '';
             return;
         }
@@ -81,7 +83,7 @@ export class ChatComponent implements OnInit, OnDestroy {
             case MessageType.Empty:
                 break;
             case MessageType.Normal:
-                this.chatService.sendMessage(this.message);
+                //this.chatService.sendMessage(this.message);
                 this.message.body = '';
                 break;
             case MessageType.Place:
@@ -90,26 +92,30 @@ export class ChatComponent implements OnInit, OnDestroy {
             case MessageType.Hint:
             case MessageType.Reserve: {
                 const type: string = MessageType[messageType];
-                this.chatService.sendMessage(this.message);
+                //this.chatService.sendMessage(this.message);
                 this.message.body = this.message.body.substring(this.message.body.indexOf(' ') + 1, this.message.body.length);
                 this.chatService.sendCommand(this.message.body, type);
                 this.message.body = '';
                 break;
             }
             case MessageType.InvalidCommand:
-                this.chatService.sendMessage(this.message);
-                this.chatService.sendMessage(this.messageInvalidCommand);
+                //this.chatService.sendMessage(this.message);
+                //this.chatService.sendMessage(this.messageInvalidCommand);
                 this.message.body = '';
                 break;
             case MessageType.InvalidArgument:
-                this.chatService.sendMessage(this.message);
-                this.chatService.sendMessage(this.messageInvalidArgument);
+                //this.chatService.sendMessage(this.message);
+                //this.chatService.sendMessage(this.messageInvalidArgument);
                 this.message.body = '';
                 break;
             case MessageType.Help:
-                this.chatService.sendMessage(this.messageHelp);
+                //this.chatService.sendMessage(this.messageHelp);
                 this.message.body = '';
                 break;
         }
+    }
+
+    goToLink() {
+        window.open('/profile-page', "_blank");
     }
 }

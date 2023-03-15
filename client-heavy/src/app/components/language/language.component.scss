@@ -1,0 +1,22 @@
+.lang-p {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 25px;
+    margin-top: 5%;
+    cursor: pointer;
+    color: var(--button-text-default);
+}
+
+.lang-p:hover {
+    color: var(--playarea-coords);
+    font-weight: bolder;
+    transition-property: font-weight;
+    transition-property: color;
+    transition-duration: 0.2s;
+}
+
+.active {
+    background-color: var(--button-quaternary-hover);
+    color: var(--text-default);
+}
+
