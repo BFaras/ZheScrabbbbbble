@@ -23,8 +23,7 @@ export class ChatService {
         return { errorCode, chatId: createdChatId };
     }
 
-    async createFriendsChat(userId: string, friendUsername: string) {
-        const friendUserId = await this.dbService.getUserId(friendUsername);
+    async createFriendsChat(userId: string, friendUserId: string): Promise<string> {
         const chatName = userId + PRIVATE_CHAT_IDS_SEPARATOR + friendUserId;
         let errorCode = DATABASE_UNAVAILABLE;
 

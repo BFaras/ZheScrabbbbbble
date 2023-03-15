@@ -238,6 +238,17 @@ export class DatabaseService {
         return isCreationSuccess;
     }
 
+    async addFriend(userId: string, friendUserId: string): Promise<string> {
+        let errorCode: string = NO_ERROR;
+        await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)
+            ?.updateOne({ _id: new ObjectId(userId) }, { $push: { friendsId: friendUserId } })
+            .catch(() => {
+                errorCode = DATABASE_UNAVAILABLE;
+            });
+
+        return errorCode;
+    }
+
     async getUserFriendList(userId: string): Promise<string[]> {
         let friendsList: string[] = [];
         const userFriendsDoc = await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)?.findOne({
@@ -248,6 +259,18 @@ export class DatabaseService {
             friendsList = userFriendsDoc.friendsId;
         }
         return friendsList;
+    }
+
+    async getUserIdFromFriendCode(friendCode: string): Promise<string> {
+        const profileWithCode = await ((await this.getCollection(CollectionType.PROFILEINFO)) as Collection<ProfileInfoDB>)?.findOne({
+            profileInfo: { $elemMatch: { userCode: friendCode } },
+        });
+        let friendId = '';
+
+        if (profileWithCode !== undefined && profileWithCode !== null) {
+            friendId = profileWithCode._id.toString();
+        }
+        return friendId;
     }
 
     async isFriendCodeTaken(friendCodeToCheck: string): Promise<boolean> {

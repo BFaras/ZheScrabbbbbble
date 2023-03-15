@@ -1,7 +1,9 @@
 import { MAX_ASCII_SYMBOL, MIN_ASCII_SYMBOL } from '@app/constants/authentification-constants';
+import { DATABASE_UNAVAILABLE, WRONG_FRIEND_CODE } from '@app/constants/error-code-constants';
 import { FRIEND_CODE_LENGTH } from '@app/constants/profile-constants';
 import { ConnectivityStatus, Friend } from '@app/interfaces/friend-info';
 import { Container, Service } from 'typedi';
+import { ChatService } from './chat.service';
 import { DatabaseService } from './database.service';
 import { OnlineUsersService } from './online-users.service';
 
@@ -9,10 +11,12 @@ import { OnlineUsersService } from './online-users.service';
 export class FriendService {
     private readonly dbService: DatabaseService;
     private readonly onlineUsersService: OnlineUsersService;
+    private readonly chatService: ChatService;
 
     constructor() {
         this.dbService = Container.get(DatabaseService);
         this.onlineUsersService = Container.get(OnlineUsersService);
+        this.chatService = Container.get(ChatService);
     }
 
     async generateUniqueFriendCode(): Promise<string> {
@@ -27,6 +31,22 @@ export class FriendService {
     async getFriendList(userId: string): Promise<Friend[]> {
         const friendsIds = await this.dbService.getUserFriendList(userId);
         return this.generateFriendList(friendsIds);
+    }
+
+    async addFriend(userId: string, friendCode: string): Promise<string> {
+        let errorCode: string = WRONG_FRIEND_CODE;
+        if (await this.isFriendCodeExistant(friendCode)) {
+            const friendUserId: string = await this.dbService.getUserIdFromFriendCode(friendCode);
+
+            errorCode = DATABASE_UNAVAILABLE;
+
+            if (friendUserId !== '') {
+                errorCode = await this.dbService.addFriend(userId, friendUserId);
+                errorCode = await this.dbService.addFriend(friendUserId, userId);
+                errorCode = await this.chatService.createFriendsChat(userId, friendUserId);
+            }
+        }
+        return errorCode;
     }
 
     async isFriendCodeExistant(userFriendCode: string): Promise<boolean> {
