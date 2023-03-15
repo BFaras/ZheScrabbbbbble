@@ -1,3 +1,4 @@
+import { NO_ERROR } from '@app/constants/error-code-constants';
 import { ConnectivityStatus } from '@app/interfaces/friend-info';
 import * as io from 'socket.io';
 import { Container, Service } from 'typedi';
@@ -25,7 +26,13 @@ export class FriendSocketService {
         });
 
         socket.on('Send Friend Request', async (friendCode: string) => {
-            socket.emit('Send Request Response', this.friendService.addFriend(this.accountInfoService.getUserId(socket), friendCode));
+            const errorCode = await this.friendService.addFriend(this.accountInfoService.getUserId(socket), friendCode);
+
+            if (errorCode === NO_ERROR) {
+                this.addFriendsToSocket(socket, await this.friendService.getFriendIdFromCode(friendCode));
+            }
+
+            socket.emit('Send Request Response', errorCode);
         });
     }
 

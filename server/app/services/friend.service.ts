@@ -37,6 +37,10 @@ export class FriendService {
         return await this.dbService.getUserFriendList(userId);
     }
 
+    async getFriendIdFromCode(friendCode: string): Promise<string> {
+        return await this.dbService.getUserIdFromFriendCode(friendCode);
+    }
+
     async addFriend(userId: string, friendCode: string): Promise<string> {
         let errorCode: string = WRONG_FRIEND_CODE;
         if (await this.isFriendCodeExistant(friendCode)) {
