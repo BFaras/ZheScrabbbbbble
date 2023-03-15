@@ -5,6 +5,7 @@ import { ChatService } from '@app/services/chat-service/chat.service';
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
 
+const ONE_LETTER_IN_LOGGER = 1;
 @Injectable({
     providedIn: 'root',
 })
@@ -18,7 +19,7 @@ export class LetterAdderService {
     mappedBoardState = new Map<string, string>();
     key: string;
     canPlay: boolean;
-
+    letterAdderMode:string = '';
     constructor(private letterHolderService: LetterHolderService, private gridService: GridService, private chatService: ChatService) {}
 
     onLeftClick(coords: Vec2) {
@@ -30,6 +31,64 @@ export class LetterAdderService {
             this.addArrowSquare();
             this.prevActiveSquare = this.activeSquare;
         }
+    }
+
+    onDropLetterSpot(coords: Vec2){
+        if (this.canDrop(coords)) {
+            this.gridService.deleteAndRedraw();
+            this.prevActiveSquare = this.activeSquare;
+            return true
+        } else return false
+    }
+
+    isFormerTileUsed(row:string,column:number){
+        if(this.arrowDirection){
+         const foundLetter = this.mappedBoardState.get(row + (column - 1));
+        return Boolean(foundLetter);
+        }
+        else{     
+        const foundLetter = this.mappedBoardState.get((String.fromCharCode(row.charCodeAt(0) - 1)) + column);
+        return Boolean(foundLetter);
+        }
+    }
+
+    findDirectionOfDrop(row:string,column:number){
+        if(this.addedLettersLog.size === ONE_LETTER_IN_LOGGER){
+            if(this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row){
+                this.arrowDirection = false;
+            }else if(this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row)
+            {
+                this.arrowDirection = true;
+            }
+        }
+    }
+
+    isTileAround(xIndex:string,yIndex:number):boolean{
+        console.log(this.isFormerTileUsed(xIndex,yIndex));
+        if(this.addedLettersLog.size === 0 || this.isFormerTileUsed(xIndex,yIndex) ||( yIndex  === this.prevActiveSquare.y + 1 &&  xIndex == this.prevActiveSquare.x) || ( xIndex.charCodeAt(0) === this.prevActiveSquare.x.charCodeAt(0) + 1 && yIndex  === this.prevActiveSquare.y) ){
+            this.activeSquare = { x: xIndex, y: yIndex }
+            return true;
+        }
+        return false;
+    }
+
+    isRightDirection(row:string,column:number):boolean{
+        if(this.addedLettersLog.size >= 1){
+            if(this.arrowDirection == true && this.prevActiveSquare.y === column)
+                return false
+            else if(this.arrowDirection == false && this.prevActiveSquare.x === row)
+                return false
+        }else{
+            return true
+        }
+        return true;
+    }
+
+
+    canDrop(coords: Vec2): boolean {
+        const foundCoords = this.findCoords(coords.x, coords.y);
+        this.findDirectionOfDrop(foundCoords.row,foundCoords.column)
+        return this.canPlay &&  foundCoords.valid &&  this.isTileAround(foundCoords.row,foundCoords.column) && !this.isPositionTaken() && this.isRightDirection(foundCoords.row,foundCoords.column) ;
     }
 
     canClick(coords: Vec2): boolean {
@@ -53,7 +112,9 @@ export class LetterAdderService {
                 break;
             }
             default: {
-                this.addLetters(key);
+                if(this.letterAdderMode === "keyPress" || this.letterAdderMode === ""){
+                    this.addLetters(key);
+                }
             }
         }
     }
@@ -66,11 +127,24 @@ export class LetterAdderService {
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
                 this.changeActivePosition(1);
+                this.letterAdderMode = 'keyPress';
             }
             while (this.isPositionTaken()) {
                 this.changeActivePosition(1);
             }
             this.addArrowSquare();
+        }
+    }
+
+    addLettersOnDrop(key: string) {
+        this.key = this.isLetterBlank(key) ? this.isLetterBlank(key) : this.simplifyLetter(key);
+        if (this.inPlayerHand() && this.isInBounds()) {
+            if (!this.isPositionTaken()) {
+                this.addToHand(false);
+                this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
+                this.gridService.deleteAndRedraw(this.addedLettersLog);
+                this.letterAdderMode = 'dragAndDrop';
+            }
         }
     }
 
@@ -84,6 +158,9 @@ export class LetterAdderService {
 
     removeLetters() {
         const decrement = -1;
+        if (this.addedLettersLog.size === 1){
+            this.letterAdderMode = "";
+        }
         if (!this.addedLettersLog.size) return;
         if (!this.isPositionTaken()) {
             this.addToHand(true);
@@ -93,10 +170,12 @@ export class LetterAdderService {
         while (this.isPositionTaken()) {
             this.changeActivePosition(decrement);
         }
-        if (this.addedLettersLog.size) {
-            this.addArrowSquare();
-        } else {
-            this.resetLetters();
+        if(this.letterAdderMode =="keyPress"){
+            if (this.addedLettersLog.size) {
+                this.addArrowSquare();
+            } else {
+                this.resetLetters();
+            }
         }
     }
 

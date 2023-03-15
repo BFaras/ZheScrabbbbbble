@@ -9,6 +9,7 @@ export class LetterHolderService {
     holderContext: CanvasRenderingContext2D;
     letterLog = new Map<number, string>();
     holderState: string[] = [];
+    holderStatePoints:number[] = [];
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
 
     constructor(private size: FontSizeService) {}
@@ -47,7 +48,7 @@ export class LetterHolderService {
             this.letterLog.set(position, checkedLetter);
         } else this.letterLog.delete(position);
     }
-
+    /**mettre isValidLetter dans Valide Params apres */
     validParams(letter: string, position: number): string {
         if (HOLDER_MEASUREMENTS.minPositionHolder <= position && HOLDER_MEASUREMENTS.maxPositionHolder >= position) {
             if (letter >= 'A' && letter <= 'Z') return letter;
@@ -57,8 +58,27 @@ export class LetterHolderService {
         } else return '';
     }
 
+    isValidLetter(letter:string){
+        if (letter >= 'A' && letter <= 'Z') return letter;
+            else if (letter === 'blank') return 'BLANK';
+            else if (letter >= 'a' && letter <= 'z') return letter.toUpperCase();
+            else return '';
+    }
+
+    getHolderHandPoints(letter:string){
+        const letterHolder = this.isValidLetter(letter);
+        if(letterHolder){
+            return  LETTER_POINTS[letterHolder as keyof typeof LETTER_POINTS];
+        }
+        return 0
+    }
+
+
     setHolderState(holder: string[]) {
         this.holderState = holder;
+        holder.forEach((letter)=>{
+            this.holderStatePoints.push(this.getHolderHandPoints(letter))
+        })
     }
 
     addLetters() {

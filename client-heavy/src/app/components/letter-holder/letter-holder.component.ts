@@ -7,7 +7,6 @@ import { GameState, GameStateService } from '@app/services/game-state-service/ga
 import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
 import { ManipulationRackService } from '@app/services/manipulation-rack-service/manipulation-rack.service';
-import { MouseService } from '@app/services/mouse-service/mouse.service';
 import { Subscription } from 'rxjs';
 
 const LIMIT_LETTERS_IN_RESERVE = 7;
@@ -28,12 +27,14 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     mouseIsIn: boolean = false;
     makingSelection: boolean = false;
     playerHand: string[] = [''];
+    playerHandPoints: number[] = [];
     oldKeyPressed: string = '';
     counter: number = 0;
     initialPosition: number = 0;
     subscription: Subscription;
     viewLoaded = false;
-
+    listTileManipulated = isManipulated;
+    listTileSelected = isSelected;
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
     private initialGameState : GameState;
 
@@ -42,7 +43,6 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         private readonly letterHolderService: LetterHolderService,
         private readonly gameStateService: GameStateService,
         private chatService: ChatService,
-        private mouseService: MouseService,
         private letterAdderService: LetterAdderService,
         private manipulationRack: ManipulationRackService,
     ) {
@@ -56,12 +56,12 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     }
 
     @HostListener('click', ['$event'])
-    clickInside(e: MouseEvent) {
+    clickInside(e: MouseEvent,indexOfElement:number) {
         if (e.button === MouseButton.Right) {
             if (!this.mouseIsIn) return;
             this.isReceiver();
             this.manipulationRack.cancelManipulation();
-            this.mouseService.selectRack({ x: e.offsetX, y: e.offsetY });
+            this.manipulationRack.selectLetterOnRack(indexOfElement + 1);
             this.makingSelection = Object.values(isSelected).some((selection) => selection === true);
         } else if (e.button === MouseButton.Left) {
             if (!this.mouseIsIn) return;
@@ -69,8 +69,8 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
             this.isReceiver();
             this.makingSelection = false;
             this.manipulationRack.cancelAll(isSelected);
-            this.initialPosition = this.mouseService.manipulateRackOnClick({ x: e.offsetX, y: e.offsetY }) as number;
-            this.counter = 0;
+            this.manipulationRack.manipulateLetterOnRack(indexOfElement+1);
+            this.initialPosition = indexOfElement + 1;
         }
         return;
     }
@@ -154,6 +154,15 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         this.updateHolder(this.initialGameState);
     }
 
+    isDraggingMode(){
+        if (this.letterAdderService.letterAdderMode === "dragAndDrop" || this.letterAdderService.letterAdderMode === ""){
+            return false
+        }else{
+            return true
+        }
+    }
+
+
     updateHolder(gameState: GameState) {
         let playerIndex;
         for(playerIndex = 0; playerIndex < gameState.players.length; playerIndex++){
@@ -163,6 +172,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         this.letterHolderService.addLetters();
         this.isDisabled = !(playerIndex === gameState.playerTurnIndex);
         this.playerHand = this.letterHolderService.holderState;
+        this.playerHandPoints = this.letterHolderService.holderStatePoints;
         this.letterAdderService.setPlayerHand(this.playerHand);
         this.letterAdderService.setCanPlay(this.isDisabled);
         if (gameState.reserveLength < LIMIT_LETTERS_IN_RESERVE) this.notEnoughLettersLeft = true;

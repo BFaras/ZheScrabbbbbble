@@ -80,7 +80,7 @@ import { PasswordLostAreaComponent } from './components/password-lost-area/passw
         HttpClientModule,
         MatProgressSpinnerModule,
         MatListModule,
-        MatDialogModule,
+        MatDialogModule
     ],
     providers: [ChatService],
     bootstrap: [AppComponent],
