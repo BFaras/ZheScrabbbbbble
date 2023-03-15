@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_MainMenuFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_MainMenuFragment_to_gameListFragment"
+            app:destination="@id/gameListFragment" />
     </fragment>
     <fragment
         android:id="@+id/ChatFragment"
@@ -71,4 +74,45 @@
         android:name="com.example.testchatbox.chat.ManageChatFragment"
         android:label="fragment_manage_chat"
         tools:layout="@layout/fragment_manage_chat" />
+    <fragment
+        android:id="@+id/fullscreenFragment"
+        android:name="com.example.testchatbox.GamePageFragment"
+        android:label="fragment_fullscreen"
+        tools:layout="@layout/fragment_fullscreen" >
+        <action
+            android:id="@+id/action_fullscreenFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_fullscreenFragment_to_MainMenuFragment"
+            app:destination="@id/MainMenuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameListFragment"
+        android:name="com.example.testchatbox.GameListFragment"
+        android:label="fragment_game_list"
+        tools:layout="@layout/fragment_game_list" >
+        <action
+            android:id="@+id/action_gameListFragment_to_gameRoomFragment"
+            app:destination="@id/gameRoomFragment" >
+            <argument
+                android:name="id"
+                app:argType="integer"
+                android:defaultValue="0" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/gameRoomFragment"
+        android:name="com.example.testchatbox.GameRoomFragment"
+        android:label="fragment_game_room"
+        tools:layout="@layout/fragment_game_room" >
+        <action
+            android:id="@+id/action_gameRoomFragment_to_MainMenuFragment"
+            app:destination="@id/MainMenuFragment" />
+        <action
+            android:id="@+id/action_gameRoomFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_gameRoomFragment_to_fullscreenFragment"
+            app:destination="@id/fullscreenFragment" />
+    </fragment>
 </navigation>

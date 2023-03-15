@@ -53,6 +53,7 @@ class LoginFragment : Fragment() {
         var resetButton = binding.reset
         val loadingProgressBar = binding.loading
 
+
         loginViewModel.loginFormState.observe(viewLifecycleOwner,
             Observer { loginFormState ->
                 if (loginFormState == null) {
@@ -121,6 +122,7 @@ class LoginFragment : Fragment() {
         resetButton.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_resetFragment)
         }
+
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {

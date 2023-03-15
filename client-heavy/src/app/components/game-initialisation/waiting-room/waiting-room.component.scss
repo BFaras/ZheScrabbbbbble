@@ -27,6 +27,15 @@
     -webkit-transition: color 0.2s linear;
 }
 
+img{
+    margin-left: 8px;
+    margin-bottom: 2px;
+}
+
+h2{
+    margin: 0;
+}
+
 .button:hover {
     color: black;
     cursor: pointer;
@@ -39,6 +48,19 @@
     margin-top: 0.25em;
     margin-bottom: 0.25em;
     color: green;
+}
+
+#join-requests{
+    display: flex;
+    align-items: center;
+    padding-top: 50px;
+    margin: 20px;
+}
+
+.button.join-request{
+    margin: 0;
+    width: 10vh;
+    margin-left: 10px;
 }
 
 .header-item {
@@ -62,7 +84,6 @@
 
 .mode-buttons {
     display: flex;
-    padding-top: 100px;
     justify-content: center;
     align-items: center;
     text-align: center;

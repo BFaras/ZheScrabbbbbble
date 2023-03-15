@@ -43,13 +43,12 @@ export class Game {
     }
 
     startGame() {
-        if (this.players.length === MAX_NUMBER_OF_PLAYERS) {
-            this.playerTurnIndex = Math.floor(Math.random() * this.players.length);
-            for (const player of this.players) {
-                player.getHand().addLetters(this.reserve.drawLetters(HAND_SIZE));
-            }
-            this.startDate = new Date();
+        if (this.players.length < 2) return;
+        this.playerTurnIndex = Math.floor(Math.random() * this.players.length);
+        for (const player of this.players) {
+            player.getHand().addLetters(this.reserve.drawLetters(HAND_SIZE));
         }
+        this.startDate = new Date();
     }
 
     placeLetter(commandInfo: PlaceLetterCommandInfo): CommandResult {

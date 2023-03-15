@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnDestroy, Output, ViewChild } from '@angular/core';
 import { HOLDER_MEASUREMENTS, isManipulated, isSelected } from '@app/constants/letters-constants';
 import { MouseButton } from '@app/constants/mouse-buttons';
+import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { GameState, GameStateService } from '@app/services/game-state-service/game-state.service';
 import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
@@ -31,17 +32,28 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     counter: number = 0;
     initialPosition: number = 0;
     subscription: Subscription;
+    viewLoaded = false;
 
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
+    private initialGameState : GameState;
 
     constructor(
+        private readonly accountService : AccountService,
         private readonly letterHolderService: LetterHolderService,
         private readonly gameStateService: GameStateService,
         private chatService: ChatService,
         private mouseService: MouseService,
         private letterAdderService: LetterAdderService,
         private manipulationRack: ManipulationRackService,
-    ) {}
+    ) {
+        this.subscription = this.gameStateService.getGameStateObservable().subscribe((gameState) => {
+            if(this.viewLoaded){
+                this.updateHolder(gameState)
+            }else{
+                this.initialGameState = gameState;
+            }
+        });
+    }
 
     @HostListener('click', ['$event'])
     clickInside(e: MouseEvent) {
@@ -136,14 +148,20 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
+        this.viewLoaded = true;
         this.letterHolderService.holderContext = this.letterHolder.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.subscription = this.gameStateService.getGameStateObservable().subscribe((gameState) => this.updateHolder(gameState));
+        console.log("View Init Done");
+        this.updateHolder(this.initialGameState);
     }
 
     updateHolder(gameState: GameState) {
-        this.letterHolderService.setHolderState(this.formatHandState([...gameState.hand]));
+        let playerIndex;
+        for(playerIndex = 0; playerIndex < gameState.players.length; playerIndex++){
+            if(gameState.players[playerIndex].username === this.accountService.getUsername()) break;
+        }
+        this.letterHolderService.setHolderState(this.formatHandState([...gameState.players[playerIndex].hand]));
         this.letterHolderService.addLetters();
-        this.isDisabled = !gameState.isYourTurn;
+        this.isDisabled = !(playerIndex === gameState.playerTurnIndex);
         this.playerHand = this.letterHolderService.holderState;
         this.letterAdderService.setPlayerHand(this.playerHand);
         this.letterAdderService.setCanPlay(this.isDisabled);
