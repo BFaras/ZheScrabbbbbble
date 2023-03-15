@@ -1,6 +1,7 @@
 /* eslint-disable dot-notation */
 /* eslint-disable max-len */
 import { NO_ERROR } from '@app/constants/error-code-constants';
+import { ConnectivityStatus, Friend } from '@app/interfaces/friend-info';
 import { Question } from '@app/interfaces/question';
 import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -12,6 +13,7 @@ import { ProfileService } from './profile.service';
 
 describe('Profile Tests', async () => {
     const testUsername = 'testUser157Test';
+    const testUsername2 = 'Test2User';
     const testPassword = 'tE!s&to~';
     const testEmail = 'myTestMail12564@poly.com';
     const testAvatar = 'av111';
@@ -22,7 +24,13 @@ describe('Profile Tests', async () => {
     let authService: AuthentificationService;
     let profileService: ProfileService;
     let friendService: FriendService;
+
     let accountCreated = false;
+    let account2Created = false;
+    let user1Id = '';
+    let user2Id = '';
+    let user1FriendCode = '';
+    let user2FriendCode = '';
 
     before(async () => {
         dbService = Container.get(DatabaseService);
@@ -36,13 +44,25 @@ describe('Profile Tests', async () => {
         friendService = Container.get(FriendService);
 
         const accountCreationError = await authService.createAccount(testUsername, testPassword, testEmail, testAvatar, testSecurityQuestion);
+        const accountCreationError2 = await authService.createAccount(testUsername2, testPassword, testEmail, testAvatar, testSecurityQuestion);
+
         accountCreated = accountCreationError === NO_ERROR;
+        account2Created = accountCreationError2 === NO_ERROR;
+        user1Id = await dbService.getUserId(testUsername);
+        user2Id = await dbService.getUserId(testUsername2);
+        user1FriendCode = (await profileService.getProfileInformation(testUsername2)).userCode;
+        user2FriendCode = (await profileService.getProfileInformation(testUsername)).userCode;
     });
 
     afterEach(async () => {
         if (accountCreated) {
             await dbService.removeUserAccount(testUsername);
             accountCreated = false;
+        }
+
+        if (account2Created) {
+            await dbService.removeUserAccount(testUsername2);
+            account2Created = false;
         }
     });
 
@@ -63,20 +83,31 @@ describe('Profile Tests', async () => {
     });
 
     it('should add a friend id to the list for both accounts that are friends on addFriend()', async () => {
-        const testUsername2 = 'Test2User';
-        await authService.createAccount(testUsername2, testPassword, testEmail, testAvatar, testSecurityQuestion);
+        await friendService.addFriend(user1Id, user2FriendCode);
 
-        const user1Id = await dbService.getUserId(testUsername);
-        const user2Id = await dbService.getUserId(testUsername2);
-        const user2FriendCode = (await profileService.getProfileInformation(testUsername)).userCode;
+        const user1FriendIdList: string[] = await friendService.getFriendsIds(user1Id);
+        const user2FriendIdList: string[] = await friendService.getFriendsIds(user2Id);
+
+        expect(user1FriendIdList).to.contain(user2Id);
+        expect(user2FriendIdList).to.contain(user1Id);
+    });
+
+    it('should get the friends list with the friends right info and username on getFriendList()', async () => {
+        const expectedUser1Friend: Friend = {
+            username: testUsername2,
+            status: ConnectivityStatus.ONLINE,
+        };
+        const expectedUser2Friend: Friend = {
+            username: testUsername,
+            status: ConnectivityStatus.ONLINE,
+        };
 
         await friendService.addFriend(user1Id, user2FriendCode);
 
-        const user1FriendList: string[] = await friendService.getFriendsIds(user1Id);
-        const user2FriendList: string[] = await friendService.getFriendsIds(user2Id);
+        const user1FriendList: Friend[] = await friendService.getFriendList(user1Id);
+        const user2FriendList: Friend[] = await friendService.getFriendList(user2Id);
 
-        await dbService.removeUserAccount(testUsername2);
-        expect(user1FriendList).to.contain(user2Id);
-        expect(user2FriendList).to.contain(user1Id);
+        expect(user1FriendList[0]).to.deep.equals(expectedUser1Friend);
+        expect(user2FriendList[0]).to.deep.equals(expectedUser2Friend);
     });
 });
