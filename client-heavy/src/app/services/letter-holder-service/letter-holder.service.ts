@@ -132,6 +132,12 @@ export class LetterHolderService {
         this.holderContext.clearRect(pixelPosition, 0, HOLDER_MEASUREMENTS.tileSide, HOLDER_MEASUREMENTS.tileSide);
         this.redrawLetter(position);
     }
+    /**on tentera de changer de position */
+    changePositionPoints(oldPosition: number, newPosition: number){
+        const savedPosition = this.holderStatePoints[oldPosition - 1];
+        this.holderStatePoints[oldPosition - 1] = this.holderStatePoints[newPosition - 1];
+        this.holderStatePoints[newPosition - 1] = savedPosition
+    }
 
     changePosition(oldPosition: number, newPosition: number) {
         const lettersPosition = this.letterLog;
