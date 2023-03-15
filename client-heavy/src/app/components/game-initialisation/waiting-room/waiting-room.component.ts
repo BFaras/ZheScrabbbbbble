@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountService } from '@app/services/account-service/account.service';
+import { GameStateService } from '@app/services/game-state-service/game-state.service';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class WaitingRoomComponent {
 
     pendingRequests: string[] = [];
 
-    constructor(private waitingRoomManagerService: WaitingRoomManagerService, private accountService: AccountService, private router: Router) {
+    constructor(private waitingRoomManagerService: WaitingRoomManagerService, private accountService: AccountService, private router: Router, private gameStateService: GameStateService) {
         this.waitingRoomManagerService.getJoinRoomRequestObservable().subscribe(this.newJoinRequest.bind(this));
         this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this))
     }
@@ -23,7 +24,9 @@ export class WaitingRoomComponent {
     }
 
     goToGame(){
-        this.router.navigate(['/game']);
+        this.router.navigate(['/game']).then(() => {
+            this.gameStateService.requestGameState();
+        });
     }
 
     leaveRoom(): void {

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -42,20 +43,30 @@ class ChatFragment : Fragment(), ObserverChat {
         super.onViewCreated(view, savedInstanceState);
         loadList();
         selectedChatIndex=0;
-        binding.send.setOnClickListener {
-            var text = binding.inputText.text.toString().trim();
-            if(text.isNotEmpty()){
-                val currentDate = Calendar.getInstance().time.toString().split(' ')[3];
-                val userName = LoggedInUser.getName();
-                binding.inputText.setText("");
-                SocketHandler.getSocket().emit("New Chat Message", text, chatsList[selectedChatIndex]._id)
+        binding.inputText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                sendMessage()
             }
+            false
+        }
+        binding.send.setOnClickListener {
+            sendMessage()
         }
         binding.ManageChats.setOnClickListener {
             findNavController().navigate(R.id.action_ChatFragment_to_manageChatFragment)
         }
         loadChatMessages();
     }
+
+    private fun sendMessage() {
+        var text = binding.inputText.text.toString().trim()
+        if(text.isNotEmpty()){
+            binding.inputText.setText("")
+            SocketHandler.getSocket().emit("New Chat Message", text, chatsList[selectedChatIndex]._id)
+            binding.scrollView.fullScroll(View.FOCUS_DOWN)
+        }
+    }
+
 
     override fun onStart() {
         super.onStart()
@@ -73,6 +84,10 @@ class ChatFragment : Fragment(), ObserverChat {
         for(message in chatsList[selectedChatIndex].messages){
             messagesBox.append(message.toString() + System.getProperty("line.separator"))
         }
+        activity?.runOnUiThread(Runnable {
+            messagesBox.invalidate();
+            messagesBox.requestLayout();
+        });
     }
 
     private fun loadList(){

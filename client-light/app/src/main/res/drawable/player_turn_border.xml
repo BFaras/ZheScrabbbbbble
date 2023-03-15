@@ -8,13 +8,14 @@
 
     <!-- View border color and width -->
     <stroke
-        android:width="4dp"
-        android:color="@color/purple_500" >
+        android:width="3dp"
+        android:color="?lightBlueTile" >
     </stroke>
 
     <!-- The radius makes the corners rounded -->
     <corners
-        android:radius="10dp"   >
+        android:radius="5dp"   >
     </corners>
+
 
 </shape>
