@@ -29,7 +29,7 @@ export class ChatService {
     }
 
     sendCommand(argument: string, command: string) {
-        this.socketManagerService.getSocket().emit('command', command, argument.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
+        this.socketManagerService.getSocket().emit('Play Turn', command, argument.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
     }
 
     getMessages(): Observable<Message> {
