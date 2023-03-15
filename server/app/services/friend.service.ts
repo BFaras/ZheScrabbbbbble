@@ -1,6 +1,6 @@
 import { MAX_ASCII_SYMBOL, MIN_ASCII_SYMBOL } from '@app/constants/authentification-constants';
 import { DATABASE_UNAVAILABLE, WRONG_FRIEND_CODE } from '@app/constants/error-code-constants';
-import { FRIEND_CODE_LENGTH } from '@app/constants/profile-constants';
+import { FRIEND_CODE_LENGTH, FRIEND_ROOM_BASE_NAME } from '@app/constants/profile-constants';
 import { ConnectivityStatus, Friend } from '@app/interfaces/friend-info';
 import { Container, Service } from 'typedi';
 import { ChatService } from './chat.service';
@@ -33,6 +33,10 @@ export class FriendService {
         return this.generateFriendList(friendsIds);
     }
 
+    async getFriendsIds(userId: string): Promise<string[]> {
+        return await this.dbService.getUserFriendList(userId);
+    }
+
     async addFriend(userId: string, friendCode: string): Promise<string> {
         let errorCode: string = WRONG_FRIEND_CODE;
         if (await this.isFriendCodeExistant(friendCode)) {
@@ -51,6 +55,10 @@ export class FriendService {
 
     async isFriendCodeExistant(userFriendCode: string): Promise<boolean> {
         return await this.dbService.isFriendCodeTaken(userFriendCode);
+    }
+
+    getFriendRoomName(friendId: string): string {
+        return FRIEND_ROOM_BASE_NAME + friendId;
     }
 
     private generateFriendCode(): string {

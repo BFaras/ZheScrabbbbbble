@@ -43,7 +43,6 @@ export class AuthentificationService {
         }
         const decryptedPasswordFromDB: string = this.decryptPassword(await this.dbService.getUserEncryptedPassword(username));
         if (decryptedPasswordFromDB.length > 0 && decryptedPasswordFromDB === password) {
-            this.usersStatusService.addOnlineUser(userId);
             return true;
         }
         console.log(new Date().toLocaleTimeString() + ' | Incorrect password, login failed');
@@ -62,10 +61,6 @@ export class AuthentificationService {
                 await this.profileService.createNewProfile(userId, userAvatar);
                 await this.dbService.addFriendDoc(userId);
             }
-        }
-
-        if (accountCreationState === NO_ERROR && userId !== '') {
-            this.usersStatusService.addOnlineUser(userId);
         }
 
         return accountCreationState;

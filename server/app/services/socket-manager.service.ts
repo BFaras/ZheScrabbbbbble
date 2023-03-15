@@ -8,6 +8,7 @@ import Container from 'typedi';
 import { AccountInfoService } from './account-info.service';
 import { AuthSocketService } from './auth-socket.service';
 import { ChatSocketService } from './chat-socket.service';
+import { FriendSocketService } from './friend-socket.service';
 import { ProfileSocketService } from './profile-socket.service';
 import { RoomManagerService } from './room-manager.service';
 import { SocketDatabaseService } from './socket-database.service';
@@ -23,6 +24,7 @@ export class SocketManager {
     private usersStatusService: UsersStatusService;
     private accountInfoService: AccountInfoService;
     private profileSocketService: ProfileSocketService;
+    private friendSocketService: FriendSocketService;
     private pendingJoinGameRequests: Map<string, [string, io.Socket]>;
     // private timeoutRoom: { [key: string]: NodeJS.Timeout };
 
@@ -35,6 +37,7 @@ export class SocketManager {
         this.usersStatusService = Container.get(UsersStatusService);
         this.roomManager = Container.get(RoomManagerService);
         this.profileSocketService = Container.get(ProfileSocketService);
+        this.friendSocketService = Container.get(FriendSocketService);
         this.pendingJoinGameRequests = new Map<string, [string, io.Socket]>();
         this.commandController = new CommandController(this.roomManager);
     }
@@ -46,6 +49,7 @@ export class SocketManager {
             this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
             this.profileSocketService.handleProfileSockets(socket);
+            this.friendSocketService.handleFriendSockets(socket, this.sio);
 
             socket.on('Create Game Room', async (name: string, visibility: RoomVisibility, password?: string) => {
                 console.log(new Date().toLocaleTimeString() + ' | Room creation request received');
