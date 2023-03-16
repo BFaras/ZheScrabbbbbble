@@ -20,38 +20,77 @@ export interface JoinResponse {
 })
 export class WaitingRoomManagerService {
     private requestPending: boolean = false;
-    private playersInRoom: string[] = [];
-    private socket: Socket;
+    private defaultPlayersInRoom : string[];
+
     private waitingRoomObservable: Observable<WaitingRoom[]>;
+    private waitingRoomObserver : Observer<WaitingRoom[]>;
+
     private joinRequestObservable: Observable<string>;
+    private joinRequestObserver: Observer<string>;
+
     private joinRoomResponseObservable: Observable<JoinResponse>;
+    private joinRoomResponseObserver: Observer<JoinResponse>;
+
     private gameStartObservable: Observable<null>;
+    private gameStartObserver: Observer<null>;
+
+    private roomPlayerObservable: Observable<string[]>;
+    private roomPlayerObserver: Observer<string[]>;
+
+    private socket : Socket;
 
     constructor(private socketManagerService: SocketManagerService) {
         this.socket = this.socketManagerService.getSocket();
         this.waitingRoomObservable = new Observable((observer: Observer<WaitingRoom[]>) => {
-            this.socket.on('Game Room List Response', (rooms) => {
-                observer.next(rooms)
-            });
+            if(!this.socket.active) this.refreshSocketRequests();
+            this.waitingRoomObserver = observer;
         });
+        this.refreshSocketRequests();
         this.joinRequestObservable = new Observable((observer: Observer<string>) => {
-            this.socket.on('Join Room Request', (username) => {
-                observer.next(username)
-            });
+            if(!this.socket.active) this.refreshSocketRequests();
+            this.joinRequestObserver = observer;
         });
+
         this.joinRoomResponseObservable = new Observable((observer: Observer<JoinResponse>) => {
-            this.socket.on('Join Room Response', (errorCode, playerNames) => {
-                observer.next({ errorCode, playerNames })
-            });
+            if(!this.socket.active) this.refreshSocketRequests();
+            this.joinRoomResponseObserver = observer;
         });
         this.gameStartObservable = new Observable((observer: Observer<null>) => {
-            this.socket.on('Game Started', () => {
-                observer.next(null);
-            });
+            if(!this.socket.active) this.refreshSocketRequests();
+            this.gameStartObserver = observer;
+        });
+        this.roomPlayerObservable = new Observable((observer: Observer<string[]>) => {
+            if(!this.socket.active) this.refreshSocketRequests();
+            this.roomPlayerObserver = observer;
+        });
+        
+    }
+
+    refreshSocketRequests(){
+        this.socket = this.socketManagerService.getSocket();
+        this.socket.on('Game Room List Response', (rooms) => {
+            this.waitingRoomObserver.next(rooms)
+        });
+        this.socket.on('Join Room Request', (username) => {
+            this.joinRequestObserver.next(username)
+        });
+        this.socket.on('Join Room Response', (errorCode, playerNames) => {
+            this.joinRoomResponseObserver.next({ errorCode, playerNames })
+        });
+        this.socket.on('Game Started', () => {
+            this.gameStartObserver.next(null);
         });
         this.socket.on('Room Player Update', (playerNames) => {
-            this.playersInRoom = playerNames;
+            this.roomPlayerObserver.next(playerNames);
         });
+    }
+
+    setDefaultPlayersInRoom(defaultPlayers : string[]){
+        this.defaultPlayersInRoom = defaultPlayers;
+    }
+
+    getDefaultPlayersInRoom(): string[]{
+        return this.defaultPlayersInRoom;
     }
 
     isRequestPending(): boolean {
@@ -62,24 +101,16 @@ export class WaitingRoomManagerService {
         this.requestPending = requestPending;
     }
 
-    getPlayersInRoom() {
-        return this.playersInRoom;
-    }
-
-    setPlayersInRoom(players: string[]) {
-        this.playersInRoom = players;
-    }
-
     getGameRoomActive() {
-        this.socket.emit('Get Game Room List');
+        this.socketManagerService.getSocket().emit('Get Game Room List');
     }
 
     joinRoom(id: string, password?: string): void {
-        this.socket.emit('Join Game Room', id, password);
+        this.socketManagerService.getSocket().emit('Join Game Room', id, password);
     }
 
     leaveRoom(): void {
-        this.socket.emit('Leave Game Room');
+        this.socketManagerService.getSocket().emit('Leave Game Room');
     }
 
     getWaitingRoomObservable(): Observable<WaitingRoom[]> {
@@ -94,17 +125,22 @@ export class WaitingRoomManagerService {
         return this.gameStartObservable;
     }
 
+    getRoomPlayerObservable(): Observable<string[]> {
+        return this.roomPlayerObservable;
+    }
+
     createMultiRoom(roomName: string, visibility: string, passwordRoom: string) {
-        this.socket.emit('Create Game Room', roomName, visibility, passwordRoom);
+        console.log(this.socketManagerService.getSocket());
+        this.socketManagerService.getSocket().emit('Create Game Room', roomName, visibility, passwordRoom);
     }
 
     startGame() {
-        this.socket.emit('Start Game');
+        this.socketManagerService.getSocket().emit('Start Game');
     }
 
     createRoomResponse(): Observable<string> {
         return new Observable((observer: Observer<string>) => {
-            this.socket.once('Room Creation Response', (errorCode) => observer.next(errorCode));
+            this.socketManagerService.getSocket().once('Room Creation Response', (errorCode) => observer.next(errorCode));
         });
     }
 
@@ -113,10 +149,10 @@ export class WaitingRoomManagerService {
     }
 
     cancelJoinGameRoom() {
-        this.socket.emit('Cancel Join Request');
+        this.socketManagerService.getSocket().emit('Cancel Join Request');
     }
 
     respondJoinRequest(answer: boolean, username: string) {
-        this.socket.emit('Join Request Response', answer, username);
+        this.socketManagerService.getSocket().emit('Join Request Response', answer, username);
     }
 }

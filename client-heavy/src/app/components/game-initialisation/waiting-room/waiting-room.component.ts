@@ -12,10 +12,13 @@ import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-se
 export class WaitingRoomComponent {
 
     pendingRequests: string[] = [];
+    playersInRoom: string[];
 
     constructor(private waitingRoomManagerService: WaitingRoomManagerService, private accountService: AccountService, private router: Router, private gameStateService: GameStateService) {
+        this.playersInRoom = this.waitingRoomManagerService.getDefaultPlayersInRoom();
         this.waitingRoomManagerService.getJoinRoomRequestObservable().subscribe(this.newJoinRequest.bind(this));
         this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this))
+        this.waitingRoomManagerService.getRoomPlayerObservable().subscribe((playersInRoom) => this.playersInRoom = playersInRoom);
     }
 
     launchGame(): void {
@@ -35,12 +38,8 @@ export class WaitingRoomComponent {
         this.router.navigate(['/home']);
     }
 
-    getPlayersInRoom(): string[] {
-        return this.waitingRoomManagerService.getPlayersInRoom();
-    }
-
     isHostPlayer(): boolean{
-        return this.waitingRoomManagerService.getPlayersInRoom()[0] === this.accountService.getUsername();
+        return this.playersInRoom[0] === this.accountService.getUsername();
     }
 
     newJoinRequest(username: string){
@@ -51,7 +50,7 @@ export class WaitingRoomComponent {
         const username = this.pendingRequests.shift();
         if(!username) return;
         this.waitingRoomManagerService.respondJoinRequest(response, username);
-        if(response && this.waitingRoomManagerService.getPlayersInRoom().length >= 3){
+        if(response && this.playersInRoom.length >= 3){
             this.refuseEveryone();
         }
     }
