@@ -33,9 +33,13 @@ export class WaitingRoomComponent {
     }
 
     leaveRoom(): void {
+        this.leaveRoomLogic();
+        this.router.navigate(['/home']);
+    }
+
+    leaveRoomLogic(): void {
         this.refuseEveryone();
         this.waitingRoomManagerService.leaveRoom();
-        this.router.navigate(['/home']);
     }
 
     isHostPlayer(): boolean{
