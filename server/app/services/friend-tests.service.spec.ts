@@ -13,7 +13,7 @@ import { FriendService } from './friend.service';
 import { ProfileService } from './profile.service';
 import { UsersStatusService } from './users-status.service';
 
-describe('Profile Tests', async () => {
+describe('Friend Tests', async () => {
     const testUsername = 'testUser157Test';
     const testUsername2 = 'Test2User';
     const testPassword = 'tE!s&to~';

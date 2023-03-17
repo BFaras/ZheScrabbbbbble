@@ -12,6 +12,7 @@ import { FriendSocketService } from './friend-socket.service';
 import { ProfileSocketService } from './profile-socket.service';
 import { RoomManagerService } from './room-manager.service';
 import { SocketDatabaseService } from './socket-database.service';
+import { UsersStatusSocketService } from './users-status-socket.service';
 import { UsersStatusService } from './users-status.service';
 
 export class SocketManager {
@@ -24,6 +25,7 @@ export class SocketManager {
     private usersStatusService: UsersStatusService;
     private accountInfoService: AccountInfoService;
     private profileSocketService: ProfileSocketService;
+    private usersStatusSocketService: UsersStatusSocketService;
     private friendSocketService: FriendSocketService;
     private pendingJoinGameRequests: Map<string, [string, io.Socket]>;
     // private timeoutRoom: { [key: string]: NodeJS.Timeout };
@@ -37,19 +39,22 @@ export class SocketManager {
         this.usersStatusService = Container.get(UsersStatusService);
         this.roomManager = Container.get(RoomManagerService);
         this.profileSocketService = Container.get(ProfileSocketService);
+        this.usersStatusSocketService = Container.get(UsersStatusSocketService);
         this.friendSocketService = Container.get(FriendSocketService);
         this.pendingJoinGameRequests = new Map<string, [string, io.Socket]>();
         this.commandController = new CommandController(this.roomManager);
     }
 
     handleSockets(): void {
+        this.usersStatusSocketService.setupUserStatusSocketService(this.sio);
+
         this.sio.on('connection', (socket: io.Socket) => {
             console.log(new Date().toLocaleTimeString() + ' | New device connection to server');
             this.socketDatabaseService.databaseSocketRequests(socket);
             this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
             this.profileSocketService.handleProfileSockets(socket);
-            this.friendSocketService.handleFriendSockets(socket, this.sio);
+            this.friendSocketService.handleFriendSockets(socket);
 
             socket.on('Create Game Room', async (name: string, visibility: RoomVisibility, password?: string) => {
                 console.log(new Date().toLocaleTimeString() + ' | Room creation request received');

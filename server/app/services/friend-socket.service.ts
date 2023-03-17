@@ -1,5 +1,4 @@
 import { NO_ERROR } from '@app/constants/error-code-constants';
-import { ConnectivityStatus } from '@app/interfaces/friend-info';
 import * as io from 'socket.io';
 import { Container, Service } from 'typedi';
 import { AccountInfoService } from './account-info.service';
@@ -11,7 +10,6 @@ export class FriendSocketService {
     private readonly friendService: FriendService;
     private readonly accountInfoService: AccountInfoService;
     private readonly usersStatusService: UsersStatusService;
-    private sio: io.Server;
 
     constructor() {
         this.friendService = Container.get(FriendService);
@@ -19,8 +17,7 @@ export class FriendSocketService {
         this.usersStatusService = Container.get(UsersStatusService);
     }
 
-    handleFriendSockets(socket: io.Socket, sio: io.Server) {
-        this.sio = sio;
+    handleFriendSockets(socket: io.Socket) {
         socket.on('Get Friend List', async () => {
             socket.emit('Friend List Response', this.friendService.getFriendList(this.accountInfoService.getUserId(socket)));
         });
@@ -36,17 +33,13 @@ export class FriendSocketService {
         });
     }
 
-    async updateFriendsWithNewStatus(userId: string, newUserStatus: ConnectivityStatus) {
-        this.sio.in(this.friendService.getFriendRoomName(userId)).emit('Update friend status', newUserStatus);
-    }
-
     private async addFriendsToSocket(socket: io.Socket, friendUserId: string) {
         socket.join(this.friendService.getFriendRoomName(friendUserId));
 
         if (this.usersStatusService.isUserOnline(friendUserId)) {
             this.usersStatusService
                 .getUserSocketFromId(friendUserId)
-                .join(this.friendService.getFriendRoomName(this.accountInfoService.getUserId(socket)));
+                ?.join(this.friendService.getFriendRoomName(this.accountInfoService.getUserId(socket)));
         }
     }
 }
