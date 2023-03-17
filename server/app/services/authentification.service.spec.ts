@@ -12,9 +12,10 @@ import {
 import { Question } from '@app/interfaces/question';
 import { expect } from 'chai';
 import { assert } from 'console';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import Container from 'typedi';
 import { AuthentificationService } from './authentification.service';
 import { DatabaseService } from './database.service';
-import { ProfileService } from './profile.service';
 import { UsersStatusService } from './users-status.service';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -27,7 +28,15 @@ describe('AuthentificationService Tests', () => {
     const testAvatar = '';
     const testSecurityQuestion: Question = { question: 'Who are you?', answer: 'Me' };
 
+    let mongoServer: MongoMemoryServer;
+    let dbService: DatabaseService;
     let authService: AuthentificationService;
+
+    before(async () => {
+        dbService = Container.get(DatabaseService);
+        mongoServer = new MongoMemoryServer();
+        await dbService.start(await mongoServer.getUri());
+    });
 
     beforeEach(() => {
         authService = new AuthentificationService();
@@ -35,6 +44,12 @@ describe('AuthentificationService Tests', () => {
 
     afterEach(() => {
         Sinon.restore();
+    });
+
+    after(async () => {
+        if (dbService['client']) {
+            await dbService['client'].close();
+        }
     });
 
     it('authentifyUser should call isUserOnline() and should return false if user is online', async () => {
@@ -85,11 +100,6 @@ describe('AuthentificationService Tests', () => {
 
     it('createAccount should return NO_ERROR if the account was created successfully', async () => {
         const testError = NO_ERROR;
-        const accountCreatedInDB = true;
-        Sinon.stub(AuthentificationService.prototype, 'verifyAccountRequirements' as any).returns(Promise.resolve(NO_ERROR));
-        Sinon.stub(DatabaseService.prototype, 'addUserAccount').returns(Promise.resolve(accountCreatedInDB));
-        Sinon.stub(ProfileService.prototype, 'createNewProfile').returns(Promise.resolve(accountCreatedInDB));
-        Sinon.stub(UsersStatusService.prototype, 'addOnlineUser');
         expect(await authService.createAccount(testUsername, testPassword, goodTestEmail, testAvatar, testSecurityQuestion)).to.deep.equal(testError);
     });
 
