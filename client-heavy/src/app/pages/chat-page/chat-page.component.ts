@@ -15,7 +15,7 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
     chatText: string = '';
     nextMessage: string = '';
     chatList: ChatInfo[];
-    chatLog: Map<string, ChatMessage[]>;
+    chatLog: Map<string, ChatMessage[]> = new Map<string, ChatMessage[]>();
     public: ChatType = ChatType.PUBLIC;
     private: ChatType = ChatType.PRIVATE;
     global: ChatType = ChatType.GLOBAL;
@@ -68,9 +68,6 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
         }
 
         (event.currentTarget! as HTMLTextAreaElement).className += " active";
-
-        console.log(this.chatList);
-        console.log(this.chatLog);
     }
 
     selectChat(event: Event, id: string) {

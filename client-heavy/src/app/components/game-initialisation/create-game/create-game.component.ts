@@ -52,6 +52,7 @@ export class CreateGameComponent {
                 return;
             }
         }
+        
         sessionStorage.clear();
         this.waitingRoomManagerService.createRoomResponse().subscribe(this.redirectPlayer.bind(this));
         this.waitingRoomManagerService.createMultiRoom(roomNameValue, this.visibility, this.passwordRoom);
@@ -66,7 +67,7 @@ export class CreateGameComponent {
             alert('Erreur dans la création de la salle');
             return;
         }
-        this.waitingRoomManagerService.setPlayersInRoom([this.accountService.getUsername()])
+        this.waitingRoomManagerService.setDefaultPlayersInRoom([this.accountService.getUsername()])
         this.router.navigate(['/waiting-room']);
     }
 }

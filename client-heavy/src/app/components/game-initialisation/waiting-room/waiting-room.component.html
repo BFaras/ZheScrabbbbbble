@@ -1,10 +1,10 @@
-<app-navigation-bar></app-navigation-bar>
+<app-navigation-bar (navLogic)="leaveRoomLogic()"></app-navigation-bar>
 <div class="container justified">
     <div class="logo">Scrabble</div>
     <h1 class="header-item text">{{ 'WAITING-ROOM.MESSAGE' | translate }}</h1>
     <div class="loading-container">
         <mat-list>
-            <mat-list-item *ngFor="let player of getPlayersInRoom(); let last=last; let first=first" class="text players">{{player}}
+            <mat-list-item *ngFor="let player of playersInRoom; let last=last; let first=first" class="text players">{{player}}
                 <img *ngIf="first" src="assets/crown.png" width="20" height="20">
                 <mat-divider *ngIf="!last"></mat-divider>
             </mat-list-item>
@@ -15,7 +15,7 @@
             <button class="button cancel join-request" (click)="respondNextRequest(false)">{{ 'WAITING-ROOM.DECLINE' | translate }}</button>
         </div>
         <div class="mode-buttons">
-            <button class="button" *ngIf="isHostPlayer() && getPlayersInRoom().length > 1" (click)="launchGame()">{{ 'WAITING-ROOM.START' | translate }}</button>
+            <button class="button" *ngIf="isHostPlayer() && playersInRoom.length > 1" (click)="launchGame()">{{ 'WAITING-ROOM.START' | translate }}</button>
             <button class="button cancel" (click)="leaveRoom()">{{ 'WAITING-ROOM.LEAVE' | translate }}</button>
         </div>
     </div>

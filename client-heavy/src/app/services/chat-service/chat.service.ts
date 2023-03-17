@@ -3,20 +3,27 @@ import { ChatInfo, ChatMessage } from '@app/classes/chat-info';
 import { Message } from '@app/classes/message';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { Observable, Observer } from 'rxjs';
+import { Socket } from 'socket.io-client';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ChatService {
-    messageLog = new Map<string, ChatMessage[]>();
-    chatList: ChatInfo[];
+    private socket : Socket;
 
-    constructor(private socketManagerService: SocketManagerService) {}
+    messageLog = new Map<string, ChatMessage[]>();
+    chatList: ChatInfo[] = [];
+
+    chatMessageObserver : Observer<Map<string, ChatMessage[]>>;
+
+    constructor(private socketManagerService: SocketManagerService) {
+        this.updateSocket();
+    }
 
     getChatsList(): Observable<ChatInfo[]> {
         this.socketManagerService.getSocket().emit('Get User Chat List');
         return new Observable((observer: Observer<ChatInfo[]>) => {
-            this.socketManagerService.getSocket().on('User Chat List Response', (chatList: ChatInfo[]) => {
+            this.socketManagerService.getSocket().once('User Chat List Response', (chatList: ChatInfo[]) => {
                 observer.next(chatList);
                 this.updateChatList(chatList);
             });
@@ -35,13 +42,18 @@ export class ChatService {
 
     getNewMessages(): Observable<Map<string, ChatMessage[]>> {
         return new Observable((observer: Observer<Map<string, ChatMessage[]>>) => {
-            this.socketManagerService.getSocket().on('New Chat Message', (id: string, message: ChatMessage) => {
-                if (this.messageLog.has(id)) {
-                    this.messageLog.get(id)!.push(message);
-                    observer.next(this.messageLog);
-                    console.log(message);
-                }
-            });
+            if(!this.socket.active) this.updateSocket();
+            this.chatMessageObserver = observer;
+        });
+    }
+
+    updateSocket(){
+        this.socket = this.socketManagerService.getSocket();
+        this.socket.on('New Chat Message', (id: string, message: ChatMessage) => {
+            if (this.messageLog.has(id)) {
+                this.messageLog.get(id)!.push(message);
+                this.chatMessageObserver.next(this.messageLog);
+            }
         });
     }
 

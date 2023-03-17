@@ -5,7 +5,6 @@ import { Reserve } from '@app/classes/reserve';
 import {
     DECIMAL_BASE,
     HAND_SIZE,
-    MAX_NUMBER_OF_PLAYERS,
     MILLISECOND_IN_HOURS,
     MILLISECOND_IN_MINUTES,
     MILLISECOND_IN_SECONDS,
@@ -173,7 +172,7 @@ export class Game {
     }
 
     changeTurn() {
-        this.playerTurnIndex = (this.playerTurnIndex + 1) % MAX_NUMBER_OF_PLAYERS;
+        this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
     }
 
     private scorePlayers() {

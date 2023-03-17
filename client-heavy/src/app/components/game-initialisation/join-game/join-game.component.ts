@@ -50,7 +50,7 @@ export class JoinGameComponent implements OnDestroy {
             const passwordDialog = this.dialog.open(PasswordInputComponent, {data:room.id, width: '30%', height: '200px'});
             passwordDialog.afterClosed().subscribe(result => {
                 if(!result) return;
-                this.waitingRoomManagerService.setPlayersInRoom(result);
+                this.waitingRoomManagerService.setDefaultPlayersInRoom(result);
                 this.router.navigate(['/waiting-room']);
             });
         }else if(room.visibility === RoomVisibility.PRIVATE){
@@ -73,7 +73,7 @@ export class JoinGameComponent implements OnDestroy {
             alert('Fatal server error. No player name received');
             return;
         }
-        this.waitingRoomManagerService.setPlayersInRoom(message.playerNames);
+        this.waitingRoomManagerService.setDefaultPlayersInRoom(message.playerNames);
         this.router.navigate(['/waiting-room']);
     }
 }
