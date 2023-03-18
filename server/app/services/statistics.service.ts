@@ -1,19 +1,22 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
 import { DATABASE_UNAVAILABLE } from '@app/constants/error-code-constants';
 import { GAMES_NB_STAT_NAME, GAME_TIME_AVRG_STAT_NAME, POINTS_AVRG_STAT_NAME, WINS_NB_STAT_NAME } from '@app/constants/profile-constants';
-import { StatisticInfo } from '@app/interfaces/profile-info';
+import { GameHistoryInfo, StatisticInfo } from '@app/interfaces/profile-info';
 import { Container, Service } from 'typedi';
 import { ProfileService } from './profile.service';
+import { TimeFormatterService } from './time-formatter.service';
 
 @Service()
 export class StatisticService {
     private readonly profileService: ProfileService;
+    private readonly timeFormatterService: TimeFormatterService;
 
     constructor() {
         this.profileService = Container.get(ProfileService);
+        this.timeFormatterService = Container.get(TimeFormatterService);
     }
 
-    async updateGameStats(userId: string, isWin: boolean, gamePointsObtained: number, gameTime: number) {
+    async addGameStats(userId: string, isWin: boolean, gamePointsObtained: number, gameTime: number) {
         let userStats: StatisticInfo[] = await this.profileService.getUserStats(userId);
         let errorCode = DATABASE_UNAVAILABLE;
 
@@ -26,6 +29,7 @@ export class StatisticService {
         userStats = this.incrementStat(userStats, GAMES_NB_STAT_NAME);
 
         errorCode = await this.profileService.updateUserStats(userId, userStats);
+        errorCode = await this.profileService.addGameToHistory(userId, this.generateGameInfo(isWin));
         return errorCode;
     }
 
@@ -59,5 +63,13 @@ export class StatisticService {
 
     private calculateNewAverage(oldAverage: number, amountToAdd: number, oldTotalNbOfStats: number): number {
         return (oldAverage * oldTotalNbOfStats + amountToAdd) / (oldTotalNbOfStats + 1);
+    }
+
+    private generateGameInfo(isWin: boolean): GameHistoryInfo {
+        return {
+            date: this.timeFormatterService.getDateString(),
+            time: this.timeFormatterService.getTimeStampString(),
+            isWinner: isWin,
+        };
     }
 }

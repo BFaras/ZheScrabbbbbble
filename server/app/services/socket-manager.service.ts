@@ -8,10 +8,11 @@ import Container from 'typedi';
 import { AccountInfoService } from './account-info.service';
 import { AuthSocketService } from './auth-socket.service';
 import { ChatSocketService } from './chat-socket.service';
-import { OnlineUsersService } from './online-users.service';
+import { FriendSocketService } from './friend-socket.service';
 import { ProfileSocketService } from './profile-socket.service';
 import { RoomManagerService } from './room-manager.service';
 import { SocketDatabaseService } from './socket-database.service';
+import { UsersStatusService } from './users-status.service';
 
 export class SocketManager {
     private sio: io.Server;
@@ -20,9 +21,10 @@ export class SocketManager {
     private socketDatabaseService: SocketDatabaseService;
     private chatSocketService: ChatSocketService;
     private authSocketService: AuthSocketService;
-    private onlineUsersService: OnlineUsersService;
+    private usersStatusService: UsersStatusService;
     private accountInfoService: AccountInfoService;
     private profileSocketService: ProfileSocketService;
+    private friendSocketService: FriendSocketService;
     private pendingJoinGameRequests: Map<string, [string, io.Socket]>;
     // private timeoutRoom: { [key: string]: NodeJS.Timeout };
 
@@ -32,11 +34,13 @@ export class SocketManager {
         this.chatSocketService = new ChatSocketService();
         this.authSocketService = new AuthSocketService();
         this.accountInfoService = Container.get(AccountInfoService);
-        this.onlineUsersService = Container.get(OnlineUsersService);
+        this.usersStatusService = Container.get(UsersStatusService);
         this.roomManager = Container.get(RoomManagerService);
         this.profileSocketService = Container.get(ProfileSocketService);
+        this.friendSocketService = Container.get(FriendSocketService);
         this.pendingJoinGameRequests = new Map<string, [string, io.Socket]>();
         this.commandController = new CommandController(this.roomManager);
+        this.friendSocketService.setSio(this.sio);
     }
 
     handleSockets(): void {
@@ -46,6 +50,7 @@ export class SocketManager {
             this.chatSocketService.handleChatSockets(socket);
             this.authSocketService.handleAuthSockets(socket);
             this.profileSocketService.handleProfileSockets(socket);
+            this.friendSocketService.handleFriendSockets(socket);
 
             socket.on('Create Game Room', async (name: string, visibility: RoomVisibility, password?: string) => {
                 console.log(new Date().toLocaleTimeString() + ' | Room creation request received');
@@ -137,8 +142,7 @@ export class SocketManager {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
                 if (currentRoom.getHostPlayer().getName() !== this.accountInfoService.getUsername(socket)) return;
-                // TODO: Pour tests, en l'absence de joueur virtuel
-                // if(currentRoom.getPlayerCount() < 2) return;
+                if (currentRoom.getPlayerCount() < 2) return;
                 if (currentRoom.isGameStarted()) return;
                 // TODO Fill with virtual players
                 currentRoom.startGame();
@@ -191,7 +195,7 @@ export class SocketManager {
 
             socket.on('disconnect', async () => {
                 console.log(new Date().toLocaleTimeString() + ' | User Disconnected from server');
-                this.onlineUsersService.removeOnlineUser(this.accountInfoService.getUsername(socket));
+                this.usersStatusService.removeOnlineUser(this.accountInfoService.getUserId(socket));
                 const room = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!room) return;
                 room.removePlayer(socket.id);

@@ -63,7 +63,7 @@ describe('Statistics Tests', async () => {
         const expectedPointsAvrg = 105;
         const expectedTimeAvrg = 1005;
 
-        await statsService.updateGameStats(userId, testIsWin, testPointsObtained, testGameTime);
+        await statsService.addGameStats(userId, testIsWin, testPointsObtained, testGameTime);
 
         const profileStats: StatisticInfo[] = await profileService.getUserStats(userId);
         expect(profileStats[statsService['getStatPosition'](profileStats, WINS_NB_STAT_NAME)].statAmount).to.equal(expectedNbOfWins);
@@ -84,7 +84,7 @@ describe('Statistics Tests', async () => {
 
         for (let i = 0; i < nbOfGamesPlayed; i++) {
             const isWin = i % 2 === 0;
-            await statsService.updateGameStats(userId, isWin, testBasePointsObtained + i, testBaseGameTime + i);
+            await statsService.addGameStats(userId, isWin, testBasePointsObtained + i, testBaseGameTime + i);
 
             if (isWin) {
                 nbOfWinsNbOfWinsAccumulated++;
