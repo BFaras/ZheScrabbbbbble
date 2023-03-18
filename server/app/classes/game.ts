@@ -14,6 +14,7 @@ import {
 import { GameState, PlaceLetterCommandInfo, PlayerState } from '@app/constants/basic-interface';
 import { GameHistory, PlayerInfo, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
 import { ILLEGAL_COMMAND } from '@app/constants/error-code-constants';
+import { INVALID_WORD_MESSAGE, PASS_MESSAGE, SWAP_MESSAGE } from '@app/constants/game-state-constants';
 import { CommandResult } from '@app/controllers/command.controller';
 import { CommandFormattingService } from '@app/services/command-formatting.service';
 import { PossibleWordFinder, PossibleWords } from '@app/services/possible-word-finder.service';
@@ -61,11 +62,10 @@ export class Game {
         const score = this.wordValidationService.validation(formattedCommand, this.board, true);
         this.resetCounter();
         if (score < 0) {
-            const invalidWordPlayerMessage = 'a tenté de placer un mot invalide.';
             this.board.removeLetters(formattedCommand);
             playerHand.addLetters(letters as Letter[]);
             this.endTurn();
-            return { activePlayerMessage: invalidWordPlayerMessage, otherPlayerMessage: invalidWordPlayerMessage };
+            return { playerMessage: {messageType: INVALID_WORD_MESSAGE, values : [this.players[this.playerTurnIndex].getName()]}};
         }
         this.players[this.playerTurnIndex].addScore(score);
         const endMessage = this.endTurn();
@@ -73,8 +73,7 @@ export class Game {
             return { endGameMessage: endMessage };
         }
         playerHand.addLetters(this.reserve.drawLetters(HAND_SIZE - playerHand.getLength()));
-
-        return { activePlayerMessage: '', otherPlayerMessage: `${score}` };
+        return { playerMessage: {messageType: `${score}`, values : [this.players[this.playerTurnIndex].getName()]} };
     }
 
     swapLetters(stringLetters: string): CommandResult {
@@ -86,9 +85,7 @@ export class Game {
         this.reserve.returnLetters(letters);
         this.resetCounter();
         this.endTurn();
-        const activePlayerMessage = `a échangé les lettres ${stringLetters}.`;
-        const otherPlayerMessage = `a échangé ${stringLetters.length} lettres.`;
-        return { activePlayerMessage, otherPlayerMessage };
+        return { playerMessage : {messageType: SWAP_MESSAGE, values : [this.players[this.playerTurnIndex].getName(), stringLetters.length.toString()]}};
     }
 
     passTurn(): CommandResult {
@@ -97,8 +94,7 @@ export class Game {
         if (endMessage) {
             return { endGameMessage: endMessage };
         }
-        const returnMessage = 'a passé son tour.';
-        return { activePlayerMessage: returnMessage, otherPlayerMessage: returnMessage };
+        return { playerMessage: {messageType: PASS_MESSAGE, values : [this.players[this.playerTurnIndex].getName()]}};
     }
 
     endGame(): string {

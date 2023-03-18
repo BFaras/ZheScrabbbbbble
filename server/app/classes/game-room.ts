@@ -2,6 +2,7 @@ import { Player } from '@app/classes/player';
 import { MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
 import { Game } from './game';
 import { VirtualPlayer } from './virtual-player';
+import { VirtualPlayerEasy } from './virtual-player-easy';
 
 export class GameRoom {
     private players: Player[];
@@ -44,6 +45,20 @@ export class GameRoom {
         const index = this.players.indexOf(player);
         this.players.splice(index, 1);
         return true;
+    }
+
+    replacePlayer(playerID: string) {
+        let index = -1;
+        for (let i = 0; i < this.players.length; i++) {
+            if (this.players[i].getUUID() === playerID) {
+                index = i;
+                break;
+            }
+        }
+        if(index === -1) return;
+        if(this.players[index] instanceof VirtualPlayer) return;
+        const newVirtualPlayer = new VirtualPlayerEasy(this.players[index].getName() + " (virtual)", this);
+        this.players[index] = newVirtualPlayer;
     }
 
     isPlayerInRoom(playerID: string): boolean {
@@ -118,7 +133,7 @@ export class GameRoom {
     isGameStarted(){
         return this.gameStarted;
     }
-    
+
     get getGame(): Game {
         return this.game;
     }

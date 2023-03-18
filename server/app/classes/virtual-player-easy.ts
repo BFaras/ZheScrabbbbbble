@@ -10,6 +10,7 @@ import {
     VALUE_FOR_SWAP,
 } from '@app/constants/basic-constants';
 import { ILLEGAL_COMMAND } from '@app/constants/error-code-constants';
+import { PLACE_MESSAGE } from '@app/constants/game-state-constants';
 import { CommandTypes } from '@app/controllers/command.controller';
 import { PossibleWords } from '@app/services/possible-word-finder.service';
 import { CommandDetails, VirtualPlayer } from './virtual-player';
@@ -44,9 +45,7 @@ export class VirtualPlayerEasy extends VirtualPlayer {
                 details = await this.place();
                 if (details.result.errorType !== undefined) details = this.pass();
                 if (details.command.split(' ')[0] === '!placer')
-                    details.result.otherPlayerMessage = `a placé ${details.command.split(' ')[2]} pour ${
-                        details.result.otherPlayerMessage
-                    } point(s).`;
+                    details.result.playerMessage = {messageType: PLACE_MESSAGE, values: [this.getName(), details.command.split(' ')[2], details.result.playerMessage!.messageType] };
                 break;
             case CommandTypes.Swap:
                 details = this.swap();
@@ -56,7 +55,7 @@ export class VirtualPlayerEasy extends VirtualPlayer {
                 details = this.pass();
                 break;
         }
-        if (details.result === undefined || details.result.otherPlayerMessage === undefined) details = this.pass();
+        if (details.result === undefined || details.result.playerMessage === undefined) details = this.pass();
         while (Date.now() < minTime);
         return details;
     }
