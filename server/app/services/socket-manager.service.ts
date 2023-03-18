@@ -216,37 +216,34 @@ export class SocketManager {
                 this.onlineUsersService.removeOnlineUser(this.accountInfoService.getUsername(socket));
                 const room = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!room) return;
-                room.removePlayer(socket.id);
+                if(room.isGameStarted()){
+                    room.replacePlayer(socket.id);
+                }else{
+                    room.removePlayer(socket.id);
+                }
                 socket.leave(room.getID());
                 if (room.getRealPlayerCount() === 0) {
                     this.roomManager.deleteRoom(room.getID());
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
-                const playerNames = this.roomManager.getRoomPlayerNames(room.getID());
-                socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
-                socket.to(room.getID()).emit('Room Player Update', playerNames);
-                /*
-                const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
-                if (!currentRoom) return;
-                if (currentRoom.getGame.isGameOver()) {
-                    this.roomManager.removePlayer(socket.id, currentRoom.getName());
+                if(!room.isGameStarted()){
+                    const playerNames = this.roomManager.getRoomPlayerNames(room.getID());
+                    socket.to(room.getID()).emit('Room Player Update', playerNames);
+                    socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
-                socket.leave(currentRoom.getName());
-                this.sio.to(currentRoom.getName()).emit('new-message', {
-                    username: '[SERVER]',
-                    body: `${currentRoom?.getPlayer(socket.id)?.getName()} s'est déconnecté.`,
-                    color: COLOR_SYSTEM,
-                });
-                const timeout = await setTimeout(async () => {
-                    await this.disconnectPlayer(currentRoom, socket);
-                }, RECONNECT_TIME);
-                this.timeoutRoom[currentRoom.getName()] = timeout;
-                */
+                let gameState = room.getGame.createGameState();
+                gameState.message
+                socket.emit('Game State Update', gameState);
+                socket.to(room.getID()).emit('Game State Update', gameState);
+                while(await room.getGame.attemptVirtualPlay()){
+                    gameState = room.getGame.createGameState();
+                    socket.emit('Game State Update', gameState);
+                    socket.to(room.getID()).emit('Game State Update', gameState);
+                }
             });
             /*
-
             socket.on('reconnect', (id: string) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(id);
                 if (!currentRoom) return;

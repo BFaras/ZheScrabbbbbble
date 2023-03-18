@@ -57,7 +57,7 @@ export class GameRoom {
         }
         if(index === -1) return;
         if(this.players[index] instanceof VirtualPlayer) return;
-        const newVirtualPlayer = new VirtualPlayerEasy(this.players[index].getName() + " (virtual)", this);
+        const newVirtualPlayer = new VirtualPlayerEasy(this.players[index].getName() + " (V)", this);
         this.players[index] = newVirtualPlayer;
     }
 
