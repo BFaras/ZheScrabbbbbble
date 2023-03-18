@@ -28,11 +28,6 @@
             </div>
 
             <div class="ghost-chat"></div>
-            <section class="font-size-container">
-                <span>{{'BOARD.SIZE' | translate}}</span><br />
-                <button class="font-size" id="increase" (click)="onIncrease()">+</button>
-                <button class="font-size" id="decrease" (click)="onDecrease()">-</button>
-            </section>
         </section>
     </div>
     <app-letter-holder id="letter-holder" (receiver)="setReceiver($event)"></app-letter-holder>

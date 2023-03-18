@@ -52,7 +52,8 @@
         "CHATBOX":"BOÎTE DE CHAT",
         "DEFAULT":"Tapez une commande",
         "SEND":"Envoyer",
-        "JOIN":"Joindre des chats publics"
+        "JOIN":"Joindre des chats publics",
+        "SELECT":"Veuillez sélectionner un chat à gauche"
     },
     "LETTERHOLDER":{
         "PASS":"Passer",

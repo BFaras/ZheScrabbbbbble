@@ -1,4 +1,5 @@
 #zoom-holder {
+    margin-left: 70px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -27,7 +28,7 @@
     padding: 10px;
     background-color: var(--button-tertiary);
     border-radius: 7px;
-    width: 150px;
+    width: max-content;
     font-size: 20px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;

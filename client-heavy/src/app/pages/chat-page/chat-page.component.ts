@@ -19,10 +19,11 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
     public: ChatType = ChatType.PUBLIC;
     private: ChatType = ChatType.PRIVATE;
     global: ChatType = ChatType.GLOBAL;
-    visibility: ChatType;
+    visibility: ChatType = this.global;
     selectedChat: string;
     subscriptions: Subscription[] = [];
     username: string;
+    isDisabled: boolean = true;
 
     constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService) {
         this.username = this.account.getUsername();
@@ -59,9 +60,10 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
 
     setVisibility(event: Event, newVisibility: ChatType) {
         this.visibility = newVisibility;
+        this.selectedChat = "";
+        this.setDisabled();
 
         let chatLinks;
-
         chatLinks = document.getElementsByClassName("tabs");
         for (let i = 0; i < chatLinks.length; i++) {
             chatLinks[i].className = chatLinks[i].className.replace(" active", "");
@@ -72,11 +74,17 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
 
     selectChat(event: Event, id: string) {
         this.selectedChat = id;
+        this.setDisabled();
         let chatButtons;
         chatButtons = document.getElementsByClassName("chat-button");
         for (let i = 0; i < chatButtons.length; i++) {
             chatButtons[i].className = chatButtons[i].className.replace(" selected", "");
         }
         (event.currentTarget! as HTMLTextAreaElement).className += " selected";
+    }
+
+    setDisabled() {
+        if (this.selectedChat) this.isDisabled = false;
+        else this.isDisabled = true;
     }
 }

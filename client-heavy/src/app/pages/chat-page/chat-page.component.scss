@@ -66,7 +66,7 @@
     flex-direction: row;
 }
 
-input {
+.input {
     border-radius: 5px;
     padding: 0% 2%;
     width: 100%;
@@ -80,10 +80,34 @@ input {
     color: var(--button-text-default);
 }
 
-input:focus {
+.input::-webkit-input-placeholder {
+    opacity: 0 !important;
+}
+
+.input:focus {
     outline: none;
     border: solid 2px var(--accent-default);
 }
+
+.input:disabled,
+.input[disabled] {
+    border-radius: 5px;
+    padding: 0% 2%;
+    width: 100%;
+    //flex-grow: 1;
+    margin-right: 0.5%;
+    border: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bolder;
+    font-size: 18px;
+    background-color: var(--background-secondary);
+    color: var(--button-text-default);
+}
+
+.input[disabled]::-webkit-input-placeholder {
+    opacity: 1 !important;
+}
+
 
 button {
     font-family: 'Courier New', Courier, monospace;

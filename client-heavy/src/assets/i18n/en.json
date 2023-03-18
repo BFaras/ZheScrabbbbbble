@@ -52,7 +52,8 @@
         "CHATBOX":"CHAT BOX",
         "DEFAULT":"Type a command",
         "SEND":"Send",
-        "JOIN":"Join Public Chats"
+        "JOIN":"Join Public Chats",
+        "SELECT":"Please select a chat on the left"
     },
     "LETTERHOLDER":{
         "PASS":"Skip turn",

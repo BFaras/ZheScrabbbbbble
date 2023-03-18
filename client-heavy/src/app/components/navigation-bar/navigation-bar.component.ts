@@ -21,7 +21,7 @@ export class NavigationBarComponent implements OnInit {
 
   }
 
-  callNavLogic(){
+  callNavLogic() {
     this.navLogic.emit();
   }
 
