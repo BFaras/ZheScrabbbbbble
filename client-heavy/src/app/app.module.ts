@@ -48,12 +48,13 @@ import { ChatService } from './services/chat-service/chat.service';
  * Otherwise Angular Cli will not know in which module to put new component
  */
 /*
-export const httpTranslateLoaderFactory = (http: HttpClient): TranslateHttpLoader => {
-    return new TranslateHttpLoader(http);
-};
-*/
 export function httpTranslateLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http);
+}
+*/
+
+export function HttpLoaderFactory(httpClient: HttpClient) {
+    return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -101,9 +102,10 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
         MatListModule,
         MatDialogModule,
         TranslateModule.forRoot({
+            defaultLanguage: 'fr',
             loader: {
                 provide: TranslateLoader,
-                useFactory: httpTranslateLoaderFactory,
+                useFactory: (HttpLoaderFactory),
                 deps: [HttpClient]
             }
         })
