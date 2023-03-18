@@ -58,7 +58,8 @@
         "PASS":"Passer",
         "PLAY":"Jouer",
         "REPLACE":"Échanger",
-        "CANCEL":"Annuler"
+        "CANCEL":"Annuler",
+        "SWITCH":"Échanger de joueur"
     },
     "BOARD":{
         "MOT":"MOT",

@@ -58,7 +58,8 @@
         "PASS":"Skip turn",
         "PLAY":"Play",
         "REPLACE":"Replace",
-        "CANCEL":"Cancel"
+        "CANCEL":"Cancel",
+        "SWITCH":"Switch player"
     },
     "BOARD":{
         "MOT":"WORD",
