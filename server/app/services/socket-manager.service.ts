@@ -1,5 +1,6 @@
 import { Player } from '@app/classes/player';
-import { RoomVisibility } from '@app/constants/basic-constants';
+import { VirtualPlayerEasy } from '@app/classes/virtual-player-easy';
+import { MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
 import { JOIN_REQUEST_REFUSED, NO_ERROR, ROOM_IS_FULL, ROOM_NAME_TAKEN, ROOM_PASSWORD_INCORRECT } from '@app/constants/error-code-constants';
 import { CommandController } from '@app/controllers/command.controller';
 import * as http from 'http';
@@ -137,10 +138,12 @@ export class SocketManager {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
                 if (currentRoom.getHostPlayer().getName() !== this.accountInfoService.getUsername(socket)) return;
-                // TODO: Pour tests, en l'absence de joueur virtuel
-                // if(currentRoom.getPlayerCount() < 2) return;
+                const playerCount = currentRoom.getPlayerCount()
+                if(playerCount < 2) return;
                 if (currentRoom.isGameStarted()) return;
-                // TODO Fill with virtual players
+                for(let i = 0; i < MAX_NUMBER_OF_PLAYERS - playerCount; i++){
+                    currentRoom.addPlayer(new VirtualPlayerEasy('Virtual Player ' + (i + 1), currentRoom));
+                }
                 currentRoom.startGame();
                 console.log(new Date().toLocaleTimeString() + ' | New game started');
                 socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
@@ -156,7 +159,7 @@ export class SocketManager {
                 socket.emit('Game State Update', currentRoom.getGame.createGameState());
             });
 
-            socket.on('Play Turn', (command: string, argument: string) => {
+            socket.on('Play Turn', async(command: string, argument: string) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom || currentRoom.getGame.isGameOver()) return;
                 const returnValue = this.commandController.executeCommand({ commandType: command, args: argument, playerID: socket.id });
@@ -174,9 +177,16 @@ export class SocketManager {
                     color: COLOR_SYSTEM,
                 });
                 */
-                const gameState = currentRoom.getGame.createGameState();
+                let gameState = currentRoom.getGame.createGameState();
+                console.log('Emit Normal Player Turn');
                 socket.emit('Game State Update', gameState);
                 socket.to(currentRoom.getID()).emit('Game State Update', gameState);
+                while(await currentRoom.getGame.attemptVirtualPlay()){
+                    gameState = currentRoom.getGame.createGameState();
+                    console.log('Emit Virtual Player Turn');
+                    socket.emit('Game State Update', gameState);
+                    socket.to(currentRoom.getID()).emit('Game State Update', gameState);
+                }
             });
 
             socket.on('Abandon', async () => {
@@ -196,8 +206,9 @@ export class SocketManager {
                 if (!room) return;
                 room.removePlayer(socket.id);
                 socket.leave(room.getID());
-                if (room.getPlayerCount() === 0) {
+                if (room.getRealPlayerCount() === 0) {
                     this.roomManager.deleteRoom(room.getID());
+                    socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
                 const playerNames = this.roomManager.getRoomPlayerNames(room.getID());

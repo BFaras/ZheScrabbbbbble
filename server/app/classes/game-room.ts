@@ -1,6 +1,7 @@
 import { Player } from '@app/classes/player';
 import { MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
 import { Game } from './game';
+import { VirtualPlayer } from './virtual-player';
 
 export class GameRoom {
     private players: Player[];
@@ -51,6 +52,14 @@ export class GameRoom {
 
     getPlayerCount(): number {
         return this.players.length;
+    }
+
+    getRealPlayerCount(): number {
+        let count = 0; 
+        for(const player of this.players){
+            if(!(player instanceof VirtualPlayer)) count++;
+        }
+        return count;
     }
 
     getName(): string {
@@ -109,7 +118,7 @@ export class GameRoom {
     isGameStarted(){
         return this.gameStarted;
     }
-
+    
     get getGame(): Game {
         return this.game;
     }

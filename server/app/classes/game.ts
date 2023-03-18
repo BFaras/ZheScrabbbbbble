@@ -19,7 +19,7 @@ import { CommandFormattingService } from '@app/services/command-formatting.servi
 import { PossibleWordFinder, PossibleWords } from '@app/services/possible-word-finder.service';
 import { WordValidation } from '@app/services/word-validation.service';
 import Container from 'typedi';
-import { VirtualPlayer } from './virtual-player';
+import { CommandDetails, VirtualPlayer } from './virtual-player';
 import { VirtualPlayerHard } from './virtual-player-hard';
 
 export class Game {
@@ -145,8 +145,8 @@ export class Game {
         };
     }
 
-    findWords(virtualPlay: boolean): PossibleWords[] {
-        return PossibleWordFinder.findWords(
+    async findWords(virtualPlay: boolean): Promise<PossibleWords[]> {
+        return await PossibleWordFinder.findWords(
             { hand: this.players[this.playerTurnIndex].getHand(), board: this.board },
             virtualPlay,
         );
@@ -173,6 +173,16 @@ export class Game {
 
     changeTurn() {
         this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
+    }
+
+    async attemptVirtualPlay(): Promise<CommandDetails | null> {
+        const currentPlayer = this.players[this.playerTurnIndex];
+        if(!(currentPlayer instanceof VirtualPlayer) || this.gameOver) return null;
+        console.log(new Date().toLocaleTimeString() + ' | Start Virtual Play');
+        const commandDetails = await currentPlayer.play();
+        console.log(new Date().toLocaleTimeString() + ' | End Virtual Play');
+        currentPlayer.endPlay();
+        return commandDetails;
     }
 
     private scorePlayers() {

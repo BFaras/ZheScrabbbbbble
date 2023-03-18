@@ -2,7 +2,6 @@ import { Game } from '@app/classes/game';
 import { PlaceLetterCommandInfo } from '@app/constants/basic-interface';
 import { INVALID_COMMAND_SYNTAX, NOT_IN_GAME, NOT_YOUR_TURN, UNKNOWN_ACTION } from '@app/constants/error-code-constants';
 import { CommandVerificationService } from '@app/services/command-verification.service';
-import { PossibleWords } from '@app/services/possible-word-finder.service';
 import { RoomManagerService } from '@app/services/room-manager.service';
 
 export interface Command {
@@ -49,7 +48,9 @@ export class CommandController {
             case CommandTypes.Swap:
                 return this.swapLetters(command.args, game);
             case CommandTypes.Hint:
-                return this.hintCommand(game);
+                //TODO Fix hints
+                return game.passTurn();
+                //return this.hintCommand(game);
             case CommandTypes.Reserve:
                 return this.reserveMessage(game);
         }
@@ -78,8 +79,9 @@ export class CommandController {
         }
         return game.swapLetters(args);
     }
-    private hintCommand(game: Game): CommandResult {
-        const possibleWords = game.findWords(false);
+    /*
+    private async hintCommand(game: Game): Promise<CommandResult> {
+        const possibleWords = await game.findWords(false);
         this.shuffleWords(possibleWords);
         return this.hintMessage(possibleWords);
     }
@@ -119,7 +121,7 @@ export class CommandController {
             otherPlayerMessage: 'NotEndTurn',
         };
     }
-
+    */
     private reserveMessage(game: Game): CommandResult {
         return { activePlayerMessage: game.getReserveContent(), otherPlayerMessage: 'NotEndTurn' };
     }

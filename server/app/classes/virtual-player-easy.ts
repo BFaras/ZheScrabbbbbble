@@ -15,9 +15,9 @@ import { PossibleWords } from '@app/services/possible-word-finder.service';
 import { CommandDetails, VirtualPlayer } from './virtual-player';
 
 export class VirtualPlayerEasy extends VirtualPlayer {
-    play(): CommandDetails {
+    async play(): Promise<CommandDetails> {
         this.playing = true;
-        return this.playAction(this.getAction());
+        return await this.playAction(this.getAction());
     }
     protected getValidWord(possibleWord: PossibleWords[]): PossibleWords {
         return this.getValidWordFromRange(possibleWord, this.getRange());
@@ -36,12 +36,12 @@ export class VirtualPlayerEasy extends VirtualPlayer {
         return this.getRangeFromRandom(Math.random());
     }
 
-    private playAction(action: CommandTypes): CommandDetails {
+    private async playAction(action: CommandTypes): Promise<CommandDetails> {
         const minTime: number = Date.now() + MIN_PLAY_TIME;
         let details: CommandDetails = { command: '', result: { errorType: ILLEGAL_COMMAND } };
         switch (action) {
             case CommandTypes.Place:
-                details = this.place();
+                details = await this.place();
                 if (details.result.errorType !== undefined) details = this.pass();
                 if (details.command.split(' ')[0] === '!placer')
                     details.result.otherPlayerMessage = `a placé ${details.command.split(' ')[2]} pour ${
@@ -60,6 +60,7 @@ export class VirtualPlayerEasy extends VirtualPlayer {
         while (Date.now() < minTime);
         return details;
     }
+
     private getRangeFromRandom(range: number): number[] {
         if (range <= LESS_THAN_SIX_PROBABILITY) {
             return LOW_RANGE;
