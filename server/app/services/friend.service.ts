@@ -30,7 +30,7 @@ export class FriendService {
 
     async getFriendList(userId: string): Promise<Friend[]> {
         const friendsIds = await this.dbService.getUserFriendList(userId);
-        return this.generateFriendList(friendsIds);
+        return await this.generateFriendList(friendsIds);
     }
 
     async getFriendsIds(userId: string): Promise<string[]> {
@@ -78,11 +78,11 @@ export class FriendService {
 
     private async generateFriendList(friendsIds: string[]): Promise<Friend[]> {
         const friendsList: Friend[] = [];
-        friendsIds.forEach(async (friendId: string) => {
+        for (const friendId of friendsIds) {
             friendsList.push({ username: await this.dbService.getUsernameFromId(friendId), status: this.getUserStatus(friendId) });
-        });
+        }
 
-        return friendsList;
+        return Promise.resolve(friendsList);
     }
 
     private getUserStatus(userId: string): ConnectivityStatus {

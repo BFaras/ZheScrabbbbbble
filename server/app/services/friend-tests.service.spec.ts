@@ -121,25 +121,6 @@ describe('Friend Tests', async () => {
         expect(user2FriendList[0]).to.deep.equals(expectedUser2Friend);
     });
 
-    it('should get the friends list with the friends right info and username on getFriendList()', async () => {
-        const expectedUser1Friend: Friend = {
-            username: testUsername2,
-            status: ConnectivityStatus.ONLINE,
-        };
-        const expectedUser2Friend: Friend = {
-            username: testUsername,
-            status: ConnectivityStatus.ONLINE,
-        };
-
-        await friendService.addFriend(user1Id, user2FriendCode);
-
-        const user1FriendList: Friend[] = await friendService.getFriendList(user1Id);
-        const user2FriendList: Friend[] = await friendService.getFriendList(user2Id);
-
-        expect(user1FriendList[0]).to.deep.equals(expectedUser1Friend);
-        expect(user2FriendList[0]).to.deep.equals(expectedUser2Friend);
-    });
-
     it('should return the right user status if the user is offline', async () => {
         await friendService.addFriend(user1Id, user2FriendCode);
         usersStatusService.removeOnlineUser(user2Id);
