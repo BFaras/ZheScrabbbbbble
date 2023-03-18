@@ -54,8 +54,8 @@ describe('Friend Tests', async () => {
         account2Created = accountCreationError2 === NO_ERROR;
         user1Id = await dbService.getUserId(testUsername);
         user2Id = await dbService.getUserId(testUsername2);
-        user1FriendCode = (await profileService.getProfileInformation(testUsername2)).userCode;
-        user2FriendCode = (await profileService.getProfileInformation(testUsername)).userCode;
+        user1FriendCode = (await profileService.getProfileInformation(testUsername)).userCode;
+        user2FriendCode = (await profileService.getProfileInformation(testUsername2)).userCode;
         usersStatusService.addOnlineUser(user1Id, {} as unknown as io.Socket);
         usersStatusService.addOnlineUser(user2Id, {} as unknown as io.Socket);
     });
