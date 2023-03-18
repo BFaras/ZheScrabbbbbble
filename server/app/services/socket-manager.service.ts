@@ -12,7 +12,6 @@ import { FriendSocketService } from './friend-socket.service';
 import { ProfileSocketService } from './profile-socket.service';
 import { RoomManagerService } from './room-manager.service';
 import { SocketDatabaseService } from './socket-database.service';
-import { UsersStatusSocketService } from './users-status-socket.service';
 import { UsersStatusService } from './users-status.service';
 
 export class SocketManager {
@@ -25,7 +24,6 @@ export class SocketManager {
     private usersStatusService: UsersStatusService;
     private accountInfoService: AccountInfoService;
     private profileSocketService: ProfileSocketService;
-    private usersStatusSocketService: UsersStatusSocketService;
     private friendSocketService: FriendSocketService;
     private pendingJoinGameRequests: Map<string, [string, io.Socket]>;
     // private timeoutRoom: { [key: string]: NodeJS.Timeout };
@@ -39,15 +37,13 @@ export class SocketManager {
         this.usersStatusService = Container.get(UsersStatusService);
         this.roomManager = Container.get(RoomManagerService);
         this.profileSocketService = Container.get(ProfileSocketService);
-        this.usersStatusSocketService = Container.get(UsersStatusSocketService);
         this.friendSocketService = Container.get(FriendSocketService);
         this.pendingJoinGameRequests = new Map<string, [string, io.Socket]>();
         this.commandController = new CommandController(this.roomManager);
+        this.friendSocketService.setSio(this.sio);
     }
 
     handleSockets(): void {
-        this.usersStatusSocketService.setupUserStatusSocketService(this.sio);
-
         this.sio.on('connection', (socket: io.Socket) => {
             console.log(new Date().toLocaleTimeString() + ' | New device connection to server');
             this.socketDatabaseService.databaseSocketRequests(socket);

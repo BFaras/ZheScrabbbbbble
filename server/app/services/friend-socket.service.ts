@@ -23,8 +23,11 @@ export class FriendSocketService {
         });
     }
 
-    handleFriendSockets(socket: io.Socket, sio: io.Server) {
+    setSio(sio: io.Server) {
         this.sio = sio;
+    }
+
+    handleFriendSockets(socket: io.Socket) {
         socket.on('Get Friend List', async () => {
             socket.emit('Friend List Response', this.friendService.getFriendList(this.accountInfoService.getUserId(socket)));
         });
