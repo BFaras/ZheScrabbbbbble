@@ -3,9 +3,9 @@
     <style name="Theme.TestChatBox" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="android:windowBackground">@color/beige</item>
+        <item name="android:textColor">@color/darkForestGreen</item>
         <item name="colorPrimary">@color/corail</item>
         <item name="colorPrimaryVariant">@color/darkCorail</item>
-        <item name="android:textColor">@color/darkForestGreen</item>
         <item name="colorOnPrimary">@color/lightBeige</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -14,9 +14,13 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="pinkTile">@color/lightCorail</item>
-        <item name="blueTile">@color/forestGreen</item>
-        <item name="lightBlueTile">@color/lightForest</item>
+        <item name="doubleWord">@color/lightCorail</item>
+        <item name="tripleWord">@color/forestGreen</item>
+        <item name="doubleLetter">@color/lightForest</item>
+        <item name="grid">@color/black</item>
+        <item name="coords">@color/black</item>
+        <item name="boardBackground">@color/lightBeige</item>
+        <item name="lettersOnBoard">@color/NavajoWhite</item>
     </style>
     <style name="Theme.TestChatBox.NoActionBar">
         <item name="windowActionBar">false</item>

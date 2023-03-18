@@ -19,8 +19,8 @@
 
         <com.example.testchatbox.GameBoardView
             android:id="@+id/gameBoard"
-            android:layout_width="675dp"
-            android:layout_height="675dp"
+            android:layout_width="680dp"
+            android:layout_height="680dp"
             android:layout_gravity="top|center"
             android:layout_marginTop="30dp" />
 

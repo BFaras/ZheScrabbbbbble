@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="pinkTile" format="reference" />
-    <attr name="blueTile" format="reference" />
-    <attr name="lightBlueTile" format="reference" />
+    <attr name="doubleWord" format="reference" />
+    <attr name="tripleWord" format="reference" />
+    <attr name="doubleLetter" format="reference" />
     <attr name="playerSelection" format="reference" />
+    <attr name="grid" format="reference" ></attr>
+    <attr name="coords" format="reference" ></attr>
+    <attr name="boardBackground" format="reference"></attr>
+    <attr name="lettersOnBoard" format="reference" />
 </resources>

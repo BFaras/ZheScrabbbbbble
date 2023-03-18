@@ -23,13 +23,23 @@ export interface PlayerState {
 export class GameStateService {
     private socket: Socket;
     private gameStateObservable: Observable<GameState>;
+    private gameStateObservers: Observer<GameState>[] = [];
 
     constructor(private socketManagerService: SocketManagerService) {
-        this.socket = this.socketManagerService.getSocket();
         this.gameStateObservable = new Observable((observer: Observer<GameState>) => {
-            this.socket.on('Game State Update', (state: GameState) => {
-                observer.next(state)
-            });
+            if(!this.socket.active) this.refreshSocket();
+            this.gameStateObservers.push(observer);
+        });
+        this.refreshSocket();
+    }
+
+    refreshSocket(){
+        this.gameStateObservers = [];
+        this.socket = this.socketManagerService.getSocket();
+        this.socket.on('Game State Update', (state: GameState) => {
+            for(let observer of this.gameStateObservers){
+                observer.next(state);
+            }
         });
     }
 

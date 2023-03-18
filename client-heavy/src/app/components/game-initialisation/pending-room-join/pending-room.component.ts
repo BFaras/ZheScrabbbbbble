@@ -31,7 +31,7 @@ export class PendingRoomComponent {
             alert('Fatal server error. No player name received');
             return;
         }
-        this.waitingRoomManagerService.setPlayersInRoom(message.playerNames);
+        this.waitingRoomManagerService.setDefaultPlayersInRoom(message.playerNames);
         this.router.navigate(['/waiting-room']);
     }
 

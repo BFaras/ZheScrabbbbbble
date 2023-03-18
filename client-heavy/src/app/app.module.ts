@@ -18,7 +18,6 @@ import { MaterialPageComponent } from '@app/pages/material-page/material-page.co
 import { SoloMultiPageComponent } from '@app/pages/solo-multi-page/solo-multi-page.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { AdminPopUpComponent } from './components/admin-pop-up/admin-pop-up.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { CreateGameComponent } from './components/game-initialisation/create-game/create-game.component';
 import { JoinGameComponent } from './components/game-initialisation/join-game/join-game.component';
@@ -34,7 +33,6 @@ import { PasswordLostAreaComponent } from './components/password-lost-area/passw
 import { SignUpAreaComponent } from './components/sign-up-area/sign-up-area.component';
 import { TimerComponent } from './components/timer/timer.component';
 import { WindowComponent } from './components/window/window.component';
-import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { ChatPageComponent } from './pages/chat-page/chat-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { PasswordLostPageComponent } from './pages/password-lost-page/password-lost-page.component';
@@ -74,8 +72,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         LetterHolderComponent,
         TimerComponent,
         LeaderboardComponent,
-        AdminPageComponent,
-        AdminPopUpComponent,
         LoginPageComponent,
         LoginAreaComponent,
         SignUpPageComponent,
