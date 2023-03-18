@@ -24,7 +24,7 @@ export const GRID_OFFSETS = {
     arrowV: 0.95,
 };
 
-export const GRID_WORDS = {
+export const GRID_WORDS_FR = {
     pinkRedWord: 'MOT',
     startWord: 'DÉBUT',
     blueWord: 'LETTRE',
@@ -33,7 +33,16 @@ export const GRID_WORDS = {
     defaultFontSize: '11',
 };
 
-export const GRID_COLOURS = {
+export const GRID_WORDS_EN = {
+    pinkRedWord: 'WORD',
+    startWord: 'START',
+    blueWord: 'LETTER',
+    doubleWord: 'x2',
+    tripleWord: 'x3',
+    defaultFontSize: '11',
+};
+
+export const GRID_COLOURS_CLASSIC = {
     defaultRed: '#cb654f',
     defaultPink: '#d3b1a7',
     defaultBlue: '#679089',
@@ -42,6 +51,39 @@ export const GRID_COLOURS = {
     defaultWhite: '#FAF5F1',
     defaultDarkRed: '#520000',
     defaultBackground: '#cfcb9c',
+};
+
+export const GRID_COLOURS_INVERTED = {
+    defaultRed: '#349ab0',
+    defaultPink: '#2c4e58',
+    defaultBlue: '#986f76',
+    defaultLightBlue: '#73415c',
+    defaultBlack: 'white',
+    defaultWhite: '#050a0e',
+    defaultDarkRed: '#adffff',
+    defaultBackground: '#303463',
+};
+
+export const GRID_COLOURS_GREEN = {
+    defaultRed: '#89b034',
+    defaultPink: '#3d582c',
+    defaultBlue: '#74986f',
+    defaultLightBlue: '#417344',
+    defaultBlack: 'white',
+    defaultWhite: '#050a0e',
+    defaultDarkRed: '#cdffad',
+    defaultBackground: '#0e5600',
+};
+
+export const GRID_COLOURS_PINK = {
+    defaultRed: '#cb4f7f',
+    defaultPink: '#d3a7bc',
+    defaultBlue: '#a75c8c',
+    defaultLightBlue: '#be8cb1',
+    defaultBlack: 'black',
+    defaultWhite: '#faf1fa',
+    defaultDarkRed: '#520027',
+    defaultBackground: '#cf9cad',
 };
 
 export const ROWS: { [key: string]: number } = {};

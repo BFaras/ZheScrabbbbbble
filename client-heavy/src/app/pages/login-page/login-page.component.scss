@@ -1,27 +1,31 @@
-.container{
+.container {
     height: 100vh;
-    width: 100vw;
+    font-size: 18px;
+    background-color: var(--background-default);
+}
+
+.justified {
+    width: 100%;
     display: flex;
     align-items: center;
-    flex-direction: row;
-
+    flex-direction: column;
 }
 
-.right-side{
-    position: relative; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgb(247, 237, 223);
-    height:100%;
-    width:64.8%
-}
-
-.left-side{
-    position: relative; 
-    height:100%;
-    width:35.2%;
-}
+select {
+    border-radius: 5px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    -webkit-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px; 
+    border: 1px solid #AAA;
+    color: #555;
+    font-size: inherit;
+    margin-top: 5%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
 .login-component{
     position:relative;
@@ -30,27 +34,7 @@
     height: 658px;
 }
 
-.button-login {
-    text-decoration: none;
-    text-align: center;
-    border: none;
-    padding: 10px;
-    background-color: rgb(204, 224, 183);
-    border-radius: 7px;
-    width: 25vh;
-    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
-    font-size: 17px;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-    color: rgb(94, 94, 94);
-    transition: color 0.5s linear;
-    -webkit-transition: color 0.2s linear;
+app-language {
+    margin-top: 1.5%;
 }
 
-.button-login:hover {
-    color: black;
-    cursor: pointer;
-    background: rgb(186, 204, 122);
-    transition-property: background-color;
-    transition-duration: 0.2s;
-}

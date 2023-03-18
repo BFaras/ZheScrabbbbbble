@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 /* eslint-disable dot-notation */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Goal } from '@app/classes/goal';
 import { InfoPanelComponent } from '@app/components/info-panel/info-panel.component';
 import { GameState } from '@app/services/game-state-service/game-state.service';
 import { TimerComponent } from '../timer/timer.component';
@@ -22,8 +21,6 @@ describe('InfoPanelComponent', () => {
         fixture = TestBed.createComponent(InfoPanelComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        component.onGoingPublicObjectives = [];
-        component.areGoals = false;
         gameState = {
             board: [[]],
             hand: ['a', 'a', 'a'],
@@ -200,16 +197,5 @@ describe('InfoPanelComponent', () => {
         component['updatePlayerNames'](['testB1', 'testB2']);
         expect(component['playersInfo'][0].name).toEqual('testB1');
         expect(component['playersInfo'][1].name).toEqual('testB2');
-    });
-
-    it('should update onGoingPublicObjectives when turn is updated', () => {
-        component.areGoals = true;
-        const goalsTest = gameState.yourGoals as Goal[];
-        const opponantGoalsTest = gameState.oppenentGoals as Goal[];
-        const result = [goalsTest[0], goalsTest[1]];
-        component['updateTurnDisplay'](gameState);
-        expect(component['playersInfo'][0].objectives).toEqual(goalsTest);
-        expect(component['playersInfo'][1].objectives).toEqual(opponantGoalsTest);
-        expect(component['onGoingPublicObjectives']).toEqual(result);
     });
 });

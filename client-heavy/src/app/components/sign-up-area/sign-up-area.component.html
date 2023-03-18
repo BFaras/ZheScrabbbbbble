@@ -1,35 +1,36 @@
 <div class="container">
-    <h1 class="title"> Inscription</h1>
-    <div *ngIf = !isFormFinished  class="form-first-step">
+    <form *ngIf = !isFormFinished  class="form-first-step">
+        <h1>{{'SIGNUP.SIGNUP' | translate}}</h1>
             <mat-form-field class="username input-field" appearance="fill">
-                <mat-label >Nom d'utilisateur</mat-label>
+                <mat-label>{{'USERDATA.USERNAME' | translate}}</mat-label>
                 <input matInput name = "username" [(ngModel)]="newAccount.username" >
             </mat-form-field>
             <mat-form-field class="email input-field" appearance="fill">
-                <mat-label>Email : </mat-label>
+                <mat-label>{{'SIGNUP.EMAIL' | translate}}</mat-label>
                 <input  type = "email" matInput  name = "email" [(ngModel)]="newAccount.email">
             </mat-form-field>
             <mat-form-field class="pasword input-field" appearance="fill">
-                <mat-label>Mot de passe : </mat-label>
+                <mat-label>{{'USERDATA.PASSWORD' | translate}}</mat-label>
                 <input matInput [type]= "changePasswordVisibility()" name = "password" [(ngModel)]="newAccount.password">
-                <button class = "button-sign-up" mat-icon-button matSuffix (click)="hide = !hide" >
+                <button title="{{'SIGNUP.SHOWPASS' | translate}}" class = "button-sign-up" mat-icon-button matSuffix (click)="hide = !hide" >
                     <mat-icon>{{changeIconVisibility()}}</mat-icon>
                 </button>
             </mat-form-field>
-              <button class = "button-sign-up" mat-raised-button [disabled] = "verifyIfFirstPageFormFinished()" (click)="goToCreateQuestion()">Continue</button>
-    </div>
-<div *ngIf = isFormFinished class="form-first-step">
-    <button class = "goToFirstStepForm"(click) = "goToCreateQuestion()" routerLink = "/sign-up" mat-fab color="primary" aria-label="Example icon button with a delete icon">
-        <mat-icon>replay</mat-icon>
-    </button>
+            <button class = "button" mat-raised-button [disabled] = "verifyIfFirstPageFormFinished()" (click)="goToCreateQuestion()">{{'SIGNUP.NEXT' | translate}}</button>
+            <button class = "button" id="back1" mat-raised-button routerLink="/login">{{'SECURITYQ.BACK' | translate}}</button>
+    </form>
+<div>
+
+    <div *ngIf = isFormFinished class="form-first-step">
+        <h1>{{'SECURITYQ.MESSAGE' | translate}}</h1>
         <mat-form-field class="username input-field" appearance="fill">
-            <mat-label >Question de sécurité : </mat-label>
+            <mat-label >{{'SECURITYQ.QUESTION' | translate}}</mat-label>
             <input matInput name = "question" [(ngModel)]="newAccount.securityQuestion.question" >
         </mat-form-field>
         <mat-form-field class="email input-field" appearance="fill">
-            <mat-label>Réponse : </mat-label>
+            <mat-label>{{'SECURITYQ.ANSWER' | translate}}</mat-label>
             <input  matInput  name = "réponse" [(ngModel)]="newAccount.securityQuestion.answer">
         </mat-form-field>
-          <button class = "button-sign-up" mat-raised-button [disabled]="verifyIfSecondPageFormFinished()" (click)="createNewAccount()">Inscription</button>
-</div>
-</div>   
+        <button class = "button" mat-raised-button (click)="createNewAccount()">{{'SIGNUP.CONFIRM' | translate}}</button>
+        <button class = "button" id="back" mat-raised-button (click)="goToCreateQuestion()">{{'SECURITYQ.BACK' | translate}}</button>
+    </div>

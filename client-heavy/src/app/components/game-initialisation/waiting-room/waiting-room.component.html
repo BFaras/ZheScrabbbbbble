@@ -1,28 +1,22 @@
+<app-navigation-bar (navLogic)="leaveRoomLogic()"></app-navigation-bar>
 <div class="container justified">
-    <img src="https://bit.ly/3m206ss" width="400" height="80" alt="Logo Scrabble" />
-    <h1 class="header-item">Salle de jeu</h1>
+    <div class="logo">Scrabble</div>
+    <h1 class="header-item text">{{ 'WAITING-ROOM.MESSAGE' | translate }}</h1>
     <div class="loading-container">
         <mat-list>
-            <mat-list-item *ngFor="let player of getPlayersInRoom(); let last=last; let first=first">{{player}}
+            <mat-list-item *ngFor="let player of playersInRoom; let last=last; let first=first" class="text players">{{player}}
                 <img *ngIf="first" src="assets/crown.png" width="20" height="20">
                 <mat-divider *ngIf="!last"></mat-divider>
             </mat-list-item>
         </mat-list>
         <div [style.visibility]="(pendingRequests.length > 0) ? 'visible':'hidden'" id="join-requests">
-            <h2>{{pendingRequests[0]}} tente de se rejoindre à votre partie</h2>
-            <button class="button join-request" (click)="respondNextRequest(true)">Accepter</button>
-            <button class="button cancel join-request" (click)="respondNextRequest(false)">Refuser</button>
+            <h2 class="text">{{pendingRequests[0]}}{{ 'WAITING-ROOM.JOIN' | translate }}</h2>
+            <button class="button join-request" (click)="respondNextRequest(true)">{{ 'WAITING-ROOM.ACCEPT' | translate }}</button>
+            <button class="button cancel join-request" (click)="respondNextRequest(false)">{{ 'WAITING-ROOM.DECLINE' | translate }}</button>
         </div>
         <div class="mode-buttons">
-            <button class="button" *ngIf="isHostPlayer() && getPlayersInRoom().length > 1" (click)="launchGame()">Démarrer</button>
-            <button class="button cancel" (click)="leaveRoom()">Quitter la salle</button>
+            <button class="button" *ngIf="isHostPlayer() && playersInRoom.length > 1" (click)="launchGame()">{{ 'WAITING-ROOM.START' | translate }}</button>
+            <button class="button cancel" (click)="leaveRoom()">{{ 'WAITING-ROOM.LEAVE' | translate }}</button>
         </div>
-    </div>
-    <div class="footer-item">
-        <h4 class="team-name">Équipe 206</h4>
-        <p>
-            <span>Ioana Daria Danciu</span>, <span>Arnaud Delage-Reid</span>, <span>Manuel Ramirez-Evrard</span>, <span>Kaboungala Bintou Seni</span>,
-            <span>Pablo Sepulveda Solis</span>, <span>Imane Znadi</span>
-        </p>
     </div>
 </div>
