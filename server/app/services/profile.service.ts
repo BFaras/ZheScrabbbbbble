@@ -29,7 +29,7 @@ export class ProfileService {
         this.usersStatusService = Container.get(UsersStatusService);
 
         this.usersStatusService.getStatusUpdater().subscribe({
-            next: this.updateProfileFromNewStatus,
+            next: this.updateProfileFromNewStatus.bind(this),
         });
     }
 
