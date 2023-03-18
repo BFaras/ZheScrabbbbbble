@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation */
 /* eslint-disable max-len */
 import { NO_ERROR } from '@app/constants/error-code-constants';
-import { ConnectionInfo, ConnectionType, GameInfo, PlayerGameInfo } from '@app/interfaces/profile-info';
+import { ConnectionInfo, ConnectionType, GameHistoryInfo } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
 import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -161,23 +161,10 @@ describe('Profile Tests', async () => {
 
     it('should add a game to the history on addGameToHistory()', async () => {
         const userId = await dbService.getUserId(testUsername);
-        const playersInGameInfo: PlayerGameInfo[] = [
-            {
-                name: 'Hello',
-                score: 105,
-            },
-            {
-                name: 'Problem',
-                score: 81,
-            },
-        ];
-        const newGameToAdd: GameInfo = {
+        const newGameToAdd: GameHistoryInfo = {
             date: 'MM/DD/YYYY',
             time: 'HH:MM',
-            length: '15:25',
-            winnerIndex: 1,
-            players: playersInGameInfo,
-            gameMode: 'Classic',
+            isWinner: true,
         };
 
         await profileService.addGameToHistory(userId, newGameToAdd);

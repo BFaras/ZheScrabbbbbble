@@ -1,4 +1,5 @@
 import { NO_ERROR } from '@app/constants/error-code-constants';
+import { UserStatus } from '@app/interfaces/friend-info';
 import * as io from 'socket.io';
 import { Container, Service } from 'typedi';
 import { AccountInfoService } from './account-info.service';
@@ -10,14 +11,20 @@ export class FriendSocketService {
     private readonly friendService: FriendService;
     private readonly accountInfoService: AccountInfoService;
     private readonly usersStatusService: UsersStatusService;
+    private sio: io.Server;
 
     constructor() {
         this.friendService = Container.get(FriendService);
         this.accountInfoService = Container.get(AccountInfoService);
         this.usersStatusService = Container.get(UsersStatusService);
+
+        this.usersStatusService.getStatusUpdater().subscribe({
+            next: this.updateFriendsWithNewStatus,
+        });
     }
 
-    handleFriendSockets(socket: io.Socket) {
+    handleFriendSockets(socket: io.Socket, sio: io.Server) {
+        this.sio = sio;
         socket.on('Get Friend List', async () => {
             socket.emit('Friend List Response', this.friendService.getFriendList(this.accountInfoService.getUserId(socket)));
         });
@@ -31,6 +38,10 @@ export class FriendSocketService {
 
             socket.emit('Send Request Response', errorCode);
         });
+    }
+
+    private updateFriendsWithNewStatus(userStatus: UserStatus) {
+        this.sio?.in(this.friendService.getFriendRoomName(userStatus.userId)).emit('Update friend status', userStatus.status);
     }
 
     private async addFriendsToSocket(socket: io.Socket, friendUserId: string) {
