@@ -14,6 +14,8 @@ import { ProfileSocketService } from './profile-socket.service';
 import { RoomManagerService } from './room-manager.service';
 import { SocketDatabaseService } from './socket-database.service';
 
+export const VIRTUAL_PLAYER_NAMES = ['Michel Gagnon', 'Eve', 'John', 'Diane', 'Alex', 'Mike', 'Emma'];
+
 export class SocketManager {
     private sio: io.Server;
     private roomManager: RoomManagerService;
@@ -142,7 +144,11 @@ export class SocketManager {
                 if(playerCount < 2) return;
                 if (currentRoom.isGameStarted()) return;
                 for(let i = 0; i < MAX_NUMBER_OF_PLAYERS - playerCount; i++){
-                    currentRoom.addPlayer(new VirtualPlayerEasy('Virtual Player ' + (i + 1), currentRoom));
+                    let name; 
+                    do{
+                        name = VIRTUAL_PLAYER_NAMES[Math.floor(Math.random() * VIRTUAL_PLAYER_NAMES.length)];
+                    }while(currentRoom.getPlayerNames().includes(name) || currentRoom.getPlayerNames().includes(name + ' (V)'))
+                    currentRoom.addPlayer(new VirtualPlayerEasy(name + ' (V)', currentRoom));
                 }
                 currentRoom.startGame();
                 console.log(new Date().toLocaleTimeString() + ' | New game started');
