@@ -8,13 +8,18 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Container } from 'typedi';
 import { AuthentificationService } from './authentification.service';
 import { DatabaseService } from './database.service';
+import { FriendService } from './friend.service';
 import { ProfileService } from './profile.service';
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import Sinon = require('sinon');
 
 describe('Profile Tests', async () => {
     const testUsername = 'testUser157Test';
     const testPassword = 'tE!s&to~';
     const testEmail = 'myTestMail12564@poly.com';
     const testAvatar = 'av111';
+    const testFriendCode = 'friendsasdguyw45448d';
     const testSecurityQuestion: Question = { question: 'Who are you?', answer: 'Me' };
 
     let mongoServer: MongoMemoryServer;
@@ -27,6 +32,8 @@ describe('Profile Tests', async () => {
         dbService = Container.get(DatabaseService);
         mongoServer = new MongoMemoryServer();
         await dbService.start(await mongoServer.getUri());
+
+        Sinon.stub(FriendService.prototype, 'generateUniqueFriendCode').returns(Promise.resolve(testFriendCode));
     });
 
     beforeEach(async () => {
@@ -48,6 +55,7 @@ describe('Profile Tests', async () => {
         if (dbService['client']) {
             await dbService['client'].close();
         }
+        Sinon.restore();
     });
 
     it('should create profile info on account creation', async () => {
@@ -60,6 +68,7 @@ describe('Profile Tests', async () => {
         const expectedProfileInfo = profileService.getDefaultProfileInformation();
 
         expectedProfileInfo.avatar = testAvatar;
+        expectedProfileInfo.userCode = testFriendCode;
 
         expect(await profileService.getProfileInformation(testUsername)).to.deep.equals(expectedProfileInfo);
     });
