@@ -53,6 +53,7 @@ export class Game {
 
     placeLetter(commandInfo: PlaceLetterCommandInfo): CommandResult {
         const playerHand = this.players[this.playerTurnIndex].getHand();
+        const name = this.players[this.playerTurnIndex].getName();
         const letters = playerHand.getLetters(commandInfo.letters, true);
         const formattedCommand = CommandFormattingService.formatCommandPlaceLetter(commandInfo, this.board, letters);
         if (!formattedCommand) {
@@ -65,7 +66,7 @@ export class Game {
             this.board.removeLetters(formattedCommand);
             playerHand.addLetters(letters as Letter[]);
             this.endTurn();
-            return { playerMessage: {messageType: INVALID_WORD_MESSAGE, values : [this.players[this.playerTurnIndex].getName()]}};
+            return { playerMessage: {messageType: INVALID_WORD_MESSAGE, values : [name]}};
         }
         this.players[this.playerTurnIndex].addScore(score);
         const endMessage = this.endTurn();
@@ -73,11 +74,12 @@ export class Game {
             return { endGameMessage: endMessage };
         }
         playerHand.addLetters(this.reserve.drawLetters(HAND_SIZE - playerHand.getLength()));
-        return { playerMessage: {messageType: `${score}`, values : [this.players[this.playerTurnIndex].getName()]} };
+        return { playerMessage: {messageType: `${score}`, values : [name]} };
     }
 
     swapLetters(stringLetters: string): CommandResult {
         if (!this.reserve.canSwap() || this.reserve.getLength() < stringLetters.length) return { errorType: ILLEGAL_COMMAND };
+        const name = this.players[this.playerTurnIndex].getName();
         const activeHand = this.players[this.playerTurnIndex].getHand();
         const letters = activeHand.getLetters(stringLetters, true);
         if (!letters) return { errorType: ILLEGAL_COMMAND };
@@ -85,16 +87,17 @@ export class Game {
         this.reserve.returnLetters(letters);
         this.resetCounter();
         this.endTurn();
-        return { playerMessage : {messageType: SWAP_MESSAGE, values : [this.players[this.playerTurnIndex].getName(), stringLetters.length.toString()]}};
+        return { playerMessage : {messageType: SWAP_MESSAGE, values : [name, stringLetters.length.toString()]}};
     }
 
     passTurn(): CommandResult {
+        const name = this.players[this.playerTurnIndex].getName();
         this.incrementCounter();
         const endMessage = this.endTurn();
         if (endMessage) {
             return { endGameMessage: endMessage };
         }
-        return { playerMessage: {messageType: PASS_MESSAGE, values : [this.players[this.playerTurnIndex].getName()]}};
+        return { playerMessage: {messageType: PASS_MESSAGE, values : [name]}};
     }
 
     endGame(): string {

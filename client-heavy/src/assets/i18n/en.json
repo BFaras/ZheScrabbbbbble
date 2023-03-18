@@ -135,5 +135,12 @@
         "INCORRECT": "The password is incorrect",
         "FULL": "The room is full",
         "MESSAGE": "Error : this message shouldn't show up"
+    },
+    "ACTION-HISTORY":{
+        "TITLE": "ACTION HISTORY",
+        "MSG-1": "$0 placed $1 for $2 point(s)",
+        "MSG-2": "$0 tried to place an invalid word",
+        "MSG-3": "$0 swapped $1 letters",
+        "MSG-4": "$0 passed their turn"
     }
 }

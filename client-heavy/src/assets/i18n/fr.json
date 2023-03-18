@@ -135,5 +135,12 @@
         "INCORRECT": "Le mot de passe entré est incorrect",
         "FULL": "La salle de jeu est pleine",
         "MESSAGE": "Erreur : ce message ne devrait jamais s'afficher"
+    },
+    "ACTION-HISTORY":{
+        "TITLE": "HISTORIQUE D'ACTIONS",
+        "MSG-1": "$0 a placé $1 pour $2 point(s)",
+        "MSG-2": "$0 a tenté de placer un mot invalide",
+        "MSG-3": "$0 a échangé $1 lettres",
+        "MSG-4": "$0 a passé son tour"
     }
 }
