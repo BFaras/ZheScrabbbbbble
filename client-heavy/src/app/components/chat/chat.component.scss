@@ -6,6 +6,7 @@ ul {
 
 #title-chat {
     font-size: 24px;
+    color: var(--text-default);
 }
 
 .input-group {
@@ -23,12 +24,13 @@ input {
     font-family: 'Courier New', Courier, monospace;
     font-weight: bolder;
     font-size: 15px;
-    background-color: #fffbfb;
+    background-color: var(--background-secondary);
+    color: var(--button-text-default);
 }
 
 input:focus {
     outline: none;
-    border: solid 2px #ce7e6c;
+    border: solid 2px var(--accent-default);
 }
 
 button {
@@ -37,8 +39,8 @@ button {
     font-size: 15px;
     border: none;
     border-radius: 5px;
-    background-color: #ce7e6c;
-    color: rgb(0, 0, 0);
+    background-color: var(--accent-default);
+    color: var(--text-default);
 }
 
 #title-chat {
@@ -48,43 +50,28 @@ button {
 #chat-box {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 20px;
-    margin: 15px;
+    margin: 0px 15px;
     border-radius: 10px;
     height: 500px;
-    background-color: #faf5f1;
+    background-color: var(--background-quaternary);
     width: 350px;
     flex-direction: column;
-    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
-    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: var(--box-shadow);
+    font-family: 'Courier New', Courier, monospace;
     font-weight: bolder;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 #history-container {
     white-space: pre-wrap;
     overflow: auto;
     height: 80%;
-    background-color: #fffbfb;
+    background-color: var(--background-secondary);
     border-radius: 7px;
     word-wrap: break-word;
     width: 100%;
-}
-
-#chat-box {
-    width: 350px;
-    height: 500px;
-    margin-top: 10%;
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #faf5f1;
-    flex-direction: column;
-    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bolder;
-    font-size: 16px;
 }
 
 /* width */
@@ -95,16 +82,16 @@ button {
 /* Track */
 ::-webkit-scrollbar-track {
     border-radius: 20px;
-    background: #f1f1f1;
+    background: var(--scroll-background);
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
     border-radius: 20px;
-    background: #8cbea3;
+    background: var(--scroll-default);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #cb654f;
+    background: var(--scroll-hover);
 }

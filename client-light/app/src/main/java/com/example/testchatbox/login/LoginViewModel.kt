@@ -1,6 +1,7 @@
 package com.example.testchatbox.login
 
 import SocketHandler
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +18,6 @@ class LoginViewModel() : ViewModel() {
     val loginResult: LiveData<LoginResult> = _loginResult
 
     fun login(username: String, password: String) {
-        // can be launched in a separate asynchronous job
         SocketHandler.getSocket().once("Authentification status"){ args ->
             if(args[0] != null){
                 val success = args[0] as Boolean;

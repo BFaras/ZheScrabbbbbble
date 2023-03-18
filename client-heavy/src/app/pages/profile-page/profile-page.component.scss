@@ -1,12 +1,5 @@
-.container{
-    border:solid green 1px;
-    height:100%;
-    width:auto;
-    display: flex;
-    flex-direction:column;
-    align-items:center;
-    gap:15px;
-}
+
+//ma partie
 .avatarSquare{
     width:50%;
     height: 50%;
@@ -59,4 +52,60 @@
     border:solid red 1px;
     width:80%;
     height:20%;
+}
+
+// fin de ma partie
+
+#themes {
+    width: 40%;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 5%;
+    color: var(--text-default);
+}
+
+.theme-button {
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    padding: 5px;
+    margin-right: 2%;
+    background-color: var(--button-quaternary);
+    border-radius: 7px;
+    width: max-content;
+    font-size: 15px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    color: var(--button-text-default);
+    transition: color 0.5s linear;
+    -webkit-transition: color 0.2s linear;
+}
+
+.theme-button:hover {
+    color: var(---button-text-hover);
+    cursor: pointer;
+    background: var(--button-quaternary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+.active {
+    background-color: var(--button-quaternary-hover);
+    color: var(--text-default);
+}
+
+.container {
+    height: 94%;
+    width: 100%;
+    font-size: 18px;
+    background-color: var(--background-default);
+}
+
+.justified {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }

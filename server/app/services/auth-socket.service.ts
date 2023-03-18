@@ -7,17 +7,23 @@ import Container, { Service } from 'typedi';
 import { AccountInfoService } from './account-info.service';
 import { AuthentificationService } from './authentification.service';
 import { ChatService } from './chat.service';
+import { FriendService } from './friend.service';
+import { UsersStatusService } from './users-status.service';
 
 @Service()
 export class AuthSocketService {
     private readonly authentificationService: AuthentificationService;
     private readonly accountInfoService: AccountInfoService;
     private readonly chatService: ChatService;
+    private readonly usersStatusService: UsersStatusService;
+    private readonly friendService: FriendService;
 
     constructor() {
         this.authentificationService = Container.get(AuthentificationService);
         this.accountInfoService = Container.get(AccountInfoService);
         this.chatService = Container.get(ChatService);
+        this.usersStatusService = Container.get(UsersStatusService);
+        this.friendService = Container.get(FriendService);
     }
     handleAuthSockets(socket: io.Socket) {
         socket.on('User authentification', async (username: string, password: string) => {
@@ -52,8 +58,8 @@ export class AuthSocketService {
             socket.emit('User Account Question', await this.authentificationService.getUserSecurityQuestion(username));
         });
 
-        socket.on('Account Question Answer', async (answerToQuestion: string, newPassword: string) => {
-            const usernameForReset = socket.data.usernameResettingPassword;
+        socket.on('Account Question Answer', async (username: string, answerToQuestion: string, newPassword: string) => {
+            const usernameForReset = username;
             let errorCode = WRONG_SECURITY_ANSWER;
             if (await this.authentificationService.isSecurityQuestionAnswerRight(usernameForReset, answerToQuestion)) {
                 errorCode = DATABASE_UNAVAILABLE;
@@ -68,16 +74,27 @@ export class AuthSocketService {
     }
 
     private async setupUser(socket: io.Socket, username: string) {
+        const userId = await this.authentificationService.getUserId(username);
         this.accountInfoService.setUsername(socket, username);
-        this.accountInfoService.setUserId(socket, await this.authentificationService.getUserId(username));
-        await this.chatService.joinGlobalChat(this.accountInfoService.getUserId(socket));
-        await this.joinUserChatRooms(socket);
+        this.accountInfoService.setUserId(socket, userId);
+        await this.chatService.joinGlobalChat(userId);
+        await this.joinUserChatRooms(userId, socket);
+        await this.joinUserFriendsRooms(userId, socket);
+        this.usersStatusService.addOnlineUser(userId, socket);
     }
 
-    private async joinUserChatRooms(socket: io.Socket) {
-        const userChats: ChatInfo[] = await this.chatService.getUserChats(this.accountInfoService.getUserId(socket));
+    private async joinUserChatRooms(userId: string, socket: io.Socket) {
+        const userChats: ChatInfo[] = await this.chatService.getUserChats(userId);
         userChats.forEach((userChatInfo: ChatInfo) => {
             socket.join(userChatInfo._id);
+        });
+    }
+
+    private async joinUserFriendsRooms(userId: string, socket: io.Socket) {
+        const userFriends: string[] = await this.friendService.getFriendsIds(userId);
+
+        userFriends.forEach((friendId: string) => {
+            socket.join(this.friendService.getFriendRoomName(friendId));
         });
     }
 }

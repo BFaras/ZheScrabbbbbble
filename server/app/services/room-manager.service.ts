@@ -1,78 +1,70 @@
 import { GameRoom } from '@app/classes/game-room';
-import { GameSettings } from '@app/classes/game-settings';
 import { Player } from '@app/classes/player';
-import { GameType } from '@app/constants/basic-constants';
-import { Timer } from '@app/constants/basic-interface';
-import { Dictionary } from '@app/constants/database-interfaces';
-import * as fs from 'fs';
+import { MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
+import { GameRoomInfo } from '@app/constants/basic-interface';
+import crypto = require('crypto');
 import { Service } from 'typedi';
-import { GoalsValidation } from './goals-validation.service';
-
-export interface WaitingRoom {
-    hostName: string;
-    roomName: string;
-    timer: Timer;
-    gameType: GameType;
-}
 
 @Service()
 export class RoomManagerService {
     private activeRooms: { [key: string]: GameRoom } = {};
-    private defaultWordValidationService: GoalsValidation;
-    constructor(dictionary: Dictionary | undefined) {
-        if (!dictionary?.words) dictionary = JSON.parse(fs.readFileSync('./assets/dictionnary.json', 'utf8')) as Dictionary;
-        if (!dictionary?.words) dictionary.words = [];
-        this.defaultWordValidationService = new GoalsValidation(dictionary.words);
+
+    createRoom(roomName: string, visibility: RoomVisibility, password?: string): string {
+        const id = 'room-' + roomName + '-' + crypto.randomBytes(10).toString('hex');
+        this.activeRooms[id] = new GameRoom(id, roomName, visibility, password);
+        return id;
     }
 
-    createSoloRoomName(): string {
-        const soloRooms = [''];
-        for (const room of Object.values(this.activeRooms)) {
-            if (room.getIsSoloGame()) {
-                soloRooms.push(room.getName());
-            }
-        }
-        let i = 1;
-        while (soloRooms.includes('solo'.concat(`${i}`))) {
-            i++;
-        }
-        return 'solo'.concat(`${i}`);
+    addPlayer(id: string, player: Player, password?: string): boolean {
+        if(!this.activeRooms[id].verifyPassword(password)) return false;
+        this.activeRooms[id]?.addPlayer(player);
+        return true;
     }
 
-    createRoom(gameSettings: GameSettings, words: string[] | undefined) {
-        let roomName = '';
-        if (gameSettings.roomName) roomName = gameSettings.roomName;
-        this.activeRooms[roomName] = new GameRoom(roomName, words ? new GoalsValidation(words) : this.defaultWordValidationService, gameSettings);
-    }
-
-    addPlayer(player: Player, roomName: string) {
-        this.activeRooms[roomName]?.addPlayer(player);
-    }
-
-    removePlayer(playerID: string, roomName: string) {
-        this.activeRooms[roomName].removePlayer(playerID);
-        if (this.activeRooms[roomName].getPlayerCount() === 0) {
-            delete this.activeRooms[roomName];
+    removePlayer(id: string, playerID: string) {
+        this.activeRooms[id].removePlayer(playerID);
+        if (this.activeRooms[id].getPlayerCount() === 0) {
+            delete this.activeRooms[id];
         }
     }
 
     verifyIfRoomExists(roomName: string): boolean {
-        return roomName in this.activeRooms;
+        for (const room of Object.values(this.activeRooms)) {
+            if(room.getName() === roomName) return true;
+        }
+        return false;
     }
 
-    getWaitingRooms(): WaitingRoom[] {
-        const waitingRooms: WaitingRoom[] = [];
+    getGameRooms(): GameRoomInfo[] {
+        const gameRooms: GameRoomInfo[] = [];
         for (const room of Object.values(this.activeRooms)) {
-            if (room.getPlayerCount() === 1 && !room.getGame.isGameOver()) {
-                waitingRooms.push({
-                    roomName: room.getName(),
-                    hostName: room.getPlayerFromIndex(0).getName(),
-                    timer: room.getTimeChosen(),
-                    gameType: room.getGameType(),
+            if (!room.getGame.isGameOver()) {
+                gameRooms.push({
+                    name: room.getName(),
+                    id: room.getID(),
+                    visibility: room.getVisibility(),
+                    players: room.getPlayerNames(),
+                    isStarted: room.isGameStarted()
                 });
             }
         }
-        return waitingRooms;
+        return gameRooms;
+    }
+
+    isRoomFull(id : string): boolean {
+        return this.activeRooms[id].getPlayerCount() >= MAX_NUMBER_OF_PLAYERS;
+    }
+
+    getRoomPlayerNames(id: string): string[] {
+        return this.activeRooms[id].getPlayerNames();
+    }
+
+    getRoomVisibility(id: string): RoomVisibility{
+        return this.activeRooms[id].getVisibility();
+    }
+
+    getRoomHost(id: string): Player{
+        return this.activeRooms[id].getHostPlayer();
     }
 
     findRoomFromPlayer(playerID: string): GameRoom | null {
@@ -84,7 +76,7 @@ export class RoomManagerService {
         return null;
     }
 
-    deleteRoom(roomToDelete: string): void {
-        delete this.activeRooms[roomToDelete];
+    deleteRoom(id: string): void {
+        delete this.activeRooms[id];
     }
 }

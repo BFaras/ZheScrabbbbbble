@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { GameType } from '@app/classes/game-settings';
 import { LeaderboardComponent } from '@app/components/leaderboard/leaderboard.component';
 import { AccountService } from '@app/services/account-service/account.service';
-import { GameModeService } from '@app/services/game-mode-service/game-mode.service';
+
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { Subscription } from 'rxjs';
 @Component({
@@ -14,12 +14,12 @@ import { Subscription } from 'rxjs';
 })
 export class MainPageComponent {
     subscriptionProfileInformation:Subscription;
-    constructor(private router:Router,private dialog: MatDialog, private gameModeService: GameModeService, private socketManager: SocketManagerService,private accountService:AccountService) {
+    constructor(private router:Router,private dialog: MatDialog, private socketManager: SocketManagerService,private accountService:AccountService) {
         this.accountService.setUpSocket()
         this.subscriptionProfileInformation = this.accountService.getUserProfileInformation().
         subscribe((userProfile)=>{
             this.accountService.setUpProfile(userProfile);
-            this.router.navigate(['/profile']);
+            this.router.navigate(['/profile-page']);
             })
         
     }
@@ -35,16 +35,12 @@ export class MainPageComponent {
         this.accountService.askProfileInformation()
     }
 
-    setScrabbleMode(scrabbleMode: GameType): void {
-        this.gameModeService.setScrabbleMode(scrabbleMode);
-    }
-
     get gameTypeEnum(): typeof GameType {
         return GameType;
     }
+
     disconnectUser() {
         this.socketManager.getSocket().disconnect();
         this.socketManager.createSocket();
-
     }
 }

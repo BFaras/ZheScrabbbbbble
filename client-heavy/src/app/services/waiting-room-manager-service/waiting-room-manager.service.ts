@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { GameSettings } from '@app/classes/game-settings';
 import { Timer } from '@app/classes/timer';
 import { WaitingRoom } from '@app/classes/waiting-room';
-import { GameModeService } from '@app/services/game-mode-service/game-mode.service';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { Observable, Observer } from 'rxjs';
 import { Socket } from 'socket.io-client';
@@ -12,148 +10,149 @@ export interface Settings {
     timer: Timer;
 }
 
+export interface JoinResponse {
+    errorCode: string;
+    playerNames?: string[];
+}
+
 @Injectable({
     providedIn: 'root',
 })
 export class WaitingRoomManagerService {
-    private socket: Socket;
-    private messageSource: string;
-    private alertMessage: string;
-    private hostPlayer: boolean;
-    private hostPlayerName: string;
-    private guestPlayerConnected: boolean;
-    private roomToJoin: string;
-    private waitingRoomObservable: Observable<WaitingRoom[]>;
+    private requestPending: boolean = false;
+    private defaultPlayersInRoom : string[];
 
-    constructor(private socketManagerService: SocketManagerService, private gameModeService: GameModeService) {
+    private waitingRoomObservable: Observable<WaitingRoom[]>;
+    private waitingRoomObserver : Observer<WaitingRoom[]>;
+
+    private joinRequestObservable: Observable<string>;
+    private joinRequestObserver: Observer<string>;
+
+    private joinRoomResponseObservable: Observable<JoinResponse>;
+    private joinRoomResponseObserver: Observer<JoinResponse>;
+
+    private gameStartObservable: Observable<null>;
+    private gameStartObserver: Observer<null>;
+
+    private roomPlayerObservable: Observable<string[]>;
+    private roomPlayerObserver: Observer<string[]>;
+
+    private socket : Socket;
+
+    constructor(private socketManagerService: SocketManagerService) {
         this.socket = this.socketManagerService.getSocket();
         this.waitingRoomObservable = new Observable((observer: Observer<WaitingRoom[]>) => {
-            this.socket.on('hereAreTheActiveGames', (rooms) => observer.next(rooms));
+            if(!this.socket.active) this.refreshSocketRequests();
+            this.waitingRoomObserver = observer;
+        });
+        this.refreshSocketRequests();
+        this.joinRequestObservable = new Observable((observer: Observer<string>) => {
+            if(!this.socket.active) this.refreshSocketRequests();
+            this.joinRequestObserver = observer;
+        });
+
+        this.joinRoomResponseObservable = new Observable((observer: Observer<JoinResponse>) => {
+            if(!this.socket.active) this.refreshSocketRequests();
+            this.joinRoomResponseObserver = observer;
+        });
+        this.gameStartObservable = new Observable((observer: Observer<null>) => {
+            if(!this.socket.active) this.refreshSocketRequests();
+            this.gameStartObserver = observer;
+        });
+        this.roomPlayerObservable = new Observable((observer: Observer<string[]>) => {
+            if(!this.socket.active) this.refreshSocketRequests();
+            this.roomPlayerObserver = observer;
+        });
+        
+    }
+
+    refreshSocketRequests(){
+        this.socket = this.socketManagerService.getSocket();
+        this.socket.on('Game Room List Response', (rooms) => {
+            this.waitingRoomObserver.next(rooms)
+        });
+        this.socket.on('Join Room Request', (username) => {
+            this.joinRequestObserver.next(username)
+        });
+        this.socket.on('Join Room Response', (errorCode, playerNames) => {
+            this.joinRoomResponseObserver.next({ errorCode, playerNames })
+        });
+        this.socket.on('Game Started', () => {
+            this.gameStartObserver.next(null);
+        });
+        this.socket.on('Room Player Update', (playerNames) => {
+            this.roomPlayerObserver.next(playerNames);
         });
     }
 
-    getMessageSource(): string {
-        return this.messageSource;
+    setDefaultPlayersInRoom(defaultPlayers : string[]){
+        this.defaultPlayersInRoom = defaultPlayers;
     }
 
-    getAlertMessage(): string {
-        return this.alertMessage;
+    getDefaultPlayersInRoom(): string[]{
+        return this.defaultPlayersInRoom;
     }
 
-    setMessageSource(message: string) {
-        this.messageSource = message;
+    isRequestPending(): boolean {
+        return this.requestPending;
     }
 
-    setAlertMessage(message: string) {
-        this.alertMessage = message;
+    setRequestPending(requestPending: boolean) {
+        this.requestPending = requestPending;
     }
 
-    isHostPlayer(): boolean {
-        return this.hostPlayer;
+    getGameRoomActive() {
+        this.socketManagerService.getSocket().emit('Get Game Room List');
     }
 
-    setHostPlayer(value: boolean) {
-        this.hostPlayer = value;
+    joinRoom(id: string, password?: string): void {
+        this.socketManagerService.getSocket().emit('Join Game Room', id, password);
     }
 
-    setHostPlayerName(value: string) {
-        this.hostPlayerName = value;
-    }
-
-    isGuestPlayer(): boolean {
-        return this.guestPlayerConnected;
-    }
-
-    setGuestPlayer(value: boolean) {
-        this.guestPlayerConnected = value;
-    }
-
-    getRoomToJoin(): string {
-        return this.roomToJoin;
-    }
-
-    setRoomToJoin(room: string) {
-        this.roomToJoin = room;
-    }
-
-    getJoinedPlayer(): Observable<string> {
-        return new Observable((observer: Observer<string>) => {
-            this.socket.on('guestPlayerIsWaiting', (message: string, isWaiting: boolean) => this.guestPlayerIsWaiting(isWaiting, message, observer));
-        });
-    }
-
-    getJoinResponse(): Observable<boolean> {
-        return new Observable((observer: Observer<boolean>) => {
-            this.socket.on('guestAnswered', (answer: boolean, message: string) => this.guestAnswered(answer, message, observer));
-        });
-    }
-
-    guestAnswered(answer: boolean, message: string, observer: Observer<boolean>) {
-        this.alertMessage = message;
-        observer.next(answer);
-    }
-
-    guestPlayerIsWaiting(isWaiting: boolean, message: string, observer: Observer<string>) {
-        this.guestPlayerConnected = isWaiting;
-        observer.next(message);
-    }
-
-    getHostPlayerName(): string {
-        return this.hostPlayerName;
-    }
-
-    joinRoom(guestPlayerName: string): void {
-        this.socket.emit('joinRoom', guestPlayerName, this.roomToJoin);
-    }
-
-    answerGuestPlayer(answer: boolean, message: string): void {
-        this.socket.emit('answerGuestPlayer', this.roomToJoin, answer, message);
-    }
-
-    deleteRoom(): void {
-        this.socket.emit('deleteRoom', this.roomToJoin);
-    }
-
-    updateWaitingRoom(message: string): void {
-        this.socket.emit('guestPlayerLeft', this.roomToJoin, message);
-    }
-
-    getGuestPlayerLeft(): Observable<string> {
-        return new Observable((observer: Observer<string>) => {
-            this.socket.on('guestLeft', (message: string) => observer.next(message));
-        });
+    leaveRoom(): void {
+        this.socketManagerService.getSocket().emit('Leave Game Room');
     }
 
     getWaitingRoomObservable(): Observable<WaitingRoom[]> {
         return this.waitingRoomObservable;
     }
 
-    askForWaitingRooms() {
-        this.socket.emit('sendWaitingRooms');
+    getJoinRoomRequestObservable(): Observable<string> {
+        return this.joinRequestObservable;
     }
 
-    convertMultiToSolo() {
-        this.gameModeService.setGameMode(true);
-        this.socket.emit('sendCurrentSettings');
+    getStartGameObservable(): Observable<null> {
+        return this.gameStartObservable;
     }
 
-    getCurrentSettings(): Observable<Settings> {
-        return new Observable((observer: Observer<Settings>) => {
-            this.socket.on('hereAreTheSettings', (playerName: string, timer: Timer) => observer.next({ playerName, timer }));
+    getRoomPlayerObservable(): Observable<string[]> {
+        return this.roomPlayerObservable;
+    }
+
+    createMultiRoom(roomName: string, visibility: string, passwordRoom: string) {
+        console.log(this.socketManagerService.getSocket());
+        this.socketManagerService.getSocket().emit('Create Game Room', roomName, visibility, passwordRoom);
+    }
+
+    startGame() {
+        this.socketManagerService.getSocket().emit('Start Game');
+    }
+
+    createRoomResponse(): Observable<string> {
+        return new Observable((observer: Observer<string>) => {
+            this.socketManagerService.getSocket().once('Room Creation Response', (errorCode) => observer.next(errorCode));
         });
     }
 
-    getSoloRoomObservable() {
-        return new Observable((observer: Observer<boolean>) => {
-            this.socket.on('soloRoomIsReady', (accepted) => observer.next(accepted));
-        });
+    joinRoomResponse(): Observable<JoinResponse> {
+        return this.joinRoomResponseObservable;
     }
 
-    createSoloRoom(gameSettings: GameSettings) {
-        this.socket.emit('createSoloRoom', gameSettings);
+    cancelJoinGameRoom() {
+        this.socketManagerService.getSocket().emit('Cancel Join Request');
     }
 
-    createMultiRoom(gameSettings: GameSettings) {
-        this.socket.emit('createMultiRoom', gameSettings);
+    respondJoinRequest(answer: boolean, username: string) {
+        this.socketManagerService.getSocket().emit('Join Request Response', answer, username);
     }
 }

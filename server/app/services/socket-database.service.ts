@@ -1,4 +1,3 @@
-import { GameType } from '@app/constants/basic-constants';
 import { CollectionType, Dictionary, GameHistory, PlayerName, Score, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
 import * as io from 'socket.io';
 import { Container, Service } from 'typedi';
@@ -13,8 +12,8 @@ export class SocketDatabaseService {
     }
 
     databaseSocketRequests(socket: io.Socket) {
-        socket.on('requestTopScores', (numberOfResults: number, gameType: GameType) => {
-            this.sendTopScores(numberOfResults, gameType, socket);
+        socket.on('requestTopScores', (numberOfResults: number) => {
+            this.sendTopScores(numberOfResults, socket);
         });
         socket.on('getDictionaryList', async () => {
             socket.emit('dictionaryList', await this.databaseService.getDictionaryList());
@@ -63,18 +62,18 @@ export class SocketDatabaseService {
         });
     }
 
-    sendScoreToDatabase(yourScore: Score, opponentScore: Score, disconnect: boolean, isSolo: boolean, gameType: GameType) {
-        if (!disconnect) this.databaseService.addScore(yourScore, gameType);
-        if (!isSolo) this.databaseService.addScore(opponentScore, gameType);
+    sendScoreToDatabase(yourScore: Score, opponentScore: Score, disconnect: boolean, isSolo: boolean) {
+        if (!disconnect) this.databaseService.addScore(yourScore);
+        if (!isSolo) this.databaseService.addScore(opponentScore);
     }
 
     sendGameHistoryToDatabase(gameHistory: GameHistory) {
         this.databaseService.addGameHistory(gameHistory);
     }
 
-    async sendTopScores(numberOfResults: number, gameType: GameType, socket: io.Socket) {
+    async sendTopScores(numberOfResults: number, socket: io.Socket) {
         let topScores = {};
-        topScores = await this.databaseService.getTopScores(numberOfResults, gameType).catch();
+        topScores = await this.databaseService.getTopScores(numberOfResults).catch();
         socket.emit('topScores', topScores);
     }
 

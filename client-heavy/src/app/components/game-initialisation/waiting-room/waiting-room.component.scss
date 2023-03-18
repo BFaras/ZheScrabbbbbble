@@ -1,103 +1,104 @@
 .container {
-    margin-top: 80px;
+    background-color: var(--background-default);
+    height: 57.1%;
+    padding: 8% 10% 10% 10%;
 }
 
 .justified {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
+}
+
+.logo {
+    margin-top: 1%;
+    font-family: "Shrikhand";
+    font-size: 95px;
+    color: var(--text-default);
 }
 
 .button {
     text-decoration: none;
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: center;
     border: none;
     padding: 10px;
-    background-color: rgb(204, 224, 183);
+    background-color: var(--button-primary);
     border-radius: 7px;
     width: 50vh;
-    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    box-shadow: var(--box-shadow);
     font-size: 17px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
-    color: rgb(94, 94, 94);
+    color: var(--button-text-default);
     transition: color 0.5s linear;
     -webkit-transition: color 0.2s linear;
 }
 
 .button:hover {
-    color: black;
+    color: var(--button-text-hover);
     cursor: pointer;
-    background: rgb(186, 204, 122);
+    background: var(--button-primary-hover);
     transition-property: background-color;
     transition-duration: 0.2s;
 }
 
-.team-name {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-    color: green;
+img{
+    margin-left: 8px;
+    margin-bottom: 2px;
+}
+
+h2{
+    margin: 0;
+}
+
+#join-requests{
+    display: flex;
+    align-items: center;
+    padding-top: 50px;
+    margin: 20px;
+}
+
+.button.join-request{
+    margin: 0;
+    width: 10vh;
+    margin-left: 10px;
 }
 
 .header-item {
     justify-content: center;
     text-align: center;
-    padding: 100px;
-}
-
-.footer-item {
-    position: absolute;
-    text-align: center;
-    bottom: 0;
-}
-
-.footer-item p :nth-child(even) {
-    color: black;
-}
-.footer-item p :nth-child(odd) {
-    color: grey;
+    padding: 100px 0px 50px 0px;
 }
 
 .mode-buttons {
     display: flex;
-    padding-top: 100px;
     justify-content: center;
     align-items: center;
     text-align: center;
     flex-direction: column;
 }
 
-.cancel {
-    background-color: #d3b1a7;
-}
-
-.cancel:hover:enabled {
-    background: #ce8975;
-    transition-property: background-color;
-    transition-duration: 0.2s;
-}
-
-.team-name {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-    color: green;
-}
-
-#spinner-container {
-    height: 0vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.mat-spinner::ng-deep circle {
-    stroke: rgb(241, 36, 163);
-}
-
 .mode-buttons {
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+.text {
+    color: var(--text-default);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.players {
+    font-size: 20px;
+}
+
+mat-list {
+    background-color: var(--background-tertiary);
+    box-shadow: var(--box-shadow);
+    border-radius: 7px;
 }

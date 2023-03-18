@@ -1,0 +1,15 @@
+<app-navigation-bar></app-navigation-bar>
+<div class="container justified">
+    <div class="logo">Scrabble</div>
+    <h1 class="header-item" *ngIf="isRequestPending()">{{ 'PENDING-ROOM.PENDING' | translate }}</h1>
+    <h1 class="header-item" *ngIf="!isRequestPending()">{{ 'PENDING-ROOM.DECLINE' | translate }}</h1>
+    <div id="page-content">
+        <div [style.visibility]="isRequestPending() ? 'visible' : 'hidden'" id="spinner-container">
+            <mat-spinner></mat-spinner>
+        </div>
+        <div class="mode-buttons">
+            <button *ngIf="isRequestPending()" class="button cancel" (click)="cancelDemand()">{{ 'PENDING-ROOM.CANCEL' | translate }}</button>
+            <button *ngIf="!isRequestPending()" class="button cancel" (click)="returnToMenu()">{{ 'PENDING-ROOM.RETURN' | translate }}</button>
+        </div>
+    </div>
+</div>

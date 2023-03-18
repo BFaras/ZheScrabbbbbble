@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable max-lines */
-import { GameType } from '@app/constants/basic-constants';
 import { DATABASE_NAME, DATABASE_URL } from '@app/constants/database-environment';
 import {
     AccountInfo,
@@ -14,6 +13,7 @@ import {
 } from '@app/constants/database-interfaces';
 import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
+import { FriendsDB } from '@app/interfaces/friend-info';
 import { ProfileInfo, ProfileInfoDB, ProfileSettings } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
@@ -42,8 +42,7 @@ export class DatabaseService {
     }
 
     async initialiseDB() {
-        await this.fillScoreCollection(GameType.CLASSIC);
-        await this.fillScoreCollection(GameType.LOG2990);
+        await this.fillScoreCollection();
         await this.insertDefaultDictionary();
         await this.insertDefaultPlayerNames();
     }
@@ -57,8 +56,8 @@ export class DatabaseService {
 
     async resetCollection(type: CollectionType) {
         if (type === CollectionType.SCORE) {
-            await this.getCollection(type, GameType.CLASSIC).deleteMany({});
-            await this.getCollection(type, GameType.LOG2990).deleteMany({});
+            await this.getCollection(type).deleteMany({});
+            await this.getCollection(type).deleteMany({});
         } else {
             await this.getCollection(type).deleteMany({});
         }
@@ -78,7 +77,6 @@ export class DatabaseService {
             email,
             securityQuestion,
         };
-
         await this.getCollection(CollectionType.USERACCOUNTS)
             ?.insertOne(accountInfo)
             .catch(() => {
@@ -117,10 +115,10 @@ export class DatabaseService {
         return username;
     }
 
-    async changeUserPassword(username: string, encryptedPassword: string): Promise<boolean> {
+    async changeUserPassword(usernameUser: string, encryptedPasswordUser: string) {
         let isChangeSuccess = true;
         await this.getCollection(CollectionType.USERACCOUNTS)
-            ?.updateOne({ username }, { $set: { encryptedPassword } })
+            ?.updateOne({ username: usernameUser }, { $set: { encryptedPassword: encryptedPasswordUser } })
             .catch(() => {
                 isChangeSuccess = false;
             });
@@ -137,6 +135,10 @@ export class DatabaseService {
             encryptedPassword = userAccountInfoDoc.encryptedPassword;
         }
         return encryptedPassword;
+    }
+
+    async addScore(score: Score): Promise<void> {
+        await this.getCollection(CollectionType.SCORE)?.insertOne(score).catch();
     }
 
     async getUserSecurityQuestion(username: string): Promise<string> {
@@ -221,6 +223,62 @@ export class DatabaseService {
                 errorCode = DATABASE_UNAVAILABLE;
             });
         return errorCode;
+    }
+
+    async addFriendDoc(userId: string): Promise<boolean> {
+        const friendsInfo: FriendsDB = {
+            _id: new ObjectId(userId),
+            friendsId: [],
+        };
+        let isCreationSuccess = true;
+        await this.getCollection(CollectionType.FRIENDS)
+            ?.insertOne(friendsInfo)
+            .catch(() => {
+                isCreationSuccess = false;
+            });
+        return isCreationSuccess;
+    }
+
+    async addFriend(userId: string, friendUserId: string): Promise<string> {
+        let errorCode: string = NO_ERROR;
+        await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)
+            ?.updateOne({ _id: new ObjectId(userId) }, { $push: { friendsId: friendUserId } })
+            .catch(() => {
+                errorCode = DATABASE_UNAVAILABLE;
+            });
+
+        return errorCode;
+    }
+
+    async getUserFriendList(userId: string): Promise<string[]> {
+        let friendsList: string[] = [];
+        const userFriendsDoc = await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)?.findOne({
+            _id: new ObjectId(userId),
+        });
+
+        if (userFriendsDoc !== undefined && userFriendsDoc !== null) {
+            friendsList = userFriendsDoc.friendsId;
+        }
+        return friendsList;
+    }
+
+    async getUserIdFromFriendCode(friendCode: string): Promise<string> {
+        const profileWithCode = await ((await this.getCollection(CollectionType.PROFILEINFO)) as Collection<ProfileInfoDB>)?.findOne({
+            'profileInfo.userCode': friendCode,
+        });
+        let friendId = '';
+
+        if (profileWithCode !== undefined && profileWithCode !== null) {
+            friendId = profileWithCode._id.toString();
+        }
+        return friendId;
+    }
+
+    async isFriendCodeTaken(friendCodeToCheck: string): Promise<boolean> {
+        const userWithFriendCode = await ((await this.getCollection(CollectionType.PROFILEINFO)) as Collection<ProfileInfoDB>)?.findOne({
+            'profileInfo.userCode': friendCodeToCheck,
+        });
+        return Promise.resolve(!(userWithFriendCode === undefined || userWithFriendCode === null));
     }
 
     async addNewChatCanal(chatInfo: ChatInfoDB): Promise<string> {
@@ -333,12 +391,8 @@ export class DatabaseService {
         return mongoArray as ChatInfo[];
     }
 
-    async addScore(score: Score, gameType: GameType): Promise<void> {
-        await this.getCollection(CollectionType.SCORE, gameType)?.insertOne(score).catch();
-    }
-
-    async getTopScores(resultCount: number, gameType: GameType): Promise<TopScores> {
-        const dbResults = await (this.getCollection(CollectionType.SCORE, gameType) as Collection<Score>)
+    async getTopScores(resultCount: number): Promise<TopScores> {
+        const dbResults = await (this.getCollection(CollectionType.SCORE) as Collection<Score>)
             ?.find({}, { projection: { _id: 0 } })
             .sort({ score: -1 })
             .toArray();
@@ -443,13 +497,13 @@ export class DatabaseService {
         return this.client.close();
     }
 
-    private getCollection<T>(collectionType: CollectionType, gameType?: GameType): Collection<T> {
-        return this.database?.collection(collectionType + (gameType ? gameType : ''));
+    private getCollection<T extends Document>(collectionType: CollectionType): Collection<T> {
+        return this.database?.collection(collectionType);
     }
 
-    private async fillScoreCollection(gameType: GameType): Promise<void> {
-        if ((await this.getCollection(CollectionType.SCORE, gameType)?.countDocuments()) === 0) {
-            await this.insertDefaultScores(this.getCollection(CollectionType.SCORE, gameType));
+    private async fillScoreCollection(): Promise<void> {
+        if ((await this.getCollection(CollectionType.SCORE)?.countDocuments()) === 0) {
+            await this.insertDefaultScores(this.getCollection(CollectionType.SCORE));
         }
     }
 

@@ -1,5 +1,7 @@
 .container {
-    margin-top: 80px;
+    background-color: var(--background-default);
+    height: 53%;
+    padding: 8% 0% 12% 0%;
 }
 
 .justified {
@@ -9,88 +11,43 @@
     align-items: center;
 }
 
-.button, .inactive-button {
+.logo {
+    margin-top: 1%;
+    font-family: "Shrikhand";
+    font-size: 95px;
+    color: var(--text-default);
+}
+
+.button {
     text-decoration: none;
     margin-top: 20px;
     text-align: center;
     border: none;
     padding: 10px;
-    background-color: rgb(204, 224, 183);
+    background-color: var(--button-primary);
     border-radius: 7px;
     width: 50vh;
-    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    box-shadow: var(--box-shadow);
     font-size: 17px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
-    color: rgb(94, 94, 94);
+    color: var(--button-text-default);
     transition: color 0.5s linear;
     -webkit-transition: color 0.2s linear;
 }
 
 .button:hover {
-    color: black;
+    color: var(--button-text-hover);
     cursor: pointer;
-    background: rgb(186, 204, 122);
+    background: var(--button-primary-hover);
     transition-property: background-color;
     transition-duration: 0.2s;
 }
 
-.inactive-button:hover  {
-    background-color: rgb(204, 224, 183);
-}
 .button:disabled:hover .button:disabled {
-    background: rgb(186, 204, 122);
+    background: var(--button-primary-hover);
     box-shadow: inset 0px 0px 8px #c1c1c1;
     outline: none;
-}
-
-.team-name {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-    color: green;
-}
-
-.header-item {
-    justify-content: center;
-    text-align: center;
-    padding: 100px;
-}
-
-.footer-item {
-    position: absolute;
-    text-align: center;
-    bottom: 0;
-}
-
-.footer-item p :nth-child(even) {
-    color: black;
-}
-.footer-item p :nth-child(odd) {
-    color: grey;
-}
-
-.mode-buttons {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.cancel {
-    background-color: #d3b1a7;
-}
-
-.cancel:hover:enabled {
-    background: #ce8975;
-    transition-property: background-color;
-    transition-duration: 0.2s;
-}
-
-.join {
-    background-color: rgb(204, 224, 183);
-    margin-top: 0px;
-    border-width: 0.5vh;
-    height: 3.75vh;
-    width: max-content;
 }
 
 #title {
@@ -104,6 +61,35 @@
     height: 5vh;
 }
 
+table{
+    background-color: var(--playarea-letterx2);
+    border-radius: 7px;
+}
+
+.text {
+    color: var(--text-default);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.header-item {
+    justify-content: center;
+    text-align: center;
+    padding: 100px;
+    font-weight: bold;
+}
+
+.join {
+    background-color: var(--button-primary);
+    height: 3.2vh;
+    padding-bottom: 13%;
+    font-size: 18px;
+    width: max-content;
+    box-shadow: none;
+    margin-top: none;
+    margin-right: 10px;
+    box-shadow: var(--box-shadow);
+}
+
 .table-wrapper {
     margin-top: -75px;
     display: flex;
@@ -113,36 +99,32 @@
 }
 
 .created-games {
-    border-width: 0.2vw;
-    border-color: white;
-    border-style: solid;
+    border: none;
     width: 40vw;
     overflow: hidden;
 }
 
 .room-information {
-    width: 15vw;
+    width: 10vw;
     font-size: 1.65vh;
-    font-weight: 700;
-    color: white;
+    font-weight: bold;
     line-height: 3.5vh;
 }
 
 .waiting-rooms-information {
     display: flex;
-    background-color: #1f2029;
     width: auto;
     height: max-content;
-    border-bottom-style: solid;
-    border-bottom-color: white;
-    border-width: 0.2vw;
 }
 
 .waiting-players {
     overflow-y: auto;
     overflow-x: hidden;
-    height: 25vh;
-    width: auto;
+    height: max-content;
+    border-radius: 7px;
+    box-shadow: var(--box-shadow);
+    background-color: var(--background-tertiary);
+    margin-top: 0.2%;
 }
 
 .noGameFound {
@@ -150,46 +132,57 @@
     justify-content: center;
     align-items: center;
     width: auto;
-    height: 10vh;
+    height: 7vh;
     font-size: 1.65vh;
+    font-style: italic;
 }
 
 .waiting-player {
-    background: #979797;
-    height: 5vh;
+    border-radius: 7px;
+    height: 7vh;
     width: auto;
     display: flex;
     align-items: center;
-    border-width: 0.15vh;
-    border-color: black;
-    border-style: solid;
     margin: 0.25vh 0;
-    color: white;
-    font-family: 'Tahoma';
     font-size: 1.7vh;
+    border-bottom: 3px;
+    border-color: var(--accent-default);
 }
 
-#game-option {
+.game-option {
     display: flex;
     justify-content: space-evenly;
-    width: 15vw;
+    width: 10vw;
 }
 
-#player-name-cell {
-    width: 15vw;
+.cell-btn {
+    margin-left: 50px;
+    margin-right: 35px;
+    width: max-content;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    border-width: 0.2vw;
+    align-content: space-between;
+    margin-bottom: 1.8%;
 }
 
-#join-cell {
-    width: 7.2vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+::-webkit-scrollbar {
+    width: 10px;
 }
 
-p {
-    margin: 0;
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background: var(--scroll-background);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background: var(--scroll-default);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scroll-hover);
 }

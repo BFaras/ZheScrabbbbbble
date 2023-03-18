@@ -37,6 +37,10 @@ private var _binding: FragmentMainMenuBinding? = null
             findNavController().navigate(R.id.action_MainMenuFragment_to_ChatFragment)
         }
 
+        binding.modeClassique.setOnClickListener {
+            findNavController().navigate(R.id.action_MainMenuFragment_to_gameListFragment)
+        }
+
         binding.buttonDisconnect.setOnClickListener {
             SocketHandler.closeConnection();
             LoggedInUser.disconnectUser();

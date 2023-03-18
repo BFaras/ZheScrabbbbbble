@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="270dp"
+    android:layout_height="50dp"
+    card_view:cardCornerRadius="5dp"
+    android:layout_gravity="center|center_vertical"
+    card_view:cardBackgroundColor="?colorPrimaryVariant"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:id="@+id/playerInfoHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/playerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="NAME"
+            android:textColor="?colorOnPrimary"
+            android:textSize="20dp" />
+
+
+        <TextView
+            android:id="@+id/playerPoints"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="500"
+            android:textSize="20dp"
+            android:textColor="?colorOnPrimary"
+            android:layout_alignParentRight="true">
+
+
+        </TextView>
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

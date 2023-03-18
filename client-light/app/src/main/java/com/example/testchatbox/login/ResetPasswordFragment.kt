@@ -12,7 +12,7 @@ import com.example.testchatbox.databinding.FragmentResetPasswordBinding
 import com.example.testchatbox.login.model.LoggedInUser
 import SocketHandler
 import android.widget.Toast
-
+import com.example.testchatbox.chat.ChatModel
 
 
 /**
@@ -95,14 +95,15 @@ class ResetPasswordFragment : Fragment() {
                             if(error.toInt() == 0){
                                 activity?.runOnUiThread(Runnable {
                                     LoggedInUser.connectUser(usernameEditText.text.toString())
+                                    ChatModel.initialiseChat();
                                     findNavController().navigate(R.id.action_resetFragment_to_MainMenuFragment)
                                 });
                             }
                             val errorMessage = when(error.toInt()){
-                                3 -> R.string.PASSWORD_INVALID.toString()
-                                5 -> R.string.DATABASE_UNAVAILABLE.toString()
-                                6 -> R.string.WRONG_SECURITY_ANSWER.toString()
-                                else -> "Error"
+                                3 -> R.string.PASSWORD_INVALID
+                                5 -> R.string.DATABASE_UNAVAILABLE
+                                6 -> R.string.WRONG_SECURITY_ANSWER
+                                else -> R.string.ERROR
                             }
                             activity?.runOnUiThread(Runnable {
                                 val appContext = context?.applicationContext

@@ -1,23 +1,13 @@
-<div class="container justified">
-    <img src="https://bit.ly/3m206ss" width="400" height="80" alt="Logo Scrabble" />
-
-    <h1 class="header-item">Veuillez choisir un mode de jeu!</h1>
-
-    <section id="pick-a-mode">
-        <p id="instruction">Vous pouvez jouer seul contre un joueur virtuel, ou à deux avec une autre personne.</p>
-        <div class="mode-buttons">
-            <button class="button" routerLink="/create-game" (click)="setSoloMode(true)">Jouer une partie solo</button><br />
-            <button class="button" routerLink="/create-game" (click)="setSoloMode(false)">Créer une partie mutlijoueur</button><br />
-            <button class="button" routerLink="/join-game">Joindre une partie multijoueur</button><br />
-            <button class="button cancel" routerLink="">Retourner au menu principal</button>
-        </div>
-    </section>
-
-    <div class="footer-item">
-        <h4 class="team-name">Équipe 206</h4>
-        <p>
-            <span>Ioana Daria Danciu</span>, <span>Arnaud Delage-Reid</span>, <span>Manuel Ramirez-Evrard</span>, <span>Kaboungala Bintou Seni</span>,
-            <span>Pablo Sepulveda Solis</span>, <span>Imane Znadi</span>
-        </p>
+<app-navigation-bar></app-navigation-bar>
+<div class="container">
+    <div class="justified">
+        <div class="logo">Scrabble</div>
+        <section id="pick-a-mode">
+            <h1 class="header-item">{{ 'SOLO-MULTI.MESSAGE' | translate }}</h1>
+            <div class="mode-buttons">
+                <button class="button" routerLink="/create-game">{{ 'SOLO-MULTI.CREATE' | translate }}</button><br />
+                <button class="button" routerLink="/join-game">{{ 'SOLO-MULTI.JOIN' | translate }}</button><br />
+            </div>
+        </section>
     </div>
 </div>

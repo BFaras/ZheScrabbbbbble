@@ -7,16 +7,30 @@ import {
     POINTS_AVRG_STAT_NAME,
     WINS_NB_STAT_NAME
 } from '@app/constants/profile-constants';
-import { ProfileInfo, ProfileSettings, StatisticInfo } from '@app/interfaces/profile-info';
+import { ConnectivityStatus, UserStatus } from '@app/interfaces/friend-info';
+import { ConnectionInfo, ConnectionType, GameHistoryInfo, ProfileInfo, ProfileSettings, StatisticInfo } from '@app/interfaces/profile-info';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
+import { FriendService } from './friend.service';
+import { TimeFormatterService } from './time-formatter.service';
+import { UsersStatusService } from './users-status.service';
 
 @Service()
 export class ProfileService {
     private readonly dbService: DatabaseService;
+    private readonly friendService: FriendService;
+    private readonly timeFormatterService: TimeFormatterService;
+    private readonly usersStatusService: UsersStatusService;
 
     constructor() {
         this.dbService = Container.get(DatabaseService);
+        this.friendService = Container.get(FriendService);
+        this.timeFormatterService = Container.get(TimeFormatterService);
+        this.usersStatusService = Container.get(UsersStatusService);
+
+        this.usersStatusService.getStatusUpdater().subscribe({
+            next: this.updateProfileFromNewStatus.bind(this),
+        });
     }
 
     getDefaultProfileInformation(): ProfileInfo {
@@ -49,17 +63,19 @@ export class ProfileService {
     }
 
     async getUserStats(userId: string): Promise<StatisticInfo[]> {
-        return (await this.getProfileInformation(userId)).stats;
+        const username: string = await this.dbService.getUsernameFromId(userId);
+        return (await this.getProfileInformation(username)).stats;
     }
 
     async getUserSettings(userId: string): Promise<ProfileSettings> {
         return this.dbService.getUserProfileSettings(userId);
     }
 
-    async createNewProfile(username: string, avatar: string): Promise<boolean> {
-        const userId: string = await this.dbService.getUserId(username);
+    async createNewProfile(userId: string, avatar: string): Promise<boolean> {
         const profileInfo: ProfileInfo = this.getDefaultProfileInformation();
+
         profileInfo.avatar = avatar;
+        profileInfo.userCode = await this.friendService.generateUniqueFriendCode();
         return await this.dbService.addNewProfile(userId, profileInfo, this.getDefaultProfileSettings());
     }
 
@@ -96,5 +112,54 @@ export class ProfileService {
         errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);
 
         return errorCode;
+    }
+
+    async addConnection(userId: string, connectionInfo: ConnectionInfo): Promise<string> {
+        const profileInfo: ProfileInfo = await this.dbService.getUserProfileInfo(userId);
+        let errorCode: string = DATABASE_UNAVAILABLE;
+
+        if (profileInfo !== this.getDefaultProfileInformation()) {
+            profileInfo.connectionHistory.push(connectionInfo);
+            errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);
+        }
+        return errorCode;
+    }
+
+    async addTournamentWin(userId: string, tournamentPosition: number) {
+        const profileInfo: ProfileInfo = await this.dbService.getUserProfileInfo(userId);
+        let errorCode: string = DATABASE_UNAVAILABLE;
+
+        if (profileInfo !== this.getDefaultProfileInformation()) {
+            profileInfo.tournamentWins[tournamentPosition - 1]++;
+            errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);
+        }
+        return errorCode;
+    }
+
+    async addGameToHistory(userId: string, gameInfo: GameHistoryInfo): Promise<string> {
+        const profileInfo: ProfileInfo = await this.dbService.getUserProfileInfo(userId);
+        let errorCode: string = DATABASE_UNAVAILABLE;
+
+        if (profileInfo !== this.getDefaultProfileInformation()) {
+            profileInfo.gameHistory.push(gameInfo);
+            errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);
+        }
+        return errorCode;
+    }
+
+    private async updateProfileFromNewStatus(userSatus: UserStatus) {
+        if (userSatus.status === ConnectivityStatus.ONLINE) {
+            await this.addConnection(userSatus.userId, this.generateConnectionInfo(ConnectionType.CONNECTION));
+        } else if (userSatus.status === ConnectivityStatus.OFFLINE) {
+            await this.addConnection(userSatus.userId, this.generateConnectionInfo(ConnectionType.DISCONNECTION));
+        }
+    }
+
+    private generateConnectionInfo(conectionType: ConnectionType): ConnectionInfo {
+        return {
+            connectionType: conectionType,
+            date: this.timeFormatterService.getDateString(),
+            time: this.timeFormatterService.getTimeStampString(),
+        };
     }
 }
