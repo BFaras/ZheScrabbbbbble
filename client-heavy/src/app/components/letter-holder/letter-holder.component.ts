@@ -1,3 +1,4 @@
+import { CdkDragStart } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnDestroy, Output, ViewChild } from '@angular/core';
 import { HOLDER_MEASUREMENTS, isManipulated, isSelected } from '@app/constants/letters-constants';
 import { MouseButton } from '@app/constants/mouse-buttons';
@@ -32,6 +33,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     counter: number = 0;
     initialPosition: number = 0;
     subscription: Subscription;
+    subscriptionHolderPoints: Subscription;
     viewLoaded = false;
     listTileManipulated = isManipulated;
     listTileSelected = isSelected;
@@ -55,22 +57,40 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         });
     }
 
+    cancelManipulationAndSelection(event:CdkDragStart){
+        this.manipulationRack.cancelAll(isSelected);
+        this.manipulationRack.cancelManipulation()
+    }
+
+    getLetterIfNotBlank(letter:string){
+        if (letter === 'blank'){
+            return ''
+        }else{
+            return letter.toUpperCase()
+        }
+    }
+
+    getPointIfNotBlank(point:number){
+        if (point === 0 ){
+            return ''
+        }else{
+            return point
+        }
+    }
+
     @HostListener('click', ['$event'])
     clickInside(e: MouseEvent,indexOfElement:number) {
         if (e.button === MouseButton.Right) {
-            if (!this.mouseIsIn) return;
-            this.isReceiver();
             this.manipulationRack.cancelManipulation();
             this.manipulationRack.selectLetterOnRack(indexOfElement + 1);
             this.makingSelection = Object.values(isSelected).some((selection) => selection === true);
         } else if (e.button === MouseButton.Left) {
-            if (!this.mouseIsIn) return;
             e.stopPropagation();
-            this.isReceiver();
             this.makingSelection = false;
             this.manipulationRack.cancelAll(isSelected);
             this.manipulationRack.manipulateLetterOnRack(indexOfElement+1);
             this.initialPosition = indexOfElement + 1;
+            this.counter = 0;
         }
         return;
     }
@@ -108,10 +128,12 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
             this.manipulationRack.moveLetter('right', this.initialPosition, this.playerHand);
             this.initialPosition++;
             this.initialPosition = this.initialPosition >= HOLDER_MEASUREMENTS.maxPositionHolder + OFFSET_POSITION ? 1 : this.initialPosition;
+            this.manipulationRack.manipulateRackOnKey(this.initialPosition)
         } else if (e.key === 'ArrowLeft') {
             this.manipulationRack.moveLetter('left', this.initialPosition, this.playerHand);
             this.initialPosition--;
             this.initialPosition = this.initialPosition <= 0 ? HOLDER_MEASUREMENTS.maxPositionHolder : this.initialPosition;
+            this.manipulationRack.manipulateRackOnKey(this.initialPosition)
         }
         return;
     }
@@ -124,10 +146,12 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
             this.manipulationRack.moveLetter('right', this.initialPosition, this.playerHand);
             this.initialPosition++;
             this.initialPosition = this.initialPosition >= HOLDER_MEASUREMENTS.maxPositionHolder + OFFSET_POSITION ? 1 : this.initialPosition;
+            this.manipulationRack.manipulateRackOnKey(this.initialPosition)
         } else if (e.deltaY < 0) {
             this.manipulationRack.moveLetter('left', this.initialPosition, this.playerHand);
             this.initialPosition--;
             this.initialPosition = this.initialPosition <= 0 ? HOLDER_MEASUREMENTS.maxPositionHolder : this.initialPosition;
+            this.manipulationRack.manipulateRackOnKey(this.initialPosition)
         }
         return;
     }
@@ -152,6 +176,9 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         this.letterHolderService.holderContext = this.letterHolder.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         console.log("View Init Done");
         this.updateHolder(this.initialGameState);
+        this.subscriptionHolderPoints = this.letterHolderService.getNewHolderStatePoints().subscribe((holderHandPoints)=>{
+            this.playerHandPoints = holderHandPoints
+        })
     }
 
     isDraggingMode(){

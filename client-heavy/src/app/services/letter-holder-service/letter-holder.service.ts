@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HOLDER_MEASUREMENTS, LETTER_POINTS, TILE_COLOURS } from '@app/constants/letters-constants';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -10,6 +11,7 @@ export class LetterHolderService {
     letterLog = new Map<number, string>();
     holderState: string[] = [];
     holderStatePoints:number[] = [];
+    subjectHolderStatePoints:Subject<number[]> = new Subject()
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
 
     constructor(private size: FontSizeService) {}
@@ -76,7 +78,8 @@ export class LetterHolderService {
 
     setHolderState(holder: string[]) {
         this.holderState = holder;
-        holder.forEach((letter)=>{
+        this.holderStatePoints = [];
+        this.holderState.forEach((letter)=>{
             this.holderStatePoints.push(this.getHolderHandPoints(letter))
         })
     }
@@ -96,7 +99,16 @@ export class LetterHolderService {
         });
     }
 
+    getNewHolderStatePoints(): Subject<number[]> {
+        return this.subjectHolderStatePoints;
+    }
+
     drawTypedLetters(letters: string[]) {
+        this.holderStatePoints = [];
+        letters.forEach((letter)=>{
+            this.holderStatePoints.push(this.getHolderHandPoints(letter))
+        })
+        this.getNewHolderStatePoints().next(this.holderStatePoints)
         const previousState = this.holderState;
         this.holderContext.clearRect(0, 0, HOLDER_MEASUREMENTS.holderWidth, HOLDER_MEASUREMENTS.holderHeight);
         this.holderState = letters;
@@ -149,6 +161,7 @@ export class LetterHolderService {
         if (letterToMove && letterToChange) {
             lettersPosition.set(newPosition, letterToMove);
             lettersPosition.set(oldPosition, letterToChange);
+            this.changePositionPoints(oldPosition,newPosition);
             const newLettersMap = new Map([...lettersPosition.entries()].sort(([key1], [key2]) => key1 - key2));
             this.letterLog = newLettersMap;
 

@@ -42,18 +42,20 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         const topBorad = document.getElementById("canvas")?.getBoundingClientRect().top as number;
         this.setReceiver('playarea');
         const coordinateClick: Vec2 = { x: letter.dropPoint.x - leftBoard, y: letter.dropPoint.y - topBorad };
-        this.mouseIsIn = true;
         if (this.letterAdderService.onDropLetterSpot(coordinateClick)){
             this.letterAdderService.addLettersOnDrop(letter.item.data)
         }
+        this.mouseIsIn = true;
 
         
     }
 
-    @HostListener('keydown', ['$event'])
+    @HostListener('document:keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
+        if(this.receiver ==="playarea"){
         this.buttonPressed = event.key;
         this.letterAdderService.onPressDown(this.buttonPressed);
+        }
     }
 
     ngOnInit(): void {

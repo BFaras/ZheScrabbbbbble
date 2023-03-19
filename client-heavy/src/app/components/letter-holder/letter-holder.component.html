@@ -12,29 +12,20 @@
         >
             Échanger
         </button>
-        <canvas
+        <div cdkDropList [cdkDropListData]="playerHand"id="rack" >
+            <div cdkDrag (cdkDragStarted) = "cancelManipulationAndSelection($event)"
+            (contextmenu)="clickInside($event,indexOfelement)"
+            (click)="clickInside($event,indexOfelement)"
             (click)="isReceiver()"
             (contextmenu)="isReceiver()"
-            #letterHolder
-            (contextmenu)="clickInside($event,1)"
-            (click)="clickInside($event,1)"
-            (keypress)="onKeyDown($event)"
-            id="letter-holder-container"
-            [attr.width]="width"
-            [attr.height]="height"
-        ></canvas>
-                <div cdkDropList (click)="isReceiver()"
-        (contextmenu)="isReceiver()" [cdkDropListData]="playerHand"id="rack">
-            <div cdkDrag (contextmenu)="clickInside($event,indexOfelement)"
-            (click)="clickInside($event,indexOfelement)"
-            (keypress)="onKeyDown($event)" [cdkDragDisabled]="isDraggingMode()" 
+            (keypress)="onKeyDown($event)" [cdkDragDisabled]="isDraggingMode() || tile === 'blank' " 
             [cdkDragData]="tile" *ngFor="let tile of playerHand;let indexOfelement=index"
+                        
             [ngClass]="{'red': listTileSelected[indexOfelement+1],'green':listTileManipulated[indexOfelement+1]}"class="tile" >
-                <h1 id="letter">{{tile}}</h1>
-                <h1 id="point">{{playerHandPoints[indexOfelement]}}</h1>
+                <h1 id="letter">{{getLetterIfNotBlank(tile)}}</h1>
+                <h1 id="point">{{getPointIfNotBlank(playerHandPoints[indexOfelement])}}</h1>
             </div>
         </div>
-
         <button id="playButton" class="button" [disabled]="isDisabled" (click)="sendWord()">Jouer</button>
         <button class="button" id="skipButton" (click)="skipTurn()" [disabled]="isDisabled">Passer</button>
     </div>
