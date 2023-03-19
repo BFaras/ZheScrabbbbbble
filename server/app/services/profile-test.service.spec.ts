@@ -120,7 +120,7 @@ describe('Profile Tests', async () => {
 
         newTestUserStats[0].statAmount = 3;
         newTestUserStats[2].statAmount = 102;
-        await profileService.updateUserStats(userId, newTestUserStats);
+        await profileService.updateUserStatsAndLevel(userId, newTestUserStats);
 
         expect(await profileService.getUserStats(userId)).to.deep.equals(newTestUserStats);
     });
