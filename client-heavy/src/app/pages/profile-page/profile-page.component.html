@@ -9,4 +9,23 @@
     </div>
     <button class="theme-button" (click)="goToFriends()">{{ 'PROFILE-PAGE.FRIENDS' | translate }}</button>
     
+ <!---  ma partie-->
+    <div class="profileAvatarNameLevel">
+        <div class="avatarSection">
+            <div class="avatarSquare" [style.background-color]="accountProfile.avatar"></div>
+            <button class="button" (click)="openDialogChangeColor()">Modifier l'avatar
+            </button>
+        </div>
+        <div class="nameLevel">
+        <h1 class = "name">Nom: {{accountUsername}}</h1>
+        <h1 class = "level"> Niveau : {{accountProfile.level}} </h1>
+        </div>
+    </div>
+    <h1 >{{accountProfile.level}}</h1>
+    <h1>{{accountProfile.userCode}}</h1>
+    <h1>{{accountProfile.stats}}</h1>
+    <h1>{{accountProfile.tournamentWins}}</h1>
+    <h1>{{accountProfile.connectionHistory}}</h1>
+    <h1>{{accountProfile.gameHistory}}</h1>
+     <!---  ma partie-->
 </div>

@@ -19,7 +19,7 @@ export class FriendSocketService {
         this.usersStatusService = Container.get(UsersStatusService);
 
         this.usersStatusService.getStatusUpdater().subscribe({
-            next: this.updateFriendsWithNewStatus,
+            next: this.updateFriendsWithNewStatus.bind(this),
         });
     }
 

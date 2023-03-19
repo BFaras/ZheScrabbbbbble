@@ -30,17 +30,18 @@ import { LetterHolderComponent } from './components/letter-holder/letter-holder.
 import { LoginAreaComponent } from './components/login-area/login-area.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { PasswordLostAreaComponent } from './components/password-lost-area/password-lost-area.component';
+import { AvatarPopUpComponent } from './components/profil-pop-up/avatar-pop-up/avatar-pop-up.component';
 import { SignUpAreaComponent } from './components/sign-up-area/sign-up-area.component';
 import { TimerComponent } from './components/timer/timer.component';
 import { WindowComponent } from './components/window/window.component';
 import { ChatPageComponent } from './pages/chat-page/chat-page.component';
+import { FriendsPageComponent } from './pages/friends-page/friends-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { PasswordLostPageComponent } from './pages/password-lost-page/password-lost-page.component';
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
+import { PublicChatsComponent } from './pages/public-chats/public-chats.component';
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
 import { ChatService } from './services/chat-service/chat.service';
-import { FriendsPageComponent } from './pages/friends-page/friends-page.component';
-import { PublicChatsComponent } from './pages/public-chats/public-chats.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -79,6 +80,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         SignUpPageComponent,
         SignUpAreaComponent,
         ProfilePageComponent,
+        AvatarPopUpComponent,
         WindowComponent,
         PendingRoomComponent,
         PasswordInputComponent,
