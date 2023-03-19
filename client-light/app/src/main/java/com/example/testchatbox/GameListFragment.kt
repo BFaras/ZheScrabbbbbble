@@ -218,7 +218,7 @@ class GameListFragment : Fragment() {
                     });
                 }
             }
-            SocketHandler.getSocket().emit("Create Game Room", roomName, roomType, roomPassword)
+            SocketHandler.getSocket().emit("Create Game Room", roomName, roomType, roomPassword.trim())
         }
     }
     private fun showPasswordPrompt(gameRoom: GameRoom) {
@@ -233,7 +233,7 @@ class GameListFragment : Fragment() {
                 binding.cancelProtectedButton.setOnClickListener(null);
                 binding.gameListSection.visibility = View.VISIBLE;
                 binding.createSection.visibility = View.VISIBLE
-                joinRoom(gameRoom, password)
+                joinRoom(gameRoom, password.trim())
             }
         }
         binding.cancelProtectedButton.setOnClickListener {
