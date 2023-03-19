@@ -33,7 +33,7 @@ export class Game {
     private startDate: Date;
     private playerTurnIndex: number;
     private timer : NodeJS.Timeout;
-    private timerCallback : (username : string) => void;
+    private timerCallback : (username : string, result : CommandResult) => void;
 
     constructor(players: Player[]) {
         this.passCounter = 0;
@@ -44,7 +44,7 @@ export class Game {
         this.wordValidationService = Container.get(WordValidation);
     }
 
-    startGame(timerCallback: (username: string) => void) {
+    startGame(timerCallback: (username: string, result : CommandResult) => void) {
         if (this.players.length < 2) return;
         this.playerTurnIndex = Math.floor(Math.random() * this.players.length);
         for (const player of this.players) {
@@ -65,7 +65,7 @@ export class Game {
             return { errorType: ILLEGAL_COMMAND };
         }
         const score = this.wordValidationService.validation(formattedCommand, this.board, true);
-        this.resetCounter();
+        if(!(this.players[this.playerTurnIndex] instanceof VirtualPlayer)) this.resetCounter();
         if (score < 0) {
             this.board.removeLetters(formattedCommand);
             playerHand.addLetters(letters as Letter[]);
@@ -75,7 +75,7 @@ export class Game {
         this.players[this.playerTurnIndex].addScore(score);
         const endMessage = this.endTurn();
         if (endMessage) {
-            return { endGameMessage: endMessage };
+            return { playerMessage: {messageType: `${score}`, values : [name]}, endGameMessage: endMessage };
         }
         playerHand.addLetters(this.reserve.drawLetters(HAND_SIZE - playerHand.getLength()));
         return { playerMessage: {messageType: `${score}`, values : [name]} };
@@ -89,29 +89,29 @@ export class Game {
         if (!letters) return { errorType: ILLEGAL_COMMAND };
         activeHand.addLetters(this.reserve.drawLetters(HAND_SIZE - activeHand.getLength()));
         this.reserve.returnLetters(letters);
-        this.resetCounter();
+        if(!(this.players[this.playerTurnIndex] instanceof VirtualPlayer)) this.resetCounter();
         this.endTurn();
         return { playerMessage : {messageType: SWAP_MESSAGE, values : [name, stringLetters.length.toString()]}};
     }
 
     passTurn(): CommandResult {
         const name = this.players[this.playerTurnIndex].getName();
-        this.incrementCounter();
+        if(!(this.players[this.playerTurnIndex] instanceof VirtualPlayer)) this.incrementCounter();
         const endMessage = this.endTurn();
         if (endMessage) {
-            return { endGameMessage: endMessage };
+            return { playerMessage: {messageType: PASS_MESSAGE, values : [name]}, endGameMessage: endMessage };
         }
         return { playerMessage: {messageType: PASS_MESSAGE, values : [name]}};
     }
 
     endGame(): string {
+        clearTimeout(this.timer);
         this.gameOver = true;
         this.scorePlayers();
-        let endMessage: string = 'Fin de partie - lettres restantes';
+        let endMessage: string = '';
         for (const player of this.players) {
             endMessage += '\n' + player.getName() + ' : ' + player.getHand().getLettersToString();
         }
-        console.log(endMessage);
         return endMessage;
     }
 
@@ -182,14 +182,15 @@ export class Game {
         clearTimeout(this.timer);
         this.timer = setTimeout(() => {
             const username = this.players[this.playerTurnIndex].getName();
-            this.passTurn();
-            this.timerCallback(username);
+            const result = this.passTurn();
+            this.timerCallback(username, result);
         }, MILLISECOND_IN_MINUTES);
     }
 
     async attemptVirtualPlay(): Promise<CommandDetails | null> {
         const currentPlayer = this.players[this.playerTurnIndex];
-        if(!(currentPlayer instanceof VirtualPlayer) || this.gameOver) return null;
+        if(!(currentPlayer instanceof VirtualPlayer)) return null;
+        if(this.gameOver) return null;
         if(currentPlayer.isPlaying) return null;
         console.log(new Date().toLocaleTimeString() + ' | Start Virtual Play');
         const commandDetails = await currentPlayer.play();
@@ -200,7 +201,7 @@ export class Game {
 
     private scorePlayers() {
         let scoreSum: number = 0;
-        let emptyHandIndex: number = 0;
+        let emptyHandIndex: number = -1;
         for (let i = 0; i < this.players.length; i++) {
             const player = this.players[i];
             const score = player.getHand().calculateHandScore();
@@ -211,7 +212,7 @@ export class Game {
                 player.addScore(-score);
             }
         }
-        this.players[emptyHandIndex].addScore(scoreSum);
+        if(emptyHandIndex > -1) this.players[emptyHandIndex].addScore(scoreSum);
     }
 
     private endTurn(): string {
@@ -222,7 +223,7 @@ export class Game {
         return returnMessage;
     }
     private isGameFinished(): boolean {
-        return this.passCounter === NUMBER_PASS_ENDING_GAME || (this.isAnyHandEmpty() && this.getReserveLength() === 0);
+        return this.passCounter === (NUMBER_PASS_ENDING_GAME * this.getNumberOfRealPlayers()) || (this.isAnyHandEmpty() && this.getReserveLength() === 0);
     }
 
     private isAnyHandEmpty(): boolean {
@@ -269,5 +270,14 @@ export class Game {
         if (playerInfo.virtual)
             playerInfo.difficulty = player instanceof VirtualPlayerHard ? VirtualPlayerDifficulty.EXPERT : VirtualPlayerDifficulty.BEGINNER;
         return playerInfo;
+    }
+
+    private getNumberOfRealPlayers(): number {
+        let count = 0;
+        for(let player of this.players){
+            if(player instanceof VirtualPlayer) continue;
+            count++;
+        }
+        return count;
     }
 }

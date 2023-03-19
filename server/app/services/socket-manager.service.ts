@@ -1,10 +1,11 @@
 import { GameRoom } from '@app/classes/game-room';
 import { Player } from '@app/classes/player';
 import { VirtualPlayerEasy } from '@app/classes/virtual-player-easy';
+import { VirtualPlayerHard } from '@app/classes/virtual-player-hard';
 import { MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
 import { JOIN_REQUEST_REFUSED, NO_ERROR, ROOM_IS_FULL, ROOM_NAME_TAKEN, ROOM_PASSWORD_INCORRECT } from '@app/constants/error-code-constants';
-import { DISCONNECT_MESSAGE, OUT_OF_TIME_MESSAGE } from '@app/constants/game-state-constants';
-import { CommandController, PlayerMessage } from '@app/controllers/command.controller';
+import { DISCONNECT_MESSAGE, END_GAME_MESSAGE, OUT_OF_TIME_MESSAGE } from '@app/constants/game-state-constants';
+import { CommandController, CommandResult, PlayerMessage } from '@app/controllers/command.controller';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
@@ -145,11 +146,19 @@ export class SocketManager {
                 if(playerCount < 2) return;
                 if (currentRoom.isGameStarted()) return;
                 for(let i = 0; i < MAX_NUMBER_OF_PLAYERS - playerCount; i++){
-                    let name; 
+                    let name;
+                    let index;
                     do{
-                        name = VIRTUAL_PLAYER_NAMES[Math.floor(Math.random() * VIRTUAL_PLAYER_NAMES.length)];
+                        index = Math.floor(Math.random() * VIRTUAL_PLAYER_NAMES.length);
+                        name = VIRTUAL_PLAYER_NAMES[index];
                     }while(currentRoom.getPlayerNames().includes(name) || currentRoom.getPlayerNames().includes(name + ' (V)'))
-                    currentRoom.addPlayer(new VirtualPlayerEasy(name + ' (V)', currentRoom));
+                    let virtualPlayer; 
+                    if(index === 0){
+                        virtualPlayer = new VirtualPlayerHard(name + ' (V)', currentRoom)
+                    }else{
+                        virtualPlayer = new VirtualPlayerEasy(name + ' (V)', currentRoom)
+                    }
+                    currentRoom.addPlayer(virtualPlayer);
                 }
                 currentRoom.startGame(this.timerCallback.bind(this));
                 console.log(new Date().toLocaleTimeString() + ' | New game started');
@@ -171,7 +180,8 @@ export class SocketManager {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom || currentRoom.getGame.isGameOver()) return;
                 let returnValue = this.commandController.executeCommand({ commandType: command, args: argument, playerID: socket.id });
-                this.sendGameState(currentRoom, returnValue.playerMessage); 
+                this.sendGameState(currentRoom, returnValue.playerMessage);
+                if(returnValue.endGameMessage) this.sendGameState(currentRoom, {messageType: END_GAME_MESSAGE, values: [returnValue.endGameMessage]});
                 this.playVirtualTurns(currentRoom);
             });
 
@@ -222,6 +232,7 @@ export class SocketManager {
         let virtualReturnValue;
         while(virtualReturnValue = await room.getGame.attemptVirtualPlay()){
             this.sendGameState(room, virtualReturnValue.result.playerMessage);
+            if(virtualReturnValue.result.endGameMessage) this.sendGameState(room, {messageType: END_GAME_MESSAGE, values: [virtualReturnValue.result.endGameMessage]}); 
         }
     }
 
@@ -229,14 +240,15 @@ export class SocketManager {
         const gameState = room.getGame.createGameState();
         gameState.message = message;
         this.sio.in(room.getID()).emit('Game State Update', gameState);
-        room.getGame.resetTimer();
+        if(!gameState.gameOver) room.getGame.resetTimer();
     }
 
-    private timerCallback(room: GameRoom, username: string){
-        const gameState = room.getGame.createGameState();
-        gameState.message = {messageType : OUT_OF_TIME_MESSAGE, values : [username]};
-        this.sio.in(room.getID()).emit('Game State Update', gameState);
-        room.getGame.resetTimer();
+    private timerCallback(room: GameRoom, username: string, result : CommandResult){
+        this.sendGameState(room, {messageType : OUT_OF_TIME_MESSAGE, values : [username]});
+        if(result.endGameMessage) {
+            this.sendGameState(room, {messageType: END_GAME_MESSAGE, values: [result.endGameMessage]});
+            return;
+        };
         this.playVirtualTurns(room);
     }
 }

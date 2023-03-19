@@ -14,7 +14,7 @@ export const ALPHABET_SIZE = 26;
 
 export const MINIUM_NUMBER_LETTER_SWAP = 7;
 
-export const NUMBER_PASS_ENDING_GAME = 6;
+export const NUMBER_PASS_ENDING_GAME = 2;
 
 export const MAX_TIME_VIRTUAL_PLAY = 20000;
 export const MAX_TIME_HINT = 5000;

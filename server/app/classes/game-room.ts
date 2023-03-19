@@ -1,5 +1,6 @@
 import { Player } from '@app/classes/player';
 import { MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
+import { CommandResult } from '@app/controllers/command.controller';
 import { Game } from './game';
 import { VirtualPlayer } from './virtual-player';
 import { VirtualPlayerEasy } from './virtual-player-easy';
@@ -125,10 +126,10 @@ export class GameRoom {
         return this.password === password;
     }
 
-    startGame(timerCallback : (room : GameRoom, username: string) => void) {
+    startGame(timerCallback : (room : GameRoom, username: string, result : CommandResult) => void) {
         if(this.gameStarted) return;
-        this.game.startGame((username : string) => {
-            timerCallback(this, username);
+        this.game.startGame((username : string, result: CommandResult) => {
+            timerCallback(this, username, result);
         });
         this.gameStarted = true;
     }

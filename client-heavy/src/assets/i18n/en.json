@@ -143,6 +143,7 @@
         "MSG-3": "$0 swapped $1 letters",
         "MSG-4": "$0 passed their turn",
         "MSG-5": "$0 disconnected and was replaced by a virtual player",
-        "MSG-6": "$0 ran out of time and passed their turn"
+        "MSG-6": "$0 ran out of time and passed their turn",
+        "MSG-7": "Game over - letters left $0"
     }
 }
