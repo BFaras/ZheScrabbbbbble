@@ -141,6 +141,8 @@
         "MSG-1": "$0 a placé $1 pour $2 point(s)",
         "MSG-2": "$0 a tenté de placer un mot invalide",
         "MSG-3": "$0 a échangé $1 lettres",
-        "MSG-4": "$0 a passé son tour"
+        "MSG-4": "$0 a passé son tour",
+        "MSG-5": "$0 s'est déconnecté et à été remplacé par un joueur virtuel",
+        "MSG-6": "$0 a manqué de temps et à passé son tour"
     }
 }

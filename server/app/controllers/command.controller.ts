@@ -75,7 +75,7 @@ export class CommandController {
     private placeMessage(returnValue: CommandResult, args: string): CommandResult {
         if(!returnValue.playerMessage) return {errorType: INVALID_COMMAND_SYNTAX}
         if (isNaN(Number(returnValue.playerMessage.messageType))) return returnValue;
-        returnValue.playerMessage = {messageType: PLACE_MESSAGE, values: [returnValue.playerMessage.values[0], args, returnValue.playerMessage.messageType]};
+        returnValue.playerMessage = {messageType: PLACE_MESSAGE, values: [returnValue.playerMessage.values[0], args.split(' ')[1], returnValue.playerMessage.messageType]};
         return returnValue;
     }
 

@@ -32,6 +32,8 @@ export class Game {
     private gameOver: boolean;
     private startDate: Date;
     private playerTurnIndex: number;
+    private timer : NodeJS.Timeout;
+    private timerCallback : (username : string) => void;
 
     constructor(players: Player[]) {
         this.passCounter = 0;
@@ -42,13 +44,15 @@ export class Game {
         this.wordValidationService = Container.get(WordValidation);
     }
 
-    startGame() {
+    startGame(timerCallback: (username: string) => void) {
         if (this.players.length < 2) return;
         this.playerTurnIndex = Math.floor(Math.random() * this.players.length);
         for (const player of this.players) {
             player.getHand().addLetters(this.reserve.drawLetters(HAND_SIZE));
         }
         this.startDate = new Date();
+        this.timerCallback = timerCallback;
+        this.resetTimer();
     }
 
     placeLetter(commandInfo: PlaceLetterCommandInfo): CommandResult {
@@ -174,9 +178,19 @@ export class Game {
         this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
     }
 
+    resetTimer(){
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+            const username = this.players[this.playerTurnIndex].getName();
+            this.passTurn();
+            this.timerCallback(username);
+        }, MILLISECOND_IN_MINUTES);
+    }
+
     async attemptVirtualPlay(): Promise<CommandDetails | null> {
         const currentPlayer = this.players[this.playerTurnIndex];
         if(!(currentPlayer instanceof VirtualPlayer) || this.gameOver) return null;
+        if(currentPlayer.isPlaying) return null;
         console.log(new Date().toLocaleTimeString() + ' | Start Virtual Play');
         const commandDetails = await currentPlayer.play();
         console.log(new Date().toLocaleTimeString() + ' | End Virtual Play');
@@ -203,9 +217,8 @@ export class Game {
     private endTurn(): string {
         let returnMessage = '';
         this.changeTurn();
-        if (this.isGameFinished()) {
-            returnMessage = this.endGame();
-        }
+        if (this.isGameFinished()) return this.endGame();
+        
         return returnMessage;
     }
     private isGameFinished(): boolean {

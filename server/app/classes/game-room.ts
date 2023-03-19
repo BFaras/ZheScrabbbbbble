@@ -58,6 +58,7 @@ export class GameRoom {
         if(index === -1) return;
         if(this.players[index] instanceof VirtualPlayer) return;
         const newVirtualPlayer = new VirtualPlayerEasy(this.players[index].getName() + " (V)", this);
+        newVirtualPlayer.copyPlayerState(this.players[index]);
         this.players[index] = newVirtualPlayer;
     }
 
@@ -124,9 +125,11 @@ export class GameRoom {
         return this.password === password;
     }
 
-    startGame() {
+    startGame(timerCallback : (room : GameRoom, username: string) => void) {
         if(this.gameStarted) return;
-        this.game.startGame();
+        this.game.startGame((username : string) => {
+            timerCallback(this, username);
+        });
         this.gameStarted = true;
     }
 
