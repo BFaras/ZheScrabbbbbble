@@ -206,8 +206,7 @@ export class SocketManager {
 
             socket.on('disconnect', async () => {
                 console.log(new Date().toLocaleTimeString() + ' | User Disconnected from server');
-                const username = this.accountInfoService.getUsername(socket);
-                this.usersStatusService.removeOnlineUser(username);
+                this.usersStatusService.removeOnlineUser(this.accountInfoService.getUserId(socket));
                 const room = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!room) return;
                 if(room.isGameStarted()){
@@ -227,7 +226,7 @@ export class SocketManager {
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
-                this.sendGameState(room, {messageType : DISCONNECT_MESSAGE, values: [username]});
+                this.sendGameState(room, {messageType : DISCONNECT_MESSAGE, values: [this.accountInfoService.getUsername(socket)]});
                 this.playVirtualTurns(room);
             });
         });
