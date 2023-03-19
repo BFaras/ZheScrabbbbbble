@@ -52,13 +52,20 @@
         "CHATBOX":"CHAT BOX",
         "DEFAULT":"Type a command",
         "SEND":"Send",
-        "JOIN":"Join Public Chats"
+        "JOIN":"Join Public Chats",
+        "SELECT":"Please select a chat on the left"
+    },
+    "PUBLIC-CHATS":{
+        "MESSAGE":"Join public chats here!",
+        "JOIN":"Join",
+        "LEAVE":"Leave"
     },
     "LETTERHOLDER":{
         "PASS":"Skip turn",
         "PLAY":"Play",
         "REPLACE":"Replace",
-        "CANCEL":"Cancel"
+        "CANCEL":"Cancel",
+        "SWITCH":"Switch player"
     },
     "BOARD":{
         "MOT":"WORD",
@@ -135,5 +142,18 @@
         "INCORRECT": "The password is incorrect",
         "FULL": "The room is full",
         "MESSAGE": "Error : this message shouldn't show up"
+    },
+    "FRIENDS-PAGE":{
+        "MESSAGE": "You can manage your friends here!",
+        "SHARE": "Share this code to send a friend request: ",
+        "NEW": "Add a friend",
+        "INPUT": "Please enter your friend's code: ",
+        "REQUEST": "Friend requests",
+        "ACCEPT": "Accept",
+        "FRIENDS": "Friends list",
+        "UNFRIEND": "Unfriend"
+    },
+    "PROFILE-PAGE":{
+        "FRIENDS": "Manage friends"
     }
 }
