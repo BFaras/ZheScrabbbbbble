@@ -27,11 +27,15 @@ export interface PlayerGameInfo {
     score: number;
 }
 
-export interface ProfileInfo {
-    avatar: string;
+export interface LevelInfo {
     level: number;
     xp: number;
     nextLevelXp: number;
+}
+
+export interface ProfileInfo {
+    avatar: string;
+    levelInfo: LevelInfo;
     userCode: string;
     stats: StatisticInfo[];
     tournamentWins: number[];
