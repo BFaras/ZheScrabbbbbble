@@ -43,10 +43,6 @@ export class PasswordLostAreaComponent implements OnInit {
       });
   }
 
-  ngOnDestroy() {
-    this.subscriptionModifyPassword.unsubscribe();
-    this.subscriptionGetQuestion.unsubscribe();
-  }
   changePassword() {
     const NO_ERROR = "0";
     const DATABASE_UNAVAILABLE = "5";

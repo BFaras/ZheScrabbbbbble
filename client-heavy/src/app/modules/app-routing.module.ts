@@ -29,6 +29,7 @@ const routes: Routes = [
     { path: 'waiting-room', component: WaitingRoomComponent },
     { path: 'profile-page', component: ProfilePageComponent },
     { path: 'pending-room', component: PendingRoomComponent },
+    { path: 'public-chats', component: PendingRoomComponent },
     { path: '**', redirectTo: '/login' },
 ];
 
