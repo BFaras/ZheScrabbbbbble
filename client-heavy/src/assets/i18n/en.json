@@ -55,6 +55,11 @@
         "JOIN":"Join Public Chats",
         "SELECT":"Please select a chat on the left"
     },
+    "PUBLIC-CHATS":{
+        "MESSAGE":"Join public chats here!",
+        "JOIN":"Join",
+        "LEAVE":"Leave"
+    },
     "LETTERHOLDER":{
         "PASS":"Skip turn",
         "PLAY":"Play",

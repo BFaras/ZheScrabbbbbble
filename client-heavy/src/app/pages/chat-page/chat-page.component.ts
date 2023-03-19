@@ -2,6 +2,7 @@ import { AfterContentChecked, ChangeDetectorRef, Component, OnInit } from '@angu
 import { ChatInfo, ChatMessage, ChatType } from '@app/classes/chat-info';
 import { AccountService } from '@app/services/account-service/account.service';
 //import { AccountService } from '@app/services/account-service/account.service';
+import { Router } from '@angular/router';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { Subscription } from 'rxjs';
 //import { chat, chatlist } from './chats';
@@ -25,7 +26,7 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
     username: string;
     isDisabled: boolean = true;
 
-    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService) {
+    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService, private router: Router) {
         this.username = this.account.getUsername();
     }
 
@@ -86,5 +87,9 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
     setDisabled() {
         if (this.selectedChat) this.isDisabled = false;
         else this.isDisabled = true;
+    }
+
+    goToChats() {
+        this.router.navigate(['/public-chats']);
     }
 }
