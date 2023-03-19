@@ -25,6 +25,6 @@
         ></canvas>
         <button id="playButton" class="button" [disabled]="isDisabled" (click)="sendWord()">{{'LETTERHOLDER.PLAY' | translate}}</button>
         <button class="button" id="skipButton" (click)="skipTurn()" [disabled]="isDisabled">{{'LETTERHOLDER.PASS' | translate}}</button>
-        <button class="button" id="skipButton" (click)="skipTurn()" [disabled]="isDisabled">{{'LETTERHOLDER.SWITCH' | translate}}</button>
+        <button class="button" id="skipButton" (click)="skipTurn()" [disabled]="isDisabled" [style.visibility]="'hidden'">{{'LETTERHOLDER.SWITCH' | translate}}</button>
     </div>
 </div>
