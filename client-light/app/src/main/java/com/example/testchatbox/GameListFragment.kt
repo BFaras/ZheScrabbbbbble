@@ -81,11 +81,7 @@ class GameListFragment : Fragment() {
         binding.createBtn.setOnClickListener{
             createRoom();
         }
-    }
-
-
-    private fun updateGameList(){
-        SocketHandler.getSocket().once("Game Room List Response"){ args ->
+        SocketHandler.getSocket().on("Game Room List Response"){ args ->
             if(args[0] != null){
                 val list = args[0] as JSONArray;
                 gameList= arrayListOf();
@@ -103,6 +99,10 @@ class GameListFragment : Fragment() {
                 });
             }
         }
+    }
+
+
+    private fun updateGameList(){
         SocketHandler.getSocket().emit("Get Game Room List")
     }
 
@@ -116,13 +116,50 @@ class GameListFragment : Fragment() {
             btn.id = i;
             btn.textSize= 18F;
             btn.setOnClickListener{
+                askObserver(gameRoom)
+            }
+            gameListView.addView(btn)
+        }
+    }
+
+
+    private fun askObserver(gameRoom: GameRoom){
+        binding.createSection.visibility = View.GONE
+        binding.gameListSection.visibility = View.GONE;
+        binding.observerSection.visibility = View.VISIBLE;
+        if(gameRoom.hasStarted){
+            binding.playerButton.visibility=View.GONE
+        }
+        else{
+            binding.playerButton.visibility=View.VISIBLE
+            binding.playerButton.setOnClickListener{
+                binding.observerSection.visibility = View.GONE;
+                binding.cancelObserverButton.setOnClickListener(null);
+                binding.observerButton.setOnClickListener(null);
+                binding.playerButton.setOnClickListener(null);
+                binding.gameListSection.visibility = View.VISIBLE;
+                binding.createSection.visibility = View.VISIBLE;
                 if(gameRoom.visibility!=Visibility.Protected) {
                     joinRoom(gameRoom, null)
                 }else{
                     showPasswordPrompt(gameRoom)
                 }
             }
-            gameListView.addView(btn)
+        }
+        binding.cancelObserverButton.setOnClickListener {
+            binding.observerSection.visibility = View.GONE;
+            binding.cancelObserverButton.setOnClickListener(null);
+            binding.observerButton.setOnClickListener(null);
+            binding.playerButton.setOnClickListener(null);
+            binding.gameListSection.visibility = View.VISIBLE;
+            binding.createSection.visibility = View.VISIBLE;
+        }
+        binding.observerButton.setOnClickListener {
+            //TODO : Implémenter observateur
+            activity?.runOnUiThread(Runnable {
+                val appContext = context?.applicationContext
+                Toast.makeText(appContext, "Not Implemented", Toast.LENGTH_LONG).show()
+            });
         }
     }
 
@@ -193,10 +230,18 @@ class GameListFragment : Fragment() {
             if (password.isNotEmpty()) {
                 binding.passwordSection.visibility = View.GONE;
                 binding.joinButton.setOnClickListener(null);
+                binding.cancelProtectedButton.setOnClickListener(null);
                 binding.gameListSection.visibility = View.VISIBLE;
                 binding.createSection.visibility = View.VISIBLE
                 joinRoom(gameRoom, password)
             }
+        }
+        binding.cancelProtectedButton.setOnClickListener {
+            binding.passwordSection.visibility = View.GONE;
+            binding.joinButton.setOnClickListener(null);
+            binding.cancelProtectedButton.setOnClickListener(null);
+            binding.gameListSection.visibility = View.VISIBLE;
+            binding.createSection.visibility = View.VISIBLE
         }
     }
 
@@ -204,9 +249,9 @@ class GameListFragment : Fragment() {
         binding.createSection.visibility = View.GONE
         binding.gameListSection.visibility = View.GONE;
         binding.cancelSection.visibility=View.VISIBLE;
-        binding.cancelButton.setOnClickListener {
+        binding.cancelPrivateButton.setOnClickListener {
             binding.cancelSection.visibility=View.GONE;
-            binding.cancelButton.setOnClickListener(null);
+            binding.cancelPrivateButton.setOnClickListener(null);
             binding.gameListSection.visibility=View.VISIBLE;
             binding.createSection.visibility=View.VISIBLE
             SocketHandler.getSocket().emit("Cancel Join Request")
