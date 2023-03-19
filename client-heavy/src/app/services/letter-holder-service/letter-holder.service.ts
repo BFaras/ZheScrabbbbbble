@@ -1,62 +1,29 @@
 import { Injectable } from '@angular/core';
-import { HOLDER_MEASUREMENTS, LETTER_POINTS, TILE_COLOURS } from '@app/constants/letters-constants';
-import { FontSizeService } from '@app/services/font-size-service/font-size.service';
+import { HOLDER_MEASUREMENTS, LETTER_POINTS } from '@app/constants/letters-constants';
 import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class LetterHolderService {
-    holderContext: CanvasRenderingContext2D;
     letterLog = new Map<number, string>();
     holderState: string[] = [];
     holderStatePoints:number[] = [];
     subjectHolderStatePoints:Subject<number[]> = new Subject()
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
 
-    constructor(private size: FontSizeService) {}
+    constructor() {}
 
     drawLetter(letter: string, position: number) {
         const checkedLetter = this.validParams(letter, position);
         if (checkedLetter) {
-            this.holderContext.beginPath();
-            const letterPoint = LETTER_POINTS[checkedLetter as keyof typeof LETTER_POINTS];
-            const pixelPosition = (position - 1) * (HOLDER_MEASUREMENTS.tileSide + HOLDER_MEASUREMENTS.spaceBetween);
-            this.holderContext.font = `800 ${this.size.getFontSize().get('tileLetterSize')}px Courier`;
-            this.holderContext.textBaseline = 'bottom';
-            this.holderContext.textAlign = 'center';
-            this.holderContext.fillStyle = TILE_COLOURS.backgroundColour;
-            this.holderContext.fillRect(pixelPosition, 0, HOLDER_MEASUREMENTS.tileSide, HOLDER_MEASUREMENTS.tileSide);
-            this.holderContext.fillStyle = TILE_COLOURS.textColour;
-            if (letterPoint)
-                this.holderContext.fillText(
-                    checkedLetter,
-                    pixelPosition + HOLDER_MEASUREMENTS.tileSide / HOLDER_MEASUREMENTS.letterOffsetH,
-                    HOLDER_MEASUREMENTS.tileSide / HOLDER_MEASUREMENTS.letterOffsetV,
-                );
-
-            this.holderContext.textBaseline = 'top';
-            this.holderContext.font = `800 ${this.size.getFontSize().get('tilePointSize')}px Courier`;
-            if (letterPoint)
-                this.holderContext.fillText(
-                    `${letterPoint}`,
-                    pixelPosition + HOLDER_MEASUREMENTS.tileSide / HOLDER_MEASUREMENTS.pointOffsetH,
-                    HOLDER_MEASUREMENTS.tileSide / HOLDER_MEASUREMENTS.pointOffsetV,
-                );
-
-            this.holderContext.strokeStyle = 'black';
-            this.holderContext.stroke();
-
             this.letterLog.set(position, checkedLetter);
         } else this.letterLog.delete(position);
     }
     /**mettre isValidLetter dans Valide Params apres */
     validParams(letter: string, position: number): string {
         if (HOLDER_MEASUREMENTS.minPositionHolder <= position && HOLDER_MEASUREMENTS.maxPositionHolder >= position) {
-            if (letter >= 'A' && letter <= 'Z') return letter;
-            else if (letter === 'blank') return 'BLANK';
-            else if (letter >= 'a' && letter <= 'z') return letter.toUpperCase();
-            else return '';
+            return this.isValidLetter(letter);
         } else return '';
     }
 
@@ -72,7 +39,7 @@ export class LetterHolderService {
         if(letterHolder){
             return  LETTER_POINTS[letterHolder as keyof typeof LETTER_POINTS];
         }
-        return 0
+        return 0;
     }
 
 
@@ -110,7 +77,6 @@ export class LetterHolderService {
         })
         this.getNewHolderStatePoints().next(this.holderStatePoints)
         const previousState = this.holderState;
-        this.holderContext.clearRect(0, 0, HOLDER_MEASUREMENTS.holderWidth, HOLDER_MEASUREMENTS.holderHeight);
         this.holderState = letters;
         this.addLetters();
         this.holderState = previousState;
@@ -121,27 +87,7 @@ export class LetterHolderService {
         if (letter) this.drawLetter(letter, position);
     }
 
-    drawSelection(position: number) {
-        const pixelPosition = (position - 1) * (HOLDER_MEASUREMENTS.tileSide + HOLDER_MEASUREMENTS.spaceBetween);
-        this.holderContext.beginPath();
-        this.holderContext.lineWidth = 1;
-        this.holderContext.fillStyle = TILE_COLOURS.selectionColour;
-        this.holderContext.fillRect(pixelPosition, 0, HOLDER_MEASUREMENTS.tileSide, HOLDER_MEASUREMENTS.tileSide);
-        this.holderContext.stroke();
-    }
-
-    drawManipulation(position: number) {
-        const pixelPosition = (position - 1) * (HOLDER_MEASUREMENTS.tileSide + HOLDER_MEASUREMENTS.spaceBetween);
-        this.holderContext.beginPath();
-        this.holderContext.lineWidth = 1;
-        this.holderContext.fillStyle = TILE_COLOURS.manipulationColor;
-        this.holderContext.fillRect(pixelPosition, 0, HOLDER_MEASUREMENTS.tileSide, HOLDER_MEASUREMENTS.tileSide);
-        this.holderContext.stroke();
-    }
-
     removeSelection(position: number) {
-        const pixelPosition = (position - 1) * (HOLDER_MEASUREMENTS.tileSide + HOLDER_MEASUREMENTS.spaceBetween);
-        this.holderContext.clearRect(pixelPosition, 0, HOLDER_MEASUREMENTS.tileSide, HOLDER_MEASUREMENTS.tileSide);
         this.redrawLetter(position);
     }
     /**on tentera de changer de position */
@@ -166,7 +112,6 @@ export class LetterHolderService {
             this.letterLog = newLettersMap;
 
             this.redrawTiles();
-            this.drawManipulation(newPosition);
         }
     }
 

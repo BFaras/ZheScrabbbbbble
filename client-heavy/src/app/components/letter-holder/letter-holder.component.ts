@@ -1,5 +1,5 @@
 import { CdkDragStart } from '@angular/cdk/drag-drop';
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnDestroy, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, HostListener, OnDestroy, Output } from '@angular/core';
 import { HOLDER_MEASUREMENTS, isManipulated, isSelected } from '@app/constants/letters-constants';
 import { MouseButton } from '@app/constants/mouse-buttons';
 import { AccountService } from '@app/services/account-service/account.service';
@@ -21,7 +21,6 @@ const OFFSET_POSITION = 1;
 })
 export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     @Output() receiver = new EventEmitter();
-    @ViewChild('letterHolder', { static: false }) private letterHolder!: ElementRef<HTMLCanvasElement>;
     switch: boolean = false;
     isDisabled: boolean = false;
     notEnoughLettersLeft: boolean = false;
@@ -173,7 +172,6 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
         this.viewLoaded = true;
-        this.letterHolderService.holderContext = this.letterHolder.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         console.log("View Init Done");
         this.updateHolder(this.initialGameState);
         this.subscriptionHolderPoints = this.letterHolderService.getNewHolderStatePoints().subscribe((holderHandPoints)=>{
