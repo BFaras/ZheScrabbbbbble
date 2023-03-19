@@ -1,6 +1,5 @@
 <app-navigation-bar></app-navigation-bar>
 <div class="container justified">
-    <app-language></app-language>
     <div id="themes">
         {{'CHANGETHEME.MESSAGE' | translate}} : 
         <button class="theme-button" id="classic" (click)="changeThemeTo('classic')" (click)="setActive($event)">{{ 'CHANGETHEME.CLASSIC' | translate }}</button> 
@@ -8,5 +7,25 @@
         <button class="theme-button" id="green" (click)="changeThemeTo('green')" (click)="setActive($event)">{{ 'CHANGETHEME.GREEN' | translate }}</button> 
         <button class="theme-button" id="pink" (click)="changeThemeTo('pink')" (click)="setActive($event)">{{ 'CHANGETHEME.PINK' | translate }}</button> 
     </div>
+    <button class="theme-button" (click)="goToFriends()">{{ 'PROFILE-PAGE.FRIENDS' | translate }}</button>
     
+ <!---  ma partie-->
+    <div class="profileAvatarNameLevel">
+        <div class="avatarSection">
+            <div class="avatarSquare" [style.background-color]="accountProfile.avatar"></div>
+            <button class="button" (click)="openDialogChangeColor()">Modifier l'avatar
+            </button>
+        </div>
+        <div class="nameLevel">
+        <h1 class = "name">Nom: {{accountUsername}}</h1>
+        <h1 class = "level"> Niveau : {{accountProfile.level}} </h1>
+        </div>
+    </div>
+    <h1 >{{accountProfile.level}}</h1>
+    <h1>{{accountProfile.userCode}}</h1>
+    <h1>{{accountProfile.stats}}</h1>
+    <h1>{{accountProfile.tournamentWins}}</h1>
+    <h1>{{accountProfile.connectionHistory}}</h1>
+    <h1>{{accountProfile.gameHistory}}</h1>
+     <!---  ma partie-->
 </div>

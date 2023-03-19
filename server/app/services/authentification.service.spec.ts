@@ -12,10 +12,11 @@ import {
 import { Question } from '@app/interfaces/question';
 import { expect } from 'chai';
 import { assert } from 'console';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import Container from 'typedi';
 import { AuthentificationService } from './authentification.service';
 import { DatabaseService } from './database.service';
-import { OnlineUsersService } from './online-users.service';
-import { ProfileService } from './profile.service';
+import { UsersStatusService } from './users-status.service';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import Sinon = require('sinon');
@@ -27,7 +28,15 @@ describe('AuthentificationService Tests', () => {
     const testAvatar = '';
     const testSecurityQuestion: Question = { question: 'Who are you?', answer: 'Me' };
 
+    let mongoServer: MongoMemoryServer;
+    let dbService: DatabaseService;
     let authService: AuthentificationService;
+
+    before(async () => {
+        dbService = Container.get(DatabaseService);
+        mongoServer = new MongoMemoryServer();
+        await dbService.start(await mongoServer.getUri());
+    });
 
     beforeEach(() => {
         authService = new AuthentificationService();
@@ -37,17 +46,23 @@ describe('AuthentificationService Tests', () => {
         Sinon.restore();
     });
 
+    after(async () => {
+        if (dbService['client']) {
+            await dbService['client'].close();
+        }
+    });
+
     it('authentifyUser should call isUserOnline() and should return false if user is online', async () => {
-        const stubOnlineService = Sinon.stub(OnlineUsersService.prototype, 'isUserOnline').returns(true);
+        const stubOnlineService = Sinon.stub(UsersStatusService.prototype, 'isUserOnline').returns(true);
         expect(await authService.authentifyUser(testUsername, testPassword)).to.be.false;
         assert(stubOnlineService.called);
     });
 
     it('authentifyUser should return true and call isUserOnline(), decryptPassword(), getUserEncryptedPassword() and addOnlineUser() if user is offline and password is right', async () => {
-        const stubOnlineServiceIsOnline = Sinon.stub(OnlineUsersService.prototype, 'isUserOnline').returns(false);
+        const stubOnlineServiceIsOnline = Sinon.stub(UsersStatusService.prototype, 'isUserOnline').returns(false);
         const stubDbServiceGetPass = Sinon.stub(DatabaseService.prototype, 'getUserEncryptedPassword').returns(Promise.resolve(testPassword));
         const stubAuthServiceDecryptPass = Sinon.stub(AuthentificationService.prototype, 'decryptPassword' as any).returns(testPassword);
-        const stubOnlineServiceAddUser = Sinon.stub(OnlineUsersService.prototype, 'addOnlineUser');
+        const stubOnlineServiceAddUser = Sinon.stub(UsersStatusService.prototype, 'addOnlineUser');
 
         expect(await authService.authentifyUser(testUsername, testPassword)).to.be.true;
         assert(stubOnlineServiceIsOnline.called);
@@ -58,7 +73,7 @@ describe('AuthentificationService Tests', () => {
     });
 
     it('authentifyUser should return false and call isUserOnline(), decryptPassword() and getUserEncryptedPassword() if user is offline and password is wrong', async () => {
-        const stubOnlineServiceIsOnline = Sinon.stub(OnlineUsersService.prototype, 'isUserOnline').returns(false);
+        const stubOnlineServiceIsOnline = Sinon.stub(UsersStatusService.prototype, 'isUserOnline').returns(false);
         const stubDbServiceGetPass = Sinon.stub(DatabaseService.prototype, 'getUserEncryptedPassword').returns(Promise.resolve('wrongPass'));
         const stubAuthServiceDecryptPass = Sinon.stub(AuthentificationService.prototype, 'decryptPassword' as any).returns('wrongPass');
 
@@ -85,11 +100,6 @@ describe('AuthentificationService Tests', () => {
 
     it('createAccount should return NO_ERROR if the account was created successfully', async () => {
         const testError = NO_ERROR;
-        const accountCreatedInDB = true;
-        Sinon.stub(AuthentificationService.prototype, 'verifyAccountRequirements' as any).returns(Promise.resolve(NO_ERROR));
-        Sinon.stub(DatabaseService.prototype, 'addUserAccount').returns(Promise.resolve(accountCreatedInDB));
-        Sinon.stub(ProfileService.prototype, 'createNewProfile').returns(Promise.resolve(accountCreatedInDB));
-        Sinon.stub(OnlineUsersService.prototype, 'addOnlineUser');
         expect(await authService.createAccount(testUsername, testPassword, goodTestEmail, testAvatar, testSecurityQuestion)).to.deep.equal(testError);
     });
 

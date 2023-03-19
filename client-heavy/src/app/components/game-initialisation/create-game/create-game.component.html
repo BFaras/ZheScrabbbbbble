@@ -4,7 +4,7 @@
     <div class="game-settings">
         <h1 class="header-item text" style="font-size: 27px;">{{ 'CREATE-GAME.MESSAGE' | translate }}</h1>
         <div class="input-container">
-            <p class="text-container text">{{ 'CREATE-GAME.ROOM' | translate }}</p>
+            <span class="text-container text">{{ 'CREATE-GAME.ROOM' | translate }}</span>
             <input class="input" id="room-name" #roomName required />
         </div>
         <mat-radio-group class="input-container" id="radio-btn" aria-label="Select an option">
@@ -13,7 +13,7 @@
             <mat-radio-button class="text" value="Protected"  (change)="getRadioButtonValue($event)">{{ 'CREATE-GAME.PROTECTED' | translate }}</mat-radio-button>
         </mat-radio-group>
         <div *ngIf="IsProtectedRoom " class="input-container">
-            <p class="text-container text">{{ 'CREATE-GAME.PASSWORD' | translate }}</p>
+            <span class="text-container text">{{ 'CREATE-GAME.PASSWORD' | translate }}</span>
             <input class="input" id="password-room" #passwordRoom />
         </div>
         <div class="mode-buttons">

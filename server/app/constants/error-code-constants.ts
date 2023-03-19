@@ -21,3 +21,6 @@ export const NOT_YOUR_TURN = 'GAME-2';
 export const NOT_IN_GAME = 'GAME-3';
 export const INVALID_COMMAND_SYNTAX = 'GAME-4';
 export const ILLEGAL_COMMAND = 'GAME-5';
+
+// Friends error codes
+export const WRONG_FRIEND_CODE = 'FRIEND-1';

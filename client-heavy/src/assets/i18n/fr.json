@@ -52,13 +52,20 @@
         "CHATBOX":"BOÎTE DE CHAT",
         "DEFAULT":"Tapez une commande",
         "SEND":"Envoyer",
-        "JOIN":"Joindre des chats publics"
+        "JOIN":"Joindre des chats publics",
+        "SELECT":"Veuillez sélectionner un chat à gauche"
+    },
+    "PUBLIC-CHATS":{
+        "MESSAGE":"Joignez des chats publiques ici!",
+        "JOIN":"Joindre",
+        "LEAVE":"Quitter"
     },
     "LETTERHOLDER":{
         "PASS":"Passer",
         "PLAY":"Jouer",
         "REPLACE":"Échanger",
-        "CANCEL":"Annuler"
+        "CANCEL":"Annuler",
+        "SWITCH":"Échanger de joueur"
     },
     "BOARD":{
         "MOT":"MOT",
@@ -145,5 +152,18 @@
         "MSG-5": "$0 s'est déconnecté et à été remplacé par un joueur virtuel",
         "MSG-6": "$0 a manqué de temps et à passé son tour",
         "MSG-7": "Fin de partie - lettres restantes $0"
+    },
+    "FRIENDS-PAGE":{
+        "MESSAGE": "Vous pouvez gérer vos amis ici!",
+        "SHARE": "Partagez ce code pour faire une demande d'amitié: ",
+        "NEW": "Ajouter un ami",
+        "INPUT": "Veuillez entrer le code d'amitié: ",
+        "ACCEPT": "Accepter",
+        "REQUEST": "Demandes d'amitié",
+        "FRIENDS": "Liste d'amis",
+        "UNFRIEND": "Enlever"
+    },
+    "PROFILE-PAGE":{
+        "FRIENDS": "Gérer ses amis"
     }
 }
