@@ -142,5 +142,18 @@
         "INCORRECT": "The password is incorrect",
         "FULL": "The room is full",
         "MESSAGE": "Error : this message shouldn't show up"
+    },
+    "FRIENDS-PAGE":{
+        "MESSAGE": "You can manage your friends here!",
+        "SHARE": "Share this code to send a friend request: ",
+        "NEW": "Add a friend",
+        "INPUT": "Please enter your friend's code: ",
+        "REQUEST": "Friend requests",
+        "ACCEPT": "Accept",
+        "FRIENDS": "Friends list",
+        "UNFRIEND": "Unfriend"
+    },
+    "PROFILE-PAGE":{
+        "FRIENDS": "Manage friends"
     }
 }

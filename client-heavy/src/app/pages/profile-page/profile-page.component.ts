@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { classic, Theme } from '@app/constants/themes';
 import { ThemesService } from '@app/services/themes-service/themes-service';
 
@@ -9,7 +10,7 @@ import { ThemesService } from '@app/services/themes-service/themes-service';
 })
 export class ProfilePageComponent implements OnInit {
 
-  constructor(private themeService: ThemesService) {}
+  constructor(private themeService: ThemesService, private router: Router) {}
 
   ngOnInit(): void {
     let current = localStorage.getItem("currentTheme");
@@ -36,5 +37,9 @@ export class ProfilePageComponent implements OnInit {
       themes[i].className = themes[i].className.replace(" active", "");
     }
     (event.currentTarget! as HTMLTextAreaElement).className += " active";
+  }
+
+  goToFriends() {
+    this.router.navigate(['/friends-page']);
   }
 }
