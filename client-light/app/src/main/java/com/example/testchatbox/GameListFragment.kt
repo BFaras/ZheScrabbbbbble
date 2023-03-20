@@ -208,8 +208,8 @@ class GameListFragment : Fragment() {
                         else -> R.string.ERROR
                     }
                     activity?.runOnUiThread(Runnable {
-                        if(errorMessage == R.string.NO_ERROR){
-                            GameRoomModel.initialise(GameRoom(roomName,"-1", roomType, arrayOf(),false))
+                        if(errorMessage == R.string.NO_ERROR && args[1]!=null){
+                            GameRoomModel.initialise(GameRoom(roomName,args[1] as String, roomType, arrayOf(),false))
                             findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment )
                         }else{
                             val appContext = context?.applicationContext
