@@ -131,6 +131,7 @@ class GamePageFragment : Fragment() {
             }
 
             abandonButton.setOnClickListener {
+                GameRoomModel.leaveRoom()
                 SocketHandler.getSocket().emit("Abandon")
                 findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
             }
