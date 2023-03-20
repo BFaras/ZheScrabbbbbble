@@ -56,9 +56,13 @@
         "SELECT":"Veuillez sélectionner un chat à gauche"
     },
     "PUBLIC-CHATS":{
-        "MESSAGE":"Joignez des chats publiques ici!",
+        "MESSAGEJOIN":"Joignez des chats publiques",
+        "MESSAGELEAVE":"Quittez des chats publiques",
         "JOIN":"Joindre",
-        "LEAVE":"Quitter"
+        "LEAVE":"Quitter",
+        "CREATE":"Créer un chat publique",
+        "NAME":"Veuillez entrer le nom du chat: ",
+        "BUTTON":"Créer"
     },
     "LETTERHOLDER":{
         "PASS":"Passer",

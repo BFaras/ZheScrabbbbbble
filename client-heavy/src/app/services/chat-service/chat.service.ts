@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ChatInfo, ChatMessage } from '@app/classes/chat-info';
+import { ChatInfo, ChatMessage, ChatType } from '@app/classes/chat-info';
 import { Message } from '@app/classes/message';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { Observable, Observer } from 'rxjs';
@@ -9,12 +9,10 @@ import { Socket } from 'socket.io-client';
     providedIn: 'root',
 })
 export class ChatService {
-    private socket : Socket;
-
+    private socket: Socket;
     messageLog = new Map<string, ChatMessage[]>();
-    chatList: ChatInfo[] = [];
 
-    chatMessageObserver : Observer<Map<string, ChatMessage[]>>;
+    chatMessageObserver: Observer<Map<string, ChatMessage[]>>;
 
     constructor(private socketManagerService: SocketManagerService) {
         this.updateSocket();
@@ -35,19 +33,18 @@ export class ChatService {
             if (!this.messageLog.has(chat._id)) this.messageLog.set(chat._id, []);
         });
     }
-
     getClientID(): string {
         return this.socketManagerService.getSocket().id;
     }
 
     getNewMessages(): Observable<Map<string, ChatMessage[]>> {
         return new Observable((observer: Observer<Map<string, ChatMessage[]>>) => {
-            if(!this.socket.active) this.updateSocket();
+            if (!this.socket.active) this.updateSocket();
             this.chatMessageObserver = observer;
         });
     }
 
-    updateSocket(){
+    updateSocket() {
         this.socket = this.socketManagerService.getSocket();
         this.socket.on('New Chat Message', (id: string, message: ChatMessage) => {
             if (this.messageLog.has(id)) {
@@ -69,5 +66,30 @@ export class ChatService {
         return new Observable((observer: Observer<Message>) => {
             this.socketManagerService.getSocket().on('new-message', (message: Message) => observer.next(message));
         });
+    }
+
+    getPublicChatObservable(): Observable<ChatInfo[]> {
+        return new Observable((observer: Observer<ChatInfo[]>) => {
+            this.socketManagerService.getSocket().once('Public Chat List Response', (chatList: ChatInfo[]) => {
+                observer.next(chatList);
+            });
+        });
+    }
+
+    getPublicChats() {
+        this.socketManagerService.getSocket().emit('Get Public Chat List');
+    }
+
+    leaveChat(chat: ChatInfo) {
+        this.socketManagerService.getSocket().emit('Leave Public Chat', chat._id);
+    }
+
+    joinChat(chat: ChatInfo) {
+        this.socketManagerService.getSocket().emit('Join Public Chat', chat._id);
+    }
+
+    createChat(chatName: string) {
+        console.log(chatName);
+        this.socketManagerService.getSocket().emit('Create New Chat', chatName, ChatType.PUBLIC);
     }
 }

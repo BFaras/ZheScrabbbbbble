@@ -1,12 +1,26 @@
 <app-navigation-bar></app-navigation-bar>
 <div class="container">
-    <h1 class="text">{{ 'PUBLIC-CHATS.MESSAGE' | translate }}</h1>
-    <div id="chats-container">
-        <div class="chat-container" *ngFor="let chat of chatList">
-            <span class="chat text">{{ chat.chatName }}</span>
-            <div class="button-container">
-                <button>{{ 'PUBLIC-CHATS.JOIN' | translate }}</button>
-                <button (click)="alert()">{{ 'PUBLIC-CHATS.LEAVE' | translate }}</button>
+    <div id="create-chat">
+        <h1 class="text">{{ 'PUBLIC-CHATS.CREATE' | translate }}</h1>
+        <div id="input-container">
+            <span class="text">{{ 'FRIENDS-PAGE.INPUT' | translate }}</span>
+            <input class="input" id="chat-name" (keydown.enter)="addChat()"/>
+            <button (click)="addChat()">{{ 'PUBLIC-CHATS.BUTTON' | translate }}</button>
+        </div>
+    </div>
+    <div id="chats-wrapper">
+        <div id="chats-container">
+            <h1 class="text">{{ 'PUBLIC-CHATS.MESSAGEJOIN' | translate }}</h1>
+            <div class="chat-container" *ngFor="let chat of absentChatList">
+                <span class="chat text">{{ chat.chatName }}</span>
+                <button class="text" (click)="joinChat(chat)">{{ 'PUBLIC-CHATS.JOIN' | translate }}</button>
+            </div>
+        </div>
+        <div id="chats-container">
+            <h1 class="text">{{ 'PUBLIC-CHATS.MESSAGELEAVE' | translate }}</h1>
+            <div class="chat-container" *ngFor="let chat of presentChatList">
+                <span class="chat text">{{ chat.chatName }}</span>
+                <button class="text" (click)="alert(chat)">{{ 'PUBLIC-CHATS.LEAVE' | translate }}</button>
             </div>
         </div>
     </div>

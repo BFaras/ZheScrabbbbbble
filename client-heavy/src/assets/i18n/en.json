@@ -56,9 +56,13 @@
         "SELECT":"Please select a chat on the left"
     },
     "PUBLIC-CHATS":{
-        "MESSAGE":"Join public chats here!",
+        "MESSAGEJOIN":"Join public chats here",
+        "MESSAGELEAVE":"Leave public chats here",
         "JOIN":"Join",
-        "LEAVE":"Leave"
+        "LEAVE":"Leave",
+        "CREATE":"Create a public chat",
+        "NAME":"Please enter the chat name: ",
+        "BUTTON":"Create"
     },
     "LETTERHOLDER":{
         "PASS":"Skip turn",
