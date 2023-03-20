@@ -80,16 +80,30 @@ export class ChatService {
         this.socketManagerService.getSocket().emit('Get Public Chat List');
     }
 
-    leaveChat(chat: ChatInfo) {
+    leaveChat(chat: ChatInfo): Observable<string> {
         this.socketManagerService.getSocket().emit('Leave Public Chat', chat._id);
+        return new Observable((observer: Observer<string>) => {
+            this.socketManagerService.getSocket().once('Leave Chat Response', (errorCode: string) => {
+                observer.next(errorCode);
+            });
+        });
     }
 
-    joinChat(chat: ChatInfo) {
+    joinChat(chat: ChatInfo): Observable<string> {
         this.socketManagerService.getSocket().emit('Join Public Chat', chat._id);
+        return new Observable((observer: Observer<string>) => {
+            this.socketManagerService.getSocket().once('Join Chat Response', (errorCode: string) => {
+                observer.next(errorCode);
+            });
+        });
     }
 
-    createChat(chatName: string) {
-        console.log(chatName);
+    createChat(chatName: string): Observable<string> {
         this.socketManagerService.getSocket().emit('Create New Chat', chatName, ChatType.PUBLIC);
+        return new Observable((observer: Observer<string>) => {
+            this.socketManagerService.getSocket().once('Chat Creation Response', (errorCode: string) => {
+                observer.next(errorCode);
+            });
+        });
     }
 }

@@ -1,18 +1,17 @@
 .container {
     background-color: var(--background-default);
-    height: 53%;
-    padding: 10%; 
+    height: 94vh;
 }
 
 .justified {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
 .logo {
-    margin-top: 1%;
+    margin: 80px 0px 50px;
     font-family: "Shrikhand";
     font-size: 95px;
     color: var(--text-default);
@@ -22,7 +21,7 @@
     color: var(--text-default);
     justify-content: center;
     text-align: center;
-    padding: 100px;
+    padding: 20px;
     font-weight: bold;
     font-family: 'Courier New', Courier, monospace;
     font-size: 20px;
@@ -33,7 +32,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 100px;
+    margin-bottom: 50px;
 }
 
 .mat-spinner::ng-deep circle {

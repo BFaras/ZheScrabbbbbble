@@ -13,20 +13,26 @@ export class PublicChatsComponent implements OnInit {
   presentChatList: ChatInfo[] = [];
   subscriptions: Subscription[] = [];
 
-  constructor(private chatService: ChatService) {}
+  constructor(private chatService: ChatService) {
+    this.updateChats();
+  }
 
-  ngOnInit(): void {
+  updateChats() {
     this.subscriptions.push(this.chatService.getPublicChatObservable().subscribe((publicChats: ChatInfo[]) => {
       this.absentChatList = publicChats;
     }));
     this.chatService.getPublicChats();
     this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
+      const newChats: ChatInfo[] = [];
       chatList.forEach((chat: ChatInfo) => {
-        if (chat.chatType === ChatType.PUBLIC) {
-          this.presentChatList.push(chat);
-        }
+        if (chat.chatType === ChatType.PUBLIC) newChats.push(chat);
+        this.presentChatList = newChats;
       });
     }));
+  }
+
+  ngOnInit(): void {
+
   }
 
   ngOnDestroy(): void {
@@ -36,17 +42,26 @@ export class PublicChatsComponent implements OnInit {
   alert(chat: ChatInfo) {
     const text = 'Êtes-vous sûr(e) de vouloir quitter ce chat?';
     if (confirm(text)) {
-      this.chatService.leaveChat(chat);
+      this.chatService.leaveChat(chat).subscribe((errorCode: string) => {
+        this.updateChats();
+        console.log(errorCode);
+      });
     }
   }
 
   joinChat(chat: ChatInfo) {
-    this.chatService.joinChat(chat);
+    this.chatService.joinChat(chat).subscribe((errorCode: string) => {
+      this.updateChats();
+      console.log(errorCode);
+    });
   }
 
   addChat() {
     const chatName = (document.getElementById('chat-name') as HTMLInputElement).value;
-    this.chatService.createChat(chatName);
+    this.chatService.createChat(chatName).subscribe((errorCode: string) => {
+      this.updateChats();
+      console.log(errorCode);
+    });
     (document.getElementById('chat-name') as HTMLInputElement).value = "";
   }
 }
