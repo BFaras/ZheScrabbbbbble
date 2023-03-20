@@ -10,24 +10,26 @@ import { Service } from 'typedi';
 @Service()
 export class UserLevelService {
     calculateNewLevelInfo(levelInfo: LevelInfo, isWin: boolean, nbOfGamePoints: number): LevelInfo {
-        const nextLevelXp = this.getNextLevelXP(levelInfo.level);
-        let newAmountOfXp = levelInfo.xp + nbOfGamePoints * XP_AMOUNT_FOR_GAME_POINTS;
+        let nextLevelXp: number = this.getNextLevelXP(levelInfo.level);
+        let newAmountOfXp: number = levelInfo.xp + nbOfGamePoints * XP_AMOUNT_FOR_GAME_POINTS;
 
         if (isWin) {
             newAmountOfXp += XP_AMOUNT_FOR_VICTORY;
         }
 
-        if (newAmountOfXp >= nextLevelXp) {
+        while (newAmountOfXp >= nextLevelXp) {
             levelInfo.level++;
-            levelInfo.xp = newAmountOfXp - nextLevelXp;
-            levelInfo.nextLevelXp = this.getNextLevelXP(levelInfo.level);
-        } else {
-            levelInfo.xp = newAmountOfXp;
+            newAmountOfXp -= nextLevelXp;
+            nextLevelXp = this.getNextLevelXP(levelInfo.level);
         }
+
+        levelInfo.xp = newAmountOfXp;
+        levelInfo.nextLevelXp = nextLevelXp;
+
         return levelInfo;
     }
 
-    getNextLevelXP(currentLevel: number) {
+    getNextLevelXP(currentLevel: number): number {
         return Math.floor((currentLevel * MULTIPLICATIVE_XP_FACTOR) / 2) + BASE_XP;
     }
 }

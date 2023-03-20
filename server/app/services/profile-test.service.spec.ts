@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation */
 /* eslint-disable max-len */
 import { NO_ERROR } from '@app/constants/error-code-constants';
-import { ConnectionInfo, ConnectionType, GameHistoryInfo } from '@app/interfaces/profile-info';
+import { ConnectionInfo, ConnectionType, GameHistoryInfo, LevelInfo } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
 import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -117,10 +117,15 @@ describe('Profile Tests', async () => {
     it('should change the userStats to the right value on updateUserStats()', async () => {
         const userId = await dbService.getUserId(testUsername);
         const newTestUserStats = profileService.getDefaultProfileInformation().stats;
+        const testLevelInfo: LevelInfo = {
+            level: 0,
+            xp: 0,
+            nextLevelXp: 100,
+        };
 
         newTestUserStats[0].statAmount = 3;
         newTestUserStats[2].statAmount = 102;
-        await profileService.updateUserStatsAndLevel(userId, newTestUserStats);
+        await profileService.updateUserStatsAndLevel(userId, newTestUserStats, testLevelInfo);
 
         expect(await profileService.getUserStats(userId)).to.deep.equals(newTestUserStats);
     });
