@@ -9,6 +9,12 @@ export interface GameState {
     playerTurnIndex: number;
     reserveLength: number;
     gameOver: boolean;
+    message ?: PlayerMessage;
+}
+
+export interface PlayerMessage {
+    messageType: string;
+    values: string[];
 }
 
 export interface PlayerState {
@@ -37,6 +43,7 @@ export class GameStateService {
         this.gameStateObservers = [];
         this.socket = this.socketManagerService.getSocket();
         this.socket.on('Game State Update', (state: GameState) => {
+            console.log(state.message);
             for(let observer of this.gameStateObservers){
                 observer.next(state);
             }
@@ -52,7 +59,7 @@ export class GameStateService {
     }
 
     sendAbandonRequest() {
-        this.socket.emit('abandon');
+        this.socket.emit('Abandon');
     }
 
     reconnect(id: string) {

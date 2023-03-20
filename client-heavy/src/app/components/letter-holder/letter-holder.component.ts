@@ -150,7 +150,6 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     ngAfterViewInit() {
         this.viewLoaded = true;
         this.letterHolderService.holderContext = this.letterHolder.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        console.log("View Init Done");
         this.updateHolder(this.initialGameState);
     }
 

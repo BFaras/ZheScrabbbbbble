@@ -1,4 +1,5 @@
 import { Letter } from '@app/classes/letter';
+import { PlayerMessage } from '@app/controllers/command.controller';
 import { Direction, RoomVisibility } from './basic-constants';
 
 export interface LetterPosition {
@@ -19,6 +20,7 @@ export interface GameState {
     playerTurnIndex: number;
     reserveLength: number;
     gameOver: boolean;
+    message?: PlayerMessage;
 }
 
 export interface PlayerState {
