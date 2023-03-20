@@ -4,11 +4,6 @@ ul {
     margin: 15px 1px;
 }
 
-#title-chat {
-    font-size: 24px;
-    color: var(--text-default);
-}
-
 .input-group {
     width: 100%;
     display: flex;
@@ -45,6 +40,8 @@ button {
 
 #title-chat {
     text-align: center;
+    font-size: 24px;
+    color: var(--text-default);
 }
 
 #chat-box {

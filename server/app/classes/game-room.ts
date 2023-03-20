@@ -1,6 +1,9 @@
 import { Player } from '@app/classes/player';
 import { MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
+import { CommandResult } from '@app/controllers/command.controller';
 import { Game } from './game';
+import { VirtualPlayer } from './virtual-player';
+import { VirtualPlayerEasy } from './virtual-player-easy';
 
 export class GameRoom {
     private players: Player[];
@@ -45,12 +48,35 @@ export class GameRoom {
         return true;
     }
 
+    replacePlayer(playerID: string) {
+        let index = -1;
+        for (let i = 0; i < this.players.length; i++) {
+            if (this.players[i].getUUID() === playerID) {
+                index = i;
+                break;
+            }
+        }
+        if(index === -1) return;
+        if(this.players[index] instanceof VirtualPlayer) return;
+        const newVirtualPlayer = new VirtualPlayerEasy(this.players[index].getName() + " (V)", this);
+        newVirtualPlayer.copyPlayerState(this.players[index]);
+        this.players[index] = newVirtualPlayer;
+    }
+
     isPlayerInRoom(playerID: string): boolean {
         return this.getPlayer(playerID) !== null;
     }
 
     getPlayerCount(): number {
         return this.players.length;
+    }
+
+    getRealPlayerCount(): number {
+        let count = 0; 
+        for(const player of this.players){
+            if(!(player instanceof VirtualPlayer)) count++;
+        }
+        return count;
     }
 
     getName(): string {
@@ -100,9 +126,11 @@ export class GameRoom {
         return this.password === password;
     }
 
-    startGame() {
+    startGame(timerCallback : (room : GameRoom, username: string, result : CommandResult) => void) {
         if(this.gameStarted) return;
-        this.game.startGame();
+        this.game.startGame((username : string, result: CommandResult) => {
+            timerCallback(this, username, result);
+        });
         this.gameStarted = true;
     }
 

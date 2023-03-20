@@ -143,6 +143,16 @@
         "FULL": "The room is full",
         "MESSAGE": "Error : this message shouldn't show up"
     },
+    "ACTION-HISTORY":{
+        "TITLE": "ACTION HISTORY",
+        "MSG-1": "$0 placed $1 for $2 point(s)",
+        "MSG-2": "$0 tried to place an invalid word",
+        "MSG-3": "$0 swapped $1 letters",
+        "MSG-4": "$0 passed their turn",
+        "MSG-5": "$0 disconnected and was replaced by a virtual player",
+        "MSG-6": "$0 ran out of time and passed their turn",
+        "MSG-7": "Game over - letters left $0"
+    },
     "FRIENDS-PAGE":{
         "MESSAGE": "You can manage your friends here!",
         "SHARE": "Share this code to send a friend request: ",

@@ -143,6 +143,16 @@
         "FULL": "La salle de jeu est pleine",
         "MESSAGE": "Erreur : ce message ne devrait jamais s'afficher"
     },
+    "ACTION-HISTORY":{
+        "TITLE": "HISTORIQUE D'ACTIONS",
+        "MSG-1": "$0 a placé $1 pour $2 point(s)",
+        "MSG-2": "$0 a tenté de placer un mot invalide",
+        "MSG-3": "$0 a échangé $1 lettres",
+        "MSG-4": "$0 a passé son tour",
+        "MSG-5": "$0 s'est déconnecté et à été remplacé par un joueur virtuel",
+        "MSG-6": "$0 a manqué de temps et à passé son tour",
+        "MSG-7": "Fin de partie - lettres restantes $0"
+    },
     "FRIENDS-PAGE":{
         "MESSAGE": "Vous pouvez gérer vos amis ici!",
         "SHARE": "Partagez ce code pour faire une demande d'amitié: ",
