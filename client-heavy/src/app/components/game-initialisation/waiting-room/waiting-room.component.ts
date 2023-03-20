@@ -22,7 +22,7 @@ export class WaitingRoomComponent {
     }
 
     launchGame(): void {
-        this.refuseEveryone();
+        this.refuseEveryone(true);
         this.waitingRoomManagerService.startGame();
     }
 
@@ -38,7 +38,7 @@ export class WaitingRoomComponent {
     }
 
     leaveRoomLogic(): void {
-        this.refuseEveryone();
+        this.refuseEveryone(true);
         this.waitingRoomManagerService.leaveRoom();
     }
 
@@ -55,14 +55,19 @@ export class WaitingRoomComponent {
         if(!data) return;
         this.waitingRoomManagerService.respondJoinRequest(response, data[0]);
         if(response && this.playersInRoom.length >= 3){
-            this.refuseEveryone();
+            this.refuseEveryone(false);
         }
     }
 
-    private refuseEveryone(){
+    private refuseEveryone(refuseObservers: boolean){
+        const newPendingRequests = [];
         for(let data of this.pendingRequests){
+            if(!refuseObservers && data[1]){
+                newPendingRequests.push(data);
+                continue;
+            }
             this.waitingRoomManagerService.respondJoinRequest(false, data[0]);
         }
-        this.pendingRequests = [];
+        this.pendingRequests = newPendingRequests;
     }
 }
