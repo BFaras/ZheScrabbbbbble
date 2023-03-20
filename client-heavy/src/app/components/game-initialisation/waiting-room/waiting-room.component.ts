@@ -27,7 +27,7 @@ export class WaitingRoomComponent {
     }
 
     goToGame(){
-        this.gameStateService.setObserver(false);
+        this.gameStateService.setObserver(-1);
         this.router.navigate(['/game']).then(() => {
             this.gameStateService.requestGameState();
         });

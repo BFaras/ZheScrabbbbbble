@@ -34,7 +34,6 @@ export class AccountService {
     return this.profile;
   }
 
-
   askProfileInformation():void{
     this.socket.emit("Get Profile Information",this.getUsername());
   }

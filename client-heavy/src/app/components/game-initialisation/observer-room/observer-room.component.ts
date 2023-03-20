@@ -25,7 +25,7 @@ export class ObserverRoomComponent {
     }
 
     goToGame(){
-        this.gameStateService.setObserver(true);
+        this.gameStateService.setObserver(0);
         this.router.navigate(['/game']).then(() => {
             this.gameStateService.requestGameState();
         });

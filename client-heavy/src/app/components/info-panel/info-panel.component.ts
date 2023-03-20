@@ -31,10 +31,11 @@ export class InfoPanelComponent implements OnDestroy {
     }
 
     isPlayerUser(player : Player){
-        if(this.gameStateService.isObserver()){
-            return false
+        const index = this.gameStateService.getObserverIndex();
+        if(index < 0){
+            return player.name === this.accountService.getUsername();
         }
-        return player.name === this.accountService.getUsername();
+        return player.name === this.playersInfo[index].name;
     }
 
     private endGame(gameState: GameState) {

@@ -33,6 +33,10 @@ export class GameRoom {
         this.gameStarted = false;
     }
 
+    isPlayerObserver(userId: string): boolean{
+        return this.observers.includes(userId);
+    }
+
     addObserver(userId: string){
         this.observers.push(userId);
     }

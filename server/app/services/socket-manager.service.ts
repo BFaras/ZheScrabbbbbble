@@ -214,8 +214,13 @@ export class SocketManager {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
                 socket.leave(currentRoom.getID());
+                if(currentRoom.isPlayerObserver(socket.id)){
+                    currentRoom.removeObserver(socket.id);
+                    return;
+                }
                 currentRoom.replacePlayer(socket.id);
                 if (currentRoom.getRealPlayerCount() === 0) {
+                    currentRoom.getGame.resetTimer();
                     this.roomManager.deleteRoom(currentRoom.getID());
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
@@ -238,6 +243,7 @@ export class SocketManager {
                 socket.leave(room.getID());
                 if(isObserver) return;
                 if (room.getRealPlayerCount() === 0) {
+                    room.getGame.resetTimer();
                     this.roomManager.deleteRoom(room.getID());
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
