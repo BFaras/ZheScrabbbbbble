@@ -30,6 +30,7 @@ export class GameStateService {
     private socket: Socket;
     private gameStateObservable: Observable<GameState>;
     private gameStateObservers: Observer<GameState>[] = [];
+    private observer : boolean;
 
     constructor(private socketManagerService: SocketManagerService) {
         this.gameStateObservable = new Observable((observer: Observer<GameState>) => {
@@ -64,5 +65,13 @@ export class GameStateService {
 
     reconnect(id: string) {
         this.socket.emit('reconnect', id);
+    }
+
+    isObserver() : boolean{
+        return this.observer;
+    }
+
+    setObserver(observer : boolean){
+        this.observer = observer;
     }
 }

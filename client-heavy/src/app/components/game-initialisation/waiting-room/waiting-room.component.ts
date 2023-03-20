@@ -17,7 +17,7 @@ export class WaitingRoomComponent {
     constructor(private waitingRoomManagerService: WaitingRoomManagerService, private accountService: AccountService, private router: Router, private gameStateService: GameStateService) {
         this.playersInRoom = this.waitingRoomManagerService.getDefaultPlayersInRoom();
         this.waitingRoomManagerService.getJoinRoomRequestObservable().subscribe(this.newJoinRequest.bind(this));
-        this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this))
+        this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this));
         this.waitingRoomManagerService.getRoomPlayerObservable().subscribe((playersInRoom) => this.playersInRoom = playersInRoom);
     }
 
@@ -27,6 +27,7 @@ export class WaitingRoomComponent {
     }
 
     goToGame(){
+        this.gameStateService.setObserver(false);
         this.router.navigate(['/game']).then(() => {
             this.gameStateService.requestGameState();
         });

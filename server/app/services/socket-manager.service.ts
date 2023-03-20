@@ -69,7 +69,7 @@ export class SocketManager {
                 this.roomManager.addPlayer(roomId, newUser);
                 socket.join(roomId);
                 console.log(new Date().toLocaleTimeString() + ' | New ' + visibility + ' room created');
-                socket.emit('Room Creation Response', NO_ERROR);
+                socket.emit('Room Creation Response', NO_ERROR, roomId);
                 socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
             });
 
@@ -141,6 +141,12 @@ export class SocketManager {
             socket.on('Cancel Join Request', () => {
                 this.pendingJoinGameRequests.delete(this.accountInfoService.getUsername(socket));
             });
+
+            socket.on('Is Game Started', () => {
+                const room = this.roomManager.findRoomFromPlayer(socket.id);
+                if(!room) return;
+                socket.emit('Is Game Started Response', room.isGameStarted());
+            })
 
             socket.on('Leave Game Room', () => {
                 const room = this.roomManager.findRoomFromPlayer(socket.id);

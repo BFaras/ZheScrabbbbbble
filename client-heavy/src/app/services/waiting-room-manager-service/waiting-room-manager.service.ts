@@ -145,6 +145,16 @@ export class WaitingRoomManagerService {
         });
     }
 
+    isGameStartedResponse(): Observable<boolean> {
+        return new Observable((observer: Observer<boolean>) => {
+            this.socketManagerService.getSocket().once('Is Game Started Response', (answer) => observer.next(answer));
+        });
+    }
+
+    isGameStarted() {
+        this.socketManagerService.getSocket().emit('Is Game Started');
+    }
+
     joinRoomResponse(): Observable<JoinResponse> {
         return this.joinRoomResponseObservable;
     }

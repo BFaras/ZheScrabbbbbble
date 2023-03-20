@@ -1,4 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
+import { AccountService } from '@app/services/account-service/account.service';
 import { GameState, GameStateService } from '@app/services/game-state-service/game-state.service';
 import { Subscription } from 'rxjs';
 import { Player } from './players-info';
@@ -17,7 +18,7 @@ export class InfoPanelComponent implements OnDestroy {
     roundInfo: Round[] = roundInfo;
     subscriptions: Subscription[] = [];
 
-    constructor(private readonly gameStateService: GameStateService) {
+    constructor(private readonly gameStateService: GameStateService, private readonly accountService: AccountService) {
         this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => {
             this.updateTurnDisplay(gameState);
         }));
@@ -27,6 +28,13 @@ export class InfoPanelComponent implements OnDestroy {
         for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
         }
+    }
+
+    isPlayerUser(player : Player){
+        if(this.gameStateService.isObserver()){
+            return false
+        }
+        return player.name === this.accountService.getUsername();
     }
 
     private endGame(gameState: GameState) {
