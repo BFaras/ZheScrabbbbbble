@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_MainMenuFragment_to_gameListFragment"
             app:destination="@id/gameListFragment" />
+        <action
+            android:id="@+id/action_MainMenuFragment_to_profilFragment"
+            app:destination="@id/profilFragment" />
     </fragment>
     <fragment
         android:id="@+id/ChatFragment"
@@ -115,4 +118,9 @@
             android:id="@+id/action_gameRoomFragment_to_fullscreenFragment"
             app:destination="@id/fullscreenFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/profilFragment"
+        android:name="com.example.testchatbox.ProfilFragment"
+        android:label="fragment_profil"
+        tools:layout="@layout/fragment_profil" />
 </navigation>
