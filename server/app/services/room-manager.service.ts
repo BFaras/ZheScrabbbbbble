@@ -15,17 +15,16 @@ export class RoomManagerService {
         return id;
     }
 
-    addPlayer(id: string, player: Player, password?: string): boolean {
-        if(!this.activeRooms[id].verifyPassword(password)) return false;
+    addPlayer(id: string, player: Player) {
         this.activeRooms[id]?.addPlayer(player);
-        return true;
     }
 
-    removePlayer(id: string, playerID: string) {
-        this.activeRooms[id].removePlayer(playerID);
-        if (this.activeRooms[id].getPlayerCount() === 0) {
-            delete this.activeRooms[id];
-        }
+    addObserver(id: string, playerId : string){
+        this.activeRooms[id]?.addObserver(playerId);
+    }
+
+    verifyPassword(id: string, password?: string): boolean{
+        return this.activeRooms[id].verifyPassword(password);
     }
 
     verifyIfRoomExists(roomName: string): boolean {

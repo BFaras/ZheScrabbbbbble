@@ -11,7 +11,7 @@ import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-se
 })
 export class WaitingRoomComponent {
 
-    pendingRequests: string[] = [];
+    pendingRequests: [string, boolean][] = [];
     playersInRoom: string[];
 
     constructor(private waitingRoomManagerService: WaitingRoomManagerService, private accountService: AccountService, private router: Router, private gameStateService: GameStateService) {
@@ -46,22 +46,22 @@ export class WaitingRoomComponent {
         return this.playersInRoom[0] === this.accountService.getUsername();
     }
 
-    newJoinRequest(username: string){
-        this.pendingRequests.push(username);
+    newJoinRequest(data: [string, boolean]){
+        this.pendingRequests.push(data);
     }
 
     respondNextRequest(response: boolean){
-        const username = this.pendingRequests.shift();
-        if(!username) return;
-        this.waitingRoomManagerService.respondJoinRequest(response, username);
+        const data = this.pendingRequests.shift();
+        if(!data) return;
+        this.waitingRoomManagerService.respondJoinRequest(response, data[0]);
         if(response && this.playersInRoom.length >= 3){
             this.refuseEveryone();
         }
     }
 
     private refuseEveryone(){
-        for(let username of this.pendingRequests){
-            this.waitingRoomManagerService.respondJoinRequest(false, username);
+        for(let data of this.pendingRequests){
+            this.waitingRoomManagerService.respondJoinRequest(false, data[0]);
         }
         this.pendingRequests = [];
     }

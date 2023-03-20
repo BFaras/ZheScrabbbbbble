@@ -21,6 +21,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ChatComponent } from './components/chat/chat.component';
 import { CreateGameComponent } from './components/game-initialisation/create-game/create-game.component';
 import { JoinGameComponent } from './components/game-initialisation/join-game/join-game.component';
+import { ObserverRoomComponent } from './components/game-initialisation/observer-room/observer-room.component';
 import { PasswordInputComponent } from './components/game-initialisation/password-input-dialog/password-input.component';
 import { PendingRoomComponent } from './components/game-initialisation/pending-room-join/pending-room.component';
 import { WaitingRoomComponent } from './components/game-initialisation/waiting-room/waiting-room.component';
@@ -83,6 +84,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         AvatarPopUpComponent,
         WindowComponent,
         PendingRoomComponent,
+        ObserverRoomComponent,
         PasswordInputComponent,
         PasswordLostPageComponent,
         PasswordLostAreaComponent,

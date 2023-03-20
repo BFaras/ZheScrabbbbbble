@@ -14,6 +14,7 @@ export class GameRoom {
     private visibility: RoomVisibility;
     private password: string;
     private gameStarted: boolean;
+    private observers: string[] = [];
 
     constructor(id: string, name: string, visibility: RoomVisibility, password?: string) {
         this.id = id;
@@ -32,6 +33,16 @@ export class GameRoom {
         this.gameStarted = false;
     }
 
+    addObserver(userId: string){
+        this.observers.push(userId);
+    }
+
+    removeObserver(userId: string){
+        const index = this.observers.indexOf(userId);
+        if(index < 0) return;
+        this.observers.splice(index, 1);
+    }
+
     addPlayer(player: Player) {
         if (this.players.length < MAX_NUMBER_OF_PLAYERS) {
             this.players.push(player);
@@ -40,12 +51,15 @@ export class GameRoom {
 
     removePlayer(playerID: string): boolean {
         const player = this.getPlayer(playerID);
-        if (!player) {
-            return false;
+        if (player) {
+            const index = this.players.indexOf(player);
+            this.players.splice(index, 1);
+            return true;
         }
-        const index = this.players.indexOf(player);
-        this.players.splice(index, 1);
-        return true;
+        const index = this.observers.indexOf(playerID);
+        if(index < 0) return false;
+        this.observers.splice(index, 1);
+        return false;
     }
 
     replacePlayer(playerID: string) {
@@ -64,7 +78,7 @@ export class GameRoom {
     }
 
     isPlayerInRoom(playerID: string): boolean {
-        return this.getPlayer(playerID) !== null;
+        return this.getPlayer(playerID) !== null || this.observers.includes(playerID);
     }
 
     getPlayerCount(): number {
