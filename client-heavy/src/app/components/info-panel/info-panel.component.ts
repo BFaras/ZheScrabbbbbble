@@ -49,6 +49,8 @@ export class InfoPanelComponent implements OnDestroy {
             this.playersInfo[i].active = false;
             this.playersInfo[i].winner = gameState.players[i].score === highestScore;
             this.playersInfo[i].currentScore = gameState.players[i].score;
+            this.playersInfo[i].letterCount = gameState.players[i].hand.length;
+            this.playersInfo[i].name = gameState.players[i].username;
         }
     }
 

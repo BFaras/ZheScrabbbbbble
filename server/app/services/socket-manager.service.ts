@@ -220,6 +220,9 @@ export class SocketManager {
                 }
                 currentRoom.replacePlayer(socket.id);
                 if (currentRoom.getRealPlayerCount() === 0) {
+                    const message = currentRoom.getGame.endGame();
+                    this.sendGameState(currentRoom, {messageType : DISCONNECT_MESSAGE, values: [this.accountInfoService.getUsername(socket)]});
+                    this.sendGameState(currentRoom, {messageType: END_GAME_MESSAGE, values: [message]});
                     currentRoom.getGame.resetTimer();
                     this.roomManager.deleteRoom(currentRoom.getID());
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
@@ -242,15 +245,17 @@ export class SocketManager {
                 }
                 socket.leave(room.getID());
                 if(isObserver) return;
-                if (room.getRealPlayerCount() === 0) {
-                    room.getGame.resetTimer();
-                    this.roomManager.deleteRoom(room.getID());
-                    socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
-                    return;
-                }
                 if(!room.isGameStarted()){
                     const playerNames = this.roomManager.getRoomPlayerNames(room.getID());
                     socket.to(room.getID()).emit('Room Player Update', playerNames);
+                    socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
+                    return;
+                }
+                if (room.getRealPlayerCount() === 0) {
+                    const message = room.getGame.endGame();
+                    this.sendGameState(room, {messageType : DISCONNECT_MESSAGE, values: [this.accountInfoService.getUsername(socket)]});
+                    this.sendGameState(room, {messageType: END_GAME_MESSAGE, values: [message]});
+                    this.roomManager.deleteRoom(room.getID());
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
@@ -276,6 +281,7 @@ export class SocketManager {
     }
 
     private timerCallback(room: GameRoom, username: string, result : CommandResult){
+        if(room.getGame.isGameOver()) return;
         this.sendGameState(room, {messageType : OUT_OF_TIME_MESSAGE, values : [username]});
         if(result.endGameMessage) {
             this.sendGameState(room, {messageType: END_GAME_MESSAGE, values: [result.endGameMessage]});

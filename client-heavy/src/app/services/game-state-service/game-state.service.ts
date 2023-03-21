@@ -44,7 +44,7 @@ export class GameStateService {
         this.gameStateObservers = [];
         this.socket = this.socketManagerService.getSocket();
         this.socket.on('Game State Update', (state: GameState) => {
-            console.log(state.message);
+            console.log(state);
             for(let observer of this.gameStateObservers){
                 observer.next(state);
             }
