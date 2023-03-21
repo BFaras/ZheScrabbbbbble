@@ -138,9 +138,9 @@ export class WaitingRoomManagerService {
         this.socketManagerService.getSocket().emit('Start Game');
     }
 
-    createRoomResponse(): Observable<string> {
-        return new Observable((observer: Observer<string>) => {
-            this.socketManagerService.getSocket().once('Room Creation Response', (errorCode) => observer.next(errorCode));
+    createRoomResponse(): Observable<any> {
+        return new Observable((observer: Observer<any>) => {
+            this.socketManagerService.getSocket().once('Room Creation Response', (response) => observer.next(response));
         });
     }
 

@@ -36,6 +36,7 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
         this.subscriptions.push(this.chatService.getNewMessages().subscribe((messageLog: Map<string, ChatMessage[]>) => {
             this.chatLog = messageLog;
         }));
+        
     }
 
     ngAfterContentChecked(): void {

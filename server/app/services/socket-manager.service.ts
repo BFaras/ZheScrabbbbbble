@@ -64,7 +64,7 @@ export class SocketManager {
                 this.roomManager.addPlayer(roomId, newUser, password);
                 socket.join(roomId);
                 console.log(new Date().toLocaleTimeString() + ' | New ' + visibility + ' room created');
-                socket.emit('Room Creation Response', NO_ERROR);
+                socket.emit('Room Creation Response', { codeError: NO_ERROR, room: roomId });
                 socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
             });
 

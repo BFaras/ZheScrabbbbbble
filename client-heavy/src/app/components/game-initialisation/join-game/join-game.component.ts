@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { WaitingRoom } from '@app/classes/waiting-room';
 import { RoomVisibility } from '@app/constants/room-visibility';
+import { ChatService } from '@app/services/chat-service/chat.service';
 import { JoinResponse, WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
@@ -20,7 +21,7 @@ export class JoinGameComponent implements OnDestroy {
     waitingRooms: WaitingRoom[] = [];
     subscription: Subscription;
 
-    constructor(private waitingRoomManagerService: WaitingRoomManagerService, private router: Router, private dialog: MatDialog) {}
+    constructor(private waitingRoomManagerService: WaitingRoomManagerService, private router: Router, private dialog: MatDialog,private chatService:ChatService) {}
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
@@ -54,10 +55,12 @@ export class JoinGameComponent implements OnDestroy {
                 this.router.navigate(['/waiting-room']);
             });
         }else if(room.visibility === RoomVisibility.PRIVATE){
+            this.chatService.setChatInGameRoom(room.id);
             this.waitingRoomManagerService.joinRoom(room.id);
             this.waitingRoomManagerService.setRequestPending(true);
             this.router.navigate(['/pending-room']);
         }else{
+            this.chatService.setChatInGameRoom(room.id);
             this.waitingRoomManagerService.joinRoomResponse().pipe(first()).subscribe(this.redirectPlayer.bind(this));
             this.waitingRoomManagerService.joinRoom(room.id);
         }
