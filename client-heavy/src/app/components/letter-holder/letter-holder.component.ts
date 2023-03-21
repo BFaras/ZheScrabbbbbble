@@ -35,7 +35,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     viewLoaded = false;
 
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
-    private initialGameState : GameState;
+    private gameState : GameState;
 
     constructor(
         private readonly accountService : AccountService,
@@ -49,9 +49,8 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         this.subscription = this.gameStateService.getGameStateObservable().subscribe((gameState) => {
             if(this.viewLoaded){
                 this.updateHolder(gameState)
-            }else{
-                this.initialGameState = gameState;
             }
+            this.gameState = gameState;
         });
     }
 
@@ -59,6 +58,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     clickInside(e: MouseEvent) {
         if (e.button === MouseButton.Right) {
             if (!this.mouseIsIn) return;
+            if(this.isObserver()) return;
             this.isReceiver();
             this.manipulationRack.cancelManipulation();
             this.mouseService.selectRack({ x: e.offsetX, y: e.offsetY });
@@ -150,13 +150,23 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     ngAfterViewInit() {
         this.viewLoaded = true;
         this.letterHolderService.holderContext = this.letterHolder.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.updateHolder(this.initialGameState);
+        this.updateHolder(this.gameState);
+    }
+
+    switchObserverView(){
+        let index = this.gameStateService.getObserverIndex();
+        index = (index + 1) % this.gameState.players.length;
+        this.gameStateService.setObserver(index);
+        this.updateHolder(this.gameState); 
     }
 
     updateHolder(gameState: GameState) {
-        let playerIndex;
-        for(playerIndex = 0; playerIndex < gameState.players.length; playerIndex++){
-            if(gameState.players[playerIndex].username === this.accountService.getUsername()) break;
+        let playerIndex = this.gameStateService.getObserverIndex();
+        if(playerIndex < 0){
+            for(playerIndex = 0; playerIndex < gameState.players.length; playerIndex++){
+                console.log(this.accountService.getUsername())
+                if(gameState.players[playerIndex].username === this.accountService.getUsername()) break;
+            }
         }
         this.letterHolderService.setHolderState(this.formatHandState([...gameState.players[playerIndex].hand]));
         this.letterHolderService.addLetters();
@@ -252,6 +262,10 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
             .map((x) => {
                 return Number(x);
             });
+    }
+
+    isObserver() : boolean{
+        return this.gameStateService.getObserverIndex() >= 0;
     }
 
     get height(): number {

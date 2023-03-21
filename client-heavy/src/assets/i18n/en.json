@@ -113,6 +113,7 @@
         "MESSAGE": "Players in the Game Room",
         "LEAVE": "Leave the room",
         "JOIN": " is trying to join the game room.",
+        "OBSERVE": " wants to spectate the game.",
         "ACCEPT": "Accept",
         "DECLINE": "Decline",
         "START": "Start"
@@ -134,6 +135,10 @@
         "PENDING": "Waiting for the host's approval",
         "DECLINE": "The host declined your request",
         "CANCEL": "Cancel request",
+        "RETURN": "Return to game rooms"
+    },
+    "OBSERVER-ROOM":{
+        "TITLE": "Waiting for host to start the game",
         "RETURN": "Return to game rooms"
     },
     "PASSWORD-PAGE":{

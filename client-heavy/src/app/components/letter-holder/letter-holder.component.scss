@@ -28,7 +28,7 @@
     padding: 10px;
     background-color: var(--button-tertiary);
     border-radius: 7px;
-    width: max-content;
+    width: 150px;
     font-size: 20px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
@@ -50,6 +50,11 @@
     font-weight: bold;
     box-shadow: var(--box-shadow);
     color: var(--button-text-default);
+}
+
+#swapPlayerButton {
+    width: 250px;
+    margin-right: 80px;
 }
 
 .button:hover:enabled {
