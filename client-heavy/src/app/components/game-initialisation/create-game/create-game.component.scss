@@ -1,5 +1,7 @@
 .container {
-    margin-top: 80px;
+    background-color: var(--background-default);
+    height: 75.5%;
+    padding: 5% 0% 4% 0%;
 }
 
 .justified {
@@ -9,55 +11,56 @@
     align-items: center;
 }
 
+.text {
+    color:var(--text-default);
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 18px;
+}
+
 .button {
     text-decoration: none;
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: center;
     border: none;
     padding: 10px;
-    background-color: rgb(204, 224, 183);
+    background-color: var(--button-primary);
     border-radius: 7px;
     width: 50vh;
-    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    box-shadow: var(--box-shadow);
     font-size: 17px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
-    color: rgb(94, 94, 94);
+    color: var(--button-text-default);
     transition: color 0.5s linear;
     -webkit-transition: color 0.2s linear;
 }
 
 .button:hover {
-    color: black;
+    color: var(--button-text-hover);
     cursor: pointer;
-    background: rgb(186, 204, 122);
+    background: var(--button-primary-hover);
     transition-property: background-color;
     transition-duration: 0.2s;
 }
 
-.team-name {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-    color: green;
+#radio-btn {
+    width: 72%;
 }
 
-.header-item {
-    justify-content: center;
-    text-align: center;
-    padding: 60px;
+.mat-radio-button::ng-deep circle {
+    stroke: var(--accent-default);
 }
 
-.footer-item {
-    position: absolute;
-    text-align: center;
-    bottom: 0;
+mat-radio-button {
+    margin-right: 12%;
 }
 
-.footer-item p :nth-child(even) {
-    color: black;
-}
-.footer-item p :nth-child(odd) {
-    color: grey;
+.logo {
+    margin-top: 1%;
+    font-family: "Shrikhand";
+    font-size: 95px;
+    color: var(--text-default);
 }
 
 .mode-buttons {
@@ -66,46 +69,43 @@
     text-align: center;
 }
 
-.cancel {
-    background-color: #d3b1a7;
-}
-
-.cancel:hover {
-    background: #ce8975;
-    transition-property: background-color;
-    transition-duration: 0.2s;
-}
-
 .game-settings {
     display: flex;
-    height: 40vh;
-    width: 547px;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: left;
+    height: 420px;
+    width: 550px;
+    justify-content: space-around;
+    align-items: center;
     flex-direction: column;
+    background-color: var(--background-tertiary);
+    padding: 3em 3em;
+    border-radius: 11px;
+    box-shadow: var(--box-shadow);
+    margin-bottom: 2%;
 }
 
 .input-container {
     display: flex;
-    margin-bottom: 2.5vh;
     justify-content: space-between;
+    align-items: center;
+    width: 550px;
 }
 
 .input {
-    display: flex;
-    width: 270px;
-    padding: 7px;
-    border-radius: 7px;
-    border: 1px solid rgb(94, 94, 94);
+    border-radius: 5px;
+    flex-grow: 1;
+    margin-left: 5%;
+    border: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bolder;
+    font-size: 15px;
+    background-color: var(--background-secondary);
+    color: var(--button-text-default);
+    height: 30px;
 }
 
-input.input-container {
-    align-items: right;
-}
-
-select.input {
-    width: 270px;
+.input:focus {
+    outline: none;
+    border: solid 2px var(--accent-default);
 }
 
 #dictionaries.input {

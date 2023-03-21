@@ -1,7 +1,7 @@
 <div id="zoom-holder">
     <div id="holder-buttons-container" (click)="$event.stopPropagation()">
         <button class="button" id="cancelButton" [style.visibility]="makingSelection ? 'visible' : 'hidden'" (click)="cancelSelection()">
-            Annuler
+            {{'LETTERHOLDER.CANCEL' | translate}}
         </button>
         <button
             class="button"
@@ -10,7 +10,7 @@
             (click)="swapLetters()"
             [disabled]="isDisabled || notEnoughLettersLeft"
         >
-            Échanger
+            {{'LETTERHOLDER.REPLACE' | translate}}
         </button>
 
         <div cdkDropList [cdkDropListData]="playerHand"id="rack" >
@@ -27,7 +27,8 @@
                 <h1 id="point">{{getPointIfNotBlank(playerHandPoints[indexOfelement])}}</h1>
             </div>
         </div>
-        <button id="playButton" class="button" [disabled]="isDisabled" (click)="sendWord()">Jouer</button>
-        <button class="button" id="skipButton" (click)="skipTurn()" [disabled]="isDisabled">Passer</button>
+        <button *ngIf="!isObserver()" id="playButton" class="button" [disabled]="isDisabled" (click)="sendWord()">{{'LETTERHOLDER.PLAY' | translate}}</button>
+        <button *ngIf="!isObserver()" class="button" id="skipButton" (click)="skipTurn()" [disabled]="isDisabled">{{'LETTERHOLDER.PASS' | translate}}</button>
+        <button *ngIf="isObserver()" class="button" id="swapPlayerButton" (click)="switchObserverView()">{{'LETTERHOLDER.SWITCH' | translate}}</button>
     </div>
 </div>

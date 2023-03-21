@@ -1,25 +1,64 @@
 .container{
-    height: 100%;
+    height: 90%;
     width: 100%;
     border-radius: 11px;
-    border-style:groove;
-    background-color:white;
+    margin-top: 7vh;
     padding:3em;
-}
-
-.form{
-    padding : 1em;
-    height: 80%;
+    background-color: var(--background-tertiary);
     display:flex;
     flex-direction:column;
+    align-items: center;
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: var(--box-shadow);
+}
+
+h1 {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    margin-bottom: 5%;
+    color: var(--text-secondary);
+}
+
+mat-label {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: var(--text-default);
+}
+
+input {
+    color: var(--text-default);
+}
+
+.logo {
+    width: 400px;
+    height: 100px;
+    margin-top: 12%;
+    font-family: "Shrikhand";
+    font-size: 85px;
+    color: var(--text-default);
+}
+
+.form {
+    padding : 1em;
+    height: 30%;
     gap: 14px;
+    display:flex;
+    flex-direction:column;
+    align-items: center;
 }
 
 .input-field{  
     min-width: 300px;
     max-width: 500px;
-    width: 100px;
+    font-size: 18px;
+}
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px var(--input-highlight) inset !important;
+    -webkit-text-fill-color: var(--text-default);
 }
 
 .button-login{
@@ -28,19 +67,23 @@
     top : 20%;
 }
 
+a {
+    margin-top: 5vh;
+    color: var(--text-secondary);
+}
+
 .button-login {
     text-decoration: none;
     text-align: center;
     border: none;
     padding: 10px;
-    background-color: rgb(204, 224, 183);
+    background-color: var(--button-primary);
     border-radius: 7px;
-    width: 50vh;
-    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    box-shadow: var(--box-shadow);
     font-size: 17px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
-    color: rgb(94, 94, 94);
+    color: var(--button-text-default);
     transition: color 0.5s linear;
     -webkit-transition: color 0.2s linear;
 }
@@ -55,9 +98,9 @@
 }
 
 .button-login:hover {
-    color: black;
+    color: var(--button-text-hover);
     cursor: pointer;
-    background: rgb(186, 204, 122);
+    background: var(--button-primary-hover);
     transition-property: background-color;
     transition-duration: 0.2s;
 }

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
-import { GameStateService } from '@app/services/game-state-service/game-state.service';
+import { GameStateService, PlayerMessage } from '@app/services/game-state-service/game-state.service';
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
 import { Subscription } from 'rxjs';
@@ -15,17 +15,23 @@ export class GamePageComponent implements OnInit, OnDestroy {
     isReceiver: string;
     endGame: boolean = false;
     subscriptions: Subscription[] = [];
+    showPortal = false;
+    chatDisplay: boolean = false;
+    actionHistory: PlayerMessage[] = [];
 
     constructor(
         private readonly gameStateService: GameStateService,
         private readonly letterHolderService: LetterHolderService,
         private readonly gridService: GridService,
         private readonly router: Router,
-        private readonly fontSize: FontSizeService,
+        private readonly fontSize: FontSizeService
     ) {}
 
     ngOnInit() {
-        this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => (this.endGame = gameState.gameOver)));
+        this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => {
+            if(gameState.message) this.actionHistory.push(gameState.message);
+            this.endGame = gameState.gameOver;
+        }));
         //Reconnection code
         /*
         const id = sessionStorage.getItem('playerID');
@@ -66,5 +72,20 @@ export class GamePageComponent implements OnInit, OnDestroy {
         this.fontSize.decreaseSize();
         this.letterHolderService.redrawTiles();
         this.gridService.deleteAndRedraw();
+    }
+
+    toggle() {
+        this.chatDisplay = !this.chatDisplay;
+    }
+
+    isObserver() : boolean{
+        return this.gameStateService.getObserverIndex() >= 0;
+    }
+
+    formatActionInList(message : string, values : string[]): string{
+        for(let i = 0; i < values.length; i++){
+            message = message.replace('$' + i, values[i])
+        }
+        return message;
     }
 }

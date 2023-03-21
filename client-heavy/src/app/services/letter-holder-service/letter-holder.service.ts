@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HOLDER_MEASUREMENTS, LETTER_POINTS } from '@app/constants/letters-constants';
 import { Subject } from 'rxjs';
+import { HOLDER_MEASUREMENTS, LETTER_POINTS, TILE_COLORS_CLASSIC, TILE_COLORS_GREEN, TILE_COLORS_INVERTED, TILE_COLORS_PINK } from '@app/constants/letters-constants';
+import { classic, green, inverted, pink } from '@app/constants/themes';
+import { ThemesService } from '../themes-service/themes-service';
 
 @Injectable({
     providedIn: 'root',
@@ -12,9 +14,29 @@ export class LetterHolderService {
     subjectHolderStatePoints:Subject<number[]> = new Subject()
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
 
-    constructor() {}
+    TILE_COLOURS = TILE_COLORS_CLASSIC;
+    constructor(private theme: ThemesService) {}
+
+    setGrids() {
+        switch (this.theme.getActiveTheme()) {
+            case classic:
+                this.TILE_COLOURS = TILE_COLORS_CLASSIC;
+                break;
+            case inverted:
+                this.TILE_COLOURS = TILE_COLORS_INVERTED;
+                break;
+            case green:
+                this.TILE_COLOURS = TILE_COLORS_GREEN;
+                break;
+            case pink:
+                this.TILE_COLOURS = TILE_COLORS_PINK;
+                break;
+            default:
+        }
+    }
 
     drawLetter(letter: string, position: number) {
+        this.setGrids();
         const checkedLetter = this.validParams(letter, position);
         if (checkedLetter) {
             this.letterLog.set(position, checkedLetter);

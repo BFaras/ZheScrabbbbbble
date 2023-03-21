@@ -1,8 +1,8 @@
 import { Game } from '@app/classes/game';
 import { PlaceLetterCommandInfo } from '@app/constants/basic-interface';
 import { INVALID_COMMAND_SYNTAX, NOT_IN_GAME, NOT_YOUR_TURN, UNKNOWN_ACTION } from '@app/constants/error-code-constants';
+import { PLACE_MESSAGE } from '@app/constants/game-state-constants';
 import { CommandVerificationService } from '@app/services/command-verification.service';
-import { PossibleWords } from '@app/services/possible-word-finder.service';
 import { RoomManagerService } from '@app/services/room-manager.service';
 
 export interface Command {
@@ -13,9 +13,13 @@ export interface Command {
 
 export interface CommandResult {
     errorType?: string;
-    activePlayerMessage?: string;
-    otherPlayerMessage?: string;
+    playerMessage?: PlayerMessage;
     endGameMessage?: string;
+}
+
+export interface PlayerMessage {
+    messageType: string;
+    values: string[];
 }
 
 export enum CommandTypes {
@@ -49,9 +53,13 @@ export class CommandController {
             case CommandTypes.Swap:
                 return this.swapLetters(command.args, game);
             case CommandTypes.Hint:
-                return this.hintCommand(game);
+                //TODO Fix hints
+                return game.passTurn();
+                //return this.hintCommand(game);
             case CommandTypes.Reserve:
-                return this.reserveMessage(game);
+                //TODO Fix reserve
+                return game.passTurn();
+                //return this.reserveMessage(game);
         }
         return { errorType: UNKNOWN_ACTION };
     }
@@ -63,12 +71,11 @@ export class CommandController {
         }
         return this.placeMessage(game.placeLetter(commandInfo), args);
     }
+
     private placeMessage(returnValue: CommandResult, args: string): CommandResult {
-        if (returnValue.activePlayerMessage === '') {
-            const validPlacementMessage = `a placé ${args} pour ${returnValue.otherPlayerMessage} point(s).`;
-            returnValue.activePlayerMessage = validPlacementMessage;
-            returnValue.otherPlayerMessage = validPlacementMessage;
-        }
+        if(!returnValue.playerMessage) return {errorType: INVALID_COMMAND_SYNTAX}
+        if (isNaN(Number(returnValue.playerMessage.messageType))) return returnValue;
+        returnValue.playerMessage = {messageType: PLACE_MESSAGE, values: [returnValue.playerMessage.values[0], args.split(' ')[1], returnValue.playerMessage.messageType]};
         return returnValue;
     }
 
@@ -78,8 +85,9 @@ export class CommandController {
         }
         return game.swapLetters(args);
     }
-    private hintCommand(game: Game): CommandResult {
-        const possibleWords = game.findWords(false);
+    /*
+    private async hintCommand(game: Game): Promise<CommandResult> {
+        const possibleWords = await game.findWords(false);
         this.shuffleWords(possibleWords);
         return this.hintMessage(possibleWords);
     }
@@ -119,8 +127,10 @@ export class CommandController {
             otherPlayerMessage: 'NotEndTurn',
         };
     }
-
+    */
+    /*
     private reserveMessage(game: Game): CommandResult {
         return { activePlayerMessage: game.getReserveContent(), otherPlayerMessage: 'NotEndTurn' };
     }
+    */
 }

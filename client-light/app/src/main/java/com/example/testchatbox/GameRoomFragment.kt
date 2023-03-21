@@ -38,8 +38,9 @@ class GameRoomFragment : Fragment(), Observer {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        updateNames();
+        update();
         binding.leave.setOnClickListener {
+            GameRoomModel.leaveRoom();
             SocketHandler.getSocket().emit("Leave Game Room")
             findNavController().navigate(R.id.action_gameRoomFragment_to_MainMenuFragment)
         }

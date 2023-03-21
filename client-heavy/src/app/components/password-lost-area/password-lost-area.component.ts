@@ -10,60 +10,65 @@ import { Subscription } from 'rxjs/internal/Subscription';
   styleUrls: ['./password-lost-area.component.scss']
 })
 export class PasswordLostAreaComponent implements OnInit {
-  username:string;
-  newPassword:string ;
-  newPasswordConfirmed:string;
-  isQuestionAnswered:boolean = false;
-  questionReset:string;
-  answerReset:string;
+  username: string;
+  newPassword: string;
+  newPasswordConfirmed: string;
+  isQuestionAnswered: boolean = false;
+  questionReset: string;
+  answerReset: string;
   subscriptionModifyPassword: Subscription;
   subscriptionGetQuestion: Subscription;
-  constructor(private router:Router, private accountAuthenticationService:AccountAuthenticationService) {
-    this.accountAuthenticationService.setUpSocket()
+  constructor(private router: Router, private accountAuthenticationService: AccountAuthenticationService) {
+    this.accountAuthenticationService.setUpSocket();
   }
 
   ngOnInit(): void {
   }
-  
-  goBackToLogin(){
+
+  goBackToLogin() {
     this.router.navigate(['login']);
   }
 
-  generateQuestion(){
-
-    this.subscriptionGetQuestion =  this.accountAuthenticationService.getUserQuestion(this.username).subscribe(
+  generateQuestion() {
+    this.subscriptionGetQuestion = this.accountAuthenticationService.getUserQuestion(this.username).subscribe(
       (question: string) => {
-        if (question){
+        if (question) {
           this.isQuestionAnswered = true;
           this.questionReset = question;
-        }else{
+        } else {
           this.isQuestionAnswered = false;
           this.questionReset = "";
-          window.alert('Veuillez choisir un nom valide'); 
+          window.alert('Veuillez choisir un nom valide');
         }
-        } );
+      });
   }
 
-  ngOnDestroy() {
-    this.subscriptionModifyPassword.unsubscribe();
-    this.subscriptionGetQuestion.unsubscribe();
-}
-  changePassword(){
-    this.subscriptionModifyPassword = this.accountAuthenticationService.modifyPassword(this.username,this.newPassword,this.answerReset).subscribe(
-      (isThereError:string)=>{
-        if (isThereError){
-          //aleret
-          window.alert('Veuillez entrer la bonne réponse à la question'); 
-        }
-        else{
-          window.alert('Votre mot de passe a été modifié'); 
+  changePassword() {
+    const NO_ERROR = "0";
+    const DATABASE_UNAVAILABLE = "5";
+    this.subscriptionModifyPassword = this.accountAuthenticationService.modifyPassword(this.username, this.newPassword, this.answerReset).subscribe(
+      (errorCode: string) => {
+        if (errorCode === NO_ERROR) {
+          window.alert('Votre mot de passe a été modifié');
           this.router.navigate(['login']);
+        }
+        else if (errorCode === DATABASE_UNAVAILABLE) {
+          window.alert("La base de donnée n'est pas disponible");
+        }
+        else {
+          window.alert('Veuillez entrer la bonne réponse pour la question de sécurité');
+
         }
       }
     );
-    
   }
 
+  goToIsQuestionAnswered(): void {
+    this.isQuestionAnswered = !this.isQuestionAnswered
+  }
 
+  goToLogIn(): void {
+    this.router.navigate(['/login']);
+  }
 
 }

@@ -1,0 +1,26 @@
+<app-navigation-bar></app-navigation-bar>
+<div class="container">
+    <h1 class="text">{{ 'FRIENDS-PAGE.MESSAGE' | translate }}</h1>
+    <span class="text add">{{ 'FRIENDS-PAGE.SHARE' | translate }}</span><br>
+    <span class="text add">{{ 'FRIENDS-PAGE.NEW' | translate }}</span>
+    <div class="input-container">
+        <span class="text">{{ 'FRIENDS-PAGE.INPUT' | translate }}</span>
+        <input class="input"/>
+    </div>
+    <div id="boxes-container">
+        <!--<div class="friends-container">
+            <h2 class="text">{{ 'FRIENDS-PAGE.REQUEST' | translate }}</h2>
+            <div class="friend-container" *ngFor="let req of requests">
+                <span class="chat text">{{ req }}</span>
+                <button (click)="alert()">{{ 'FRIENDS-PAGE.ACCEPT' | translate }}</button>
+            </div>
+        </div>-->
+        <div class="friends-container">
+            <h2 class="text">{{ 'FRIENDS-PAGE.FRIENDS' | translate }}</h2>
+            <div class="friend-container" *ngFor="let friend of friends">
+                <span class="chat text">{{ friend }}</span>
+                <button (click)="alert()">{{ 'FRIENDS-PAGE.UNFRIEND' | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>

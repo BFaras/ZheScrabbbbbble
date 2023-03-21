@@ -1,79 +1,18 @@
 <div class="container">
     <div class="inner-container">
-        <header id="title">PANNEAU INFORMATIF</header>
+        <header id="title" class="centered-title">{{'INFOBOARD.INFOBOARD' | translate}}</header>
         <div id="info">
-            <div *ngFor="let player of playersInfo">
-                <span class="name">{{ player.name }}</span>
-                <span class="name" style="color: #cb654f" *ngIf="player.active">, c'est à votre tour!</span>
-                <span class="name" style="color: #cb654f" *ngIf="player.winner">, vous avez gagné!</span>
+            <div *ngFor="let player of playersInfo" class="player-container" [class.player-selected]="isPlayerUser(player)">
+                <span class="data"><strong>{{ player.name }}</strong></span>
+                <span class="status" *ngIf="player.active">{{'INFOBOARD.TURN' | translate}}</span>
+                <span class="status" *ngIf="player.winner">{{'INFOBOARD.WIN' | translate}}</span>
                 <br /><br />
-                <p>Score: {{ player.currentScore }}</p>
-                <p *ngIf="player.letterCount < 7">Nombre de lettres sur le chevalet: {{ player.letterCount }}</p>
-                <br />
+                <p class="data">{{'INFOBOARD.SCORE' | translate}}{{ player.currentScore }}</p>
+                <p class="data" *ngIf="player.letterCount < 7">{{'INFOBOARD.LETTERSINHAND' | translate}}{{ player.letterCount }}</p>
             </div>
-            <p>Nombre de lettres restantes dans la réserve: {{ roundInfo[0].lettersRemaining }}</p>
+            <p class="data reserve-letters">{{'INFOBOARD.LETTERSLEFT' | translate}}{{ roundInfo[0].lettersRemaining }}</p>
         </div>
         <br />
         <app-timer></app-timer>
-        <br />
-        <div id="objectives" *ngIf="areGoals">
-            <p id="objective-subtitle">objectifs publics</p>
-
-            <div *ngFor="let objective of onGoingPublicObjectives">
-                <ul [className]="objective.completed === true ? 'checked' : 'objective-public'">
-                    {{
-                        objective.title
-                    }}
-                    -
-                    {{
-                        objective.points
-                    }}
-                    points
-                    <br />
-                    <br />
-                    <span id="progress-score-current" *ngIf="objective.progress">
-                        {{ playersInfo[0].name }} : {{ objective.progress[0].playerProgress }} / {{ objective.progressMax }}
-                    </span>
-                    <span id="progress-score-opponant" *ngIf="objective.progress">
-                        {{ playersInfo[1].name }} : {{ objective.progress[1].playerProgress }} / {{ objective.progressMax }}
-                    </span>
-                    <br />
-                </ul>
-            </div>
-
-            <p id="objective-subtitle">votre objectif</p>
-            <div>
-                <ul [className]="playersInfo[0].objectives[2].completed === true ? 'checked' : 'objective-public'">
-                    {{
-                        playersInfo[0].objectives[2].title
-                    }}
-                    -
-                    {{
-                        playersInfo[0].objectives[2].points
-                    }}
-                    points
-                    <span id="progress-score" *ngIf="playersInfo[0].objectives[2].progress">
-                        {{ playersInfo[0].objectives[2].progress[0].playerProgress }} / {{ playersInfo[0].objectives[2].progressMax }}
-                    </span>
-                </ul>
-            </div>
-            <div id="objectives-completed">
-                <div id="opponent-objective" *ngIf="playersInfo[1].objectives[2].completed === true">
-                    {{ playersInfo[1].name }} a rempli son objectif :
-                    <ul>
-                        «
-                        {{
-                            playersInfo[1].objectives[2].title
-                        }}
-                        »
-
-                        {{
-                            playersInfo[1].objectives[2].points
-                        }}
-                        points
-                    </ul>
-                </div>
-            </div>
-        </div>
     </div>
 </div>

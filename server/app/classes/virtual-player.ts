@@ -47,8 +47,8 @@ export abstract class VirtualPlayer extends Player {
         });
         return { command: '!échanger ' + letterToSwap.join(''), result: finalResult };
     }
-    protected place(): CommandDetails {
-        const possibleWord: PossibleWords[] = this.gameRoom.getGame.findWords(true);
+    protected async place(): Promise<CommandDetails> {
+        const possibleWord: PossibleWords[] = await this.gameRoom.getGame.findWords(true);
         if (possibleWord.length === 0) return { command: '', result: { errorType: ILLEGAL_COMMAND } };
         const validWord: PossibleWords = this.getValidWord(possibleWord);
         const wordToPlace: PlaceLetterCommandInfo = validWord?.command as PlaceLetterCommandInfo;
@@ -59,7 +59,7 @@ export abstract class VirtualPlayer extends Player {
         return this.playing;
     }
 
-    abstract play(): CommandDetails;
+    abstract play(): Promise<CommandDetails>;
 
     protected abstract getNumberToSwap(): number;
 

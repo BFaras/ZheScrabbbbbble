@@ -1,0 +1,134 @@
+.container {
+    height: 94vh;
+    font-size: 18px;
+    background-color: var(--background-default);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    margin-bottom: 20%;
+}
+
+.friends-container {
+    display: flex;
+    height: 535px;
+    width: 650px;
+    margin: 30px;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    background-color: var(--background-tertiary);
+    border-radius: 11px;
+    box-shadow: var(--box-shadow);
+    overflow: auto;
+    padding: 30px 0px 30px 0px;
+}
+
+#boxes-container {
+    display: flex;
+    align-items: center;
+    align-content: space-around;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.button-container {
+    width: 220px;
+}
+
+.chat {
+    margin-right: 20px;
+}
+
+.friend-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 530px;
+    background-color: var(--tile-on-holder);
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin: 5px 0px;
+}
+
+button {
+    font-family: 'Courier New', Courier, monospace;
+    width: 100px;
+    font-weight: bolder;
+    font-size: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--accent-default);
+    color: var(--text-primary);
+    padding: 5px 0px;
+    margin-right: 10px;
+}
+
+button:hover {
+    color: var(--button-text-hover);
+    cursor: pointer;
+    background: var(--button-primary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
+} 
+
+.text {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: var(--text-default);
+}
+
+::-webkit-scrollbar {
+    width: 1em;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background: var(--scroll-background);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background: var(--scroll-default);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scroll-hover);
+}
+
+h1 {
+    margin: 20px;
+}
+
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 700px;
+}
+
+.input {
+    border-radius: 5px;
+    flex-grow: 1;
+    margin-left: 5%;
+    border: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bolder;
+    font-size: 15px;
+    background-color: var(--background-secondary);
+    color: var(--button-text-default);
+    height: 30px;
+}
+
+.input:focus {
+    outline: none;
+    border: solid 2px var(--accent-default);
+}
+
+.add {
+    font-size: 20px;
+}

@@ -37,7 +37,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     listTileManipulated = isManipulated;
     listTileSelected = isSelected;
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
-    private initialGameState : GameState;
+    private gameState : GameState;
 
     constructor(
         private readonly accountService : AccountService,
@@ -50,9 +50,8 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         this.subscription = this.gameStateService.getGameStateObservable().subscribe((gameState) => {
             if(this.viewLoaded){
                 this.updateHolder(gameState)
-            }else{
-                this.initialGameState = gameState;
             }
+            this.gameState = gameState;
         });
     }
 
@@ -80,6 +79,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     @HostListener('click', ['$event'])
     clickInside(e: MouseEvent,indexOfElement:number) {
         if (e.button === MouseButton.Right) {
+            if(this.isObserver()) return;
             this.manipulationRack.cancelManipulation();
             this.manipulationRack.selectLetterOnRack(indexOfElement + 1);
             this.makingSelection = Object.values(isSelected).some((selection) => selection === true);
@@ -172,11 +172,17 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
         this.viewLoaded = true;
-        console.log("View Init Done");
-        this.updateHolder(this.initialGameState);
         this.subscriptionHolderPoints = this.letterHolderService.getNewHolderStatePoints().subscribe((holderHandPoints)=>{
             this.playerHandPoints = holderHandPoints
         })
+        this.updateHolder(this.gameState);
+    }
+
+    switchObserverView(){
+        let index = this.gameStateService.getObserverIndex();
+        index = (index + 1) % this.gameState.players.length;
+        this.gameStateService.setObserver(index);
+        this.updateHolder(this.gameState); 
     }
 
     isDraggingMode(){
@@ -189,9 +195,12 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
 
 
     updateHolder(gameState: GameState) {
-        let playerIndex;
-        for(playerIndex = 0; playerIndex < gameState.players.length; playerIndex++){
-            if(gameState.players[playerIndex].username === this.accountService.getUsername()) break;
+        let playerIndex = this.gameStateService.getObserverIndex();
+        if(playerIndex < 0){
+            for(playerIndex = 0; playerIndex < gameState.players.length; playerIndex++){
+                console.log(this.accountService.getUsername())
+                if(gameState.players[playerIndex].username === this.accountService.getUsername()) break;
+            }
         }
         this.letterHolderService.setHolderState(this.formatHandState([...gameState.players[playerIndex].hand]));
         this.letterHolderService.addLetters();
@@ -288,6 +297,10 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
             .map((x) => {
                 return Number(x);
             });
+    }
+
+    isObserver() : boolean{
+        return this.gameStateService.getObserverIndex() >= 0;
     }
 
     get height(): number {

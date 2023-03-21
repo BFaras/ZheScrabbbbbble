@@ -4,8 +4,8 @@ import com.example.testchatbox.Coordinates.COLUMNS
 import com.example.testchatbox.Coordinates.ROWS
 
 object GridConstants {
-    const val DEFAULT_WIDTH = 675F
-    const val DEFAULT_HEIGHT = 675F
+    const val DEFAULT_WIDTH = 1020F
+    const val DEFAULT_HEIGHT = 1020F
     const val DEFAULT_SIDE = DEFAULT_HEIGHT/15
     const val DEFAULT_LINE_WIDTH = 1F
     const val ROW_COLUMN_COUNT = 15

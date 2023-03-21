@@ -1,21 +1,15 @@
+<app-navigation-bar></app-navigation-bar>
 <div class="container justified">
-    <img src="https://bit.ly/3m206ss" width="400" height="80" alt="Logo Scrabble" />
-    <h1 class="header-item" *ngIf="isRequestPending()">En attente d'une réponse de l'hôte</h1>
-    <h1 class="header-item" *ngIf="!isRequestPending()">L'hôte a refusé votre requête</h1>
+    <div class="logo">Scrabble</div>
+    <h1 class="header-item" *ngIf="isRequestPending()">{{ 'PENDING-ROOM.PENDING' | translate }}</h1>
+    <h1 class="header-item" *ngIf="!isRequestPending()">{{ 'PENDING-ROOM.DECLINE' | translate }}</h1>
     <div id="page-content">
         <div [style.visibility]="isRequestPending() ? 'visible' : 'hidden'" id="spinner-container">
             <mat-spinner></mat-spinner>
         </div>
         <div class="mode-buttons">
-            <button *ngIf="isRequestPending()" class="button cancel" (click)="cancelDemand()">Annuler la demande</button>
-            <button *ngIf="!isRequestPending()" class="button cancel" (click)="returnToMenu()">Retourner aux salles de jeu</button>
+            <button *ngIf="isRequestPending()" class="button cancel" (click)="cancelDemand()">{{ 'PENDING-ROOM.CANCEL' | translate }}</button>
+            <button *ngIf="!isRequestPending()" class="button cancel" (click)="returnToMenu()">{{ 'PENDING-ROOM.RETURN' | translate }}</button>
         </div>
-    </div>
-    <div class="footer-item">
-        <h4 class="team-name">Équipe 206</h4>
-        <p>
-            <span>Ioana Daria Danciu</span>, <span>Arnaud Delage-Reid</span>, <span>Manuel Ramirez-Evrard</span>, <span>Kaboungala Bintou Seni</span>,
-            <span>Pablo Sepulveda Solis</span>, <span>Imane Znadi</span>
-        </p>
     </div>
 </div>
