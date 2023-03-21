@@ -4,6 +4,7 @@ import { DIRECTION, GRID_CONSTANTS } from '@app/constants/grid-constants';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
+import { PreviewPlayersActionService } from '../preview-players-action-service/preview-players-action.service';
 
 const ONE_LETTER_IN_LOGGER = 1;
 @Injectable({
@@ -20,7 +21,12 @@ export class LetterAdderService {
     key: string;
     canPlay: boolean;
     letterAdderMode:string = '';
-    constructor(private letterHolderService: LetterHolderService, private gridService: GridService, private chatService: ChatService) {}
+    constructor(private letterHolderService: LetterHolderService,
+         private gridService: GridService,
+          private chatService: ChatService,
+          private previewPlayerActionService: PreviewPlayersActionService) {
+
+          }
 
     onLeftClick(coords: Vec2) {
         if (this.canClick(coords)) {
@@ -124,6 +130,13 @@ export class LetterAdderService {
         if (this.inPlayerHand() && this.isInBounds()) {
             if (!this.isPositionTaken()) {
                 this.addToHand(false);
+                /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty ecrie lettre*/
+                console.log(this.playerHand)
+                console.log(this.activeSquare)
+                if (this.playerHand.length === 6){
+                    console.log('sent first Tile')
+                    this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
+                }
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
                 this.changeActivePosition(1);
@@ -141,12 +154,21 @@ export class LetterAdderService {
         if (this.inPlayerHand() && this.isInBounds()) {
             if (!this.isPositionTaken()) {
                 this.addToHand(false);
+                /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty poser lettre*/
+                console.log(this.playerHand)
+                console.log(this.activeSquare)
+                if (this.playerHand.length === 6){
+                    console.log('sent first Tile')
+                    this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
+                }
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
                 this.letterAdderMode = 'dragAndDrop';
             }
         }
     }
+
+
 
     changeActivePosition(direction: number) {
         if (this.arrowDirection) {
@@ -160,6 +182,7 @@ export class LetterAdderService {
         const decrement = -1;
         if (this.addedLettersLog.size === 1){
             this.letterAdderMode = "";
+            this.previewPlayerActionService.removeSelectedTile(this.activeSquare);
         }
         if (!this.addedLettersLog.size) return;
         if (!this.isPositionTaken()) {

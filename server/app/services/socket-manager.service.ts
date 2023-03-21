@@ -57,6 +57,18 @@ export class SocketManager {
             this.profileSocketService.handleProfileSockets(socket);
             this.friendSocketService.handleFriendSockets(socket);
 
+            socket.on('Share First Tile', (activeSquare: { x: string; y: number }) => {
+                const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
+                if (!currentRoom) return;
+                socket.to(currentRoom.getID()).emit('Get First Tile', activeSquare);
+            });
+
+            socket.on('Remove Selected Tile', (activeSquare: { x: string; y: number }) => {
+                const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
+                if (!currentRoom) return;
+                socket.to(currentRoom.getID()).emit('Remove Selected Tile Response', activeSquare);
+            });
+
             socket.on('Create Game Room', async (name: string, visibility: RoomVisibility, password?: string) => {
                 console.log(new Date().toLocaleTimeString() + ' | Room creation request received');
                 if (this.roomManager.verifyIfRoomExists(name)) {
