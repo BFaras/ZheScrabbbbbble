@@ -16,6 +16,7 @@ import { ProfilePageComponent } from '@app/pages/profile-page/profile-page.compo
 import { PublicChatsComponent } from '@app/pages/public-chats/public-chats.component';
 import { SignUpPageComponent } from '@app/pages/sign-up-page/sign-up-page.component';
 import { SoloMultiPageComponent } from '@app/pages/solo-multi-page/solo-multi-page.component';
+import { QueuePageComponent } from '@app/pages/tournament-pages/queue-page/queue-page.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -35,6 +36,7 @@ const routes: Routes = [
     { path: 'observer-room', component: ObserverRoomComponent },
     { path: 'public-chats', component: PublicChatsComponent },
     { path: 'friends-page', component: FriendsPageComponent },
+    { path: 'tournament-queue', component: QueuePageComponent },
     { path: '**', redirectTo: '/login' },
 ];
 

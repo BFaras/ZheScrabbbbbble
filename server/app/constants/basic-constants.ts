@@ -48,6 +48,7 @@ export const AT_LEAST_EIGHT_LETTER_CONST = 7;
 export const TWO_SPECIALS_CASES_CONSTANT = 2;
 
 export const MAX_NUMBER_OF_PLAYERS = 4;
+export const TOURNAMENT_SIZE = 4;
 
 export enum Direction {
     Vertical,
@@ -57,5 +58,6 @@ export enum Direction {
 export enum RoomVisibility {
     Private = 'Private',
     Public = 'Public',
-    Protected = 'Protected'
+    Protected = 'Protected',
+    Tournament = 'Tournament'
 }

@@ -1,13 +1,16 @@
 import { GameRoom } from '@app/classes/game-room';
 import { Player } from '@app/classes/player';
+import { GameData, GameStatus, Tournament } from '@app/classes/tournament';
 import { MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
 import { GameRoomInfo } from '@app/constants/basic-interface';
 import crypto = require('crypto');
 import { Service } from 'typedi';
+import * as io from 'socket.io';
 
 @Service()
 export class RoomManagerService {
     private activeRooms: { [key: string]: GameRoom } = {};
+    private tournaments: { [key: string]: Tournament } = {};
 
     createRoom(roomName: string, visibility: RoomVisibility, password?: string): string {
         const id = 'room-' + roomName + '-' + crypto.randomBytes(10).toString('hex');
@@ -37,7 +40,7 @@ export class RoomManagerService {
     getGameRooms(): GameRoomInfo[] {
         const gameRooms: GameRoomInfo[] = [];
         for (const room of Object.values(this.activeRooms)) {
-            if (!room.getGame.isGameOver()) {
+            if (!room.getGame.isGameOver() && room.getVisibility() !== RoomVisibility.Tournament) {
                 gameRooms.push({
                     name: room.getName(),
                     id: room.getID(),
@@ -75,7 +78,31 @@ export class RoomManagerService {
         return null;
     }
 
+    getRoom(id: string): GameRoom{
+        return this.activeRooms[id];
+    }
+
     deleteRoom(id: string): void {
         delete this.activeRooms[id];
+    }
+
+    createTournament(players: {socket : io.Socket, username: string}[]): string{
+        const tournament = new Tournament(players);
+        const id = tournament.getID();
+        this.tournaments[id] = tournament;
+        return id;
+    }
+
+    registerTournamentGames(tid: string, id1 : string, id2: string): GameData[]{
+        const tournament = this.tournaments[tid];
+        const game1 = {type : 'Semi1', status : GameStatus.PENDING, players : this.activeRooms[id1].getPlayerNames(), roomCode : id1};
+        const game2 = {type : 'Semi2', status : GameStatus.PENDING, players : this.activeRooms[id2].getPlayerNames(), roomCode : id2};
+        tournament.registerGame(game1);
+        tournament.registerGame(game2);
+        return tournament.getGameData();
+    }
+
+    updateTournamentGameStatus(tid: string, id: string, status: GameStatus){
+        this.tournaments[tid].updateGameStatus(id, status);
     }
 }

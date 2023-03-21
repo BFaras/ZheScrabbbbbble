@@ -42,6 +42,7 @@ import { PasswordLostPageComponent } from './pages/password-lost-page/password-l
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { PublicChatsComponent } from './pages/public-chats/public-chats.component';
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
+import { QueuePageComponent } from './pages/tournament-pages/queue-page/queue-page.component';
 import { ChatService } from './services/chat-service/chat.service';
 /**
  * Main module that is used in main.ts.
@@ -92,6 +93,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         NavigationBarComponent,
         FriendsPageComponent,
         PublicChatsComponent,
+        QueuePageComponent,
     ],
     imports: [
         AppMaterialModule,
