@@ -10,6 +10,8 @@
     <string name="rejoindre">want to join your game</string>
     <string name="accepter">Accept</string>
     <string name="refuser">Reject</string>
+    <string name="ajouter">Add</string>
+    <string name="FriendCode">Enter your friend\'s code to add him </string>
 
 
     <!-- Strings used for fragments for navigation -->
@@ -25,6 +27,7 @@
     <string name="tripleLetter">TL</string>
     <string name="abandonner">Give Up</string>
     <string name="prompt_email">Email</string>
+    <string name="prompt_friendcode">Friend Code</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
@@ -40,6 +43,7 @@
     <!-- Strings related to errors -->
     <string name="NO_ERROR">No error</string>
     <string name="ERROR">Error</string>
+    <string name="WRONG_FRIEND_CODE">Friend code is incorrect</string>
     <string name="FIELD_EMPTY"> you  left a field empty</string>
     <string name="USERNAME_INVALID">The username is invalid</string>
     <string name="PASSWORD_INVALID">The password is invalid</string>

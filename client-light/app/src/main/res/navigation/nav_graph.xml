@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_MainMenuFragment_to_profilFragment"
             app:destination="@id/profilFragment" />
+        <action
+            android:id="@+id/action_MainMenuFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
     </fragment>
     <fragment
         android:id="@+id/ChatFragment"
@@ -123,4 +126,9 @@
         android:name="com.example.testchatbox.ProfilFragment"
         android:label="fragment_profil"
         tools:layout="@layout/fragment_profil" />
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.example.testchatbox.FriendsFragment"
+        android:label="fragment_friends"
+        tools:layout="@layout/fragment_friends" />
 </navigation>
