@@ -152,8 +152,7 @@
         "SHARE": "Partagez ce code pour faire une demande d'amitié: ",
         "NEW": "Ajouter un ami",
         "INPUT": "Veuillez entrer le code d'amitié: ",
-        "ACCEPT": "Accepter",
-        "REQUEST": "Demandes d'amitié",
+        "ADD": "Ajouter",
         "FRIENDS": "Liste d'amis",
         "UNFRIEND": "Enlever"
     },

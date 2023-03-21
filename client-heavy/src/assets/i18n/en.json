@@ -152,8 +152,7 @@
         "SHARE": "Share this code to send a friend request: ",
         "NEW": "Add a friend",
         "INPUT": "Please enter your friend's code: ",
-        "REQUEST": "Friend requests",
-        "ACCEPT": "Accept",
+        "ADD": "Add",
         "FRIENDS": "Friends list",
         "UNFRIEND": "Unfriend"
     },

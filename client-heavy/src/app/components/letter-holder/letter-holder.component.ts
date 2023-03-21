@@ -35,10 +35,10 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     viewLoaded = false;
 
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
-    private initialGameState : GameState;
+    private initialGameState: GameState;
 
     constructor(
-        private readonly accountService : AccountService,
+        private readonly accountService: AccountService,
         private readonly letterHolderService: LetterHolderService,
         private readonly gameStateService: GameStateService,
         private chatService: ChatService,
@@ -47,9 +47,9 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         private manipulationRack: ManipulationRackService,
     ) {
         this.subscription = this.gameStateService.getGameStateObservable().subscribe((gameState) => {
-            if(this.viewLoaded){
+            if (this.viewLoaded) {
                 this.updateHolder(gameState)
-            }else{
+            } else {
                 this.initialGameState = gameState;
             }
         });
@@ -156,8 +156,8 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
 
     updateHolder(gameState: GameState) {
         let playerIndex;
-        for(playerIndex = 0; playerIndex < gameState.players.length; playerIndex++){
-            if(gameState.players[playerIndex].username === this.accountService.getUsername()) break;
+        for (playerIndex = 0; playerIndex < gameState.players.length; playerIndex++) {
+            if (gameState.players[playerIndex].username === this.accountService.getUsername()) break;
         }
         this.letterHolderService.setHolderState(this.formatHandState([...gameState.players[playerIndex].hand]));
         this.letterHolderService.addLetters();

@@ -15,6 +15,7 @@ export class ProfileSocketService {
 
     handleProfileSockets(socket: io.Socket) {
         socket.on('Get Profile Information', async (username: string) => {
+            if (!username) return;
             socket.emit('User Profile Response', await this.profileService.getProfileInformation(username));
         });
 

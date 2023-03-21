@@ -29,7 +29,7 @@ export class FriendSocketService {
 
     handleFriendSockets(socket: io.Socket) {
         socket.on('Get Friend List', async () => {
-            socket.emit('Friend List Response', this.friendService.getFriendList(this.accountInfoService.getUserId(socket)));
+            socket.emit('Friend List Response', await this.friendService.getFriendList(this.accountInfoService.getUserId(socket)));
         });
 
         socket.on('Send Friend Request', async (friendCode: string) => {

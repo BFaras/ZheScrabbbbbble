@@ -33,6 +33,7 @@ export class ChatService {
             if (!this.messageLog.has(chat._id)) this.messageLog.set(chat._id, []);
         });
     }
+
     getClientID(): string {
         return this.socketManagerService.getSocket().id;
     }
