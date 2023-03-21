@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Friend } from '@app/classes/friend-info';
-import { ProfileInfo } from '@app/classes/profileInfo';
 import { AccountService } from '@app/services/account-service/account.service';
 import { FriendsService } from '@app/services/friends.service';
 import { Subscription } from 'rxjs';
@@ -20,9 +19,7 @@ export class FriendsPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.friendsService.getPersonalCode(this.account.getUsername()).subscribe((profile: ProfileInfo) => {
-      this.usercode = profile.userCode;
-    });
+    this.usercode = this.account.getProfile().userCode;
   }
 
   alert() {

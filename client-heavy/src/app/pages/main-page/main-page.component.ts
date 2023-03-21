@@ -20,7 +20,7 @@ export class MainPageComponent {
         subscribe((userProfile)=>{
             this.accountService.setUpProfile(userProfile);
             this.router.navigate(['/profile-page']);
-            })
+        });
         
     }
 

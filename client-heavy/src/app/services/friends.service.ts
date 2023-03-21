@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Friend } from '@app/classes/friend-info';
-import { ProfileInfo } from '@app/classes/profileInfo';
 import { Observable, Observer } from 'rxjs';
 import { SocketManagerService } from './socket-manager-service/socket-manager.service';
 
@@ -15,15 +14,6 @@ export class FriendsService {
     return new Observable((observer: Observer<Friend[]>) => {
       this.socketManagerService.getSocket().once('Friend List Response', (friendList: Friend[]) => {
         observer.next(friendList);
-      });
-    });
-  }
-
-  getPersonalCode(username: string): Observable<ProfileInfo> {
-    this.socketManagerService.getSocket().emit('Get Profile Information', username);
-    return new Observable((observer: Observer<ProfileInfo>) => {
-      this.socketManagerService.getSocket().once('User Profile Response', (profile: ProfileInfo) => {
-        observer.next(profile);
       });
     });
   }
