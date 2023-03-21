@@ -13,10 +13,11 @@ object LoggedInUser {
 
     private var user: User = User("")
 
+
     fun connectUser(userName : String){
         if(this.user.username==""){
             this.user = User(userName);
-            SocketHandler.getSocket().once("Theme and Language Response"){args ->
+            SocketHandler.getSocket().on("Theme and Language Response"){args ->
                 if(args[0]!=null && args[1]!=null){
                     this.user.theme = args[0] as String;
                     this.user.lang = args[1] as String;
@@ -30,8 +31,23 @@ object LoggedInUser {
     fun getName():String{
         return this.user.username
     }
+    fun getTheme():String{
+        return this.user.theme
+    }
+    fun getLang():String{
+        return this.user.lang
+    }
+
+    fun setTheme(theme: String){
+        this.user.theme=theme;
+    }
+
+    fun setLang(lang: String){
+        this.user.lang=lang;
+    }
 
     fun disconnectUser(){
         this.user = User("");
+        SocketHandler.getSocket().off("Theme and Language Response")
     }
 }
