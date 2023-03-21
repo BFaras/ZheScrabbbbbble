@@ -170,5 +170,9 @@
     },
     "PROFILE-PAGE":{
         "FRIENDS": "Manage friends"
+    },
+    "TOURNAMENT-QUEUE":{
+        "TITLE": "In search of a tournament",
+        "RETURN": "Return to main menu"
     }
 }

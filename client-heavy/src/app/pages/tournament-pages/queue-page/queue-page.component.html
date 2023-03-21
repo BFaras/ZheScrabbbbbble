@@ -1,13 +1,13 @@
 <app-navigation-bar (navLogic)="leaveRoomLogic()"></app-navigation-bar>
 <div class="container justified">
     <div class="logo">Scrabble</div>
-    <h1 class="header-item">{{ 'OBSERVER-ROOM.TITLE' | translate }}</h1>
+    <h1 class="header-item">{{ 'TOURNAMENT-QUEUE.TITLE' | translate }}</h1>
     <div id="page-content">
         <div id="spinner-container">
             <mat-spinner></mat-spinner>
         </div>
         <div class="mode-buttons">
-            <button class="button cancel" (click)="cancelObservation()">{{ 'OBSERVER-ROOM.RETURN' | translate }}</button>
+            <button class="button cancel" (click)="cancelQueue()">{{ 'TOURNAMENT-QUEUE.RETURN' | translate }}</button>
         </div>
     </div>
 </div>

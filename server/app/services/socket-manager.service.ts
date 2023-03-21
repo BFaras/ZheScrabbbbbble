@@ -272,6 +272,16 @@ export class SocketManager {
                 }, MILLISECOND_IN_MINUTES);
             });
 
+            socket.on('Exit Tournament', () => {
+                const index = this.tournamentQueue.indexOf(socket);
+                if(index >= 0){
+                    this.tournamentQueue.splice(index, 1);
+                    console.log('removed');
+                    return;
+                }
+                console.log('not removed');
+            });
+
             socket.on('disconnect', async () => {
                 console.log(new Date().toLocaleTimeString() + ' | User Disconnected from server');
                 this.usersStatusService.removeOnlineUser(this.accountInfoService.getUserId(socket));
