@@ -1,22 +1,27 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
 import { DATABASE_UNAVAILABLE } from '@app/constants/error-code-constants';
 import { GAMES_NB_STAT_NAME, GAME_TIME_AVRG_STAT_NAME, POINTS_AVRG_STAT_NAME, WINS_NB_STAT_NAME } from '@app/constants/profile-constants';
-import { GameHistoryInfo, StatisticInfo } from '@app/interfaces/profile-info';
+import { GameHistoryInfo, LevelInfo, StatisticInfo } from '@app/interfaces/profile-info';
 import { Container, Service } from 'typedi';
 import { ProfileService } from './profile.service';
 import { TimeFormatterService } from './time-formatter.service';
+import { UserLevelService } from './user-level.service';
 
 @Service()
 export class StatisticService {
     private readonly profileService: ProfileService;
+    private readonly userLevelService: UserLevelService;
     private readonly timeFormatterService: TimeFormatterService;
 
     constructor() {
         this.profileService = Container.get(ProfileService);
+        this.userLevelService = Container.get(UserLevelService);
         this.timeFormatterService = Container.get(TimeFormatterService);
     }
 
     async addGameStats(userId: string, isWin: boolean, gamePointsObtained: number, gameTime: number) {
+        const userLevelInfo: LevelInfo = await this.profileService.getUserLevelInfo(userId);
+        const newUserLevelInfo = this.userLevelService.calculateNewLevelInfo(userLevelInfo, isWin, gamePointsObtained);
         let userStats: StatisticInfo[] = await this.profileService.getUserStats(userId);
         let errorCode = DATABASE_UNAVAILABLE;
 
@@ -28,7 +33,7 @@ export class StatisticService {
         userStats = this.changeStatAverage(userStats, GAME_TIME_AVRG_STAT_NAME, gameTime);
         userStats = this.incrementStat(userStats, GAMES_NB_STAT_NAME);
 
-        errorCode = await this.profileService.updateUserStats(userId, userStats);
+        errorCode = await this.profileService.updateUserStatsAndLevel(userId, userStats, newUserLevelInfo);
         errorCode = await this.profileService.addGameToHistory(userId, this.generateGameInfo(isWin));
         return errorCode;
     }

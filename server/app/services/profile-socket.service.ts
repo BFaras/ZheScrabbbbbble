@@ -2,7 +2,7 @@ import * as io from 'socket.io';
 import { Container, Service } from 'typedi';
 import { AccountInfoService } from './account-info.service';
 import { ProfileService } from './profile.service';
-
+const fs = require('fs');
 @Service()
 export class ProfileSocketService {
     private readonly profileService: ProfileService;
@@ -39,6 +39,16 @@ export class ProfileSocketService {
                 'Language Change Response',
                 await this.profileService.changeUserSettings(this.accountInfoService.getUserId(socket), newLanguage, false, true),
             );
+        });
+
+        socket.on('Get All Avatars', async () => {
+            const listNameAllAvatars: string[] = ['cat','dog','flower'];
+            const listAvatars: string[] = [];
+            listNameAllAvatars.forEach((value, index) => {
+                const contents = fs.readFileSync('./assets/avatar/' + listNameAllAvatars[index] + '.jpg', { encoding: 'base64' });
+                listAvatars.push(contents);
+            })
+            socket.emit('Get All Avatars Response', listAvatars);
         });
     }
 }

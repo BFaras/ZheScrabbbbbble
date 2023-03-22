@@ -4,6 +4,9 @@ import { AccountCreationService } from '@app/services/account-creation-service/a
 import { VISIBILITY_CONSTANTS } from '@app/constants/visibility-constants';
 import { Subscription } from 'rxjs';
 import {  Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { SignUpAvatarPopUpComponent } from '../sign-up-avatar-pop-up/sign-up-avatar-pop-up.component';
+
 @Component({
   selector: 'app-sign-up-area',
   templateUrl: './sign-up-area.component.html',
@@ -14,17 +17,34 @@ export class SignUpAreaComponent implements OnInit {
     username : "",
     email : "",
     password : "",
+    avatar:"",
     securityQuestion: {question: "" , answer : ""},
   }
   subscription:Subscription
   hide:boolean = true;
   isFormFinished: boolean = false;
+  avatarSrc:string;
 
-  constructor(private accountCreationService:AccountCreationService,private router:Router) {
+  constructor(private accountCreationService:AccountCreationService, public dialogAvatar: MatDialog,private router:Router) {
     this.accountCreationService.setUpSocket()
    }
 
   ngOnInit(): void {
+  }
+
+  openDialogChooseAvatar(): void {
+    const dialogReference = this.dialogAvatar.open(SignUpAvatarPopUpComponent, {
+      width: '900px',
+      height: '600px',
+      data: { accountService: this.accountCreationService }
+    });
+    dialogReference.afterClosed().subscribe(result => {
+      if (result.avatar) {
+        console.log(result.avatar)
+        this.newAccount.avatar = result.avatar;
+      }
+    });
+
   }
   
   changePasswordVisibility(): string{
@@ -37,7 +57,7 @@ export class SignUpAreaComponent implements OnInit {
   }
 
   verifyIfFirstPageFormFinished(): boolean{
-    if (this.newAccount.username === "" || this.newAccount.password === "" || this.newAccount.email === ""){
+    if (this.newAccount.username === "" || this.newAccount.password === "" || this.newAccount.email === "" || this.newAccount.avatar === ""){
       return true
     }
     else{
