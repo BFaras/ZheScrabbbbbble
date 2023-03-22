@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">SCRBBLE</string>
+    <string name="app_name" translatable="false">SCRABBLE</string>
 
     <string name="action_settings">Paramètres</string>
     <string name="tapez_quelque_chose">Tapez quelque chose...</string>
@@ -55,9 +55,9 @@
     <string name="NO_ERROR">Aucune erreur </string>
     <string name="ERROR">Erreur</string>
     <string name="FIELD_EMPTY"> Une entrée est vide</string>
-    <string name="USERNAME_INVALID">Le nom est invalid</string>
-    <string name="PASSWORD_INVALID">Le mot de passe est invalid</string>
-    <string name="EMAIL_INVALID">Le courriel est invalid</string>
+    <string name="USERNAME_INVALID">Le nom est invalide</string>
+    <string name="PASSWORD_INVALID">Le mot de passe est invalide</string>
+    <string name="EMAIL_INVALID">Le courriel est invalide</string>
     <string name="USERNAME_TAKEN">Le nom est déjà utilisé</string>
     <string name="DATABASE_UNAVAILABLE">La base de données est indisponible. Veuillez réessayer plus tard.</string>
     <string name="WRONG_SECURITY_ANSWER">Mauvaise réponse</string>
@@ -65,4 +65,32 @@
     <string name="ROOM_PASSWORD_INCORRECT">Le mot de passe est incorrect</string>
     <string name="JOIN_REQUEST_REFUSED">Votre demande d\'adhésion a été refusée</string>
     <string name="ROOM_IS_FULL">La salle est déjà pleine</string>
+    <string name="ReplaceLetter"><i>Tapez une lettre à remplacer.</i></string>
+    <string name="MSG_1"><![CDATA[<b>%1$s</b> a placé <i>%2$s</i> pour %3$s point(s).]]></string>
+    <string name="MSG_2"><![CDATA[<b>%1$s</b> a tenté de placer un mot invalide.]]></string>
+    <string name="MSG_3"><![CDATA[<b>%1$s</b> a échangé %2$s lettre(s).]]></string>
+    <string name="MSG_4"><![CDATA[<b>%1$s</b> a passé son tour.]]></string>
+    <string name="MSG_5"><![CDATA[<b>%1$s</b> s\'est déconnecté et a été remplacé par un JV.]]></string>
+    <string name="MSG_6"><![CDATA[<b>%1$s</b> a manqué de temps et a passé son tour.]]></string>
+    <string name="MSG_7"><![CDATA[Fin de partie - <b>%1$s</b> lettres restantes]]></string>
+    <string name="scrabbleName">SCRABBLE</string>
+    <string name="info_panel">PANNEAU INFORMATIF</string>
+    <string name="detectedJoker">JOKER DÉTECTÉ!</string>
+    <string name="blankLetterOnBoard">Une lettre blanche a été placée sur le plateau.</string>
+    <string name="blankLetterWarning">Une fois choisies, les lettres ne peuvent plus être changées. Choisissez bien!</string>
+    <string name="registerText">Pas de compte? Inscrivez-vous!</string>
+    <string name="forgotPasswordText">Mot de passe oublié?</string>
+    <string name="reset_password">Réinitialiser mot de passe</string>
+    <string name="register">Inscription</string>
+    <string name="fr" translatable="false">FR</string>
+    <string name="en" translatable="false">EN</string>
+    <string name="security_question">Question de sécurité</string>
+    <string name="answer">Réponse</string>
+    <string name="passwordResetProcess">Enter a username to start the password reset process.</string>
+    <string name="reset">Reset</string>
+    <string name="answerReset">Réponse</string>
+    <string name="new_password">Nouveau mot de passe</string>
+    <string name="register_new_passsword">Register New Passsword</string>
+    <string name="times_up">TIME\'S UP!</string>
+
 </resources>
