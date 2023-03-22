@@ -1,5 +1,4 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ChatMessage } from '@app/classes/chat-info';
 import { Message } from '@app/classes/message';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { MessageParserService, MessageType } from '@app/services/message-parser-service/message-parser.service';
@@ -14,8 +13,11 @@ const LIMIT_OF_CHARACTERS = 512;
 })
 
 export class ChatComponent implements OnInit, OnDestroy {
+    //@ViewChild('widgetsContent') widgetsContent: ElementRef;
+    @ViewChild('widgetsContent', { read: ElementRef }) public widgetsContent: ElementRef<any>;
     @Output() receiver = new EventEmitter();
     switch = false;
+    chatList: ChatInfo[];
 
     message: Message = {
         username: '',
@@ -45,10 +47,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     */
     gameRoomName:string;
 
-    messageHistory: ChatMessage[] = [];
+    messageHistory: Message[] = [];
 
-    subscriptionMessage: Subscription;
-    subscriptionChatRoom: Subscription;
+    subscription: Subscription;
 
     constructor(private chatService: ChatService, private messageParserService: MessageParserService) {
         this.gameRoomName = this.chatService.getChatInGameRoom();

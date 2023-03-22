@@ -6,7 +6,8 @@ import {
     NB_OF_CHARS_TO_ADVANCE,
     NB_OF_RANDOM_CHARS_TO_ADD,
     NEGATIVE_MULTIPLIER,
-    POSITIVE_MULTIPLIER
+    POSITIVE_MULTIPLIER,
+    VIRTUAL_PLAYER_NAME
 } from '@app/constants/authentification-constants';
 import {
     DATABASE_UNAVAILABLE,
@@ -88,7 +89,7 @@ export class AuthentificationService {
     private async verifyAccountRequirements(username: string, password: string, email: string): Promise<string> {
         let errorCode = NO_ERROR;
         const accountCreationState: AccountCreationState = {
-            isUsernameValid: username.length >= MIN_USERNAME_LENGTH,
+            isUsernameValid: this.validateUsername(username),
             isEmailValid: email.includes(CHAR_EMAIL_MUST_CONTAIN),
             isPasswordValid: password.length >= MIN_USERNAME_LENGTH,
             isUsernameFree: await this.dbService.isUsernameFree(username),
@@ -109,6 +110,10 @@ export class AuthentificationService {
         }
 
         return Promise.resolve(errorCode);
+    }
+
+    private validateUsername(username: string): boolean {
+        return username.length >= MIN_USERNAME_LENGTH && !username.includes(VIRTUAL_PLAYER_NAME);
     }
 
     private encryptPassword(decryptedPassword: string): string {

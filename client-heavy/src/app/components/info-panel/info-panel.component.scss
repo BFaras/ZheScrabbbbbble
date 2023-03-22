@@ -29,6 +29,20 @@
     color: var(--text-default);
 }
 
+p.reserve-letters{
+    margin-top: 15px;
+}
+
+.player-container {
+    padding: 4%;
+}
+
+.player-selected {
+    border: var(--text-default);
+    border-style: dashed;
+    border-radius: 10px;
+}
+
 
 ul.checked {
     color: var(--button-text-default);
@@ -45,7 +59,6 @@ ul.checked {
 #progress-score-opponant {
     font-weight: bolder;
     display: block;
-
     margin-left: 25px;
 }
 
@@ -58,6 +71,11 @@ ul {
 .data {
     font-size: 19px;
     color: var(--text-default);
+    margin: 0;
+}
+
+.bold-data {
+    font-weight: bold;
 }
 
 .status {
@@ -85,5 +103,9 @@ ul {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: var(--scroll-hover);
+}
+
+.centered-title {
+    text-align: center;
 }
 

@@ -9,7 +9,8 @@
     padding-top: .5%;
 }
 
-.button {
+
+.tabs {
     cursor: pointer;
     white-space: nowrap;
     margin-right: 25%;
@@ -18,7 +19,7 @@
     color: var(--button-text-default);
 }
 
-.button:hover {
+.tabs:hover {
     color: var(--playarea-coords);
     font-weight: bold;
     transition-property: color;

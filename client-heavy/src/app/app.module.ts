@@ -21,6 +21,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ChatComponent } from './components/chat/chat.component';
 import { CreateGameComponent } from './components/game-initialisation/create-game/create-game.component';
 import { JoinGameComponent } from './components/game-initialisation/join-game/join-game.component';
+import { ObserverRoomComponent } from './components/game-initialisation/observer-room/observer-room.component';
 import { PasswordInputComponent } from './components/game-initialisation/password-input-dialog/password-input.component';
 import { PendingRoomComponent } from './components/game-initialisation/pending-room-join/pending-room.component';
 import { WaitingRoomComponent } from './components/game-initialisation/waiting-room/waiting-room.component';
@@ -30,16 +31,19 @@ import { LetterHolderComponent } from './components/letter-holder/letter-holder.
 import { LoginAreaComponent } from './components/login-area/login-area.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { PasswordLostAreaComponent } from './components/password-lost-area/password-lost-area.component';
+import { AvatarPopUpComponent } from './components/profil-pop-up/avatar-pop-up/avatar-pop-up.component';
 import { SignUpAreaComponent } from './components/sign-up-area/sign-up-area.component';
 import { TimerComponent } from './components/timer/timer.component';
 import { WindowComponent } from './components/window/window.component';
 import { ChatPageComponent } from './pages/chat-page/chat-page.component';
+import { FriendsPageComponent } from './pages/friends-page/friends-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { PasswordLostPageComponent } from './pages/password-lost-page/password-lost-page.component';
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
+import { PublicChatsComponent } from './pages/public-chats/public-chats.component';
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
 import { ChatService } from './services/chat-service/chat.service';
-import { AvatarPopUpComponent } from './components/profil-pop-up/avatar-pop-up/avatar-pop-up.component';
+import { SignUpAvatarPopUpComponent } from './components/sign-up-avatar-pop-up/sign-up-avatar-pop-up.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -47,12 +51,13 @@ import { AvatarPopUpComponent } from './components/profil-pop-up/avatar-pop-up/a
  * Otherwise Angular Cli will not know in which module to put new component
  */
 /*
-export const httpTranslateLoaderFactory = (http: HttpClient): TranslateHttpLoader => {
-    return new TranslateHttpLoader(http);
-};
-*/
 export function httpTranslateLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http);
+}
+*/
+
+export function HttpLoaderFactory(httpClient: HttpClient) {
+    return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -80,11 +85,15 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
         AvatarPopUpComponent,
         WindowComponent,
         PendingRoomComponent,
+        ObserverRoomComponent,
         PasswordInputComponent,
         PasswordLostPageComponent,
         PasswordLostAreaComponent,
         LanguageComponent,
         NavigationBarComponent,
+        FriendsPageComponent,
+        PublicChatsComponent,
+        SignUpAvatarPopUpComponent,
     ],
     imports: [
         AppMaterialModule,
@@ -99,9 +108,10 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
         MatListModule,
         MatDialogModule,
         TranslateModule.forRoot({
+            defaultLanguage: 'fr',
             loader: {
                 provide: TranslateLoader,
-                useFactory: httpTranslateLoaderFactory,
+                useFactory: (HttpLoaderFactory),
                 deps: [HttpClient]
             }
         })

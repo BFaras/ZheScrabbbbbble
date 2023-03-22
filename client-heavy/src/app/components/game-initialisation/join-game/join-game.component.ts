@@ -34,6 +34,7 @@ export class JoinGameComponent implements OnDestroy {
             const startedGames : WaitingRoom[] = [];
             for(let room of rooms){
                 if(room.isStarted){
+                    if(room.visibility === RoomVisibility.PRIVATE) continue;
                     startedGames.push(room);
                 }else if(room.players.length >= 4){
                     fullGames.push(room);
@@ -46,13 +47,18 @@ export class JoinGameComponent implements OnDestroy {
         this.waitingRoomManagerService.getGameRoomActive()
     }
 
-    sendRoomData(room: WaitingRoom) {
+    joinGame(room: WaitingRoom, observer: boolean) {
+        this.waitingRoomManagerService.setObserver(observer);
         if(room.visibility === RoomVisibility.PROTECTED){
             const passwordDialog = this.dialog.open(PasswordInputComponent, {data:room.id, width: '30%', height: '200px'});
             passwordDialog.afterClosed().subscribe(result => {
                 if(!result) return;
                 this.waitingRoomManagerService.setDefaultPlayersInRoom(result);
-                this.router.navigate(['/waiting-room']);
+                if(this.waitingRoomManagerService.isObserver()){
+                    this.router.navigate(['/observer-room']);
+                }else{
+                    this.router.navigate(['/waiting-room']);
+                }
             });
         }else if(room.visibility === RoomVisibility.PRIVATE){
             this.chatService.setChatInGameRoom(room.id);
@@ -77,6 +83,10 @@ export class JoinGameComponent implements OnDestroy {
             return;
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom(message.playerNames);
-        this.router.navigate(['/waiting-room']);
+        if(this.waitingRoomManagerService.isObserver()){
+            this.router.navigate(['/observer-room']);
+        }else{
+            this.router.navigate(['/waiting-room']);
+        }
     }
 }

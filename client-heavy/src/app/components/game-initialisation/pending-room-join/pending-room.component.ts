@@ -32,7 +32,11 @@ export class PendingRoomComponent {
             return;
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom(message.playerNames);
-        this.router.navigate(['/waiting-room']);
+        if(this.waitingRoomManagerService.isObserver()){
+            this.router.navigate(['/observer-room']);
+        }else{
+            this.router.navigate(['/waiting-room']);
+        }
     }
 
     isRequestPending(){

@@ -1,10 +1,6 @@
 <div class="container">
-    <div class="listColors">
-        <button (click) = "changeColors(colorsProfile.RED)" class="button buttonRed">Rouge</button>
-        <button (click) = "changeColors(colorsProfile.GREEN)"  class="button buttonGreen">Vert</button>
-        <button (click) = "changeColors(colorsProfile.BLUE)"  class="button buttonBlue">Bleu</button>
-        <button (click) = "changeColors(colorsProfile.PINK)"  class="button buttonPink">Rose</button>
-        <button  (click) = "changeColors(colorsProfile.YELLOW)"  class="button buttonYellow">Jaune</button>
+    <div class="listAvatars">
+        <img (click)="changeAvatar(avatarSrc)"*ngFor="let avatarSrc of allAvatars" class='avatar' [src]= "avatarSrc"/> 
     </div>
     <button class="button" [mat-dialog-close]="colorChosen" (click) = "closeDialog()">Confirmer l'avatar choisi</button>
 </div>

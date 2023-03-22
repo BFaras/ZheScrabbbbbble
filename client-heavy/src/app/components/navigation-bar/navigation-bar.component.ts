@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 
 @Component({
@@ -6,23 +6,18 @@ import { SocketManagerService } from '@app/services/socket-manager-service/socke
   templateUrl: './navigation-bar.component.html',
   styleUrls: ['./navigation-bar.component.scss']
 })
-export class NavigationBarComponent implements OnInit {
+export class NavigationBarComponent {
 
   @Output("navLogic") navLogic: EventEmitter<void> = new EventEmitter();
 
   constructor(private socketManager: SocketManagerService) {}
 
-  ngOnInit(): void {
-  }
-
   disconnectUser() {
     this.socketManager.getSocket().disconnect();
     this.socketManager.createSocket();
-
   }
 
-  callNavLogic(){
+  callNavLogic() {
     this.navLogic.emit();
   }
-
 }
