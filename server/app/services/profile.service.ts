@@ -48,8 +48,12 @@ export class ProfileService {
 
     getDefaultProfileInformation(): ProfileInfo {
         return {
-            avatar: '#000000',
-            level: 0,
+            avatar: '',
+            levelInfo: {
+                level: DEFAULT_LEVEL,
+                xp: DEFAULT_XP,
+                nextLevelXp: this.userLevelService.getNextLevelXP(DEFAULT_LEVEL),
+            },
             userCode: '',
             stats: [
                 { name: WINS_NB_STAT_NAME, statAmount: 0 },
