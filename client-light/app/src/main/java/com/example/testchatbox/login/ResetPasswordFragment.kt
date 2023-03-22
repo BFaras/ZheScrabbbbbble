@@ -12,6 +12,8 @@ import com.example.testchatbox.databinding.FragmentResetPasswordBinding
 import com.example.testchatbox.login.model.LoggedInUser
 import SocketHandler
 import android.widget.Toast
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.example.testchatbox.chat.ChatModel
 
 
@@ -48,6 +50,14 @@ class ResetPasswordFragment : Fragment() {
         val answerEditText = binding.answer
         val resetButton = binding.reset
         var registerButton = binding.registerNewPassword
+
+        WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
+            // Hide both the status bar and the navigation bar
+            hide(WindowInsetsCompat.Type.systemBars())
+            hide(WindowInsetsCompat.Type.statusBars())
+            // Behavior of system bars
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
 
         resetButton.setOnClickListener {
             val username= usernameEditText.text.toString()

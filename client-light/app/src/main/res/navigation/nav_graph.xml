@@ -48,6 +48,9 @@
         <action
             android:id="@+id/action_loginFragment_to_resetFragment"
             app:destination="@id/resetFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_fullscreenFragment"
+            app:destination="@id/fullscreenFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
