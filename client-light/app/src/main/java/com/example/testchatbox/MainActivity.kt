@@ -2,7 +2,6 @@ package com.example.testchatbox
 
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -10,6 +9,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.testchatbox.ThemeManager.setCustomizedThemes
 import com.example.testchatbox.ThemeStorage.getThemeColor
 import com.example.testchatbox.databinding.ActivityMainBinding
@@ -74,10 +74,16 @@ object ThemeStorage {
 object ThemeManager {
     fun setCustomizedThemes(context: Context, theme: String?) {
         when (theme) {
-            "astronaute" -> context.setTheme(R.style.AstronautTheme)
-            "eclipse" -> context.setTheme(R.style.EclipseTheme)
-            "cremebrulee" -> context.setTheme(R.style.Theme_TestChatBox)
-            "blizzard" -> context.setTheme(R.style.BlizzardTheme)
+            "cremebrulee" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            "eclipse" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            "astronaute" -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                context.setTheme(R.style.PinkTheme)
+            }
+            "blizzard" -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                context.setTheme(R.style.BlizzardTheme)
+            }
         }
     }
 }

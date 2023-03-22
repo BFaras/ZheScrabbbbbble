@@ -1,5 +1,6 @@
 package com.example.testchatbox.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,10 +16,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.testchatbox.MainActivity
 import com.example.testchatbox.R
 import com.example.testchatbox.chat.ChatModel
 import com.example.testchatbox.databinding.FragmentRegisterBinding
 import com.example.testchatbox.login.model.LoggedInUser
+import java.util.*
 
 
 class RegisterFragment : Fragment() {
