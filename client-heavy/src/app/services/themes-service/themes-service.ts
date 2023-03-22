@@ -17,18 +17,6 @@ export class ThemesService {
     return this.activeTheme;
   }
 
-  isInvertedTheme(): boolean {
-    return this.activeTheme.name === inverted.name;
-  }
-
-  setInvertedTheme(): void {
-    this.setActiveTheme(inverted);
-  }
-
-  setClassicTheme(): void {
-    this.setActiveTheme(classic);
-  }
-
   setActiveTheme(theme: Theme): void {
     this.activeTheme = theme;
 

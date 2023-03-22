@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AccountService } from '@app/services/account-service/account.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -7,36 +8,24 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./language.component.scss']
 })
 export class LanguageComponent implements OnInit {
-  currentLang: string;
+  currentLang: string = 'fr';
+  oppositeLang: string = 'en';
+  username: string;
 
-  constructor(public translate: TranslateService) {
+  constructor(public translate: TranslateService, private accountService: AccountService) {
     translate.addLangs(['fr', 'en']);
   }
 
   ngOnInit(): void {
-    this.currentLang = 'fr';
-    this.translate.use(this.currentLang);
-    /*
-    let current = localStorage.getItem("currentLang");
-    if (current) {
-      this.translate.use(current);
-      this.currentLang = current;
-      //this.resetActive();
-      //document.getElementById(current)!.className += " active";
-    }
-    else {
-      this.currentLang = 'fr';
-      localStorage.setItem("currentLang", 'fr');
-      //this.resetActive();
-      //document.getElementById('fr')!.className += " active";
-    }
-    */
   }
 
   translateLanguageTo(lang: string) {
-    this.translate.use(lang);
-    //localStorage.setItem("currentLang", lang);
+    this.oppositeLang = this.currentLang;
     this.currentLang = lang;
+
+    this.translate.use(lang);
+    this.updateLanguage(lang);
+    //localStorage.setItem("currentLang", lang);
   }
 
   resetActive() {
@@ -51,4 +40,24 @@ export class LanguageComponent implements OnInit {
     (event.currentTarget! as HTMLTextAreaElement).className += " active";
   }
 
+  updateLanguage(lang: string) {
+    this.accountService.changeLanguage(lang);
+  }
+
 }
+
+/*
+let current = localStorage.getItem("currentLang");
+if (current) {
+  this.translate.use(current);
+  this.currentLang = current;
+  //this.resetActive();
+  //document.getElementById(current)!.className += " active";
+}
+else {
+  this.currentLang = 'fr';
+  localStorage.setItem("currentLang", 'fr');
+  //this.resetActive();
+  //document.getElementById('fr')!.className += " active";
+}
+*/

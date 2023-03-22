@@ -112,7 +112,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
             }
         })
     ],
-    providers: [ChatService],
+    providers: [ChatService, ProfilePageComponent, LanguageComponent],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

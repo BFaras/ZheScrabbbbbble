@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Friend } from '@app/classes/friend-info';
 import { AccountService } from '@app/services/account-service/account.service';
 import { FriendsService } from '@app/services/friends.service';
@@ -9,16 +9,13 @@ import { Subscription } from 'rxjs';
   templateUrl: './friends-page.component.html',
   styleUrls: ['./friends-page.component.scss']
 })
-export class FriendsPageComponent implements OnInit {
+export class FriendsPageComponent {
   friends: Friend[] = [];
   usercode: string = "";
   subscriptions: Subscription[] = [];
 
   constructor(private friendsService: FriendsService, private account: AccountService) {
     this.updateFriendsList();
-  }
-
-  ngOnInit(): void {
     this.usercode = this.account.getProfile().userCode;
   }
 
@@ -42,7 +39,6 @@ export class FriendsPageComponent implements OnInit {
 
   updateFriendsList() {
     this.subscriptions.push(this.friendsService.getFriendsListObservable().subscribe((friendsList: Friend[]) => {
-      console.log(friendsList);
       this.friends = friendsList;
     }));
     this.friendsService.getFriendsList();

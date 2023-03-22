@@ -5,14 +5,14 @@
     <span class="text add">{{ 'FRIENDS-PAGE.NEW' | translate }}</span>
     <div class="input-container">
         <span class="text">{{ 'FRIENDS-PAGE.INPUT' | translate }}</span>
-        <input class="input friendCode" (keydown.enter)="addFriend()"/>
+        <input class="input" id="friendCode" (keydown.enter)="addFriend()"/>
         <button (click)="addFriend()">{{ 'FRIENDS-PAGE.ADD' | translate }}</button>
     </div>
     <div id="boxes-container">
         <div class="friends-container">
             <h2 class="text">{{ 'FRIENDS-PAGE.FRIENDS' | translate }}</h2>
             <div class="friend-container" *ngFor="let friend of friends">
-                <span class="chat text">{{ friend }}</span>
+                <span class="chat text">{{ friend.username }}</span>
                 <button (click)="alert()">{{ 'FRIENDS-PAGE.UNFRIEND' | translate }}</button>
             </div>
         </div>

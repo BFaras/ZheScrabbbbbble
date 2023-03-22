@@ -182,8 +182,6 @@ export class DatabaseService {
         const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
             _id: new ObjectId(userId),
         });
-        
-        console.log(userProfileInfoDoc);
         if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
             profileSettings = userProfileInfoDoc.profileSettings;
         }

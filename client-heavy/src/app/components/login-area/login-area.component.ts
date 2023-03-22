@@ -17,12 +17,13 @@ export class LoginAreaComponent implements OnInit {
     password: "",
     securityQuestion: { question: "", answer: "" },
   }
-  subscription: Subscription
+  subscription: Subscription;
+  themeLanguageSubscription: Subscription;
   hide: boolean = true;
   isConnected: boolean = false;
 
   constructor(private accountAuthenticationService: AccountAuthenticationService, private router: Router, private account: AccountService) {
-    this.accountAuthenticationService.setUpSocket()
+    this.accountAuthenticationService.setUpSocket();
   }
 
   ngOnInit(): void {

@@ -18,6 +18,8 @@ export class ProfilePageComponent implements OnInit {
   accountProfile: ProfileInfo
   accountUsername: string;
   subscriptionChangeAvatar: Subscription;
+  currentTheme: Theme = classic;
+
   constructor(private accountService: AccountService, public dialogAvatar: MatDialog, private themeService: ThemesService, private router: Router) {
     this.subscriptionChangeAvatar = this.accountService.getAvatarChangeStatus()
       .subscribe((errorCode: string) => {
@@ -29,6 +31,7 @@ export class ProfilePageComponent implements OnInit {
       })
     this.getUserName();
     this.accountProfile = this.accountService.getProfile();
+
   }
 
   openDialogChangeColor(): void {
@@ -50,6 +53,7 @@ export class ProfilePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    /*
     let current = localStorage.getItem("currentTheme");
     if (current) {
       this.changeThemeTo(current);
@@ -59,13 +63,17 @@ export class ProfilePageComponent implements OnInit {
       localStorage.setItem("currentTheme", classic.toString());
       document.getElementById('classic')!.className += " active";
     }
+    */
   }
 
   changeThemeTo(newTheme: string) {
     this.themeService.getAvailableThemes().forEach((theme: Theme) => {
-      if (theme.name.toString() === newTheme) this.themeService.setActiveTheme(theme);
+      if (theme.name.toString() === newTheme) {
+        this.themeService.setActiveTheme(theme);
+        this.updateUserTheme(newTheme);
+      }
     });
-    localStorage.setItem("currentTheme", newTheme);
+    //localStorage.setItem("currentTheme", newTheme);
   }
 
   setActive(event: Event) {
@@ -79,4 +87,9 @@ export class ProfilePageComponent implements OnInit {
   goToFriends() {
     this.router.navigate(['/friends-page']);
   }
+
+  updateUserTheme(theme: string) {
+    this.accountService.changeTheme(theme);
+  }
+
 }
