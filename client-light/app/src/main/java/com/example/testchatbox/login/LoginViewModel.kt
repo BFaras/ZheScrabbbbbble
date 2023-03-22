@@ -28,7 +28,7 @@ class LoginViewModel() : ViewModel() {
                 }
             }
         }
-        SocketHandler.getSocket().emit("User authentification", username, password);
+        SocketHandler.getSocket().emit("User authentification", username.trim(), password.trim());
     }
 
     fun loginDataChanged(username: String, password: String) {

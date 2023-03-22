@@ -39,7 +39,7 @@ export class PossibleWordFinder {
     
     private static wordValidation = Container.get(WordValidation);
     
-    static findWords(gameInfo: GameInfo, virtualPlay: boolean): PossibleWords[] {
+    static async findWords(gameInfo: GameInfo, virtualPlay: boolean): Promise<PossibleWords[]> {
         const originalHandSize: number = gameInfo.hand.getLength();
         const maxSize = virtualPlay ? MAX_SIZE_VIRTUAL_PLAY : MAX_SIZE_HINT;
         const blankLengthCutoff = virtualPlay ? BLANK_LENGTH_CUTOFF_VIRTUAL_PLAY : BLANK_LENGTH_CUTOFF_HINT;
@@ -48,6 +48,7 @@ export class PossibleWordFinder {
         const adjacentTiles = this.findAdjacentOccupied(gameInfo.board);
         const words: PossibleWords[] = [];
         for (const letterPermutation of letterPermutations) {
+            await this.yieldProcessor();
             words.push(...this.findWordsFromPlacements(adjacentTiles, gameInfo, letterPermutation));
             if (words.length > maxSize || Date.now() >= endTime) break;
         }
@@ -67,6 +68,10 @@ export class PossibleWordFinder {
             .sort((a, b) => {
                 return a.length - b.length;
             });
+    }
+
+    private static yieldProcessor() : Promise<null> {
+        return new Promise((resolve) => setTimeout(resolve))
     }
 
     private static recursivePermutations(remainingLetters: string[], currentPermut: string, blankLengthCutoff: number): string[] {

@@ -11,10 +11,12 @@ export class LanguageComponent implements OnInit {
 
   constructor(public translate: TranslateService) {
     translate.addLangs(['fr', 'en']);
-    translate.defaultLang = 'fr';
   }
 
   ngOnInit(): void {
+    this.currentLang = 'fr';
+    this.translate.use(this.currentLang);
+    /*
     let current = localStorage.getItem("currentLang");
     if (current) {
       this.translate.use(current);
@@ -28,11 +30,12 @@ export class LanguageComponent implements OnInit {
       //this.resetActive();
       //document.getElementById('fr')!.className += " active";
     }
+    */
   }
 
   translateLanguageTo(lang: string) {
     this.translate.use(lang);
-    localStorage.setItem("currentLang", lang);
+    //localStorage.setItem("currentLang", lang);
     this.currentLang = lang;
   }
 

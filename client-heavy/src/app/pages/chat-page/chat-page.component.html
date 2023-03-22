@@ -3,9 +3,9 @@
     <section id="chat-list">
         <div id="title-tabs">"
             <p class="title">Chats</p>
-            <p class="tabs" (click)="setVisibility($event, private)">{{ 'TABS.PRIVATE' | translate }}</p>
+            <p class="tabs active" (click)="setVisibility($event, global)">{{ 'TABS.GLOBAL' | translate }}</p>
             <p class="tabs" (click)="setVisibility($event, public)">{{ 'TABS.PUBLIC' | translate }}</p>
-            <p class="tabs" (click)="setVisibility($event, global)">{{ 'TABS.GLOBAL' | translate }}</p>
+            <p class="tabs" (click)="setVisibility($event, private)">{{ 'TABS.PRIVATE' | translate }}</p>
         </div>
         <div class="chats-container">
             <ng-container *ngFor="let chat of chatList">
@@ -14,7 +14,7 @@
                 </button>
             </ng-container>
         </div>
-        <button class="join">{{ 'CHATBOX.JOIN' | translate }}</button>
+        <button class="join" (click)="goToChats()">{{ 'CHATBOX.JOIN' | translate }}</button>
     </section>
     <section id="chat-messages">
         <div id="chat-box">
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div id="input-group">
-                <input [(ngModel)]="nextMessage" (keydown.enter)="sendMessage()"/>
+                <input class="input" [disabled]="isDisabled" [(ngModel)]="nextMessage" (keydown.enter)="sendMessage()" placeholder="{{ 'CHATBOX.SELECT' | translate }}"/>
                 <button (click)="sendMessage()">{{ 'CHATBOX.SEND' | translate}}</button>
             </div>
         </div>

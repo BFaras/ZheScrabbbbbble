@@ -23,7 +23,8 @@
             [attr.width]="width"
             [attr.height]="height"
         ></canvas>
-        <button id="playButton" class="button" [disabled]="isDisabled" (click)="sendWord()">{{'LETTERHOLDER.PLAY' | translate}}</button>
-        <button class="button" id="skipButton" (click)="skipTurn()" [disabled]="isDisabled">{{'LETTERHOLDER.PASS' | translate}}</button>
+        <button *ngIf="!isObserver()" id="playButton" class="button" [disabled]="isDisabled" (click)="sendWord()">{{'LETTERHOLDER.PLAY' | translate}}</button>
+        <button *ngIf="!isObserver()" class="button" id="skipButton" (click)="skipTurn()" [disabled]="isDisabled">{{'LETTERHOLDER.PASS' | translate}}</button>
+        <button *ngIf="isObserver()" class="button" id="swapPlayerButton" (click)="switchObserverView()">{{'LETTERHOLDER.SWITCH' | translate}}</button>
     </div>
 </div>

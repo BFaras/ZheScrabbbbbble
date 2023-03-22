@@ -32,7 +32,7 @@ class RegisterViewModel() : ViewModel() {
                 }
             }
         }
-        SocketHandler.getSocket().emit("Create user account", username, password, email, "Avatar",  JSONObject().put("question",question).put("answer", answer));
+        SocketHandler.getSocket().emit("Create user account", username.trim(), password.trim(), email.trim(), "Avatar",  JSONObject().put("question",question.trim()).put("answer", answer.trim()));
     }
 
 
