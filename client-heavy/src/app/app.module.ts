@@ -43,6 +43,7 @@ import { ProfilePageComponent } from './pages/profile-page/profile-page.componen
 import { PublicChatsComponent } from './pages/public-chats/public-chats.component';
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
 import { ChatService } from './services/chat-service/chat.service';
+import { SignUpAvatarPopUpComponent } from './components/sign-up-avatar-pop-up/sign-up-avatar-pop-up.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -92,6 +93,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         NavigationBarComponent,
         FriendsPageComponent,
         PublicChatsComponent,
+        SignUpAvatarPopUpComponent,
     ],
     imports: [
         AppMaterialModule,
