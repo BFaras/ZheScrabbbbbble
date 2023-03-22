@@ -11,9 +11,7 @@ export class ManipulationRackService {
     selectLetterOnRack(position: number) {
         this.cancelManipulation();
         this.setSelection(position, isSelected);
-        if (isSelected[position]) {
-            this.letterHolderService.drawSelection(position);
-        } else {
+        if (!isSelected[position]) {
             this.letterHolderService.removeSelection(position);
         }
     }
@@ -21,16 +19,10 @@ export class ManipulationRackService {
     manipulateRackOnKey(position: number) {
         this.cancelAll(isSelected);
         this.setManipulation(position, isManipulated);
-        if (isManipulated[position]) {
-            this.letterHolderService.drawManipulation(position);
-        }
     }
 
     manipulateLetterOnRack(position: number) {
         this.setManipulation(position, isManipulated);
-        if (isManipulated[position]) {
-            this.letterHolderService.drawManipulation(position);
-        }
     }
 
     moveLetter(direction: string, position: number, hand: string[]) {

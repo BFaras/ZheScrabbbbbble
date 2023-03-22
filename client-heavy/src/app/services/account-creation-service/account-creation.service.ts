@@ -16,7 +16,7 @@ export class AccountCreationService {
     this.socket = this.socketManagerService.getSocket();
   }
   sendNewAccountInformation(account: Account): void {
-    this.socket.emit('Create user account',account.username,account.password,account.email, "avatar", account.securityQuestion);
+    this.socket.emit('Create user account',account.username,account.password,account.email, account.avatar, account.securityQuestion);
   }
 
   getStatusOfAccountCreation():  Observable<boolean> {
@@ -25,6 +25,29 @@ export class AccountCreationService {
       });
     });
     
+  }
+
+  MakeAllAvatarBase64(AllAvatars:string[]): string[]{
+    const BASE_64_FORMAT = "data:image/png;base64,";
+    AllAvatars.forEach((value,index)=>{
+      AllAvatars[index] = BASE_64_FORMAT + AllAvatars[index];
+
+    })
+
+    return AllAvatars;
+  }
+
+  getAllAvatars(){
+    this.socket.emit('Get All Avatars');
+  }
+
+  getAllAvatarsResponse(): Observable<string[]> {
+    return new Observable((observer: Observer<string[]>) => {
+      this.socket.once('Get All Avatars Response', (AllAvatars: string[]) => {
+        observer.next(this.MakeAllAvatarBase64(AllAvatars));
+      });
+    });
+
   }
 
 }

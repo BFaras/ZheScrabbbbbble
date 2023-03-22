@@ -17,6 +17,7 @@ import { ProfileSocketService } from './profile-socket.service';
 import { RoomManagerService } from './room-manager.service';
 import { SocketDatabaseService } from './socket-database.service';
 import { UsersStatusService } from './users-status.service';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 
 export const VIRTUAL_PLAYER_NAMES = ['Michel Gagnon', 'Eve', 'John', 'Diane', 'Alex', 'Mike', 'Emma'];
 
@@ -57,6 +58,18 @@ export class SocketManager {
             this.profileSocketService.handleProfileSockets(socket);
             this.friendSocketService.handleFriendSockets(socket);
 
+            socket.on('Share First Tile', (activeSquare: { x: string; y: number }) => {
+                const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
+                if (!currentRoom) return;
+                socket.to(currentRoom.getID()).emit('Get First Tile', activeSquare);
+            });
+
+            socket.on('Remove Selected Tile', (activeSquare: { x: string; y: number }) => {
+                const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
+                if (!currentRoom) return;
+                socket.to(currentRoom.getID()).emit('Remove Selected Tile Response', activeSquare);
+            });
+
             socket.on('Create Game Room', async (name: string, visibility: RoomVisibility, password?: string) => {
                 console.log(new Date().toLocaleTimeString() + ' | Room creation request received');
                 if (this.roomManager.verifyIfRoomExists(name)) {
@@ -70,7 +83,7 @@ export class SocketManager {
                 socket.join(roomId);
                 console.log(new Date().toLocaleTimeString() + ' | New ' + visibility + ' room created');
                 socket.emit('Room Creation Response', NO_ERROR, roomId);
-                socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
+                socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());;
             });
 
             socket.on('Get Game Room List', () => {

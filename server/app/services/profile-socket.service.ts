@@ -4,7 +4,7 @@ import { Container, Service } from 'typedi';
 import { AccountInfoService } from './account-info.service';
 import { FriendSocketService } from './friend-socket.service';
 import { ProfileService } from './profile.service';
-
+const fs = require('fs');
 @Service()
 export class ProfileSocketService {
     private readonly profileService: ProfileService;
@@ -53,6 +53,16 @@ export class ProfileSocketService {
         socket.on('Get Theme and Language', async () => {
             const userSettings = await this.profileService.getUserSettings(this.accountInfoService.getUserId(socket));
             socket.emit('Theme and Language Response', userSettings.theme, userSettings.language);
+        });
+
+        socket.on('Get All Avatars', async () => {
+            const listNameAllAvatars: string[] = ['cat','dog','flower'];
+            const listAvatars: string[] = [];
+            listNameAllAvatars.forEach((value, index) => {
+                const contents = fs.readFileSync('./assets/avatar/' + listNameAllAvatars[index] + '.jpg', { encoding: 'base64' });
+                listAvatars.push(contents);
+            })
+            socket.emit('Get All Avatars Response', listAvatars);
         });
     }
 }
