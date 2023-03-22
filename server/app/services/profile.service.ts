@@ -1,18 +1,29 @@
 import { DATABASE_UNAVAILABLE } from '@app/constants/error-code-constants';
 import {
     DEFAULT_LANGUAGE,
+    DEFAULT_LEVEL,
     DEFAULT_THEME,
+    DEFAULT_XP,
     GAMES_NB_STAT_NAME,
     GAME_TIME_AVRG_STAT_NAME,
     POINTS_AVRG_STAT_NAME,
     WINS_NB_STAT_NAME
 } from '@app/constants/profile-constants';
 import { ConnectivityStatus, UserStatus } from '@app/interfaces/friend-info';
-import { ConnectionInfo, ConnectionType, GameHistoryInfo, ProfileInfo, ProfileSettings, StatisticInfo } from '@app/interfaces/profile-info';
+import {
+    ConnectionInfo,
+    ConnectionType,
+    GameHistoryInfo,
+    LevelInfo,
+    ProfileInfo,
+    ProfileSettings,
+    StatisticInfo
+} from '@app/interfaces/profile-info';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
 import { FriendService } from './friend.service';
 import { TimeFormatterService } from './time-formatter.service';
+import { UserLevelService } from './user-level.service';
 import { UsersStatusService } from './users-status.service';
 
 @Service()
@@ -21,12 +32,14 @@ export class ProfileService {
     private readonly friendService: FriendService;
     private readonly timeFormatterService: TimeFormatterService;
     private readonly usersStatusService: UsersStatusService;
+    private readonly userLevelService: UserLevelService;
 
     constructor() {
         this.dbService = Container.get(DatabaseService);
         this.friendService = Container.get(FriendService);
         this.timeFormatterService = Container.get(TimeFormatterService);
         this.usersStatusService = Container.get(UsersStatusService);
+        this.userLevelService = Container.get(UserLevelService);
 
         this.usersStatusService.getStatusUpdater().subscribe({
             next: this.updateProfileFromNewStatus.bind(this),
@@ -36,7 +49,11 @@ export class ProfileService {
     getDefaultProfileInformation(): ProfileInfo {
         return {
             avatar: '#000000',
-            level: 0,
+            levelInfo: {
+                level: DEFAULT_LEVEL,
+                xp: DEFAULT_XP,
+                nextLevelXp: this.userLevelService.getNextLevelXP(DEFAULT_LEVEL),
+            },
             userCode: '',
             stats: [
                 { name: WINS_NB_STAT_NAME, statAmount: 0 },
@@ -69,6 +86,11 @@ export class ProfileService {
 
     async getUserSettings(userId: string): Promise<ProfileSettings> {
         return this.dbService.getUserProfileSettings(userId);
+    }
+
+    async getUserLevelInfo(userId: string): Promise<LevelInfo> {
+        const username = await this.dbService.getUsernameFromId(userId);
+        return (await this.getProfileInformation(username)).levelInfo;
     }
 
     async createNewProfile(userId: string, avatar: string): Promise<boolean> {
@@ -104,11 +126,12 @@ export class ProfileService {
         return errorCode;
     }
 
-    async updateUserStats(userId: string, newUserStats: StatisticInfo[]): Promise<string> {
+    async updateUserStatsAndLevel(userId: string, newUserStats: StatisticInfo[], newLevelInfo: LevelInfo): Promise<string> {
         const profileInfo: ProfileInfo = await this.dbService.getUserProfileInfo(userId);
         let errorCode = DATABASE_UNAVAILABLE;
 
         profileInfo.stats = newUserStats;
+        profileInfo.levelInfo = newLevelInfo;
         errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);
 
         return errorCode;
