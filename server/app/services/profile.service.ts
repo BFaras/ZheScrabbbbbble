@@ -126,6 +126,10 @@ export class ProfileService {
         return errorCode;
     }
 
+    async changeUsername(userId: string, newUsername: string): Promise<string> {
+        return this.dbService.changeUsername(userId, newUsername);
+    }
+
     async updateUserStatsAndLevel(userId: string, newUserStats: StatisticInfo[], newLevelInfo: LevelInfo): Promise<string> {
         const profileInfo: ProfileInfo = await this.dbService.getUserProfileInfo(userId);
         let errorCode = DATABASE_UNAVAILABLE;

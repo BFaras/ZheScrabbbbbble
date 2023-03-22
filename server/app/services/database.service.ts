@@ -11,7 +11,7 @@ import {
     TopScores,
     VirtualPlayerDifficulty
 } from '@app/constants/database-interfaces';
-import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
+import { DATABASE_UNAVAILABLE, NO_ERROR, USERNAME_TAKEN } from '@app/constants/error-code-constants';
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
 import { FriendsDB } from '@app/interfaces/friend-info';
 import { ProfileInfo, ProfileInfoDB, ProfileSettings } from '@app/interfaces/profile-info';
@@ -115,7 +115,7 @@ export class DatabaseService {
         return username;
     }
 
-    async changeUserPassword(usernameUser: string, encryptedPasswordUser: string) {
+    async changeUserPassword(usernameUser: string, encryptedPasswordUser: string): Promise<boolean> {
         let isChangeSuccess = true;
         await this.getCollection(CollectionType.USERACCOUNTS)
             ?.updateOne({ username: usernameUser }, { $set: { encryptedPassword: encryptedPasswordUser } })
@@ -123,6 +123,19 @@ export class DatabaseService {
                 isChangeSuccess = false;
             });
         return isChangeSuccess;
+    }
+
+    async changeUsername(userId: string, newUsername: string): Promise<string> {
+        let error = USERNAME_TAKEN;
+        if (await this.isUsernameFree(newUsername)) {
+            error = NO_ERROR;
+            await this.getCollection(CollectionType.USERACCOUNTS)
+                ?.updateOne({ _id: new ObjectId(userId) }, { $set: { username: newUsername } })
+                .catch(() => {
+                    error = DATABASE_UNAVAILABLE;
+                });
+        }
+        return error;
     }
 
     async getUserEncryptedPassword(username: string): Promise<string> {
@@ -182,7 +195,7 @@ export class DatabaseService {
         const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
             _id: new ObjectId(userId),
         });
-        
+
         console.log(userProfileInfoDoc);
         if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
             profileSettings = userProfileInfoDoc.profileSettings;
