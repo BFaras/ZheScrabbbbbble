@@ -1,15 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.TestChatBox" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.TestChatBox" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowActionBar">false</item>
         <item name="android:windowBackground">@color/beige</item>
+        <item name="backgroundColor">@color/beige</item>
         <item name="android:textColor">@color/darkForestGreen</item>
         <item name="colorPrimary">@color/corail</item>
         <item name="colorPrimaryVariant">@color/darkCorail</item>
         <item name="colorOnPrimary">@color/lightBeige</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorSecondary">@color/Crimson</item>
+        <item name="colorSecondaryVariant">@color/Brown</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
@@ -19,13 +23,69 @@
         <item name="doubleLetter">@color/lightForest</item>
         <item name="grid">@color/black</item>
         <item name="coords">@color/black</item>
+        <item name="playerSelection">@color/teal_200</item>
         <item name="boardBackground">@color/lightBeige</item>
         <item name="lettersOnBoard">@color/NavajoWhite</item>
+        <item name="lettersInHand">@color/AntiqueWhite</item>
     </style>
     <style name="Theme.TestChatBox.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="AstronautTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="backgroundColor">@color/purple_700</item>
+        <item name="android:textColor">@color/lightBeige</item>
+        <item name="colorPrimary">@color/navy</item>
+        <item name="colorPrimaryVariant">@color/MidnightBlue</item>
+        <item name="colorOnPrimary">@color/Gainsboro</item>
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="playerSelection">@color/teal_200</item>
+        <item name="colorOnSecondary">@color/black</item>
+    </style>
+
+    <style name="EclipseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="backgroundColor">@color/darkSea</item>
+        <item name="android:textColor">@color/forestGreen</item>
+        <item name="colorPrimary">@color/clearSea</item>
+        <item name="colorPrimaryVariant">@color/BackSea</item>
+        <item name="colorOnPrimary">@color/Gainsboro</item>
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="doubleWord">@color/CadetBlue</item>
+        <item name="tripleWord">@color/forestGreen</item>
+        <item name="doubleLetter">@color/DarkSlateGray</item>
+        <item name="grid">@color/SlateGray</item>
+        <item name="coords">@color/white</item>
+        <item name="boardBackground">@color/black</item>
+        <item name="playerSelection">@color/teal_200</item>
+        <item name="lettersOnBoard">@color/SlateGray</item>
+        <item name="lettersInHand">@color/AntiqueWhite</item>
+    </style>
+
+    <style name="BlizzardTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="backgroundColor">@color/SlateWhite</item>
+        <item name="android:textColor">@color/BlueBlack</item>
+        <item name="colorPrimary">@color/grayWhite</item>
+        <item name="colorPrimaryVariant">@color/DarkGray</item>
+        <item name="colorOnPrimary">@color/DimGray</item>
+        <item name="colorPrimaryInverse">@color/Orange</item>
+        <item name="colorSecondary">@color/BrightSunset</item>
+        <item name="colorSecondaryVariant">@color/Sunset</item>
+        <item name="colorOnSecondary">@color/BrightSunset</item>
+        <item name="doubleWord">@color/BrightSunset</item>
+        <item name="tripleWord">@color/SlateGray</item>
+        <item name="doubleLetter">@color/DimGray</item>
+        <item name="grid">@color/black</item>
+        <item name="coords">@color/white</item>
+        <item name="playerSelection">@color/BrightSunset</item>
+        <item name="boardBackground">@color/WhiteSmoke</item>
+        <item name="lettersOnBoard">@color/grayWhite</item>
+        <item name="lettersInHand">@color/SlateWhite</item>
+    </style>
+
+
     <style name="Theme.TestChatBox.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.TestChatBox.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
