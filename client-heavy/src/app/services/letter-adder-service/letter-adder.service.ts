@@ -50,11 +50,13 @@ export class LetterAdderService {
     isFormerTileUsed(row:string,column:number){
         if(this.arrowDirection){
          const foundLetter = this.mappedBoardState.get(row + (column - 1));
-        return Boolean(foundLetter);
+         const isDirectionLeftToRight = this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row;
+        return Boolean(foundLetter ) && isDirectionLeftToRight;
         }
         else{     
         const foundLetter = this.mappedBoardState.get((String.fromCharCode(row.charCodeAt(0) - 1)) + column);
-        return Boolean(foundLetter);
+        const isDirectionTopToBottom = this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row;
+        return Boolean(foundLetter) && isDirectionTopToBottom;
         }
     }
 
@@ -70,7 +72,6 @@ export class LetterAdderService {
     }
 
     isTileAround(xIndex:string,yIndex:number):boolean{
-        console.log(this.isFormerTileUsed(xIndex,yIndex));
         if(this.addedLettersLog.size === 0 || this.isFormerTileUsed(xIndex,yIndex) ||( yIndex  === this.prevActiveSquare.y + 1 &&  xIndex == this.prevActiveSquare.x) || ( xIndex.charCodeAt(0) === this.prevActiveSquare.x.charCodeAt(0) + 1 && yIndex  === this.prevActiveSquare.y) ){
             this.activeSquare = { x: xIndex, y: yIndex }
             return true;
