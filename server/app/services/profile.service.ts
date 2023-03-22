@@ -35,7 +35,7 @@ export class ProfileService {
 
     getDefaultProfileInformation(): ProfileInfo {
         return {
-            avatar: '#000000',
+            avatar: '',
             level: 0,
             userCode: '',
             stats: [
@@ -82,7 +82,6 @@ export class ProfileService {
     async changeAvatar(userId: string, newAvatar: string) {
         const profileInfo: ProfileInfo = await this.dbService.getUserProfileInfo(userId);
         let errorCode: string = DATABASE_UNAVAILABLE;
-
         if (profileInfo !== this.getDefaultProfileInformation()) {
             profileInfo.avatar = newAvatar;
             errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);

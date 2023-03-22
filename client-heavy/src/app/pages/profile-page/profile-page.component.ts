@@ -33,13 +33,13 @@ export class ProfilePageComponent implements OnInit {
 
   openDialogChangeColor(): void {
     const dialogReference = this.dialogAvatar.open(AvatarPopUpComponent, {
-      width: '400px',
-      height: '300px',
+      width: '900px',
+      height: '600px',
       data: { accountService: this.accountService }
     });
     dialogReference.afterClosed().subscribe(result => {
-      if (result && result.color !== "") {
-        this.accountProfile.avatar = result.color;
+      if (result.avatar) {
+        this.accountProfile.avatar = result.avatar;
       }
     });
 
