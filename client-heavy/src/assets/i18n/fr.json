@@ -1,106 +1,106 @@
 {
-    "CHANGELANG":{
-        "MESSAGE":"Changer le langage"
+    "CHANGELANG": {
+        "MESSAGE": "Changer le langage"
     },
-    "CHANGETHEME":{
-        "MESSAGE":"Changer le thème",
-        "CLASSIC":"Classique",
-        "INVERTED":"Contraste",
-        "GREEN":"Vert",
-        "PINK":"Rose"
+    "CHANGETHEME": {
+        "MESSAGE": "Changer le thème",
+        "CLASSIC": "Classique",
+        "INVERTED": "Contraste",
+        "GREEN": "Vert",
+        "PINK": "Rose"
     },
-    "LOGIN":{
-        "AUTH":"Authentification",
-        "LOGIN":"Connexion",
+    "LOGIN": {
+        "AUTH": "Authentification",
+        "LOGIN": "Connexion",
         "SIGNOUT": "Déconnexion",
         "FORGOTTENPASS": "Oublié votre mot de passe?"
     },
-    "SIGNUP":{
-        "NEWACC":"Nouveau? Créez un compte!",
-        "CONFIRM":"Confirmer",
-        "EMAIL":"Adresse Email",
-        "SHOWPASS":"Montrer le mot de passe",
-        "SIGNUP":"Inscription",
-        "NEXT":"Continuer"
+    "SIGNUP": {
+        "NEWACC": "Nouveau? Créez un compte!",
+        "CONFIRM": "Confirmer",
+        "EMAIL": "Adresse Email",
+        "SHOWPASS": "Montrer le mot de passe",
+        "SIGNUP": "Inscription",
+        "NEXT": "Continuer"
     },
-    "SECURITYQ":{
-        "QUESTION":"Question de sécurité: ",
-        "ANSWER":"Réponse: ",
-        "MESSAGE":"Créez une question de sécurité",
-        "BACK":"Retour"
+    "SECURITYQ": {
+        "QUESTION": "Question de sécurité: ",
+        "ANSWER": "Réponse: ",
+        "MESSAGE": "Créez une question de sécurité",
+        "BACK": "Retour"
     },
-    "FORGOTTENPASS":{
-        "MESSAGE":"Mot de passe oublié",
-        "QUESTION":"Voir question de sécurité",
-        "PASSWORD":"Changer de mot de passe",
-        "NEWPASS":"Nouveau mot de passe: "
+    "FORGOTTENPASS": {
+        "MESSAGE": "Mot de passe oublié",
+        "QUESTION": "Voir question de sécurité",
+        "PASSWORD": "Changer de mot de passe",
+        "NEWPASS": "Nouveau mot de passe: "
     },
-    "USERDATA":{
-        "USERNAME":"Nom d'utilisateur",
-        "PASSWORD":"Mot de passe"
+    "USERDATA": {
+        "USERNAME": "Nom d'utilisateur",
+        "PASSWORD": "Mot de passe"
     },
-    "INFOBOARD":{
-        "INFOBOARD":"PANNEAU INFORMATIF",
-        "SCORE":"Points: ",
-        "LETTERSLEFT":"Nombre de lettres restantes dans la réserve: ",
-        "LETTERSINHAND":"Nombre de lettres sur le chevalet: ",
-        "TIMER":"Temps restant: ",
-        "TURN":", c'est à votre tour!",
-        "WIN":", vous avez gagné!"
+    "INFOBOARD": {
+        "INFOBOARD": "PANNEAU INFORMATIF",
+        "SCORE": "Points: ",
+        "LETTERSLEFT": "Nombre de lettres restantes dans la réserve: ",
+        "LETTERSINHAND": "Nombre de lettres sur le chevalet: ",
+        "TIMER": "Temps restant: ",
+        "TURN": ", c'est à votre tour!",
+        "WIN": ", vous avez gagné!"
     },
-    "CHATBOX":{
-        "CHATBOX":"BOÎTE DE CHAT",
-        "DEFAULT":"Tapez une commande",
-        "SEND":"Envoyer",
-        "JOIN":"Joindre des chats publics",
-        "SELECT":"Veuillez sélectionner un chat à gauche"
+    "CHATBOX": {
+        "CHATBOX": "BOÎTE DE CHAT",
+        "DEFAULT": "Tapez une commande",
+        "SEND": "Envoyer",
+        "JOIN": "Joindre des chats publics",
+        "SELECT": "Veuillez sélectionner un chat à gauche"
     },
-    "PUBLIC-CHATS":{
-        "MESSAGE":"Joignez des chats publiques ici!",
-        "JOIN":"Joindre",
-        "LEAVE":"Quitter"
+    "PUBLIC-CHATS": {
+        "MESSAGE": "Joignez des chats publiques ici!",
+        "JOIN": "Joindre",
+        "LEAVE": "Quitter"
     },
-    "LETTERHOLDER":{
-        "PASS":"Passer",
-        "PLAY":"Jouer",
-        "REPLACE":"Échanger",
-        "CANCEL":"Annuler",
-        "SWITCH":"Échanger de joueur"
+    "LETTERHOLDER": {
+        "PASS": "Passer",
+        "PLAY": "Jouer",
+        "REPLACE": "Échanger",
+        "CANCEL": "Annuler",
+        "SWITCH": "Échanger de joueur"
     },
-    "BOARD":{
-        "MOT":"MOT",
-        "LETTRE":"LETTRE",
-        "START":"DÉBUT",
-        "SIZE":"Modifier la taille des lettres"
+    "BOARD": {
+        "MOT": "MOT",
+        "LETTRE": "LETTRE",
+        "START": "DÉBUT",
+        "SIZE": "Modifier la taille des lettres"
     },
-    "GIVEUP":{
-        "GIVEUP":"Abandonner",
-        "MESSAGE":"Êtes-vous sûr(e) de vouloir quitter la partie? Tout votre progrès sera perdu.",
-        "QUIT":"Quitter"
+    "GIVEUP": {
+        "GIVEUP": "Abandonner",
+        "MESSAGE": "Êtes-vous sûr(e) de vouloir quitter la partie? Tout votre progrès sera perdu.",
+        "QUIT": "Quitter"
     },
-    "HOMEPAGE":{
-        "MESSAGE":"Choisissez un mode de jeu!",
-        "CLASSIC":"Jouer",
-        "TOURNAMENT":"Tournois",
-        "COLLABORATIVE":"Collaboratif"
+    "HOMEPAGE": {
+        "MESSAGE": "Choisissez un mode de jeu!",
+        "CLASSIC": "Jouer",
+        "TOURNAMENT": "Tournois",
+        "COLLABORATIVE": "Collaboratif"
     },
-    "TABS":{
+    "TABS": {
         "PUBLIC": "Publiques",
         "PRIVATE": "Privés",
         "GLOBAL": "Globaux"
     },
-    "NAVBAR":{
+    "NAVBAR": {
         "HOME": "Menu",
         "PROFILE": "Profil",
         "CHAT": "Chat",
         "SIGNOUT": "Déconnexion"
     },
-    "SOLO-MULTI":{
+    "SOLO-MULTI": {
         "MESSAGE": "Créez ou joignez une partie!",
         "CREATE": "Créer une partie multijoueur",
         "JOIN": "Joindre une partie multijoueur"
     },
-    "CREATE-GAME":{
+    "CREATE-GAME": {
         "MESSAGE": "Configuration de la partie",
         "ROOM": "Nom de la salle: ",
         "PASSWORD": "Mot de passe de la salle: ",
@@ -109,7 +109,7 @@
         "PROTECTED": "Protégé",
         "CREATE": "Créer une partie"
     },
-    "WAITING-ROOM":{
+    "WAITING-ROOM": {
         "MESSAGE": "Joueurs dans la salle de jeu",
         "LEAVE": "Quitter la salle",
         "JOIN": " essaie de joindre la salle de jeu.",
@@ -118,7 +118,7 @@
         "DECLINE": "Refuser",
         "START": "Démarrer"
     },
-    "JOIN-GAME":{
+    "JOIN-GAME": {
         "HOST": "Hôte",
         "ROOM": "Salle",
         "VISIBILITY": "Visibilité",
@@ -131,24 +131,24 @@
         "BEGAN": "En cours",
         "WAIT": "En attente"
     },
-    "PENDING-ROOM":{
+    "PENDING-ROOM": {
         "PENDING": "En attente d'une réponse de l'hôte",
         "DECLINE": "L'hôte a refusé votre requête",
         "CANCEL": "Annuler la demande",
         "RETURN": "Retourner aux salles de jeu"
     },
-    "OBSERVER-ROOM":{
+    "OBSERVER-ROOM": {
         "TITLE": "En attente que l'hôte démarre la partie",
         "RETURN": "Retourner aux salles de jeu"
     },
-    "PASSWORD-PAGE":{
+    "PASSWORD-PAGE": {
         "INPUT": "Veuillez entrer le mot de passe pour cette salle",
         "CONFIRM": "Confirmer",
         "INCORRECT": "Le mot de passe entré est incorrect",
         "FULL": "La salle de jeu est pleine",
         "MESSAGE": "Erreur : ce message ne devrait jamais s'afficher"
     },
-    "ACTION-HISTORY":{
+    "ACTION-HISTORY": {
         "TITLE": "HISTORIQUE D'ACTIONS",
         "MSG-1": "$0 a placé $1 pour $2 point(s)",
         "MSG-2": "$0 a tenté de placer un mot invalide",
@@ -158,7 +158,7 @@
         "MSG-6": "$0 a manqué de temps et à passé son tour",
         "MSG-7": "Fin de partie - lettres restantes $0"
     },
-    "FRIENDS-PAGE":{
+    "FRIENDS-PAGE": {
         "MESSAGE": "Vous pouvez gérer vos amis ici!",
         "SHARE": "Partagez ce code pour faire une demande d'amitié: ",
         "NEW": "Ajouter un ami",
@@ -168,11 +168,17 @@
         "FRIENDS": "Liste d'amis",
         "UNFRIEND": "Enlever"
     },
-    "PROFILE-PAGE":{
+    "PROFILE-PAGE": {
         "FRIENDS": "Gérer ses amis"
     },
-    "TOURNAMENT-QUEUE":{
+    "TOURNAMENT-QUEUE": {
         "TITLE": "En recherche de tournois",
         "RETURN": "Retourner au menu principal"
+    },
+    "TOURNAMENT-BRACKET": {
+        "TITLE": "TOURNOIS",
+        "ROUND-TIMER": "Fin de la ronde dans : ",
+        "NEXT-GAME-TIMER": "Prochaine partie commence dans : ",
+        "TBD": "À déterminer"
     }
 }

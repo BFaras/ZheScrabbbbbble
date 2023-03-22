@@ -1,106 +1,106 @@
 {
-    "CHANGELANG":{
-        "MESSAGE":"Change Language"
+    "CHANGELANG": {
+        "MESSAGE": "Change Language"
     },
-    "CHANGETHEME":{
-        "MESSAGE":"Change Theme",
-        "CLASSIC":"Classic",
-        "INVERTED":"Contrast",
-        "GREEN":"Green",
-        "PINK":"Pink"
+    "CHANGETHEME": {
+        "MESSAGE": "Change Theme",
+        "CLASSIC": "Classic",
+        "INVERTED": "Contrast",
+        "GREEN": "Green",
+        "PINK": "Pink"
     },
-    "LOGIN":{
-        "AUTH":"Authentication",
-        "LOGIN":"Log in",
+    "LOGIN": {
+        "AUTH": "Authentication",
+        "LOGIN": "Log in",
         "SIGNOUT": "Sign Out",
         "FORGOTTENPASS": "Forgot your password?"
     },
-    "SIGNUP":{
-        "NEWACC":"New? Create an account!",
-        "CONFIRM":"Confirm",
-        "EMAIL":"Email Address",
-        "SHOWPASS":"Show Password",
-        "SIGNUP":"Sign Up",
-        "NEXT":"Next"
+    "SIGNUP": {
+        "NEWACC": "New? Create an account!",
+        "CONFIRM": "Confirm",
+        "EMAIL": "Email Address",
+        "SHOWPASS": "Show Password",
+        "SIGNUP": "Sign Up",
+        "NEXT": "Next"
     },
-    "SECURITYQ":{
-        "QUESTION":"Security question: ",
-        "ANSWER":"Answer: ",
-        "MESSAGE":"Create a security question",
-        "BACK":"Back"
+    "SECURITYQ": {
+        "QUESTION": "Security question: ",
+        "ANSWER": "Answer: ",
+        "MESSAGE": "Create a security question",
+        "BACK": "Back"
     },
-    "FORGOTTENPASS":{
-        "MESSAGE":"Forgotten password",
-        "QUESTION":"Show personal question",
-        "PASSWORD":"Change password",
-        "NEWPASS":"New password: "
+    "FORGOTTENPASS": {
+        "MESSAGE": "Forgotten password",
+        "QUESTION": "Show personal question",
+        "PASSWORD": "Change password",
+        "NEWPASS": "New password: "
     },
-    "USERDATA":{
-        "USERNAME":"Username",
-        "PASSWORD":"Password"
+    "USERDATA": {
+        "USERNAME": "Username",
+        "PASSWORD": "Password"
     },
-    "INFOBOARD":{
-        "INFOBOARD":"INFO BOARD",
-        "SCORE":"Score: ",
-        "LETTERSLEFT":"Number of unused letters left: ",
-        "LETTERSINHAND":"Number of letters in hand: ",
-        "TIMER":"Time left: ",
-        "TURN":", it's your turn!",
-        "WIN":", you won!"
+    "INFOBOARD": {
+        "INFOBOARD": "INFO BOARD",
+        "SCORE": "Score: ",
+        "LETTERSLEFT": "Number of unused letters left: ",
+        "LETTERSINHAND": "Number of letters in hand: ",
+        "TIMER": "Time left: ",
+        "TURN": ", it's your turn!",
+        "WIN": ", you won!"
     },
-    "CHATBOX":{
-        "CHATBOX":"CHAT BOX",
-        "DEFAULT":"Type a command",
-        "SEND":"Send",
-        "JOIN":"Join Public Chats",
-        "SELECT":"Please select a chat on the left"
+    "CHATBOX": {
+        "CHATBOX": "CHAT BOX",
+        "DEFAULT": "Type a command",
+        "SEND": "Send",
+        "JOIN": "Join Public Chats",
+        "SELECT": "Please select a chat on the left"
     },
-    "PUBLIC-CHATS":{
-        "MESSAGE":"Join public chats here!",
-        "JOIN":"Join",
-        "LEAVE":"Leave"
+    "PUBLIC-CHATS": {
+        "MESSAGE": "Join public chats here!",
+        "JOIN": "Join",
+        "LEAVE": "Leave"
     },
-    "LETTERHOLDER":{
-        "PASS":"Skip turn",
-        "PLAY":"Play",
-        "REPLACE":"Replace",
-        "CANCEL":"Cancel",
-        "SWITCH":"Switch player"
+    "LETTERHOLDER": {
+        "PASS": "Skip turn",
+        "PLAY": "Play",
+        "REPLACE": "Replace",
+        "CANCEL": "Cancel",
+        "SWITCH": "Switch player"
     },
-    "BOARD":{
-        "MOT":"WORD",
-        "LETTRE":"LETTER",
-        "START":"START",
-        "SIZE":"Change letters' size"
+    "BOARD": {
+        "MOT": "WORD",
+        "LETTRE": "LETTER",
+        "START": "START",
+        "SIZE": "Change letters' size"
     },
-    "GIVEUP":{
-        "GIVEUP":"Give Up",
-        "MESSAGE":"Are you sure you want to leave the game? All progress will be lost.",
-        "QUIT":"Leave"
+    "GIVEUP": {
+        "GIVEUP": "Give Up",
+        "MESSAGE": "Are you sure you want to leave the game? All progress will be lost.",
+        "QUIT": "Leave"
     },
-    "HOMEPAGE":{
-        "MESSAGE":"Pick a Game Mode!",
-        "CLASSIC":"Play",
-        "TOURNAMENT":"Tournament",
-        "COLLABORATIVE":"Collaborative"
+    "HOMEPAGE": {
+        "MESSAGE": "Pick a Game Mode!",
+        "CLASSIC": "Play",
+        "TOURNAMENT": "Tournament",
+        "COLLABORATIVE": "Collaborative"
     },
-    "TABS":{
+    "TABS": {
         "PUBLIC": "Public",
         "PRIVATE": "Private",
         "GLOBAL": "Global"
     },
-    "NAVBAR":{
+    "NAVBAR": {
         "HOME": "Home",
         "PROFILE": "Profile",
         "CHAT": "Chat",
         "SIGNOUT": "Sign Out"
     },
-    "SOLO-MULTI":{
+    "SOLO-MULTI": {
         "MESSAGE": "Create or join a game!",
         "CREATE": "Create a multiplayer game",
         "JOIN": "Join a multiplater game"
     },
-    "CREATE-GAME":{
+    "CREATE-GAME": {
         "MESSAGE": "Game Configuration",
         "ROOM": "Room's name: ",
         "PASSWORD": "Room's password: ",
@@ -109,7 +109,7 @@
         "PROTECTED": "Protected",
         "CREATE": "Create the game"
     },
-    "WAITING-ROOM":{
+    "WAITING-ROOM": {
         "MESSAGE": "Players in the Game Room",
         "LEAVE": "Leave the room",
         "JOIN": " is trying to join the game room.",
@@ -118,7 +118,7 @@
         "DECLINE": "Decline",
         "START": "Start"
     },
-    "JOIN-GAME":{
+    "JOIN-GAME": {
         "HOST": "Host",
         "ROOM": "Room",
         "VISIBILITY": "Visibility",
@@ -131,24 +131,24 @@
         "BEGAN": "In progress",
         "WAIT": "Pending"
     },
-    "PENDING-ROOM":{
+    "PENDING-ROOM": {
         "PENDING": "Waiting for the host's approval",
         "DECLINE": "The host declined your request",
         "CANCEL": "Cancel request",
         "RETURN": "Return to game rooms"
     },
-    "OBSERVER-ROOM":{
+    "OBSERVER-ROOM": {
         "TITLE": "Waiting for host to start the game",
         "RETURN": "Return to game rooms"
     },
-    "PASSWORD-PAGE":{
+    "PASSWORD-PAGE": {
         "INPUT": "Please enter the password",
         "CONFIRM": "Confirm",
         "INCORRECT": "The password is incorrect",
         "FULL": "The room is full",
         "MESSAGE": "Error : this message shouldn't show up"
     },
-    "ACTION-HISTORY":{
+    "ACTION-HISTORY": {
         "TITLE": "ACTION HISTORY",
         "MSG-1": "$0 placed $1 for $2 point(s)",
         "MSG-2": "$0 tried to place an invalid word",
@@ -158,7 +158,7 @@
         "MSG-6": "$0 ran out of time and passed their turn",
         "MSG-7": "Game over - letters left $0"
     },
-    "FRIENDS-PAGE":{
+    "FRIENDS-PAGE": {
         "MESSAGE": "You can manage your friends here!",
         "SHARE": "Share this code to send a friend request: ",
         "NEW": "Add a friend",
@@ -168,11 +168,17 @@
         "FRIENDS": "Friends list",
         "UNFRIEND": "Unfriend"
     },
-    "PROFILE-PAGE":{
+    "PROFILE-PAGE": {
         "FRIENDS": "Manage friends"
     },
-    "TOURNAMENT-QUEUE":{
+    "TOURNAMENT-QUEUE": {
         "TITLE": "In search of a tournament",
         "RETURN": "Return to main menu"
+    },
+    "TOURNAMENT-BRACKET": {
+        "TITLE": "TOURNAMENT",
+        "ROUND-TIMER": "Round ends in : ",
+        "NEXT-GAME-TIMER": "Next game starts in : ",
+        "TBD": "To be determined"
     }
 }

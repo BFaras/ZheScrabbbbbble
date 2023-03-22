@@ -1,18 +1,28 @@
-<div>
+<app-navigation-bar></app-navigation-bar>
+<div class="container justified">
     <div>
-        <h2>{{semi1.players[0]}}</h2>
-        <h2>{{semi1.players[1]}}</h2>
+        <h1 class="header-item">{{ 'TOURNAMENT-BRACKET.TITLE' | translate }}</h1>
+        <div id="timer">
+            <h2>{{ 'TOURNAMENT-BRACKET.NEXT-GAME-TIMER' | translate }} 20:00</h2>
+        </div>
     </div>
     <div>
-        <h2>{{semi2.players[0]}}</h2>
-        <h2>{{semi2.players[1]}}</h2>
-    </div>
-    <div>
-        <h2>{{final1.players[0]}}</h2>
-        <h2>{{final1.players[1]}}</h2>
-    </div>
-    <div>
-        <h2>{{final2.players[0]}}</h2>
-        <h2>{{final2.players[1]}}</h2>
+    <div class="match-list">
+        <div class="game">
+            <h2>{{semi1.players[0] ? semi1.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+            <h2>{{semi1.players[1] ? semi1.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+        </div>
+        <div class="game">
+            <h2>{{semi2.players[0] ? semi2.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+            <h2>{{semi2.players[1] ? semi2.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+        </div>
+        <div class="game">
+            <h2>{{final1.players[0] ? final1.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+            <h2>{{final1.players[1] ? final1.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+        </div>
+        <div class="game">
+            <h2>{{final2.players[0] ? final2.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+            <h2>{{final2.players[1] ? final2.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+        </div>
     </div>
 </div>

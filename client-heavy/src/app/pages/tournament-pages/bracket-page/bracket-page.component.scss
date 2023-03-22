@@ -1,0 +1,42 @@
+.container {
+    background-color: var(--background-default);
+    height: 53%;
+    padding: 5%;
+}
+
+.justified {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    margin-top: 1%;
+    font-family: 'Shrikhand';
+    font-size: 95px;
+    color: var(--text-default);
+}
+
+.header-item {
+    color: var(--text-default);
+    justify-content: center;
+    text-align: center;
+    padding: 0px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 40px;
+}
+
+.match-list {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 100px;
+}
+
+.game {
+    display: inline-grid;
+    border-style: solid;
+    padding: 5%;
+}
