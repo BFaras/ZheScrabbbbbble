@@ -53,9 +53,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     constructor(private chatService: ChatService, private messageParserService: MessageParserService) {
         this.gameRoomName = this.chatService.getChatInGameRoom();
         console.log(this.gameRoomName);
-        this.subscriptionMessage = this.chatService.getMessagesInGame().subscribe((chatMessage: ChatMessage) => {
-            console.log(chatMessage);
-            this.updateMessageHistory(chatMessage)});
+        this.subscriptionMessage = this.chatService.getMessagesInGame().subscribe((response: {chatCode:string,message:ChatMessage}) => {
+            this.updateMessageHistory(response.message)});
     }
 
     ngOnInit() {

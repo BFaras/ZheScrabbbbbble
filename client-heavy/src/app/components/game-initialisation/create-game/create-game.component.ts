@@ -65,13 +65,13 @@ export class CreateGameComponent {
     }
 
     /**modifier apres avoir confirmer avec manuel si methode est bonne*/
-    redirectPlayer(message: any) {
+    redirectPlayer(message: {codeError:string,roomId:string}) {
         if (message.codeError !== '0') {
             alert('Erreur dans la création de la salle');
             return;
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom([this.accountService.getUsername()])
-        this.chatService.setChatInGameRoom(message.room);
+        this.chatService.setChatInGameRoom(message.roomId);
         this.router.navigate(['/waiting-room']);
     }
 }

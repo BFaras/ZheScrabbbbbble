@@ -71,9 +71,16 @@ export class ChatService {
     setChatInGameRoom(chatGameRoom :string){
         this.chatInGameRoom = chatGameRoom;
     }
-    getMessagesInGame(): Observable<ChatMessage> {
-        return new Observable((observer: Observer<ChatMessage>) => {
-            this.socketManagerService.getSocket().on('New Chat Message', (chatMessage: ChatMessage) => observer.next(chatMessage));
+    getMessagesInGame(): Observable<{chatCode:string,message:ChatMessage}> {
+        return new Observable((observer: Observer<{chatCode:string,message:ChatMessage}>) => {
+            this.socketManagerService.getSocket().on('New Chat Message', (chatCode:string,chatMessage: ChatMessage) =>
+            {
+                const response = {
+                    chatCode:chatCode as string,
+                    message:chatMessage as ChatMessage,
+                }
+                observer.next(response)
+            } );
         });
     }
 
