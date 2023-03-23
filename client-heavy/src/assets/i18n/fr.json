@@ -120,6 +120,7 @@
         "MESSAGE": "Joueurs dans la salle de jeu",
         "LEAVE": "Quitter la salle",
         "JOIN": " essaie de joindre la salle de jeu.",
+        "OBSERVE": " souhaite pouvoir observer la partie.",
         "ACCEPT": "Accepter",
         "DECLINE": "Refuser",
         "START": "Démarrer"
@@ -143,12 +144,26 @@
         "CANCEL": "Annuler la demande",
         "RETURN": "Retourner aux salles de jeu"
     },
+    "OBSERVER-ROOM":{
+        "TITLE": "En attente que l'hôte démarre la partie",
+        "RETURN": "Retourner aux salles de jeu"
+    },
     "PASSWORD-PAGE":{
         "INPUT": "Veuillez entrer le mot de passe pour cette salle",
         "CONFIRM": "Confirmer",
         "INCORRECT": "Le mot de passe entré est incorrect",
         "FULL": "La salle de jeu est pleine",
         "MESSAGE": "Erreur : ce message ne devrait jamais s'afficher"
+    },
+    "ACTION-HISTORY":{
+        "TITLE": "HISTORIQUE D'ACTIONS",
+        "MSG-1": "$0 a placé $1 pour $2 point(s)",
+        "MSG-2": "$0 a tenté de placer un mot invalide",
+        "MSG-3": "$0 a échangé $1 lettres",
+        "MSG-4": "$0 a passé son tour",
+        "MSG-5": "$0 s'est déconnecté et à été remplacé par un joueur virtuel",
+        "MSG-6": "$0 a manqué de temps et à passé son tour",
+        "MSG-7": "Fin de partie - lettres restantes $0"
     },
     "FRIENDS-PAGE":{
         "MESSAGE": "Vous pouvez gérer vos amis ici!",

@@ -1,6 +1,7 @@
 package com.example.testchatbox
 
 import android.util.Log
+import com.example.testchatbox.chat.ChatModel
 import com.example.testchatbox.login.model.LoggedInUser
 import org.json.JSONArray
 
@@ -31,6 +32,7 @@ object GameRoomModel :Observable{
 
     fun initialise(gameRoom: GameRoom){
         this.gameRoom = gameRoom;
+        ChatModel.addGameChat(gameRoom)
         gameRoom.players=gameRoom.players.plus(LoggedInUser.getName())
         SocketHandler.getSocket().on("Room Player Update"){ args ->
             if(args[0] != null){
@@ -47,11 +49,8 @@ object GameRoomModel :Observable{
             gameRoom.hasStarted=true;
             notifyObserver()
         }
-        Log.i("Join", "init")
         SocketHandler.getSocket().on("Join Room Request") {args ->
-            Log.i("Join", args[0] as String)
             if(args[0] != null){
-                Log.i("Join", args[0] as String)
                 joinRequest.add(args[0] as String)
                 notifyObserver()
             }
@@ -59,6 +58,8 @@ object GameRoomModel :Observable{
     }
 
     fun leaveRoom(){
+        if (gameRoom !=null)
+            ChatModel.removeGameChat(gameRoom as GameRoom)
         gameRoom=null;
         joinRequest= arrayListOf()
         observers = arrayListOf();

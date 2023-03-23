@@ -3,6 +3,7 @@ import { UserStatus } from '@app/interfaces/friend-info';
 import * as io from 'socket.io';
 import { Container, Service } from 'typedi';
 import { AccountInfoService } from './account-info.service';
+import { DatabaseService } from './database.service';
 import { FriendService } from './friend.service';
 import { UsersStatusService } from './users-status.service';
 
@@ -11,12 +12,14 @@ export class FriendSocketService {
     private readonly friendService: FriendService;
     private readonly accountInfoService: AccountInfoService;
     private readonly usersStatusService: UsersStatusService;
+    private readonly dbService: DatabaseService;
     private sio: io.Server;
 
     constructor() {
         this.friendService = Container.get(FriendService);
         this.accountInfoService = Container.get(AccountInfoService);
         this.usersStatusService = Container.get(UsersStatusService);
+        this.dbService = Container.get(DatabaseService);
 
         this.usersStatusService.getStatusUpdater().subscribe({
             next: this.updateFriendsWithNewStatus.bind(this),
@@ -43,8 +46,13 @@ export class FriendSocketService {
         });
     }
 
-    private updateFriendsWithNewStatus(userStatus: UserStatus) {
-        this.sio?.in(this.friendService.getFriendRoomName(userStatus.userId)).emit('Update friend status', userStatus.status);
+    updateFriendsWithNewUsername(oldUsername: string, newUsername: string, userId: string) {
+        this.sio?.in(this.friendService.getFriendRoomName(userId)).emit('Friend Username Updated', oldUsername, newUsername);
+    }
+
+    private async updateFriendsWithNewStatus(userStatus: UserStatus) {
+        const username: string = await this.dbService.getUsernameFromId(userStatus.userId);
+        this.sio?.in(this.friendService.getFriendRoomName(userStatus.userId)).emit('Update friend status', username, userStatus.status);
     }
 
     private async addFriendsToSocket(socket: io.Socket, friendUserId: string) {

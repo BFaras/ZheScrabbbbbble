@@ -14,12 +14,13 @@ import {
 import { GameState, PlaceLetterCommandInfo, PlayerState } from '@app/constants/basic-interface';
 import { GameHistory, PlayerInfo, VirtualPlayerDifficulty } from '@app/constants/database-interfaces';
 import { ILLEGAL_COMMAND } from '@app/constants/error-code-constants';
+import { INVALID_WORD_MESSAGE, PASS_MESSAGE, SWAP_MESSAGE } from '@app/constants/game-state-constants';
 import { CommandResult } from '@app/controllers/command.controller';
 import { CommandFormattingService } from '@app/services/command-formatting.service';
 import { PossibleWordFinder, PossibleWords } from '@app/services/possible-word-finder.service';
 import { WordValidation } from '@app/services/word-validation.service';
 import Container from 'typedi';
-import { VirtualPlayer } from './virtual-player';
+import { CommandDetails, VirtualPlayer } from './virtual-player';
 import { VirtualPlayerHard } from './virtual-player-hard';
 
 export class Game {
@@ -31,6 +32,8 @@ export class Game {
     private gameOver: boolean;
     private startDate: Date;
     private playerTurnIndex: number;
+    private timer : NodeJS.Timeout;
+    private timerCallback : (username : string, result : CommandResult) => void;
 
     constructor(players: Player[]) {
         this.passCounter = 0;
@@ -41,17 +44,20 @@ export class Game {
         this.wordValidationService = Container.get(WordValidation);
     }
 
-    startGame() {
+    startGame(timerCallback: (username: string, result : CommandResult) => void) {
         if (this.players.length < 2) return;
         this.playerTurnIndex = Math.floor(Math.random() * this.players.length);
         for (const player of this.players) {
             player.getHand().addLetters(this.reserve.drawLetters(HAND_SIZE));
         }
         this.startDate = new Date();
+        this.timerCallback = timerCallback;
+        this.resetTimer();
     }
 
     placeLetter(commandInfo: PlaceLetterCommandInfo): CommandResult {
         const playerHand = this.players[this.playerTurnIndex].getHand();
+        const name = this.players[this.playerTurnIndex].getName();
         const letters = playerHand.getLetters(commandInfo.letters, true);
         const formattedCommand = CommandFormattingService.formatCommandPlaceLetter(commandInfo, this.board, letters);
         if (!formattedCommand) {
@@ -59,56 +65,53 @@ export class Game {
             return { errorType: ILLEGAL_COMMAND };
         }
         const score = this.wordValidationService.validation(formattedCommand, this.board, true);
-        this.resetCounter();
+        if(!(this.players[this.playerTurnIndex] instanceof VirtualPlayer)) this.resetCounter();
         if (score < 0) {
-            const invalidWordPlayerMessage = 'a tenté de placer un mot invalide.';
             this.board.removeLetters(formattedCommand);
             playerHand.addLetters(letters as Letter[]);
             this.endTurn();
-            return { activePlayerMessage: invalidWordPlayerMessage, otherPlayerMessage: invalidWordPlayerMessage };
+            return { playerMessage: {messageType: INVALID_WORD_MESSAGE, values : [name]}};
         }
         this.players[this.playerTurnIndex].addScore(score);
         const endMessage = this.endTurn();
         if (endMessage) {
-            return { endGameMessage: endMessage };
+            return { playerMessage: {messageType: `${score}`, values : [name]}, endGameMessage: endMessage };
         }
         playerHand.addLetters(this.reserve.drawLetters(HAND_SIZE - playerHand.getLength()));
-
-        return { activePlayerMessage: '', otherPlayerMessage: `${score}` };
+        return { playerMessage: {messageType: `${score}`, values : [name]} };
     }
 
     swapLetters(stringLetters: string): CommandResult {
         if (!this.reserve.canSwap() || this.reserve.getLength() < stringLetters.length) return { errorType: ILLEGAL_COMMAND };
+        const name = this.players[this.playerTurnIndex].getName();
         const activeHand = this.players[this.playerTurnIndex].getHand();
         const letters = activeHand.getLetters(stringLetters, true);
         if (!letters) return { errorType: ILLEGAL_COMMAND };
         activeHand.addLetters(this.reserve.drawLetters(HAND_SIZE - activeHand.getLength()));
         this.reserve.returnLetters(letters);
-        this.resetCounter();
+        if(!(this.players[this.playerTurnIndex] instanceof VirtualPlayer)) this.resetCounter();
         this.endTurn();
-        const activePlayerMessage = `a échangé les lettres ${stringLetters}.`;
-        const otherPlayerMessage = `a échangé ${stringLetters.length} lettres.`;
-        return { activePlayerMessage, otherPlayerMessage };
+        return { playerMessage : {messageType: SWAP_MESSAGE, values : [name, stringLetters.length.toString()]}};
     }
 
     passTurn(): CommandResult {
-        this.incrementCounter();
+        const name = this.players[this.playerTurnIndex].getName();
+        if(!(this.players[this.playerTurnIndex] instanceof VirtualPlayer)) this.incrementCounter();
         const endMessage = this.endTurn();
         if (endMessage) {
-            return { endGameMessage: endMessage };
+            return { playerMessage: {messageType: PASS_MESSAGE, values : [name]}, endGameMessage: endMessage };
         }
-        const returnMessage = 'a passé son tour.';
-        return { activePlayerMessage: returnMessage, otherPlayerMessage: returnMessage };
+        return { playerMessage: {messageType: PASS_MESSAGE, values : [name]}};
     }
 
     endGame(): string {
+        clearTimeout(this.timer);
         this.gameOver = true;
         this.scorePlayers();
-        let endMessage: string = 'Fin de partie - lettres restantes';
+        let endMessage: string = '';
         for (const player of this.players) {
             endMessage += '\n' + player.getName() + ' : ' + player.getHand().getLettersToString();
         }
-        console.log(endMessage);
         return endMessage;
     }
 
@@ -145,8 +148,8 @@ export class Game {
         };
     }
 
-    findWords(virtualPlay: boolean): PossibleWords[] {
-        return PossibleWordFinder.findWords(
+    async findWords(virtualPlay: boolean): Promise<PossibleWords[]> {
+        return await PossibleWordFinder.findWords(
             { hand: this.players[this.playerTurnIndex].getHand(), board: this.board },
             virtualPlay,
         );
@@ -175,9 +178,30 @@ export class Game {
         this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
     }
 
+    resetTimer(){
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+            const username = this.players[this.playerTurnIndex].getName();
+            const result = this.passTurn();
+            this.timerCallback(username, result);
+        }, MILLISECOND_IN_MINUTES);
+    }
+
+    async attemptVirtualPlay(): Promise<CommandDetails | null> {
+        const currentPlayer = this.players[this.playerTurnIndex];
+        if(!(currentPlayer instanceof VirtualPlayer)) return null;
+        if(this.gameOver) return null;
+        if(currentPlayer.isPlaying) return null;
+        console.log(new Date().toLocaleTimeString() + ' | Start Virtual Play');
+        const commandDetails = await currentPlayer.play();
+        console.log(new Date().toLocaleTimeString() + ' | End Virtual Play');
+        currentPlayer.endPlay();
+        return commandDetails;
+    }
+
     private scorePlayers() {
         let scoreSum: number = 0;
-        let emptyHandIndex: number = 0;
+        let emptyHandIndex: number = -1;
         for (let i = 0; i < this.players.length; i++) {
             const player = this.players[i];
             const score = player.getHand().calculateHandScore();
@@ -188,19 +212,18 @@ export class Game {
                 player.addScore(-score);
             }
         }
-        this.players[emptyHandIndex].addScore(scoreSum);
+        if(emptyHandIndex > -1) this.players[emptyHandIndex].addScore(scoreSum);
     }
 
     private endTurn(): string {
         let returnMessage = '';
         this.changeTurn();
-        if (this.isGameFinished()) {
-            returnMessage = this.endGame();
-        }
+        if (this.isGameFinished()) return this.endGame();
+        
         return returnMessage;
     }
     private isGameFinished(): boolean {
-        return this.passCounter === NUMBER_PASS_ENDING_GAME || (this.isAnyHandEmpty() && this.getReserveLength() === 0);
+        return this.passCounter === (NUMBER_PASS_ENDING_GAME * this.getNumberOfRealPlayers()) || (this.isAnyHandEmpty() && this.getReserveLength() === 0);
     }
 
     private isAnyHandEmpty(): boolean {
@@ -247,5 +270,14 @@ export class Game {
         if (playerInfo.virtual)
             playerInfo.difficulty = player instanceof VirtualPlayerHard ? VirtualPlayerDifficulty.EXPERT : VirtualPlayerDifficulty.BEGINNER;
         return playerInfo;
+    }
+
+    private getNumberOfRealPlayers(): number {
+        let count = 0;
+        for(let player of this.players){
+            if(player instanceof VirtualPlayer) continue;
+            count++;
+        }
+        return count;
     }
 }

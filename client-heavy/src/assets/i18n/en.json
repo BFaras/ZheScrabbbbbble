@@ -120,6 +120,7 @@
         "MESSAGE": "Players in the Game Room",
         "LEAVE": "Leave the room",
         "JOIN": " is trying to join the game room.",
+        "OBSERVE": " wants to spectate the game.",
         "ACCEPT": "Accept",
         "DECLINE": "Decline",
         "START": "Start"
@@ -143,12 +144,26 @@
         "CANCEL": "Cancel request",
         "RETURN": "Return to game rooms"
     },
+    "OBSERVER-ROOM":{
+        "TITLE": "Waiting for host to start the game",
+        "RETURN": "Return to game rooms"
+    },
     "PASSWORD-PAGE":{
         "INPUT": "Please enter the password",
         "CONFIRM": "Confirm",
         "INCORRECT": "The password is incorrect",
         "FULL": "The room is full",
         "MESSAGE": "Error : this message shouldn't show up"
+    },
+    "ACTION-HISTORY":{
+        "TITLE": "ACTION HISTORY",
+        "MSG-1": "$0 placed $1 for $2 point(s)",
+        "MSG-2": "$0 tried to place an invalid word",
+        "MSG-3": "$0 swapped $1 letters",
+        "MSG-4": "$0 passed their turn",
+        "MSG-5": "$0 disconnected and was replaced by a virtual player",
+        "MSG-6": "$0 ran out of time and passed their turn",
+        "MSG-7": "Game over - letters left $0"
     },
     "FRIENDS-PAGE":{
         "MESSAGE": "You can manage your friends here!",

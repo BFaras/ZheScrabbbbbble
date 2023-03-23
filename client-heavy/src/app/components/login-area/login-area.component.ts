@@ -15,10 +15,10 @@ export class LoginAreaComponent implements OnInit {
     username: "",
     email: "",
     password: "",
+    avatar: "",
     securityQuestion: { question: "", answer: "" },
   }
   subscription: Subscription;
-  themeLanguageSubscription: Subscription;
   hide: boolean = true;
   isConnected: boolean = false;
 

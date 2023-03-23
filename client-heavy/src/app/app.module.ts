@@ -21,6 +21,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ChatComponent } from './components/chat/chat.component';
 import { CreateGameComponent } from './components/game-initialisation/create-game/create-game.component';
 import { JoinGameComponent } from './components/game-initialisation/join-game/join-game.component';
+import { ObserverRoomComponent } from './components/game-initialisation/observer-room/observer-room.component';
 import { PasswordInputComponent } from './components/game-initialisation/password-input-dialog/password-input.component';
 import { PendingRoomComponent } from './components/game-initialisation/pending-room-join/pending-room.component';
 import { WaitingRoomComponent } from './components/game-initialisation/waiting-room/waiting-room.component';
@@ -32,6 +33,7 @@ import { NavigationBarComponent } from './components/navigation-bar/navigation-b
 import { PasswordLostAreaComponent } from './components/password-lost-area/password-lost-area.component';
 import { AvatarPopUpComponent } from './components/profil-pop-up/avatar-pop-up/avatar-pop-up.component';
 import { SignUpAreaComponent } from './components/sign-up-area/sign-up-area.component';
+import { SignUpAvatarPopUpComponent } from './components/sign-up-avatar-pop-up/sign-up-avatar-pop-up.component';
 import { TimerComponent } from './components/timer/timer.component';
 import { WindowComponent } from './components/window/window.component';
 import { ChatPageComponent } from './pages/chat-page/chat-page.component';
@@ -83,6 +85,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         AvatarPopUpComponent,
         WindowComponent,
         PendingRoomComponent,
+        ObserverRoomComponent,
         PasswordInputComponent,
         PasswordLostPageComponent,
         PasswordLostAreaComponent,
@@ -90,6 +93,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         NavigationBarComponent,
         FriendsPageComponent,
         PublicChatsComponent,
+        SignUpAvatarPopUpComponent,
     ],
     imports: [
         AppMaterialModule,
@@ -112,7 +116,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
             }
         })
     ],
-    providers: [ChatService, ProfilePageComponent, LanguageComponent, FriendsPageComponent],
+    providers: [ChatService, ProfilePageComponent, LanguageComponent],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

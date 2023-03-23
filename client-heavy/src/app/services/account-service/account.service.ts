@@ -44,9 +44,6 @@ export class AccountService {
     return this.profile;
   }
 
-  askProfileInformation(): void {
-    this.socket.emit("Get Profile Information", this.getUsername());
-  }
 
   getUserProfileInformation(): Observable<ProfileInfo> {
     this.socket.emit("Get Profile Information", this.getUsername());
@@ -66,9 +63,14 @@ export class AccountService {
   }
 
   changeLanguage(lang: string) {
+    console.log(lang);
     this.socket.emit('Change Language', lang);
   }
-
+  /*
+  askProfileInformation(): void {
+    this.socket.emit("Get Profile Information", this.getUsername());
+  }
+*/
   getAvatarChangeStatus(): Observable<string> {
     return new Observable((observer: Observer<string>) => {
       this.socket.on('Avatar Change Response', (status: string) => {
@@ -80,10 +82,35 @@ export class AccountService {
   getThemeAndLanguage(): Observable<ProfileSettings> {
     this.socket.emit('Get Theme and Language');
     return new Observable((observer: Observer<ProfileSettings>) => {
-      this.socket.on('Theme and Language Response', (theme: string, lang: string) => {
+      this.socket.once('Theme and Language Response', (theme: string, lang: string) => {
         const profile: ProfileSettings = { theme: theme, language: lang };
         observer.next(profile);
       });
     });
   }
+
+  MakeAllAvatarBase64(AllAvatars: string[]): string[] {
+    const BASE_64_FORMAT = "data:image/png;base64,";
+    AllAvatars.forEach((value, index) => {
+      AllAvatars[index] = BASE_64_FORMAT + AllAvatars[index];
+
+    })
+
+    return AllAvatars;
+  }
+
+  getAllAvatars() {
+    this.socket.emit('Get All Avatars');
+  }
+
+  getAllAvatarsResponse(): Observable<string[]> {
+    return new Observable((observer: Observer<string[]>) => {
+      this.socket.once('Get All Avatars Response', (AllAvatars: string[]) => {
+        observer.next(this.MakeAllAvatarBase64(AllAvatars));
+      });
+    });
+
+  }
+
+
 }

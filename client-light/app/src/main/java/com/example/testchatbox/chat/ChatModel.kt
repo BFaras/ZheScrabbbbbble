@@ -3,6 +3,7 @@ package com.example.testchatbox.chat
 import SocketHandler
 import android.content.Context
 import android.util.Log
+import com.example.testchatbox.GameRoom
 import com.example.testchatbox.R
 import org.json.JSONArray
 import org.json.JSONObject
@@ -116,12 +117,12 @@ object ChatModel : ObservableChat {
         return ArrayList(publicChatList.values);
     }
 
-    fun addGameChat(id: String, name :String){
-        chatList[id] = Chat(ChatType.GLOBAL, name,  id)
+    fun addGameChat(gameRoom: GameRoom){
+        chatList[gameRoom.id] = Chat(ChatType.GLOBAL, "GAME",  gameRoom.id)
     }
 
-    fun removeGameChat(id :String){
-        chatList.remove(id)
+    fun removeGameChat(gameRoom: GameRoom){
+        chatList.remove(gameRoom.id)
     }
 
     fun joinPublicList(_id:String){
