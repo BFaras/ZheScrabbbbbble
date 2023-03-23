@@ -62,7 +62,9 @@
         "LEAVE":"Leave",
         "CREATE":"Create a public chat",
         "NAME":"Please enter the chat name: ",
-        "BUTTON":"Create"
+        "BUTTON":"Create",
+        "SEARCH":"Search for a chat: ",
+        "SEARCHBTN":"Search"
     },
     "LETTERHOLDER":{
         "PASS":"Skip turn",
@@ -97,6 +99,7 @@
         "HOME": "Home",
         "PROFILE": "Profile",
         "CHAT": "Chat",
+        "FRIENDS":"Friends",
         "SIGNOUT": "Sign Out"
     },
     "SOLO-MULTI":{

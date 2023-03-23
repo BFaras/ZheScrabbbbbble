@@ -62,7 +62,9 @@
         "LEAVE":"Quitter",
         "CREATE":"Créer un chat publique",
         "NAME":"Veuillez entrer le nom du chat: ",
-        "BUTTON":"Créer"
+        "BUTTON":"Créer",
+        "SEARCH":"Rechercher un chat: ",
+        "SEARCHBTN":"Rechercher"
     },
     "LETTERHOLDER":{
         "PASS":"Passer",
@@ -97,6 +99,7 @@
         "HOME": "Menu",
         "PROFILE": "Profil",
         "CHAT": "Chat",
+        "FRIENDS":"Amis",
         "SIGNOUT": "Déconnexion"
     },
     "SOLO-MULTI":{

@@ -10,6 +10,8 @@ export class AccountService {
   private username: string;
   private socket: Socket;
   private profile: ProfileInfo;
+  private usercode: string;
+
   constructor(private socketManagerService: SocketManagerService) {
     this.setUpSocket()
   }
@@ -26,20 +28,28 @@ export class AccountService {
     return this.username;
   }
 
+  getUserCode() {
+    return this.usercode;
+  }
+
   setUpProfile(profileInfo: ProfileInfo) {
     this.profile = profileInfo;
+  }
+
+  setUpUserCode(profile: ProfileInfo) {
+    this.usercode = profile.userCode;
   }
 
   getProfile() {
     return this.profile;
   }
 
-
   askProfileInformation(): void {
     this.socket.emit("Get Profile Information", this.getUsername());
   }
 
   getUserProfileInformation(): Observable<ProfileInfo> {
+    this.socket.emit("Get Profile Information", this.getUsername());
     return new Observable((observer: Observer<ProfileInfo>) => {
       this.socket.on('User Profile Response', (profileInfo: ProfileInfo) => {
         observer.next(profileInfo);

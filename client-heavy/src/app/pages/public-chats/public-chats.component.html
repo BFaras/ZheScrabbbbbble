@@ -9,17 +9,23 @@
         </div>
     </div>
     <div id="chats-wrapper">
-        <div id="chats-container">
+        <div class="chats-container">
             <h1 class="text">{{ 'PUBLIC-CHATS.MESSAGEJOIN' | translate }}</h1>
+            <div class="search-container">
+                <input class="input search-input" class="chat-input" (click)="setActive(0)" (keyup)="searchFilter()" placeholder="{{ 'PUBLIC-CHATS.SEARCH' | translate }}"/>
+            </div>
             <div class="chat-container" *ngFor="let chat of absentChatList">
-                <span class="chat text">{{ chat.chatName }}</span>
+                <span class="chat text chat-name">{{ chat.chatName }}</span>
                 <button class="text" (click)="joinChat(chat)">{{ 'PUBLIC-CHATS.JOIN' | translate }}</button>
             </div>
         </div>
-        <div id="chats-container">
+        <div class="chats-container">
             <h1 class="text">{{ 'PUBLIC-CHATS.MESSAGELEAVE' | translate }}</h1>
+            <div class="search-container">
+                <input class="input search-input" class="chat-input" (click)="setActive(1)" (keyup)="searchFilter()" placeholder="{{ 'PUBLIC-CHATS.SEARCH' | translate }}"/>
+            </div>
             <div class="chat-container" *ngFor="let chat of presentChatList">
-                <span class="chat text">{{ chat.chatName }}</span>
+                <span class="chat text chat-name">{{ chat.chatName }}</span>
                 <button class="text" (click)="alert(chat)">{{ 'PUBLIC-CHATS.LEAVE' | translate }}</button>
             </div>
         </div>

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Friend } from '@app/classes/friend-info';
+import { ProfileInfo } from '@app/classes/profileInfo';
 import { AccountService } from '@app/services/account-service/account.service';
 import { FriendsService } from '@app/services/friends.service';
 import { Subscription } from 'rxjs';
@@ -13,6 +14,8 @@ export class FriendsPageComponent {
   friends: Friend[] = [];
   usercode: string = "";
   subscriptions: Subscription[] = [];
+  profile: ProfileInfo;
+  username: string = "";
 
   constructor(private friendsService: FriendsService, private account: AccountService) {
     this.updateFriendsList();
@@ -30,10 +33,13 @@ export class FriendsPageComponent {
 
   addFriend() {
     const friendCode = (document.getElementById('friendCode') as HTMLInputElement).value;
-    this.friendsService.addFriend(friendCode).subscribe((errorCode: string) => {
-      this.updateFriendsList();
-      console.log(errorCode);
-    });
+    if (friendCode !== this.usercode) {
+      this.friendsService.addFriend(friendCode).subscribe((errorCode: string) => {
+        this.updateFriendsList();
+        console.log(errorCode);
+      });
+    } else alert("bruh make real friends");
+
     (document.getElementById('friendCode') as HTMLInputElement).value = "";
   }
 
@@ -44,4 +50,7 @@ export class FriendsPageComponent {
     this.friendsService.getFriendsList();
   }
 
+  setProfile(code: ProfileInfo) {
+    this.profile = code;
+  }
 }

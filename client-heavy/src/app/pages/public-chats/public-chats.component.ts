@@ -12,6 +12,7 @@ export class PublicChatsComponent implements OnInit {
   absentChatList: ChatInfo[];
   presentChatList: ChatInfo[] = [];
   subscriptions: Subscription[] = [];
+  activeInput: number;
 
   constructor(private chatService: ChatService) {
     this.updateChats();
@@ -58,10 +59,42 @@ export class PublicChatsComponent implements OnInit {
 
   addChat() {
     const chatName = (document.getElementById('chat-name') as HTMLInputElement).value;
-    this.chatService.createChat(chatName).subscribe((errorCode: string) => {
-      this.updateChats();
-      console.log(errorCode);
-    });
+    if (chatName.length < 35) {
+      this.chatService.createChat(chatName).subscribe((errorCode: string) => {
+        this.updateChats();
+        console.log(errorCode);
+      });
+    }
+    else alert("Le nom du chat est trop long. Il ne doit pas dépasser 35 caractères.");
     (document.getElementById('chat-name') as HTMLInputElement).value = "";
   }
+
+  setActive(input: number) {
+    this.activeInput = input;
+  }
+
+  searchFilter() {
+    let input, filter, a, i, txtValue;
+    let container: any = [];
+    let containerDiv: any = [];
+    let span: any = [];
+    input = document.getElementsByClassName('chat-input');
+    filter = (input[this.activeInput] as HTMLInputElement).value.toUpperCase();
+    container = document.getElementsByClassName("chats-container");
+    containerDiv = container[this.activeInput]!.getElementsByClassName("chat-container");
+    for (let i = 0; i < containerDiv.length; i++) {
+      span.push(containerDiv[i].getElementsByTagName('span'))
+    }
+
+    for (i = 0; i < span.length; i++) {
+      a = span[i][0];
+      txtValue = a.textContent || a.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        containerDiv[i].style.display = "";
+      } else {
+        containerDiv[i].style.display = "none";
+      }
+    }
+  }
+
 }

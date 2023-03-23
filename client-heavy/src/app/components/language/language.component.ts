@@ -22,7 +22,6 @@ export class LanguageComponent implements OnInit {
   translateLanguageTo(lang: string) {
     this.oppositeLang = this.currentLang;
     this.currentLang = lang;
-
     this.translate.use(lang);
     this.updateLanguage(lang);
     //localStorage.setItem("currentLang", lang);
