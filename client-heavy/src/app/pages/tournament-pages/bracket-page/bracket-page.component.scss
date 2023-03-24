@@ -46,6 +46,7 @@
     display: inline-grid;
     background-color: var(--button-primary);
     border-radius: 15px;
+    box-shadow: var(--box-shadow);
 }
 
 .game.in-progress {
