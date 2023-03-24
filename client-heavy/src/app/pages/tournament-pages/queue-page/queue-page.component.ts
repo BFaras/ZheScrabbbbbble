@@ -9,9 +9,8 @@ import { TournamentService } from '@app/services/tournament-service/tournament.s
 })
 export class QueuePageComponent {
     constructor(private tournamentService: TournamentService, private router: Router) {
-        this.router.navigate(['/tournament-bracket']);
         this.tournamentService.tournamentFoundObservable().subscribe(() => {
-            
+            this.router.navigate(['/tournament-bracket']);
         });
         this.tournamentService.enterTournament();
     }

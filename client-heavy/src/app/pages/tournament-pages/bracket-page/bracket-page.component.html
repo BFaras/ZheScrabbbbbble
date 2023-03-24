@@ -3,7 +3,7 @@
     <div>
         <h1 class="header-item">{{ 'TOURNAMENT-BRACKET.TITLE' | translate }}</h1>
         <div id="timer">
-            <h2>{{ 'TOURNAMENT-BRACKET.NEXT-GAME-TIMER' | translate }} 20:00</h2>
+            <h2>{{(betweenRounds ? 'TOURNAMENT-BRACKET.NEXT-GAME-TIMER' : 'TOURNAMENT-BRACKET.ROUND-TIMER') | translate }} {{ getTimer().minute + ':' + (getTimer().second | number: '2.0-0') }}</h2>
         </div>
     </div>
     <div>

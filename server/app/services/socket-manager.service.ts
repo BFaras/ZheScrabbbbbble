@@ -3,7 +3,7 @@ import { Player } from '@app/classes/player';
 import { GameStatus } from '@app/classes/tournament';
 import { VirtualPlayerEasy } from '@app/classes/virtual-player-easy';
 import { VirtualPlayerHard } from '@app/classes/virtual-player-hard';
-import { MAX_NUMBER_OF_PLAYERS, MILLISECOND_IN_MINUTES, RoomVisibility, TOURNAMENT_SIZE } from '@app/constants/basic-constants';
+import { MAX_NUMBER_OF_PLAYERS, RoomVisibility, TOURNAMENT_ROUND_START_TIMER, TOURNAMENT_SIZE } from '@app/constants/basic-constants';
 import { JOIN_REQUEST_REFUSED, NO_ERROR, ROOM_IS_FULL, ROOM_NAME_TAKEN, ROOM_PASSWORD_INCORRECT } from '@app/constants/error-code-constants';
 import { DISCONNECT_MESSAGE, END_GAME_MESSAGE, OUT_OF_TIME_MESSAGE } from '@app/constants/game-state-constants';
 import { CommandController, CommandResult, PlayerMessage } from '@app/controllers/command.controller';
@@ -244,7 +244,7 @@ export class SocketManager {
                 for(let i = 0; i < TOURNAMENT_SIZE; i++){
                     const socketIO = this.tournamentQueue.shift();
                     if(!socketIO) continue;
-                    users.push({socket : socketIO, username : this.accountInfoService.getUsername(socket)});
+                    users.push({socket : socketIO, username : this.accountInfoService.getUsername(socketIO)});
                 }
                 const tid = this.roomManager.createTournament(users);
                 const players = [];
@@ -255,9 +255,10 @@ export class SocketManager {
                 const rooms = [this.roomManager.createRoom(tid + '-1', RoomVisibility.Tournament), this.roomManager.createRoom(tid + '-2', RoomVisibility.Tournament)]
                 for(let i = 0; i < users.length; i++){
                     const index = i < 2 ? 0 : 1;
-                    users[i].socket.join[rooms[index]];
+                    users[i].socket.join(rooms[index]);
                     this.roomManager.addPlayer(rooms[index], new Player(users[i].socket.id, users[i].username));
                 }
+                this.roomManager.getGameRooms();
                 const gameData = this.roomManager.registerTournamentGames(tid, rooms[0], rooms[1]);
                 this.sio.in(tid).emit('Tournament Found', gameData);
                 setTimeout(() => {
@@ -268,8 +269,7 @@ export class SocketManager {
                     console.log(new Date().toLocaleTimeString() + ' | New tournament games started');
                     this.sio.in(rooms[0]).emit('Game Started');
                     this.sio.in(rooms[1]).emit('Game Started');
-                    socket.emit('Game Started');
-                }, MILLISECOND_IN_MINUTES);
+                }, TOURNAMENT_ROUND_START_TIMER);
             });
 
             socket.on('Exit Tournament', () => {

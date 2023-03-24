@@ -95,8 +95,8 @@ export class RoomManagerService {
 
     registerTournamentGames(tid: string, id1 : string, id2: string): GameData[]{
         const tournament = this.tournaments[tid];
-        const game1 = {type : 'Semi1', status : GameStatus.PENDING, players : this.activeRooms[id1].getPlayerNames(), roomCode : id1};
-        const game2 = {type : 'Semi2', status : GameStatus.PENDING, players : this.activeRooms[id2].getPlayerNames(), roomCode : id2};
+        const game1 = {type : 'Semi1', status : GameStatus.PENDING, players : this.activeRooms[id1].getPlayerNames(), winnerIndex: 0, roomCode : id1};
+        const game2 = {type : 'Semi2', status : GameStatus.PENDING, players : this.activeRooms[id2].getPlayerNames(), winnerIndex: 0, roomCode : id2};
         tournament.registerGame(game1);
         tournament.registerGame(game2);
         return tournament.getGameData();

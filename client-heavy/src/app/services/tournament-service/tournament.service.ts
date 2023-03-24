@@ -20,11 +20,16 @@ export interface GameData {
     providedIn: 'root',
 })
 export class TournamentService {
+    private gameData : GameData[] = [];
+
     constructor(private socketManagerService: SocketManagerService){}
 
-    tournamentFoundObservable(): Observable<GameData[]> {
-        return new Observable((observer: Observer<GameData[]>) => {
-            this.socketManagerService.getSocket().once('Tournament Found', (gameData) => observer.next(gameData));
+    tournamentFoundObservable(): Observable<null> {
+        return new Observable((observer: Observer<null>) => {
+            this.socketManagerService.getSocket().once('Tournament Found', (gameData) => {
+                this.gameData = gameData;
+                observer.next(null);
+            });
         });
     }
 
@@ -36,4 +41,7 @@ export class TournamentService {
         this.socketManagerService.getSocket().emit('Exit Tournament');
     }
 
+    getGameData() : GameData[]{
+        return this.gameData
+    }
 }
