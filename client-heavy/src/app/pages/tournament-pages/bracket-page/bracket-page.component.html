@@ -8,21 +8,27 @@
     </div>
     <div>
     <div class="match-list">
-        <div class="game">
-            <h2>{{semi1.players[0] ? semi1.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
-            <h2>{{semi1.players[1] ? semi1.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+        <h2 class="round-title">{{'TOURNAMENT-BRACKET.ROUND' | translate}} 1</h2>
+        <h2 class="round-title">{{'TOURNAMENT-BRACKET.ROUND' | translate}} 2</h2>
+        <div class="game" [class.in-progress]="semi1.status === 1">
+            <h2 class="player" [class.winner]="semi1.status === 2 && semi1.winnerIndex === 0">{{semi1.players[0] ? semi1.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+            <h2 class="vs">VS</h2>
+            <h2 class="player" [class.winner]="semi1.status === 2 && semi1.winnerIndex === 1">{{semi1.players[1] ? semi1.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
         </div>
-        <div class="game">
-            <h2>{{semi2.players[0] ? semi2.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
-            <h2>{{semi2.players[1] ? semi2.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+        <div class="game" [class.in-progress]="final1.status === 1">
+            <h2 class="player" [class.winner]="final1.status === 2 && final1.winnerIndex === 0">{{final1.players[0] ? final1.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+            <h2 class="vs">VS</h2>
+            <h2 class="player" [class.winner]="final1.status === 2 && final1.winnerIndex === 1">{{final1.players[1] ? final1.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
         </div>
-        <div class="game">
-            <h2>{{final1.players[0] ? final1.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
-            <h2>{{final1.players[1] ? final1.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+        <div class="game" [class.in-progress]="semi2.status === 1">
+            <h2 class="player" [class.winner]="semi2.status === 2 && semi2.winnerIndex === 0">{{semi2.players[0] ? semi2.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+            <h2 class="vs">VS</h2>
+            <h2 class="player" [class.winner]="semi2.status === 2 && semi2.winnerIndex === 1">{{semi2.players[1] ? semi2.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
         </div>
-        <div class="game">
-            <h2>{{final2.players[0] ? final2.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
-            <h2>{{final2.players[1] ? final2.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+        <div class="game" [class.in-progress]="final2.status === 1">
+            <h2 class="player" [class.winner]="final2.status === 2 && final2.winnerIndex === 0">{{final2.players[0] ? final2.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+            <h2 class="vs">VS</h2>
+            <h2 class="player" [class.winner]="final2.status === 2 && final2.winnerIndex === 1">{{final2.players[1] ? final2.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
         </div>
     </div>
 </div>

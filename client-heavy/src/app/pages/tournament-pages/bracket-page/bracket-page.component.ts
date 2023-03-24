@@ -42,10 +42,10 @@ export class BracketPageComponent {
                     break;
             }
         }
-        if(!s1) this.semi1 = {type: 'Semi1', status: GameStatus.PENDING, players: ['Manuel', 'Manuel2'], roomCode: ''};
-        if(!s2) this.semi2 = {type: 'Semi2', status: GameStatus.PENDING, players: ['Manuel3', 'Manuel4'], roomCode: ''};
-        if(!f1) this.final1 = {type: 'Final1', status: GameStatus.PENDING, players: ['', ''], roomCode: ''};
-        if(!f2) this.final2 = {type: 'Final2', status: GameStatus.PENDING, players: ['', ''], roomCode: ''};
+        if(!s1) this.semi1 = {type: 'Semi1', status: GameStatus.IN_PROGRESS, winnerIndex: 0, players: ['Manuel', 'Manuel2'], roomCode: ''};
+        if(!s2) this.semi2 = {type: 'Semi2', status: GameStatus.FINISHED, winnerIndex: 0,  players: ['Manuel3', 'Manuel4'], roomCode: ''};
+        if(!f1) this.final1 = {type: 'Final1', status: GameStatus.PENDING, winnerIndex: 0, players: ['Manuel3', ''], roomCode: ''};
+        if(!f2) this.final2 = {type: 'Final2', status: GameStatus.PENDING, winnerIndex: 0, players: ['Manuel4', ''], roomCode: ''};
     }
 
 }

@@ -179,6 +179,7 @@
         "TITLE": "TOURNAMENT",
         "ROUND-TIMER": "Round ends in : ",
         "NEXT-GAME-TIMER": "Next game starts in : ",
-        "TBD": "To be determined"
+        "TBD": "To be determined",
+        "ROUND": "Round"
     }
 }

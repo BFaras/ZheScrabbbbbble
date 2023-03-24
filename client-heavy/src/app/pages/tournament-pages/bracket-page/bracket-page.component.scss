@@ -1,6 +1,6 @@
 .container {
     background-color: var(--background-default);
-    height: 53%;
+    height: 70%;
     padding: 5%;
 }
 
@@ -28,15 +28,72 @@
     font-size: 40px;
 }
 
+#timer {
+    color: var(--text-default);
+}
+
 .match-list {
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 0.5fr 1fr 1fr;
     grid-template-columns: 1fr 1fr;
-    column-gap: 100px;
+    column-gap: 250px;
+    row-gap: 100px;
+    margin-top: 50px;
 }
 
 .game {
+    width: 200px;
     display: inline-grid;
-    border-style: solid;
+    background-color: var(--button-primary);
+    border-radius: 15px;
+}
+
+.game.in-progress {
+    background-color: var(--button-primary-hover);
+    border: 2px solid transparent;
+}
+
+.game.in-progress:hover {
+    border: 2px solid var(--button-text-hover);
+}
+
+.game.in-progress > .player,
+.game.in-progress > .vs {
+    border-color: var(--button-primary-hover);
+    color: var(--button-text-hover);
+    animation: glow 1s ease-in-out infinite alternate;
+}
+
+.player {
+    color: var(--button-text-default);
+    text-align: center;
     padding: 5%;
+    margin: 0;
+}
+
+.player.winner {
+    color: var(--button-text-hover);
+    text-shadow: 0 0 5px var(--button-text-default), 0 0 10px var(--button-text-default);
+}
+
+.round-title{
+    color: var(--text-default);
+    text-align: center;
+    font-size: xx-large;
+}
+
+.vs{
+    text-align: center;
+    color: var(--button-text-default);
+    margin: 0;
+}
+  
+@keyframes glow {
+    from {
+      text-shadow: 0 0 5px var(--button-text-default), 0 0 10px var(--button-text-default);
+    }
+    
+    to {
+      text-shadow: 0 0 10px var(--button-text-default);
+    }
 }

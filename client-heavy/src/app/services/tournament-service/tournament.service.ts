@@ -12,6 +12,7 @@ export interface GameData {
     type : string;
     status : GameStatus;
     players : string[];
+    winnerIndex : number;
     roomCode : string;
 }
 

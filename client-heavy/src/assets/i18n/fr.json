@@ -179,6 +179,7 @@
         "TITLE": "TOURNOIS",
         "ROUND-TIMER": "Fin de la ronde dans : ",
         "NEXT-GAME-TIMER": "Prochaine partie commence dans : ",
-        "TBD": "À déterminer"
+        "TBD": "À déterminer",
+        "ROUND": "Ronde"
     }
 }
