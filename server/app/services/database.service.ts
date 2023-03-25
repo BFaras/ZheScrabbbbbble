@@ -417,6 +417,11 @@ export class DatabaseService {
         return Promise.resolve(!(thisChatWithUserInIt === undefined || thisChatWithUserInIt === null));
     }
 
+    async isChatExistant(chatId: string): Promise<boolean> {
+        const chatDoc = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: new ObjectId(chatId) });
+        return Promise.resolve(!(chatDoc === undefined || chatDoc === null));
+    }
+
     async isGlobalChatExistant(): Promise<boolean> {
         const globalChatDoc = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ chatType: ChatType.GLOBAL });
         return Promise.resolve(!(globalChatDoc === undefined || globalChatDoc === null));

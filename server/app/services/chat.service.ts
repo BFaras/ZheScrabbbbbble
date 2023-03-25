@@ -3,14 +3,17 @@ import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-consta
 import { ChatCreationResponse, ChatInfo, ChatInfoDB, ChatType, PRIVATE_CHAT_IDS_SEPARATOR } from '@app/interfaces/chat-info';
 import { ChatMessage, ChatMessageDB, ChatUserInfo } from '@app/interfaces/chat-message';
 import { Container, Service } from 'typedi';
+import { ChatGameHistoryService } from './chat-game-history.service';
 import { DatabaseService } from './database.service';
 
 @Service()
 export class ChatService {
-    dbService: DatabaseService;
+    private dbService: DatabaseService;
+    private chatGameHistoryService: ChatGameHistoryService;
 
     constructor() {
         this.dbService = Container.get(DatabaseService);
+        this.chatGameHistoryService = Container.get(ChatGameHistoryService);
     }
 
     async createChat(userId: string, chatName: string, chatType: ChatType): Promise<ChatCreationResponse> {
@@ -72,12 +75,21 @@ export class ChatService {
     }
 
     async getChatHistory(chatId: string): Promise<ChatMessage[]> {
-        return this.transformChatHistoryForClient(await this.dbService.getChatHistory(chatId));
+        if (await this.chatGameHistoryService.isGameChat(chatId)) {
+            return await this.transformChatHistoryForClient(this.chatGameHistoryService.getGameChatHistory(chatId));
+        } else {
+            return await this.transformChatHistoryForClient(await this.dbService.getChatHistory(chatId));
+        }
     }
 
     async addChatMessageToHistory(userId: string, chatId: string, chatMessage: ChatMessage): Promise<void> {
         const chatMessageDB: ChatMessageDB = this.createChatMessageDB(userId, chatMessage);
-        await this.dbService.addMessageToHistory(chatId, chatMessageDB);
+
+        if (await this.chatGameHistoryService.isGameChat(chatId)) {
+            this.chatGameHistoryService.addMessageToGameChatHistory(chatId, chatMessageDB);
+        } else {
+            await this.dbService.addMessageToHistory(chatId, chatMessageDB);
+        }
     }
 
     async joinGlobalChat(userId: string) {
