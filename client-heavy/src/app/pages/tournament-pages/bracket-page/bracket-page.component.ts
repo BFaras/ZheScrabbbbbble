@@ -42,18 +42,22 @@ export class BracketPageComponent implements OnDestroy{
                 case 'Semi1':
                     s1 = true;
                     this.semi1 = game;
+                    if(this.semi1.players.length === 1) this.semi1.players.push('');
                     break;
                 case 'Semi2':
                     s2 = true;
                     this.semi2 = game;
+                    if(this.semi2.players.length === 1) this.semi2.players.push('');
                     break;
                 case 'Final1':
                     f1 = true;
                     this.final1 = game;
+                    if(this.final1.players.length === 1) this.final1.players.push('');
                     break;
                 case 'Final2':
                     f2 = true;
                     this.final2 = game;
+                    if(this.final2.players.length === 1) this.final2.players.push('');
                     break;
             }
         }

@@ -16,6 +16,7 @@ export class GameRoom {
     private gameStarted: boolean;
     private observers: string[] = [];
 
+
     constructor(id: string, name: string, visibility: RoomVisibility, password?: string) {
         this.id = id;
         this.name = name;

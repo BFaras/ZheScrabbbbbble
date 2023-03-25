@@ -187,6 +187,16 @@ export class Game {
         }, MILLISECOND_IN_MINUTES);
     }
 
+    getWinner(): string {
+        if(!this.gameOver) return '';
+        let highestScore = -Infinity;
+        let playerIndex = -1;
+        for(let i = 0; i < this.players.length; i++){
+            if(this.players[i].getScore() > highestScore) playerIndex = i
+        }
+        return this.players[playerIndex].getName();
+    }
+
     async attemptVirtualPlay(): Promise<CommandDetails | null> {
         const currentPlayer = this.players[this.playerTurnIndex];
         if(!(currentPlayer instanceof VirtualPlayer)) return null;

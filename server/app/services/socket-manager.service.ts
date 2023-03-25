@@ -3,9 +3,9 @@ import { Player } from '@app/classes/player';
 import { GameStatus } from '@app/classes/tournament';
 import { VirtualPlayerEasy } from '@app/classes/virtual-player-easy';
 import { VirtualPlayerHard } from '@app/classes/virtual-player-hard';
-import { MAX_NUMBER_OF_PLAYERS, RoomVisibility, TOURNAMENT_ROUND_START_TIMER, TOURNAMENT_SIZE } from '@app/constants/basic-constants';
+import { MAX_NUMBER_OF_PLAYERS, RoomVisibility, TOURNAMENT_SIZE } from '@app/constants/basic-constants';
 import { JOIN_REQUEST_REFUSED, NO_ERROR, ROOM_IS_FULL, ROOM_NAME_TAKEN, ROOM_PASSWORD_INCORRECT } from '@app/constants/error-code-constants';
-import { DISCONNECT_MESSAGE, END_GAME_MESSAGE, OUT_OF_TIME_MESSAGE } from '@app/constants/game-state-constants';
+import { DISCONNECT_MESSAGE, END_GAME_MESSAGE, OUT_OF_TIME_MESSAGE, ROUND_OVER_MESSAGE } from '@app/constants/game-state-constants';
 import { CommandController, CommandResult, PlayerMessage } from '@app/controllers/command.controller';
 import * as http from 'http';
 import * as io from 'socket.io';
@@ -252,34 +252,22 @@ export class SocketManager {
                     user.socket.join(tid);
                     players.push(user.username);
                 }
-                const rooms = [this.roomManager.createRoom(tid + '-1', RoomVisibility.Tournament), this.roomManager.createRoom(tid + '-2', RoomVisibility.Tournament)]
-                for(let i = 0; i < users.length; i++){
-                    const index = i < 2 ? 0 : 1;
-                    users[i].socket.join(rooms[index]);
-                    this.roomManager.addPlayer(rooms[index], new Player(users[i].socket.id, users[i].username));
-                }
-                this.roomManager.getGameRooms();
-                const gameData = this.roomManager.registerTournamentGames(tid, rooms[0], rooms[1]);
-                this.sio.in(tid).emit('Tournament Found', gameData);
-                setTimeout(() => {
-                    this.roomManager.getRoom(rooms[0]).startGame(this.timerCallback.bind(this));
-                    this.roomManager.updateTournamentGameStatus(tid, rooms[0], GameStatus.IN_PROGRESS);
-                    this.roomManager.getRoom(rooms[1]).startGame(this.timerCallback.bind(this));
-                    this.roomManager.updateTournamentGameStatus(tid, rooms[1], GameStatus.IN_PROGRESS);
-                    console.log(new Date().toLocaleTimeString() + ' | New tournament games started');
-                    this.sio.in(rooms[0]).emit('Game Started');
-                    this.sio.in(rooms[1]).emit('Game Started');
-                }, TOURNAMENT_ROUND_START_TIMER);
+                this.sio.in(tid).emit('Tournament Found');
+                this.roomManager.startTournament(tid, this.createTournamentRound, this.startTournamentRound, this.endTournamentRound);
+            });
+
+            socket.on('Get Tournament Data', () => {
+                const tournament = this.roomManager.findTournamentFromPlayer(socket.id);
+                if(!tournament) return;
+                socket.emit('Tournament Data Response', tournament.getGameData());
             });
 
             socket.on('Exit Tournament', () => {
                 const index = this.tournamentQueue.indexOf(socket);
                 if(index >= 0){
                     this.tournamentQueue.splice(index, 1);
-                    console.log('removed');
                     return;
                 }
-                console.log('not removed');
             });
 
             socket.on('disconnect', async () => {
@@ -338,5 +326,34 @@ export class SocketManager {
             return;
         };
         this.playVirtualTurns(room);
+    }
+
+    private startTournamentRound(tid : string, users: io.Socket[], rooms: string[]){
+        this.roomManager.getRoom(rooms[0]).startGame(this.timerCallback.bind(this));
+        this.roomManager.updateTournamentGameStatus(tid, rooms[0], GameStatus.IN_PROGRESS);
+        this.roomManager.getRoom(rooms[1]).startGame(this.timerCallback.bind(this));
+        this.roomManager.updateTournamentGameStatus(tid, rooms[1], GameStatus.IN_PROGRESS);
+        console.log(new Date().toLocaleTimeString() + ' | New tournament games started');
+        this.sio.in(rooms[0]).emit('Game Started');
+        this.sio.in(rooms[1]).emit('Game Started');
+    }
+
+    private createTournamentRound(tid : string, users: io.Socket[]) : string []{
+        const rooms = [this.roomManager.createRoom(tid + '-1', RoomVisibility.Tournament), this.roomManager.createRoom(tid + '-2', RoomVisibility.Tournament)]
+        for(let i = 0; i < users.length; i++){
+            const index = i < 2 ? 0 : 1;
+            users[i].join(rooms[index]);
+            this.roomManager.addPlayer(rooms[index], new Player(users[i].id, this.accountInfoService.getUsername(users[i])));
+        }
+        this.roomManager.registerTournamentGames(tid, rooms[0], rooms[1]);
+        return rooms;
+    }
+
+    private endTournamentRound(tid : string, ){
+        const endMessages = this.roomManager.endTournamentGames(tid);
+        for(let endMessage of endMessages){
+            this.sendGameState(endMessage.room, {messageType : ROUND_OVER_MESSAGE, values: []});
+            this.sendGameState(endMessage.room, {messageType: END_GAME_MESSAGE, values: [endMessage.endMessage]});
+        }
     }
 }

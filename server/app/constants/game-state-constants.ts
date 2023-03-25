@@ -5,3 +5,4 @@ export const PASS_MESSAGE = 'MSG-4';
 export const DISCONNECT_MESSAGE = 'MSG-5';
 export const OUT_OF_TIME_MESSAGE = 'MSG-6';
 export const END_GAME_MESSAGE = 'MSG-7';
+export const ROUND_OVER_MESSAGE = 'MSG-8';

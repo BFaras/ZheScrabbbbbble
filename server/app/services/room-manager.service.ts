@@ -93,16 +93,45 @@ export class RoomManagerService {
         return id;
     }
 
-    registerTournamentGames(tid: string, id1 : string, id2: string): GameData[]{
+    registerTournamentGames(tid: string, id1 : string, id2: string){
         const tournament = this.tournaments[tid];
         const game1 = {type : 'Semi1', status : GameStatus.PENDING, players : this.activeRooms[id1].getPlayerNames(), winnerIndex: 0, roomCode : id1};
         const game2 = {type : 'Semi2', status : GameStatus.PENDING, players : this.activeRooms[id2].getPlayerNames(), winnerIndex: 0, roomCode : id2};
         tournament.registerGame(game1);
         tournament.registerGame(game2);
-        return tournament.getGameData();
     }
 
     updateTournamentGameStatus(tid: string, id: string, status: GameStatus){
         this.tournaments[tid].updateGameStatus(id, status);
+    }
+
+    getTournamentGameData(tid: string): GameData[]{
+        return this.tournaments[tid].getGameData();
+    }
+
+    startTournament(tid: string, gameCreationCallback : (tid : string, users: io.Socket[]) => string[], gameStartCallback : (tid : string, users: io.Socket[], rooms: string[]) => void, gameEndCallback : (tid : string) => void){
+        this.tournaments[tid].startTournament(gameCreationCallback, gameStartCallback, gameEndCallback);
+    }
+
+    findTournamentFromPlayer(playerID: string): Tournament | null {
+        for (const tournament of Object.values(this.tournaments)) {
+            if (tournament.isPlayerInTournament(playerID)) {
+                return tournament;
+            }
+        }
+        return null;
+    }
+
+    endTournamentGames(tid: string) : {room: GameRoom, endMessage: string}[]{
+        const tournament = this.tournaments[tid]
+        const rooms = tournament.getGameRooms();
+        const endGameMessages : {room: GameRoom, endMessage: string}[] = [];
+        for(let room of rooms){
+            const gameRoom = this.activeRooms[room];
+            if(gameRoom.getGame.isGameOver()) continue;
+            endGameMessages.push({room: gameRoom, endMessage: gameRoom.getGame.endGame()});
+            tournament.setGameWinner(room, gameRoom.getGame.getWinner());
+        }
+        return endGameMessages;
     }
 }
