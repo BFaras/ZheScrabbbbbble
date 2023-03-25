@@ -29,7 +29,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => {
-            if(gameState.message) this.actionHistory.push(gameState.message);
+            if (gameState.message) this.actionHistory.push(gameState.message);
             this.endGame = gameState.gameOver;
         }));
         //Reconnection code
@@ -49,13 +49,21 @@ export class GamePageComponent implements OnInit, OnDestroy {
         const text = 'Êtes-vous sûr(e) de vouloir quitter la partie? Tout votre progrès sera perdu.';
         if (confirm(text)) {
             this.gameStateService.sendAbandonRequest();
-            this.router.navigate(['/home']);
+            if (this.gameStateService.isTournamentGame()) {
+                this.router.navigate(['/tournament-bracket']);
+            } else {
+                this.router.navigate(['/home']);
+            }
         }
     }
 
     goHome() {
         this.gameStateService.sendAbandonRequest();
-        this.router.navigate(['/home']);
+        if (this.gameStateService.isTournamentGame()) {
+            this.router.navigate(['/tournament-bracket']);
+        } else {
+            this.router.navigate(['/home']);
+        }
     }
 
     setReceiver(receiver: string) {
@@ -78,12 +86,12 @@ export class GamePageComponent implements OnInit, OnDestroy {
         this.chatDisplay = !this.chatDisplay;
     }
 
-    isObserver() : boolean{
+    isObserver(): boolean {
         return this.gameStateService.getObserverIndex() >= 0;
     }
 
-    formatActionInList(message : string, values : string[]): string{
-        for(let i = 0; i < values.length; i++){
+    formatActionInList(message: string, values: string[]): string {
+        for (let i = 0; i < values.length; i++) {
             message = message.replace('$' + i, values[i])
         }
         return message;

@@ -2,32 +2,30 @@ import { Injectable } from "@angular/core";
 import { Observable, Observer } from "rxjs";
 import { SocketManagerService } from "../socket-manager-service/socket-manager.service";
 
-export enum GameStatus{
+export enum GameStatus {
     PENDING,
     IN_PROGRESS,
     FINISHED
 }
 
 export interface GameData {
-    type : string;
-    status : GameStatus;
-    players : string[];
-    winnerIndex : number;
-    roomCode : string;
+    type: string;
+    status: GameStatus;
+    players: string[];
+    winnerIndex: number;
+    roomCode: string;
 }
 
 @Injectable({
     providedIn: 'root',
 })
 export class TournamentService {
-    private gameData : GameData[] = [];
 
-    constructor(private socketManagerService: SocketManagerService){}
+    constructor(private socketManagerService: SocketManagerService) {}
 
     tournamentFoundObservable(): Observable<null> {
         return new Observable((observer: Observer<null>) => {
-            this.socketManagerService.getSocket().once('Tournament Found', (gameData) => {
-                this.gameData = gameData;
+            this.socketManagerService.getSocket().once('Tournament Found', () => {
                 observer.next(null);
             });
         });
@@ -37,11 +35,16 @@ export class TournamentService {
         this.socketManagerService.getSocket().emit('Enter Tournament Queue');
     }
 
-    leaveTournament(){
+    leaveTournament() {
         this.socketManagerService.getSocket().emit('Exit Tournament');
     }
 
-    getGameData() : GameData[]{
-        return this.gameData
+    getGameData(): Observable<GameData[]> {
+        this.socketManagerService.getSocket().emit('Get Tournament Data');
+        return new Observable((observer: Observer<GameData[]>) => {
+            this.socketManagerService.getSocket().once('Tournament Data Response', (data) => {
+                observer.next(data);
+            });
+        });
     }
 }

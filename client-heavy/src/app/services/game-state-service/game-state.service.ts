@@ -9,7 +9,7 @@ export interface GameState {
     playerTurnIndex: number;
     reserveLength: number;
     gameOver: boolean;
-    message ?: PlayerMessage;
+    message?: PlayerMessage;
 }
 
 export interface PlayerMessage {
@@ -30,22 +30,23 @@ export class GameStateService {
     private socket: Socket;
     private gameStateObservable: Observable<GameState>;
     private gameStateObservers: Observer<GameState>[] = [];
-    private observerIndex : number;
+    private observerIndex: number;
+    private tournamentGame: boolean;
 
     constructor(private socketManagerService: SocketManagerService) {
         this.gameStateObservable = new Observable((observer: Observer<GameState>) => {
-            if(!this.socket.active) this.refreshSocket();
+            if (!this.socket.active) this.refreshSocket();
             this.gameStateObservers.push(observer);
         });
         this.refreshSocket();
     }
 
-    refreshSocket(){
+    refreshSocket() {
         this.gameStateObservers = [];
         this.socket = this.socketManagerService.getSocket();
         this.socket.on('Game State Update', (state: GameState) => {
             console.log(state);
-            for(let observer of this.gameStateObservers){
+            for (let observer of this.gameStateObservers) {
                 observer.next(state);
             }
         });
@@ -55,7 +56,7 @@ export class GameStateService {
         return this.gameStateObservable;
     }
 
-    requestGameState(){
+    requestGameState() {
         this.socket.emit('Request Game State');
     }
 
@@ -67,11 +68,19 @@ export class GameStateService {
         this.socket.emit('reconnect', id);
     }
 
-    getObserverIndex() : number{
+    getObserverIndex(): number {
         return this.observerIndex;
     }
 
-    setObserver(observerindex : number){
+    setObserver(observerindex: number) {
         this.observerIndex = observerindex;
+    }
+
+    isTournamentGame(): boolean {
+        return this.tournamentGame;
+    }
+
+    setTournamentGame(tournamentGame: boolean) {
+        this.tournamentGame = tournamentGame;
     }
 }
