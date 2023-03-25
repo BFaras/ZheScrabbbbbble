@@ -13,6 +13,7 @@ import {
 } from '@app/constants/database-interfaces';
 import { DATABASE_UNAVAILABLE, NO_ERROR, USERNAME_TAKEN } from '@app/constants/error-code-constants';
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
+import { ChatMessageDB } from '@app/interfaces/chat-message';
 import { FriendsDB } from '@app/interfaces/friend-info';
 import { ProfileInfo, ProfileInfoDB, ProfileSettings } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
@@ -91,7 +92,7 @@ export class DatabaseService {
         await this.getCollection(CollectionType.PROFILEINFO)?.deleteOne({ _id: new ObjectId(userId) });
     }
 
-    async getUserId(username: string) {
+    async getUserId(username: string): Promise<string> {
         const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<Document>)?.findOne({
             username,
         });
@@ -103,7 +104,7 @@ export class DatabaseService {
         return userId;
     }
 
-    async getUsernameFromId(userId: string) {
+    async getUsernameFromId(userId: string): Promise<string> {
         const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<AccountInfo>)?.findOne({
             _id: new ObjectId(userId),
         });
@@ -188,6 +189,18 @@ export class DatabaseService {
             profileInfo = userProfileInfoDoc.profileInfo;
         }
         return profileInfo;
+    }
+
+    async getUserAvatar(userId: string): Promise<string> {
+        let userAvatar = '';
+        const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
+            _id: new ObjectId(userId),
+        });
+
+        if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
+            userAvatar = userProfileInfoDoc.profileInfo.avatar;
+        }
+        return userAvatar;
     }
 
     async getUserProfileSettings(userId: string): Promise<ProfileSettings> {
@@ -324,6 +337,20 @@ export class DatabaseService {
         return wasUserAddedToChat;
     }
 
+    async addMessageToHistory(chatId: string, chatMessage: ChatMessageDB): Promise<string> {
+        let error = DATABASE_UNAVAILABLE;
+        if (await this.isUserInChat(chatMessage.userId, chatId)) {
+            error = NO_ERROR;
+            await this.getCollection(CollectionType.CHATCANALS)
+                ?.updateOne({ _id: new ObjectId(chatId) }, { $push: { chatHistory: chatMessage } })
+                .catch(() => {
+                    error = DATABASE_UNAVAILABLE;
+                });
+        }
+
+        return error;
+    }
+
     async leaveChatCanal(userId: string, chatId: string) {
         let wasUserRemovedFromChat = false;
         if (await this.isUserInChat(userId, chatId)) {
@@ -340,6 +367,18 @@ export class DatabaseService {
         }
 
         return wasUserRemovedFromChat;
+    }
+
+    async getChatHistory(chatId: string): Promise<ChatMessageDB[]> {
+        const chatDoc = await ((await this.getCollection(CollectionType.CHATCANALS)) as Collection<ChatInfoDB>)?.findOne({
+            _id: new ObjectId(chatId),
+        });
+        let chatHistory: ChatMessageDB[] = [];
+
+        if (chatDoc !== undefined && chatDoc !== null) {
+            chatHistory = chatDoc.chatHistory;
+        }
+        return chatHistory;
     }
 
     async getChatCanalsUserCanJoin(userId: string): Promise<ChatInfo[]> {

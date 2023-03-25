@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
 import { ChatCreationResponse, ChatInfo, ChatInfoDB, ChatType, PRIVATE_CHAT_IDS_SEPARATOR } from '@app/interfaces/chat-info';
+import { ChatMessage, ChatMessageDB, ChatUserInfo } from '@app/interfaces/chat-message';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
 
@@ -12,7 +14,7 @@ export class ChatService {
     }
 
     async createChat(userId: string, chatName: string, chatType: ChatType): Promise<ChatCreationResponse> {
-        const chatInfo: ChatInfoDB = { chatName, chatType, usersIds: [] };
+        const chatInfo: ChatInfoDB = { chatName, chatType, usersIds: [], chatHistory: [] };
         const createdChatId: string = await this.dbService.addNewChatCanal(chatInfo);
         let errorCode = DATABASE_UNAVAILABLE;
 
@@ -69,6 +71,15 @@ export class ChatService {
         return userChats;
     }
 
+    async getChatHistory(chatId: string): Promise<ChatMessage[]> {
+        return this.transformChatHistoryForClient(await this.dbService.getChatHistory(chatId));
+    }
+
+    async addChatMessageToHistory(userId: string, chatId: string, chatMessage: ChatMessage): Promise<void> {
+        const chatMessageDB: ChatMessageDB = this.createChatMessageDB(userId, chatMessage);
+        await this.dbService.addMessageToHistory(chatId, chatMessageDB);
+    }
+
     async joinGlobalChat(userId: string) {
         if (!(await this.createGlobalChat(userId))) {
             await this.joinChat(userId, await this.dbService.getGlobalChatId());
@@ -87,5 +98,37 @@ export class ChatService {
         const idsInChatName: string[] = currentChatName.split(PRIVATE_CHAT_IDS_SEPARATOR);
         const friendUserId = idsInChatName[0] !== userId ? idsInChatName[0] : idsInChatName[1];
         return this.dbService.getUsernameFromId(friendUserId);
+    }
+
+    private createChatMessageDB(userId: string, chatMessage: ChatMessage): ChatMessageDB {
+        return {
+            userId,
+            message: chatMessage.message,
+            timestamp: chatMessage.timestamp,
+        };
+    }
+
+    private async transformChatHistoryForClient(chatHistory: ChatMessageDB[]): Promise<ChatMessage[]> {
+        const chatUserInfos: Map<string, ChatUserInfo> = new Map<string, ChatUserInfo>();
+        const clientChatHistory: ChatMessage[] = [];
+
+        for (const chatMessage of chatHistory) {
+            const userId = chatMessage.userId;
+            if (!chatUserInfos.has(userId)) {
+                chatUserInfos.set(userId, {
+                    username: await this.dbService.getUsernameFromId(userId),
+                    avatar: await this.dbService.getUserAvatar(userId),
+                });
+            }
+            const chatUserInfo = chatUserInfos.get(chatMessage.userId);
+
+            clientChatHistory.push({
+                message: chatMessage.message,
+                timestamp: chatMessage.timestamp,
+                username: chatUserInfo!.username,
+                avatar: chatUserInfo!.avatar,
+            });
+        }
+        return clientChatHistory;
     }
 }
