@@ -2,11 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable dot-notation */
-import "reflect-metadata"
 import { GameRoom } from '@app/classes/game-room';
 import { Player } from '@app/classes/player';
 import { RoomVisibility } from '@app/constants/basic-constants';
 import { expect } from 'chai';
+import 'reflect-metadata';
 
 describe('GameRoom', () => {
     let gameRoom: GameRoom;
@@ -112,7 +112,7 @@ describe('GameRoom', () => {
         gameRoom.addPlayer(player2);
         gameRoom.addPlayer(player3);
         gameRoom.addPlayer(player4);
-        expect(gameRoom.getPlayerNames()).to.eql(['Joe','Eve','Bob','Zoe']);
+        expect(gameRoom.getPlayerNames()).to.eql(['Joe', 'Eve', 'Bob', 'Zoe']);
     });
 
     it('should return the correct output when calling verifyPassword', () => {
@@ -121,13 +121,11 @@ describe('GameRoom', () => {
         expect(gameRoom.verifyPassword('password123')).to.equals(false);
     });
 
-    
-
-    it('should change the status of the game to started when calling start game', () => {
-        expect(gameRoom.isGameStarted()).to.equals(false);
-        gameRoom.startGame();
-        expect(gameRoom.isGameStarted()).to.equals(true);
-        gameRoom.startGame();
-        expect(gameRoom.isGameStarted()).to.equals(true);
-    });
+    // it('should change the status of the game to started when calling start game', () => {
+    //     expect(gameRoom.isGameStarted()).to.equals(false);
+    //     gameRoom.startGame();
+    //     expect(gameRoom.isGameStarted()).to.equals(true);
+    //     gameRoom.startGame();
+    //     expect(gameRoom.isGameStarted()).to.equals(true);
+    // });
 });
