@@ -211,7 +211,13 @@ export class SocketManager {
                 if (!currentRoom || currentRoom.getGame.isGameOver()) return;
                 let returnValue = this.commandController.executeCommand({ commandType: command, args: argument, playerID: socket.id });
                 this.sendGameState(currentRoom, returnValue.playerMessage);
-                if(returnValue.endGameMessage) this.sendGameState(currentRoom, {messageType: END_GAME_MESSAGE, values: [returnValue.endGameMessage]});
+                if(returnValue.endGameMessage){
+                    this.sendGameState(currentRoom, {messageType: END_GAME_MESSAGE, values: [returnValue.endGameMessage]});
+                    if(currentRoom.getVisibility() === RoomVisibility.Tournament){
+                        const tournament = this.roomManager.findTournamentFromPlayer(this.accountInfoService.getUsername(socket));
+                        tournament?.setGameWinner(currentRoom.getID(), currentRoom.getGame.getWinner())
+                    }
+                }
                 this.playVirtualTurns(currentRoom);
             });
 
@@ -257,7 +263,7 @@ export class SocketManager {
             });
 
             socket.on('Get Tournament Data', () => {
-                const tournament = this.roomManager.findTournamentFromPlayer(socket.id);
+                const tournament = this.roomManager.findTournamentFromPlayer(this.accountInfoService.getUsername(socket));
                 if(!tournament) return;
                 socket.emit('Tournament Data Response', tournament.getGameData());
             });
@@ -323,6 +329,10 @@ export class SocketManager {
         this.sendGameState(room, {messageType : OUT_OF_TIME_MESSAGE, values : [username]});
         if(result.endGameMessage) {
             this.sendGameState(room, {messageType: END_GAME_MESSAGE, values: [result.endGameMessage]});
+            if(room.getVisibility() === RoomVisibility.Tournament){
+                const tournament = this.roomManager.findTournamentFromPlayer(username);
+                tournament?.setGameWinner(room.getID(), room.getGame.getWinner())
+            }
             return;
         };
         this.playVirtualTurns(room);
@@ -349,7 +359,7 @@ export class SocketManager {
         return rooms;
     }
 
-    private endTournamentRound(tid : string, ){
+    private endTournamentRound(tid : string){
         const endMessages = this.roomManager.endTournamentGames(tid);
         for(let endMessage of endMessages){
             this.sendGameState(endMessage.room, {messageType : ROUND_OVER_MESSAGE, values: []});

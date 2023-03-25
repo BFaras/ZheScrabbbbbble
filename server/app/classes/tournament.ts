@@ -25,6 +25,11 @@ export class Tournament{
     private games : GameData[] = [];
     private roundTimer : NodeJS.Timer;
     private rooms : string[];
+    private round : number = 0;
+
+    private gameCreationCallback : (tid : string, users: io.Socket[]) => string[];
+    private gameStartCallback : (tid : string, users: io.Socket[], rooms: string[]) => void;
+    private gameEndCallback : (tid : string) => void;
 
     constructor(players: {socket : io.Socket, username: string}[]){
         this.players = []
@@ -49,9 +54,9 @@ export class Tournament{
         }
     }
 
-    isPlayerInTournament(playerId : string): boolean{
+    isPlayerInTournament(username : string): boolean{
         for(let player of this.players){
-            if(player.socket.id === playerId) return true;
+            if(player.username === username) return true;
         }
         return false;
     }
@@ -65,25 +70,24 @@ export class Tournament{
     }
 
     startTournament(gameCreationCallback : (tid : string, users: io.Socket[]) => string[], gameStartCallback : (tid : string, users: io.Socket[], rooms: string[]) => void, gameEndCallback: (tid : string) => void){
+        this.gameCreationCallback = gameCreationCallback;
+        this.gameStartCallback = gameStartCallback;
+        this.gameEndCallback = gameEndCallback;
+        this.round = 0;
         let users : io.Socket[] = [];
         for(let player of this.players){
             users.push(player.socket);
         }
-        this.rooms = gameCreationCallback(this.id, users);
+        this.rooms = this.gameCreationCallback(this.id, users);
         setTimeout(() => {
-            gameStartCallback(this.id, users, this.rooms);
+            this.gameStartCallback(this.id, users, this.rooms);
             this.startRoundTimer();
         }, TOURNAMENT_ROUND_START_TIMER);
     }
 
     setGameWinner(id : string, winnerName : string){
-        let numberFinished = 0;
         for(let game of this.games){
-            if(game.roomCode !== id){
-                if(game.status === GameStatus.FINISHED) numberFinished++;
-                continue;
-            }
-            numberFinished++;
+            if(game.roomCode !== id) continue;
             let loserName = '';
             game.status = GameStatus.FINISHED;
             for(let i = 0; i < game.players.length; i++){
@@ -108,10 +112,44 @@ export class Tournament{
                 }
             }
         }
-        if(numberFinished === 2){
+        if(this.getGame('Semi1')?.status === GameStatus.FINISHED && this.getGame('Semi2')?.status === GameStatus.FINISHED && this.round === 1){
             clearInterval(this.roundTimer);
-            // TODO Start next round
+            this.startSecondRound();
+            return;
         }
+        if(this.getGame('Final1')?.status === GameStatus.FINISHED && this.getGame('Final2')?.status === GameStatus.FINISHED && this.round === 2){
+            console.log('Tournament Over');
+        }
+    }
+
+    startSecondRound(){
+        const final1 = this.getGame('Final1');
+        if(!final1) return;
+        const final2 = this.getGame('Final2');
+        if(!final2) return;
+        this.round = 2;
+        const users: string[] = [];
+        users.concat(final1.players).concat(final2.players);
+        const sockets = this.getSocketFromNames(users);
+        this.rooms = this.gameCreationCallback(this.id, sockets);
+        setTimeout(() => {
+            this.gameStartCallback(this.id, sockets, this.rooms);
+            this.startRoundTimer();
+        }, TOURNAMENT_ROUND_START_TIMER);
+    }
+    
+
+    private getSocketFromNames(users: string[]) : io.Socket[] {
+        const sockets = [];
+        for(let user of users){
+            for(let player of this.players){
+                if(user === player.username){
+                    sockets.push(player.socket);
+                    break;
+                }
+            }
+        }
+        return sockets;
     }
 
     private getGame(type: string): GameData | null{
@@ -127,6 +165,7 @@ export class Tournament{
             nbMinLeft--;
             if(nbMinLeft <= 0){
                 clearInterval(this.roundTimer);
+                this.gameEndCallback(this.id);
             }
         }, MILLISECOND_IN_MINUTES);
     }

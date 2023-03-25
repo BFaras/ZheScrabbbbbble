@@ -113,9 +113,9 @@ export class RoomManagerService {
         this.tournaments[tid].startTournament(gameCreationCallback, gameStartCallback, gameEndCallback);
     }
 
-    findTournamentFromPlayer(playerID: string): Tournament | null {
+    findTournamentFromPlayer(username: string): Tournament | null {
         for (const tournament of Object.values(this.tournaments)) {
-            if (tournament.isPlayerInTournament(playerID)) {
+            if (tournament.isPlayerInTournament(username)) {
                 return tournament;
             }
         }
