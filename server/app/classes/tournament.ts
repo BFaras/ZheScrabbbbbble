@@ -27,8 +27,8 @@ export class Tournament {
     private rooms: string[];
     private round: number = 0;
 
-    private gameCreationCallback: (tid: string, users: io.Socket[]) => string[];
-    private gameStartCallback: (tid: string, users: io.Socket[], rooms: string[]) => void;
+    private gameCreationCallback: (tid: string, users: io.Socket[], round: number) => string[];
+    private gameStartCallback: (tid: string, rooms: string[]) => void;
     private gameEndCallback: (tid: string) => void;
 
     constructor(players: { socket: io.Socket, username: string }[]) {
@@ -54,6 +54,12 @@ export class Tournament {
         }
     }
 
+    updateGameRoomCodes(rooms: string[]){
+        for(let i = 0; i < rooms.length; i++){
+            this.games[i + 2].roomCode = rooms[i];
+        }
+    }
+
     isPlayerInTournament(username: string): boolean {
         for (let player of this.players) {
             if (player.username === username) return true;
@@ -69,18 +75,18 @@ export class Tournament {
         return this.rooms;
     }
 
-    startTournament(gameCreationCallback: (tid: string, users: io.Socket[]) => string[], gameStartCallback: (tid: string, users: io.Socket[], rooms: string[]) => void, gameEndCallback: (tid: string) => void) {
+    startTournament(gameCreationCallback: (tid: string, users: io.Socket[], round: number) => string[], gameStartCallback: (tid: string, rooms: string[]) => void, gameEndCallback: (tid: string) => void) {
         this.gameCreationCallback = gameCreationCallback;
         this.gameStartCallback = gameStartCallback;
         this.gameEndCallback = gameEndCallback;
-        this.round = 0;
+        this.round = 1;
         let users: io.Socket[] = [];
         for (let player of this.players) {
             users.push(player.socket);
         }
-        this.rooms = this.gameCreationCallback(this.id, users);
+        this.rooms = this.gameCreationCallback(this.id, users, this.round);
         setTimeout(() => {
-            this.gameStartCallback(this.id, users, this.rooms);
+            this.gameStartCallback(this.id, this.rooms);
             this.startRoundTimer();
         }, TOURNAMENT_ROUND_START_TIMER);
     }
@@ -130,17 +136,19 @@ export class Tournament {
     }
 
     startSecondRound() {
+        console.log('Second round start');
         const final1 = this.getGame('Final1');
         if (!final1) return;
         const final2 = this.getGame('Final2');
         if (!final2) return;
         this.round = 2;
-        const users: string[] = [];
-        users.concat(final1.players).concat(final2.players);
+        const users: string[] = final1.players.concat(final2.players);
         const sockets = this.getSocketFromNames(users);
-        this.rooms = this.gameCreationCallback(this.id, sockets);
+        this.rooms = this.gameCreationCallback(this.id, sockets, this.round);
+        console.log('Second round games created');
         setTimeout(() => {
-            this.gameStartCallback(this.id, sockets, this.rooms);
+            console.log('Second round timeout over');
+            this.gameStartCallback(this.id, this.rooms);
             this.startRoundTimer();
         }, TOURNAMENT_ROUND_START_TIMER);
     }

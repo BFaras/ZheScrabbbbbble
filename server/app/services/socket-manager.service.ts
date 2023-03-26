@@ -373,7 +373,8 @@ export class SocketManager {
         this.playVirtualTurns(room);
     }
 
-    private startTournamentRound(tid: string, users: io.Socket[], rooms: string[]) {
+    private startTournamentRound(tid: string, rooms: string[]) {
+        console.log(this.sio.sockets.adapter.rooms);
         this.roomManager.getRoom(rooms[0]).startGame(this.timerCallback.bind(this));
         this.roomManager.updateTournamentGameStatus(tid, rooms[0], GameStatus.IN_PROGRESS);
         this.roomManager.getRoom(rooms[1]).startGame(this.timerCallback.bind(this));
@@ -383,14 +384,18 @@ export class SocketManager {
         this.sio.in(rooms[1]).emit('Game Started');
     }
 
-    private createTournamentRound(tid: string, users: io.Socket[]): string[] {
-        const rooms = [this.roomManager.createRoom(tid + '-1', RoomVisibility.Tournament), this.roomManager.createRoom(tid + '-2', RoomVisibility.Tournament)]
+    private createTournamentRound(tid: string, users: io.Socket[], round : number): string[] {
+        const rooms = [this.roomManager.createRoom(tid + ('-' + round + '-1'), RoomVisibility.Tournament), this.roomManager.createRoom(tid + ('-' + round + '-2'), RoomVisibility.Tournament)];
         for (let i = 0; i < users.length; i++) {
             const index = i < 2 ? 0 : 1;
             users[i].join(rooms[index]);
             this.roomManager.addPlayer(rooms[index], new Player(users[i].id, this.accountInfoService.getUsername(users[i])));
         }
-        this.roomManager.registerTournamentGames(tid, rooms[0], rooms[1]);
+        if(round === 1){
+            this.roomManager.registerTournamentGames(tid, rooms[0], rooms[1]);
+        }else{
+            this.roomManager.updateTournamentGameRoomCode(tid, rooms);
+        }
         return rooms;
     }
 

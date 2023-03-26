@@ -101,6 +101,10 @@ export class RoomManagerService {
         tournament.registerGame(game2);
     }
 
+    updateTournamentGameRoomCode(tid: string, rooms: string[]){
+        this.tournaments[tid].updateGameRoomCodes(rooms);
+    }
+
     updateTournamentGameStatus(tid: string, id: string, status: GameStatus){
         this.tournaments[tid].updateGameStatus(id, status);
     }
@@ -109,7 +113,7 @@ export class RoomManagerService {
         return this.tournaments[tid].getGameData();
     }
 
-    startTournament(tid: string, gameCreationCallback : (tid : string, users: io.Socket[]) => string[], gameStartCallback : (tid : string, users: io.Socket[], rooms: string[]) => void, gameEndCallback : (tid : string) => void){
+    startTournament(tid: string, gameCreationCallback : (tid : string, users: io.Socket[], round: number) => string[], gameStartCallback : (tid : string, rooms: string[]) => void, gameEndCallback : (tid : string) => void){
         this.tournaments[tid].startTournament(gameCreationCallback, gameStartCallback, gameEndCallback);
     }
 
