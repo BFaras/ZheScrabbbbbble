@@ -1,6 +1,7 @@
 import { MAX_ASCII_SYMBOL, MIN_ASCII_SYMBOL } from '@app/constants/authentification-constants';
-import { DATABASE_UNAVAILABLE, WRONG_FRIEND_CODE } from '@app/constants/error-code-constants';
+import { DATABASE_UNAVAILABLE, NO_ERROR, WRONG_FRIEND_CODE } from '@app/constants/error-code-constants';
 import { FRIEND_CODE_LENGTH, FRIEND_ROOM_BASE_NAME } from '@app/constants/profile-constants';
+import { ChatCreationResponse } from '@app/interfaces/chat-info';
 import { ConnectivityStatus, Friend } from '@app/interfaces/friend-info';
 import { Container, Service } from 'typedi';
 import { ChatService } from './chat.service';
@@ -41,20 +42,35 @@ export class FriendService {
         return await this.dbService.getUserIdFromFriendCode(friendCode);
     }
 
-    async addFriend(userId: string, friendCode: string): Promise<string> {
-        let errorCode: string = WRONG_FRIEND_CODE;
+    async addFriend(userId: string, friendCode: string): Promise<ChatCreationResponse> {
+        let chatCreationResponse: ChatCreationResponse = { errorCode: WRONG_FRIEND_CODE, chatId: '' };
         if (await this.isFriendCodeExistant(friendCode)) {
             const friendUserId: string = await this.dbService.getUserIdFromFriendCode(friendCode);
 
-            errorCode = DATABASE_UNAVAILABLE;
+            chatCreationResponse.errorCode = DATABASE_UNAVAILABLE;
 
             if (friendUserId !== '') {
-                errorCode = await this.dbService.addFriend(userId, friendUserId);
-                errorCode = await this.dbService.addFriend(friendUserId, userId);
-                errorCode = await this.chatService.createFriendsChat(userId, friendUserId);
+                chatCreationResponse.errorCode = await this.dbService.addFriend(userId, friendUserId);
+                chatCreationResponse.errorCode = await this.dbService.addFriend(friendUserId, userId);
+                if (chatCreationResponse.errorCode === NO_ERROR) {
+                    chatCreationResponse = await this.chatService.createFriendsChat(userId, friendUserId);
+                }
             }
         }
-        return errorCode;
+        return chatCreationResponse;
+    }
+
+    async removeFriend(userId: string, friendUserId: string): Promise<ChatCreationResponse> {
+        let chatLeaveResponse: ChatCreationResponse = { errorCode: DATABASE_UNAVAILABLE, chatId: '' };
+
+        if (friendUserId !== '') {
+            chatLeaveResponse.errorCode = await this.dbService.removeFriend(userId, friendUserId);
+            chatLeaveResponse.errorCode = await this.dbService.removeFriend(friendUserId, userId);
+            if (chatLeaveResponse.errorCode === NO_ERROR) {
+                chatLeaveResponse = await this.chatService.removeFriendsChat(userId, friendUserId);
+            }
+        }
+        return chatLeaveResponse;
     }
 
     async isFriendCodeExistant(userFriendCode: string): Promise<boolean> {

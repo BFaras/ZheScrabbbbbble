@@ -28,18 +28,34 @@ export class ChatService {
         return { errorCode, chatId: createdChatId };
     }
 
-    async createFriendsChat(userId: string, friendUserId: string): Promise<string> {
-        const chatName = userId + PRIVATE_CHAT_IDS_SEPARATOR + friendUserId;
-        let errorCode = DATABASE_UNAVAILABLE;
+    async createFriendsChat(userId: string, friendUserId: string): Promise<ChatCreationResponse> {
+        const chatName = this.getFriendChatName(userId, friendUserId);
+        let chatCreationResponse: ChatCreationResponse = { errorCode: DATABASE_UNAVAILABLE, chatId: '' };
 
         if (friendUserId !== '') {
-            const chatCreationResponse: ChatCreationResponse = await this.createChat(userId, chatName, ChatType.PRIVATE);
+            chatCreationResponse = await this.createChat(userId, chatName, ChatType.PRIVATE);
             if (chatCreationResponse.errorCode === NO_ERROR) {
-                errorCode = await this.joinChat(friendUserId, chatCreationResponse.chatId);
+                chatCreationResponse.errorCode = await this.joinChat(friendUserId, chatCreationResponse.chatId);
             }
         }
 
-        return errorCode;
+        return chatCreationResponse;
+    }
+
+    async removeFriendsChat(userId: string, friendUserId: string): Promise<ChatCreationResponse> {
+        const possibleChatName1 = this.getFriendChatName(userId, friendUserId);
+        const possibleChatName2 = this.getFriendChatName(friendUserId, userId);
+        const friendChatId = await this.dbService.getFriendChatId(possibleChatName1, possibleChatName2);
+        const chatLeaveResponse: ChatCreationResponse = { errorCode: DATABASE_UNAVAILABLE, chatId: friendChatId };
+
+        if (friendChatId !== '' && friendUserId !== '') {
+            chatLeaveResponse.errorCode = await this.leaveChat(userId, friendChatId);
+            if (chatLeaveResponse.errorCode === NO_ERROR) {
+                await this.leaveChat(friendUserId, friendChatId);
+            }
+        }
+
+        return chatLeaveResponse;
     }
 
     async joinChat(userId: string, chatId: string): Promise<string> {
@@ -110,6 +126,10 @@ export class ChatService {
         const idsInChatName: string[] = currentChatName.split(PRIVATE_CHAT_IDS_SEPARATOR);
         const friendUserId = idsInChatName[0] !== userId ? idsInChatName[0] : idsInChatName[1];
         return this.dbService.getUsernameFromId(friendUserId);
+    }
+
+    private getFriendChatName(userId: string, friendUserId: string): string {
+        return userId + PRIVATE_CHAT_IDS_SEPARATOR + friendUserId;
     }
 
     private createChatMessageDB(userId: string, chatMessage: ChatMessage): ChatMessageDB {
