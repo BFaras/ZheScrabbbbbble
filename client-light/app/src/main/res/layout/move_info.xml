@@ -5,16 +5,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity=""
-        android:padding="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/background_direction_panel"
         android:backgroundTint="?colorPrimaryVariant">
 
-        <TextView
-            android:id="@+id/displayedMoveMessage"
-            android:layout_width="match_parent"
-            android:padding="3dp"
-            android:layout_height="wrap_content"
-            android:justificationMode="inter_word"></TextView>
+    <TextView
+        android:id="@+id/displayedMoveMessage"
+        android:layout_width="match_parent"
+        android:padding="3dp"
+        android:layout_height="wrap_content"
+        android:justificationMode="inter_word" />
     </FrameLayout>
 
