@@ -88,4 +88,5 @@
     <string name="new_password">Nouveau mot de passe</string>
     <string name="register_new_passsword">Enregister le nouveau mot de passe</string>
     <string name="times_up">TEMPS ÉCOULÉ!</string>
+    <string name="talkingIntext">Présentement dans</string>
 </resources>

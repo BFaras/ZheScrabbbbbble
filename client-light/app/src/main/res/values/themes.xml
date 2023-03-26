@@ -27,11 +27,13 @@
         <item name="boardBackground">@color/lightBeige</item>
         <item name="lettersOnBoard">@color/NavajoWhite</item>
         <item name="lettersInHand">@color/AntiqueWhite</item>
+        <item name="chatBox">@color/lightBeige</item>
     </style>
     <style name="Theme.TestChatBox.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="PinkTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="backgroundColor">#f7dfed</item>
         <item name="android:textColor">@color/black</item>
@@ -51,6 +53,7 @@
         <item name="boardBackground">@color/lightBeige</item>
         <item name="lettersOnBoard">@color/BabyPink</item>
         <item name="lettersInHand">@color/AntiqueWhite</item>
+        <item name="chatBox">@color/white</item>
     </style>
 
     <style name="EclipseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -59,7 +62,8 @@
         <item name="colorPrimary">@color/clearSea</item>
         <item name="colorPrimaryVariant">@color/BackSea</item>
         <item name="colorOnPrimary">@color/Gainsboro</item>
-        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondary">@color/CadetBlue</item>
+        <item name="android:statusBarColor">@color/black</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <item name="doubleWord">@color/CadetBlue</item>
@@ -71,16 +75,18 @@
         <item name="playerSelection">@color/teal_200</item>
         <item name="lettersOnBoard">@color/SlateGray</item>
         <item name="lettersInHand">@color/AntiqueWhite</item>
+        <item name="chatBox">@color/Platinium</item>
     </style>
 
     <style name="BlizzardTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="backgroundColor">@color/SlateWhite</item>
         <item name="android:textColor">@color/BlueBlack</item>
+        <item name="colorAccent">@color/BrightSunset</item>
         <item name="colorPrimary">@color/grayWhite</item>
         <item name="android:statusBarColor">@color/BlueBlack</item>
         <item name="colorPrimaryVariant">@color/DarkGray</item>
         <item name="colorOnPrimary">@color/DimGray</item>
-        <item name="colorPrimaryInverse">@color/Orange</item>
+        <item name="android:textColorHighlight">@color/BrightSunset</item>
         <item name="colorSecondary">@color/BrightSunset</item>
         <item name="colorSecondaryVariant">@color/Sunset</item>
         <item name="colorOnSecondary">@color/BrightSunset</item>

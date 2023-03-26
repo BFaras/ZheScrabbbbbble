@@ -9,4 +9,5 @@
     <attr name="boardBackground" format="reference"></attr>
     <attr name="lettersOnBoard" format="reference" />
     <attr name="lettersInHand" format="reference" ></attr>
+    <attr name="chatBox" format="reference"></attr>
 </resources>
