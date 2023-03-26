@@ -11,22 +11,23 @@ import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-se
 })
 export class WaitingRoomComponent {
 
-    pendingRequests: string[] = [];
+    pendingRequests: [string, boolean][] = [];
     playersInRoom: string[];
 
     constructor(private waitingRoomManagerService: WaitingRoomManagerService, private accountService: AccountService, private router: Router, private gameStateService: GameStateService) {
         this.playersInRoom = this.waitingRoomManagerService.getDefaultPlayersInRoom();
         this.waitingRoomManagerService.getJoinRoomRequestObservable().subscribe(this.newJoinRequest.bind(this));
-        this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this))
+        this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this));
         this.waitingRoomManagerService.getRoomPlayerObservable().subscribe((playersInRoom) => this.playersInRoom = playersInRoom);
     }
 
     launchGame(): void {
-        this.refuseEveryone();
+        this.refuseEveryone(true);
         this.waitingRoomManagerService.startGame();
     }
 
     goToGame(){
+        this.gameStateService.setObserver(-1);
         this.router.navigate(['/game']).then(() => {
             this.gameStateService.requestGameState();
         });
@@ -38,7 +39,7 @@ export class WaitingRoomComponent {
     }
 
     leaveRoomLogic(): void {
-        this.refuseEveryone();
+        this.refuseEveryone(true);
         this.waitingRoomManagerService.leaveRoom();
     }
 
@@ -46,23 +47,28 @@ export class WaitingRoomComponent {
         return this.playersInRoom[0] === this.accountService.getUsername();
     }
 
-    newJoinRequest(username: string){
-        this.pendingRequests.push(username);
+    newJoinRequest(data: [string, boolean]){
+        this.pendingRequests.push(data);
     }
 
     respondNextRequest(response: boolean){
-        const username = this.pendingRequests.shift();
-        if(!username) return;
-        this.waitingRoomManagerService.respondJoinRequest(response, username);
+        const data = this.pendingRequests.shift();
+        if(!data) return;
+        this.waitingRoomManagerService.respondJoinRequest(response, data[0]);
         if(response && this.playersInRoom.length >= 3){
-            this.refuseEveryone();
+            this.refuseEveryone(false);
         }
     }
 
-    private refuseEveryone(){
-        for(let username of this.pendingRequests){
-            this.waitingRoomManagerService.respondJoinRequest(false, username);
+    private refuseEveryone(refuseObservers: boolean){
+        const newPendingRequests = [];
+        for(let data of this.pendingRequests){
+            if(!refuseObservers && data[1]){
+                newPendingRequests.push(data);
+                continue;
+            }
+            this.waitingRoomManagerService.respondJoinRequest(false, data[0]);
         }
-        this.pendingRequests = [];
+        this.pendingRequests = newPendingRequests;
     }
 }

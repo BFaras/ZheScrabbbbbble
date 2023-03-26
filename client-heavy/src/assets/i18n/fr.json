@@ -113,6 +113,7 @@
         "MESSAGE": "Joueurs dans la salle de jeu",
         "LEAVE": "Quitter la salle",
         "JOIN": " essaie de joindre la salle de jeu.",
+        "OBSERVE": " souhaite pouvoir observer la partie.",
         "ACCEPT": "Accepter",
         "DECLINE": "Refuser",
         "START": "Démarrer"
@@ -134,6 +135,10 @@
         "PENDING": "En attente d'une réponse de l'hôte",
         "DECLINE": "L'hôte a refusé votre requête",
         "CANCEL": "Annuler la demande",
+        "RETURN": "Retourner aux salles de jeu"
+    },
+    "OBSERVER-ROOM":{
+        "TITLE": "En attente que l'hôte démarre la partie",
         "RETURN": "Retourner aux salles de jeu"
     },
     "PASSWORD-PAGE":{

@@ -1,5 +1,7 @@
 export const DEFAULT_THEME = 'Default';
 export const DEFAULT_LANGUAGE = 'fr';
+export const DEFAULT_LEVEL = 0;
+export const DEFAULT_XP = 0;
 
 export const WINS_NB_STAT_NAME = 'Wins';
 export const GAMES_NB_STAT_NAME = 'Games played';

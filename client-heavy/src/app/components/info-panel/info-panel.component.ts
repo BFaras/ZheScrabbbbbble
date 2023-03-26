@@ -1,4 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
+import { AccountService } from '@app/services/account-service/account.service';
 import { GameState, GameStateService } from '@app/services/game-state-service/game-state.service';
 import { Subscription } from 'rxjs';
 import { Player } from './players-info';
@@ -17,7 +18,7 @@ export class InfoPanelComponent implements OnDestroy {
     roundInfo: Round[] = roundInfo;
     subscriptions: Subscription[] = [];
 
-    constructor(private readonly gameStateService: GameStateService) {
+    constructor(private readonly gameStateService: GameStateService, private readonly accountService: AccountService) {
         this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => {
             this.updateTurnDisplay(gameState);
         }));
@@ -27,6 +28,14 @@ export class InfoPanelComponent implements OnDestroy {
         for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
         }
+    }
+
+    isPlayerUser(player : Player){
+        const index = this.gameStateService.getObserverIndex();
+        if(index < 0){
+            return player.name === this.accountService.getUsername();
+        }
+        return player.name === this.playersInfo[index].name;
     }
 
     private endGame(gameState: GameState) {
@@ -40,6 +49,8 @@ export class InfoPanelComponent implements OnDestroy {
             this.playersInfo[i].active = false;
             this.playersInfo[i].winner = gameState.players[i].score === highestScore;
             this.playersInfo[i].currentScore = gameState.players[i].score;
+            this.playersInfo[i].letterCount = gameState.players[i].hand.length;
+            this.playersInfo[i].name = gameState.players[i].username;
         }
     }
 

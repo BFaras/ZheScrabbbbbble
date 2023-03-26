@@ -30,6 +30,7 @@ export class GameStateService {
     private socket: Socket;
     private gameStateObservable: Observable<GameState>;
     private gameStateObservers: Observer<GameState>[] = [];
+    private observerIndex : number;
 
     constructor(private socketManagerService: SocketManagerService) {
         this.gameStateObservable = new Observable((observer: Observer<GameState>) => {
@@ -43,7 +44,7 @@ export class GameStateService {
         this.gameStateObservers = [];
         this.socket = this.socketManagerService.getSocket();
         this.socket.on('Game State Update', (state: GameState) => {
-            console.log(state.message);
+            console.log(state);
             for(let observer of this.gameStateObservers){
                 observer.next(state);
             }
@@ -64,5 +65,13 @@ export class GameStateService {
 
     reconnect(id: string) {
         this.socket.emit('reconnect', id);
+    }
+
+    getObserverIndex() : number{
+        return this.observerIndex;
+    }
+
+    setObserver(observerindex : number){
+        this.observerIndex = observerindex;
     }
 }

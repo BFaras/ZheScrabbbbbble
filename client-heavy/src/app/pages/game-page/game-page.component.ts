@@ -78,6 +78,10 @@ export class GamePageComponent implements OnInit, OnDestroy {
         this.chatDisplay = !this.chatDisplay;
     }
 
+    isObserver() : boolean{
+        return this.gameStateService.getObserverIndex() >= 0;
+    }
+
     formatActionInList(message : string, values : string[]): string{
         for(let i = 0; i < values.length; i++){
             message = message.replace('$' + i, values[i])
