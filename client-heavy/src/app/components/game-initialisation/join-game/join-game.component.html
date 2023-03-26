@@ -65,8 +65,8 @@
                                     </div>
                                 </div>
                                 <div class="cell-btn">
-                                    <button class="button join text" [style.visibility]="(waitingRoom.players.length >= 4 || waitingRoom.isStarted) ? 'hidden' : 'visible'" (click)="sendRoomData(waitingRoom)">{{ 'JOIN-GAME.JOIN' | translate }}</button>
-                                    <button class="button join text" (click)="sendRoomData(waitingRoom)">{{ 'JOIN-GAME.OBSERVE' | translate }}</button>
+                                    <button class="button join text" [style.visibility]="(waitingRoom.players.length >= 4 || waitingRoom.isStarted) ? 'hidden' : 'visible'" (click)="joinGame(waitingRoom, false)">{{ 'JOIN-GAME.JOIN' | translate }}</button>
+                                    <button class="button join text" (click)="joinGame(waitingRoom, true)">{{ 'JOIN-GAME.OBSERVE' | translate }}</button>
                                 </div>
                             </div>
                         </div>

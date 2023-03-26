@@ -1,0 +1,18 @@
+.container{
+    display:flex;
+}
+
+.avatar{
+    width:160px;
+    height:160px;
+    border-style: double;
+    
+}
+
+.listAvatars{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}

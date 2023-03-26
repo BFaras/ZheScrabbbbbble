@@ -81,7 +81,7 @@ class ResetPasswordFragment : Fragment() {
                             });
                         }
                     }
-                    SocketHandler.getSocket().emit("Reset User Password", username)
+                    SocketHandler.getSocket().emit("Reset User Password", username.trim())
                 }
                 catch (e: java.lang.Exception){
                     val appContext = context?.applicationContext
@@ -121,7 +121,7 @@ class ResetPasswordFragment : Fragment() {
                             });
                         }
                     }
-                    SocketHandler.getSocket().emit("Account Question Answer", answer, password)
+                    SocketHandler.getSocket().emit("Account Question Answer", answer.trim(), password.trim())
                 }
                 catch (e: java.lang.Exception){
                     val appContext = context?.applicationContext

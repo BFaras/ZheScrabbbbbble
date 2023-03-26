@@ -1,7 +1,17 @@
-export const TWO_DIGIT_TIME_VALUE = '2-digit';
+export interface ChatMessageDB {
+    message: string;
+    userId: string;
+    timestamp: string;
+}
 
 export interface ChatMessage {
     message: string;
     username: string;
+    avatar: string;
     timestamp: string;
+}
+
+export interface ChatUserInfo {
+    username: string;
+    avatar: string;
 }
