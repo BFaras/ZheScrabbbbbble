@@ -27,11 +27,9 @@ export class MainPageComponent {
         this.subscriptions.push(this.accountService.getUserProfileInformation().
             subscribe((userProfile) => {
                 this.accountService.setUpProfile(userProfile);
-                console.log(userProfile);
             }));
         this.subscriptions.push(this.accountService.getThemeAndLanguage().subscribe((profile: ProfileSettings) => {
             this.profile.changeThemeTo(profile.theme);
-            console.log(profile.language);
             this.language.translateLanguageTo(profile.language);
         }));
     }

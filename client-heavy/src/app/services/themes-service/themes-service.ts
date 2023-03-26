@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { classic, green, inverted, pink, Theme } from '@app/constants/themes';
+import { blizzard, classic, green, inverted, pink, Theme } from '@app/constants/themes';
 
 
 @Injectable({
@@ -7,7 +7,7 @@ import { classic, green, inverted, pink, Theme } from '@app/constants/themes';
 })
 export class ThemesService {
   private activeTheme: Theme = classic;
-  private availableThemes: Theme[] = [classic, inverted, green, pink];
+  private availableThemes: Theme[] = [classic, inverted, green, pink, blizzard];
 
   getAvailableThemes(): Theme[] {
     return this.availableThemes;

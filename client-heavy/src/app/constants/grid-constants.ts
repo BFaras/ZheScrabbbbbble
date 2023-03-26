@@ -86,6 +86,17 @@ export const GRID_COLOURS_PINK = {
     defaultBackground: '#cf9cad',
 };
 
+export const GRID_COLOURS_BLIZZARD = {
+    defaultRed: '#708090',
+    defaultPink: '#EE4540',
+    defaultBlue: '#B7C1CC',
+    defaultLightBlue: '#9C9A9A',
+    defaultBlack: 'black',
+    defaultWhite: '#faf1fa',
+    defaultDarkRed: '#C72C41',
+    defaultBackground: '#A9A9A9',
+};
+
 export const ROWS: { [key: string]: number } = {};
 export const COLUMNS: { [key: string]: number } = {};
 

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
 import { DIRECTION, GRID_CONSTANTS } from '@app/constants/grid-constants';
 import { ChatService } from '@app/services/chat-service/chat.service';
@@ -24,7 +24,7 @@ export class LetterAdderService {
     constructor(private letterHolderService: LetterHolderService,
         private gridService: GridService,
         private chatService: ChatService,
-        @Inject(String) private previewPlayerActionService: PreviewPlayersActionService) {
+        private previewPlayerActionService: PreviewPlayersActionService) {
 
     }
 

@@ -57,6 +57,13 @@ export const TILE_COLORS_PINK = {
     manipulationColor: 'rgb(226, 182, 253, 0.5)',
 };
 
+export const TILE_COLORS_BLIZZARD = {
+    textColour: '#C72C41',
+    backgroundColour: '#CBC6C6',
+    selectionColour: 'rgb(255, 0, 0, 0.2)',
+    manipulationColor: 'rgb(0, 0, 255, 0.2)',
+};
+
 export const HOLDER_MEASUREMENTS = {
     tileSide: 60,
     defaultLetterSize: 27,

@@ -13,7 +13,9 @@
             <h2 class="text">{{ 'FRIENDS-PAGE.FRIENDS' | translate }}</h2>
             <div class="friend-container" *ngFor="let friend of friends">
                 <span class="chat text">{{ friend.username }}</span>
-                <button (click)="alert()">{{ 'FRIENDS-PAGE.UNFRIEND' | translate }}</button>
+                <!--<button (click)="alert()">{{ 'FRIENDS-PAGE.UNFRIEND' | translate }}</button>-->
+                <!--<button (click)="openChat(friend)">Chat</button>-->
+                <button>Chat</button>
             </div>
         </div>
     </div>
