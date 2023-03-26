@@ -6,6 +6,11 @@ object SocketHandler {
 
     lateinit var mSocket: Socket
 
+    init {
+        setSocket()
+        establishConnection()
+    }
+
     @Synchronized
     fun setSocket() {
         try {

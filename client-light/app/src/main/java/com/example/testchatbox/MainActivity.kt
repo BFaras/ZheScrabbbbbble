@@ -22,8 +22,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCustomizedThemes(this,getThemeColor(this));
-        SocketHandler.setSocket()
-        SocketHandler.establishConnection()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

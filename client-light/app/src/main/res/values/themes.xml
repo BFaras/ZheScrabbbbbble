@@ -28,10 +28,12 @@
         <item name="lettersOnBoard">@color/NavajoWhite</item>
         <item name="lettersInHand">@color/AntiqueWhite</item>
     </style>
+
     <style name="Theme.TestChatBox.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="PinkTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="backgroundColor">#f7dfed</item>
         <item name="android:textColor">@color/black</item>
@@ -97,6 +99,7 @@
 
 
     <style name="Theme.TestChatBox.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="Theme.TestChatBox.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="ThemeOverlay.TestChatBox.FullscreenContainer" parent="">

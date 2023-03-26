@@ -228,10 +228,10 @@
 
 
     <Button
-        android:id="@+id/gameTest"
+        android:id="@+id/theme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="GAMETEST"
+        android:text="theme"
         android:layout_gravity="center|top"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
