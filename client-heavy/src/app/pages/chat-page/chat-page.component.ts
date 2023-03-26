@@ -2,6 +2,7 @@ import { AfterContentChecked, ChangeDetectorRef, Component, OnInit } from '@angu
 import { ChatInfo, ChatMessage, ChatType } from '@app/classes/chat-info';
 import { AccountService } from '@app/services/account-service/account.service';
 //import { AccountService } from '@app/services/account-service/account.service';
+import { Router } from '@angular/router';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { Subscription } from 'rxjs';
 //import { chat, chatlist } from './chats';
@@ -15,16 +16,17 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
     chatText: string = '';
     nextMessage: string = '';
     chatList: ChatInfo[];
-    chatLog: Map<string, ChatMessage[]>;
+    chatLog: Map<string, ChatMessage[]> = new Map<string, ChatMessage[]>();
     public: ChatType = ChatType.PUBLIC;
     private: ChatType = ChatType.PRIVATE;
     global: ChatType = ChatType.GLOBAL;
-    visibility: ChatType;
+    visibility: ChatType = this.global;
     selectedChat: string;
     subscriptions: Subscription[] = [];
     username: string;
+    isDisabled: boolean = true;
 
-    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService) {
+    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService, private router: Router) {
         this.username = this.account.getUsername();
     }
 
@@ -36,6 +38,7 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
         this.subscriptions.push(this.chatService.getNewMessages().subscribe((messageLog: Map<string, ChatMessage[]>) => {
             this.chatLog = messageLog;
         }));
+        
     }
 
     ngAfterContentChecked(): void {
@@ -59,27 +62,35 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
 
     setVisibility(event: Event, newVisibility: ChatType) {
         this.visibility = newVisibility;
+        this.selectedChat = "";
+        this.setDisabled();
 
         let chatLinks;
-
         chatLinks = document.getElementsByClassName("tabs");
         for (let i = 0; i < chatLinks.length; i++) {
             chatLinks[i].className = chatLinks[i].className.replace(" active", "");
         }
 
         (event.currentTarget! as HTMLTextAreaElement).className += " active";
-
-        console.log(this.chatList);
-        console.log(this.chatLog);
     }
 
     selectChat(event: Event, id: string) {
         this.selectedChat = id;
+        this.setDisabled();
         let chatButtons;
         chatButtons = document.getElementsByClassName("chat-button");
         for (let i = 0; i < chatButtons.length; i++) {
             chatButtons[i].className = chatButtons[i].className.replace(" selected", "");
         }
         (event.currentTarget! as HTMLTextAreaElement).className += " selected";
+    }
+
+    setDisabled() {
+        if (this.selectedChat) this.isDisabled = false;
+        else this.isDisabled = true;
+    }
+
+    goToChats() {
+        this.router.navigate(['/public-chats']);
     }
 }

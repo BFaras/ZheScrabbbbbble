@@ -1,28 +1,38 @@
 import { NO_ERROR } from '@app/constants/error-code-constants';
 import { ChatType } from '@app/interfaces/chat-info';
-import { ChatMessage, TWO_DIGIT_TIME_VALUE } from '@app/interfaces/chat-message';
+import { ChatMessage } from '@app/interfaces/chat-message';
 import * as io from 'socket.io';
 import Container, { Service } from 'typedi';
 import { AccountInfoService } from './account-info.service';
 import { ChatService } from './chat.service';
+import { DatabaseService } from './database.service';
+import { TimeFormatterService } from './time-formatter.service';
 
 @Service()
 export class ChatSocketService {
     private readonly chatService: ChatService;
     private readonly accountInfoService: AccountInfoService;
+    private readonly timeFormatterService: TimeFormatterService;
+    private readonly dbService: DatabaseService;
 
     constructor() {
         this.chatService = Container.get(ChatService);
         this.accountInfoService = Container.get(AccountInfoService);
+        this.timeFormatterService = Container.get(TimeFormatterService);
+        this.dbService = Container.get(DatabaseService);
     }
 
     handleChatSockets(socket: io.Socket) {
-        socket.on('New Chat Message', (message: string, chatCode: string) => {
+        socket.on('New Chat Message', async (message: string, chatCode: string) => {
+            const userId: string = this.accountInfoService.getUserId(socket);
             const chatMessage: ChatMessage = {
                 message,
                 username: this.accountInfoService.getUsername(socket),
-                timestamp: this.getTimeStampString(),
+                avatar: await this.dbService.getUserAvatar(userId),
+                timestamp: this.timeFormatterService.getTimeStampString(),
             };
+            await this.chatService.addChatMessageToHistory(userId, chatCode, chatMessage);
+
             socket.emit('New Chat Message', chatCode, chatMessage);
             socket.to(chatCode).emit('New Chat Message', chatCode, chatMessage);
             // eslint-disable-next-line no-console
@@ -60,15 +70,9 @@ export class ChatSocketService {
         socket.on('Get User Chat List', async () => {
             socket.emit('User Chat List Response', await this.chatService.getUserChats(this.accountInfoService.getUserId(socket)));
         });
-    }
 
-    private getTimeStampString(): string {
-        const date = new Date();
-        return date.toLocaleString('en-US', {
-            hour: TWO_DIGIT_TIME_VALUE,
-            minute: TWO_DIGIT_TIME_VALUE,
-            second: TWO_DIGIT_TIME_VALUE,
-            hour12: false,
+        socket.on('Get Chat History', async (chatId: string) => {
+            socket.emit('Chat History Response', await this.chatService.getChatHistory(chatId));
         });
     }
 }

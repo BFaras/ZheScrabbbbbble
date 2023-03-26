@@ -1,6 +1,9 @@
 import { Player } from '@app/classes/player';
 import { MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
+import { CommandResult } from '@app/controllers/command.controller';
 import { Game } from './game';
+import { VirtualPlayer } from './virtual-player';
+import { VirtualPlayerEasy } from './virtual-player-easy';
 
 export class GameRoom {
     private players: Player[];
@@ -11,6 +14,7 @@ export class GameRoom {
     private visibility: RoomVisibility;
     private password: string;
     private gameStarted: boolean;
+    private observers: string[] = [];
 
     constructor(id: string, name: string, visibility: RoomVisibility, password?: string) {
         this.id = id;
@@ -29,6 +33,20 @@ export class GameRoom {
         this.gameStarted = false;
     }
 
+    isPlayerObserver(userId: string): boolean{
+        return this.observers.includes(userId);
+    }
+
+    addObserver(userId: string){
+        this.observers.push(userId);
+    }
+
+    removeObserver(userId: string){
+        const index = this.observers.indexOf(userId);
+        if(index < 0) return;
+        this.observers.splice(index, 1);
+    }
+
     addPlayer(player: Player) {
         if (this.players.length < MAX_NUMBER_OF_PLAYERS) {
             this.players.push(player);
@@ -37,20 +55,46 @@ export class GameRoom {
 
     removePlayer(playerID: string): boolean {
         const player = this.getPlayer(playerID);
-        if (!player) {
-            return false;
+        if (player) {
+            const index = this.players.indexOf(player);
+            this.players.splice(index, 1);
+            return true;
         }
-        const index = this.players.indexOf(player);
-        this.players.splice(index, 1);
-        return true;
+        const index = this.observers.indexOf(playerID);
+        if(index < 0) return false;
+        this.observers.splice(index, 1);
+        return false;
+    }
+
+    replacePlayer(playerID: string) {
+        let index = -1;
+        for (let i = 0; i < this.players.length; i++) {
+            if (this.players[i].getUUID() === playerID) {
+                index = i;
+                break;
+            }
+        }
+        if(index === -1) return;
+        if(this.players[index] instanceof VirtualPlayer) return;
+        const newVirtualPlayer = new VirtualPlayerEasy(this.players[index].getName() + " (V)", this);
+        newVirtualPlayer.copyPlayerState(this.players[index]);
+        this.players[index] = newVirtualPlayer;
     }
 
     isPlayerInRoom(playerID: string): boolean {
-        return this.getPlayer(playerID) !== null;
+        return this.getPlayer(playerID) !== null || this.observers.includes(playerID);
     }
 
     getPlayerCount(): number {
         return this.players.length;
+    }
+
+    getRealPlayerCount(): number {
+        let count = 0; 
+        for(const player of this.players){
+            if(!(player instanceof VirtualPlayer)) count++;
+        }
+        return count;
     }
 
     getName(): string {
@@ -100,9 +144,11 @@ export class GameRoom {
         return this.password === password;
     }
 
-    startGame() {
+    startGame(timerCallback : (room : GameRoom, username: string, result : CommandResult) => void) {
         if(this.gameStarted) return;
-        this.game.startGame();
+        this.game.startGame((username : string, result: CommandResult) => {
+            timerCallback(this, username, result);
+        });
         this.gameStarted = true;
     }
 

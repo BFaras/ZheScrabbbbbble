@@ -6,7 +6,8 @@ import {
     NB_OF_CHARS_TO_ADVANCE,
     NB_OF_RANDOM_CHARS_TO_ADD,
     NEGATIVE_MULTIPLIER,
-    POSITIVE_MULTIPLIER
+    POSITIVE_MULTIPLIER,
+    VIRTUAL_PLAYER_NAME
 } from '@app/constants/authentification-constants';
 import {
     DATABASE_UNAVAILABLE,
@@ -20,29 +21,29 @@ import { AccountCreationState } from '@app/interfaces/account-creation-state';
 import { Question } from '@app/interfaces/question';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
-import { OnlineUsersService } from './online-users.service';
 import { ProfileService } from './profile.service';
+import { UsersStatusService } from './users-status.service';
 
 @Service()
 export class AuthentificationService {
     private readonly dbService: DatabaseService;
-    private readonly onlineUsersService: OnlineUsersService;
+    private readonly usersStatusService: UsersStatusService;
     private readonly profileService: ProfileService;
 
     constructor() {
         this.dbService = Container.get(DatabaseService);
-        this.onlineUsersService = Container.get(OnlineUsersService);
+        this.usersStatusService = Container.get(UsersStatusService);
         this.profileService = Container.get(ProfileService);
     }
 
     async authentifyUser(username: string, password: string): Promise<boolean> {
-        if (this.onlineUsersService.isUserOnline(username)) {
+        const userId = await this.dbService.getUserId(username);
+        if (this.usersStatusService.isUserOnline(userId)) {
             console.log(new Date().toLocaleTimeString() + ' | User is already connected on another device');
             return false;
         }
         const decryptedPasswordFromDB: string = this.decryptPassword(await this.dbService.getUserEncryptedPassword(username));
         if (decryptedPasswordFromDB.length > 0 && decryptedPasswordFromDB === password) {
-            this.onlineUsersService.addOnlineUser(username);
             return true;
         }
         console.log(new Date().toLocaleTimeString() + ' | Incorrect password, login failed');
@@ -51,17 +52,16 @@ export class AuthentificationService {
 
     async createAccount(username: string, password: string, email: string, userAvatar: string, securityQuestion: Question): Promise<string> {
         let accountCreationState: string = await this.verifyAccountRequirements(username, password, email);
+        let userId = '';
         if (accountCreationState === NO_ERROR) {
             const encryptedPassword: string = this.encryptPassword(password);
             if (!(await this.dbService.addUserAccount(username, encryptedPassword, email, securityQuestion))) {
                 accountCreationState = DATABASE_UNAVAILABLE;
             } else {
-                await this.profileService.createNewProfile(username, userAvatar);
+                userId = await this.dbService.getUserId(username);
+                await this.profileService.createNewProfile(userId, userAvatar);
+                await this.dbService.addFriendDoc(userId);
             }
-        }
-
-        if (accountCreationState === NO_ERROR) {
-            this.onlineUsersService.addOnlineUser(username);
         }
 
         return accountCreationState;
@@ -89,7 +89,7 @@ export class AuthentificationService {
     private async verifyAccountRequirements(username: string, password: string, email: string): Promise<string> {
         let errorCode = NO_ERROR;
         const accountCreationState: AccountCreationState = {
-            isUsernameValid: username.length >= MIN_USERNAME_LENGTH,
+            isUsernameValid: this.validateUsername(username),
             isEmailValid: email.includes(CHAR_EMAIL_MUST_CONTAIN),
             isPasswordValid: password.length >= MIN_USERNAME_LENGTH,
             isUsernameFree: await this.dbService.isUsernameFree(username),
@@ -110,6 +110,10 @@ export class AuthentificationService {
         }
 
         return Promise.resolve(errorCode);
+    }
+
+    private validateUsername(username: string): boolean {
+        return username.length >= MIN_USERNAME_LENGTH && !username.includes(VIRTUAL_PLAYER_NAME);
     }
 
     private encryptPassword(decryptedPassword: string): string {

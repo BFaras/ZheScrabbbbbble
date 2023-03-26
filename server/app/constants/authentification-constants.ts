@@ -7,3 +7,4 @@ export const MIN_ASCII_SYMBOL = 33;
 export const MAX_ASCII_SYMBOL = 126;
 export const NEGATIVE_MULTIPLIER = -1;
 export const POSITIVE_MULTIPLIER = 1;
+export const VIRTUAL_PLAYER_NAME = '(V)';

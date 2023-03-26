@@ -16,13 +16,10 @@ export interface ConnectionInfo {
     time: string;
 }
 
-export interface GameInfo {
+export interface GameHistoryInfo {
     date: string;
     time: string;
-    length: string;
-    winnerIndex: number;
-    players: PlayerGameInfo[];
-    gameMode: string;
+    isWinner: boolean;
 }
 
 export interface PlayerGameInfo {
@@ -30,14 +27,20 @@ export interface PlayerGameInfo {
     score: number;
 }
 
+export interface LevelInfo {
+    level: number;
+    xp: number;
+    nextLevelXp: number;
+}
+
 export interface ProfileInfo {
     avatar: string;
-    level: number;
+    levelInfo: LevelInfo;
     userCode: string;
     stats: StatisticInfo[];
     tournamentWins: number[];
     connectionHistory: ConnectionInfo[];
-    gameHistory: GameInfo[];
+    gameHistory: GameHistoryInfo[];
 }
 
 export interface ProfileSettings {

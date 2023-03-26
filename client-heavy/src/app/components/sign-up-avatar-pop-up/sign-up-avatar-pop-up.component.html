@@ -1,0 +1,6 @@
+<div class="container">
+    <div class="listAvatars">
+        <img (click)="changeAvatar(avatarSrc)"*ngFor="let avatarSrc of allAvatars" class='avatar' [src]= "avatarSrc"/> 
+    </div>
+    <button class="button" [mat-dialog-close]="avatarChosen" (click) = "closeDialog()">Confirmer l'avatar choisi</button>
+</div>

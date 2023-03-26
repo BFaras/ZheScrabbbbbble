@@ -86,21 +86,21 @@ mat-radio-button {
 .input-container {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 550px;
 }
 
 .input {
     border-radius: 5px;
-    padding: 2%;
     flex-grow: 1;
-    margin: 0% 0% 0% 5%;
+    margin-left: 5%;
     border: none;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bolder;
     font-size: 15px;
     background-color: var(--background-secondary);
     color: var(--button-text-default);
-    height: 5%;
+    height: 30px;
 }
 
 .input:focus {

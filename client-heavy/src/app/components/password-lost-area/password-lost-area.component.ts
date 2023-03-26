@@ -30,7 +30,6 @@ export class PasswordLostAreaComponent implements OnInit {
   }
 
   generateQuestion() {
-
     this.subscriptionGetQuestion = this.accountAuthenticationService.getUserQuestion(this.username).subscribe(
       (question: string) => {
         if (question) {
@@ -44,10 +43,6 @@ export class PasswordLostAreaComponent implements OnInit {
       });
   }
 
-  ngOnDestroy() {
-    this.subscriptionModifyPassword.unsubscribe();
-    this.subscriptionGetQuestion.unsubscribe();
-  }
   changePassword() {
     const NO_ERROR = "0";
     const DATABASE_UNAVAILABLE = "5";
@@ -66,11 +61,14 @@ export class PasswordLostAreaComponent implements OnInit {
         }
       }
     );
-
   }
 
   goToIsQuestionAnswered(): void {
     this.isQuestionAnswered = !this.isQuestionAnswered
+  }
+
+  goToLogIn(): void {
+    this.router.navigate(['/login']);
   }
 
 }

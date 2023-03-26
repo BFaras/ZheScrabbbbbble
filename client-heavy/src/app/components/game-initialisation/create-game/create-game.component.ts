@@ -3,6 +3,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { RoomVisibility } from '@app/constants/room-visibility';
 import { AccountService } from '@app/services/account-service/account.service';
+import { ChatService } from '@app/services/chat-service/chat.service';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 
 @Component({
@@ -21,6 +22,7 @@ export class CreateGameComponent {
         private waitingRoomManagerService: WaitingRoomManagerService,
         private accountService: AccountService, 
         private router: Router,
+        private chatService:ChatService
     ) {}
 
 
@@ -52,8 +54,9 @@ export class CreateGameComponent {
                 return;
             }
         }
+        
         sessionStorage.clear();
-        this.waitingRoomManagerService.createRoomResponse().subscribe(this.redirectPlayer.bind(this));
+        this.waitingRoomManagerService.createRoomResponse().subscribe((response)=> this.redirectPlayer(response));
         this.waitingRoomManagerService.createMultiRoom(roomNameValue, this.visibility, this.passwordRoom);
     }
 
@@ -61,12 +64,14 @@ export class CreateGameComponent {
         alert('Veuillez remplir les champs vides.');
     }
 
-    redirectPlayer(message: string) {
-        if (message !== '0') {
+    /**modifier apres avoir confirmer avec manuel si methode est bonne*/
+    redirectPlayer(message: {codeError:string,roomId:string}) {
+        if (message.codeError !== '0') {
             alert('Erreur dans la création de la salle');
             return;
         }
-        this.waitingRoomManagerService.setPlayersInRoom([this.accountService.getUsername()])
+        this.waitingRoomManagerService.setDefaultPlayersInRoom([this.accountService.getUsername()])
+        this.chatService.setChatInGameRoom(message.roomId);
         this.router.navigate(['/waiting-room']);
     }
 }

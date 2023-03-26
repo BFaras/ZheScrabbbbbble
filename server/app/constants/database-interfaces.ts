@@ -56,4 +56,5 @@ export enum CollectionType {
     USERACCOUNTS = 'userAccount',
     CHATCANALS = 'chatCanals',
     PROFILEINFO = 'profileInfo',
+    FRIENDS = 'friendsCollection',
 }

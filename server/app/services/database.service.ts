@@ -11,8 +11,10 @@ import {
     TopScores,
     VirtualPlayerDifficulty
 } from '@app/constants/database-interfaces';
-import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
+import { DATABASE_UNAVAILABLE, NO_ERROR, USERNAME_TAKEN } from '@app/constants/error-code-constants';
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
+import { ChatMessageDB } from '@app/interfaces/chat-message';
+import { FriendsDB } from '@app/interfaces/friend-info';
 import { ProfileInfo, ProfileInfoDB, ProfileSettings } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
 import * as fs from 'fs';
@@ -76,7 +78,6 @@ export class DatabaseService {
             email,
             securityQuestion,
         };
-
         await this.getCollection(CollectionType.USERACCOUNTS)
             ?.insertOne(accountInfo)
             .catch(() => {
@@ -91,7 +92,7 @@ export class DatabaseService {
         await this.getCollection(CollectionType.PROFILEINFO)?.deleteOne({ _id: new ObjectId(userId) });
     }
 
-    async getUserId(username: string) {
+    async getUserId(username: string): Promise<string> {
         const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<Document>)?.findOne({
             username,
         });
@@ -103,7 +104,7 @@ export class DatabaseService {
         return userId;
     }
 
-    async getUsernameFromId(userId: string) {
+    async getUsernameFromId(userId: string): Promise<string> {
         const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<AccountInfo>)?.findOne({
             _id: new ObjectId(userId),
         });
@@ -115,7 +116,7 @@ export class DatabaseService {
         return username;
     }
 
-    async changeUserPassword(usernameUser: string, encryptedPasswordUser: string) {
+    async changeUserPassword(usernameUser: string, encryptedPasswordUser: string): Promise<boolean> {
         let isChangeSuccess = true;
         await this.getCollection(CollectionType.USERACCOUNTS)
             ?.updateOne({ username: usernameUser }, { $set: { encryptedPassword: encryptedPasswordUser } })
@@ -123,6 +124,19 @@ export class DatabaseService {
                 isChangeSuccess = false;
             });
         return isChangeSuccess;
+    }
+
+    async changeUsername(userId: string, newUsername: string): Promise<string> {
+        let error = USERNAME_TAKEN;
+        if (await this.isUsernameFree(newUsername)) {
+            error = NO_ERROR;
+            await this.getCollection(CollectionType.USERACCOUNTS)
+                ?.updateOne({ _id: new ObjectId(userId) }, { $set: { username: newUsername } })
+                .catch(() => {
+                    error = DATABASE_UNAVAILABLE;
+                });
+        }
+        return error;
     }
 
     async getUserEncryptedPassword(username: string): Promise<string> {
@@ -158,7 +172,7 @@ export class DatabaseService {
             username,
         });
         let securityQuestionAnswer = '';
-        
+
         if (userAccountInfoDoc !== undefined && userAccountInfoDoc !== null) {
             securityQuestionAnswer = userAccountInfoDoc.securityQuestion.answer;
         }
@@ -177,12 +191,25 @@ export class DatabaseService {
         return profileInfo;
     }
 
+    async getUserAvatar(userId: string): Promise<string> {
+        let userAvatar = '';
+        const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
+            _id: new ObjectId(userId),
+        });
+
+        if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
+            userAvatar = userProfileInfoDoc.profileInfo.avatar;
+        }
+        return userAvatar;
+    }
+
     async getUserProfileSettings(userId: string): Promise<ProfileSettings> {
         let profileSettings: ProfileSettings = Container.get(ProfileService).getDefaultProfileSettings();
         const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
             _id: new ObjectId(userId),
         });
 
+        console.log(userProfileInfoDoc);
         if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
             profileSettings = userProfileInfoDoc.profileSettings;
         }
@@ -224,6 +251,62 @@ export class DatabaseService {
         return errorCode;
     }
 
+    async addFriendDoc(userId: string): Promise<boolean> {
+        const friendsInfo: FriendsDB = {
+            _id: new ObjectId(userId),
+            friendsId: [],
+        };
+        let isCreationSuccess = true;
+        await this.getCollection(CollectionType.FRIENDS)
+            ?.insertOne(friendsInfo)
+            .catch(() => {
+                isCreationSuccess = false;
+            });
+        return isCreationSuccess;
+    }
+
+    async addFriend(userId: string, friendUserId: string): Promise<string> {
+        let errorCode: string = NO_ERROR;
+        await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)
+            ?.updateOne({ _id: new ObjectId(userId) }, { $push: { friendsId: friendUserId } })
+            .catch(() => {
+                errorCode = DATABASE_UNAVAILABLE;
+            });
+
+        return errorCode;
+    }
+
+    async getUserFriendList(userId: string): Promise<string[]> {
+        let friendsList: string[] = [];
+        const userFriendsDoc = await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)?.findOne({
+            _id: new ObjectId(userId),
+        });
+
+        if (userFriendsDoc !== undefined && userFriendsDoc !== null) {
+            friendsList = userFriendsDoc.friendsId;
+        }
+        return friendsList;
+    }
+
+    async getUserIdFromFriendCode(friendCode: string): Promise<string> {
+        const profileWithCode = await ((await this.getCollection(CollectionType.PROFILEINFO)) as Collection<ProfileInfoDB>)?.findOne({
+            'profileInfo.userCode': friendCode,
+        });
+        let friendId = '';
+
+        if (profileWithCode !== undefined && profileWithCode !== null) {
+            friendId = profileWithCode._id.toString();
+        }
+        return friendId;
+    }
+
+    async isFriendCodeTaken(friendCodeToCheck: string): Promise<boolean> {
+        const userWithFriendCode = await ((await this.getCollection(CollectionType.PROFILEINFO)) as Collection<ProfileInfoDB>)?.findOne({
+            'profileInfo.userCode': friendCodeToCheck,
+        });
+        return Promise.resolve(!(userWithFriendCode === undefined || userWithFriendCode === null));
+    }
+
     async addNewChatCanal(chatInfo: ChatInfoDB): Promise<string> {
         let chatId = '';
         let creationSuccess = true;
@@ -254,6 +337,20 @@ export class DatabaseService {
         return wasUserAddedToChat;
     }
 
+    async addMessageToHistory(chatId: string, chatMessage: ChatMessageDB): Promise<string> {
+        let error = DATABASE_UNAVAILABLE;
+        if (await this.isUserInChat(chatMessage.userId, chatId)) {
+            error = NO_ERROR;
+            await this.getCollection(CollectionType.CHATCANALS)
+                ?.updateOne({ _id: new ObjectId(chatId) }, { $push: { chatHistory: chatMessage } })
+                .catch(() => {
+                    error = DATABASE_UNAVAILABLE;
+                });
+        }
+
+        return error;
+    }
+
     async leaveChatCanal(userId: string, chatId: string) {
         let wasUserRemovedFromChat = false;
         if (await this.isUserInChat(userId, chatId)) {
@@ -270,6 +367,18 @@ export class DatabaseService {
         }
 
         return wasUserRemovedFromChat;
+    }
+
+    async getChatHistory(chatId: string): Promise<ChatMessageDB[]> {
+        const chatDoc = await ((await this.getCollection(CollectionType.CHATCANALS)) as Collection<ChatInfoDB>)?.findOne({
+            _id: new ObjectId(chatId),
+        });
+        let chatHistory: ChatMessageDB[] = [];
+
+        if (chatDoc !== undefined && chatDoc !== null) {
+            chatHistory = chatDoc.chatHistory;
+        }
+        return chatHistory;
     }
 
     async getChatCanalsUserCanJoin(userId: string): Promise<ChatInfo[]> {
@@ -308,6 +417,11 @@ export class DatabaseService {
         return Promise.resolve(!(thisChatWithUserInIt === undefined || thisChatWithUserInIt === null));
     }
 
+    async isChatExistant(chatId: string): Promise<boolean> {
+        const chatDoc = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: new ObjectId(chatId) });
+        return Promise.resolve(!(chatDoc === undefined || chatDoc === null));
+    }
+
     async isGlobalChatExistant(): Promise<boolean> {
         const globalChatDoc = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ chatType: ChatType.GLOBAL });
         return Promise.resolve(!(globalChatDoc === undefined || globalChatDoc === null));
@@ -333,7 +447,7 @@ export class DatabaseService {
         });
         return mongoArray as ChatInfo[];
     }
-    
+
     async getTopScores(resultCount: number): Promise<TopScores> {
         const dbResults = await (this.getCollection(CollectionType.SCORE) as Collection<Score>)
             ?.find({}, { projection: { _id: 0 } })
