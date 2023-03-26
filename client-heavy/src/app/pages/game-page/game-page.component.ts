@@ -4,6 +4,7 @@ import { FontSizeService } from '@app/services/font-size-service/font-size.servi
 import { GameStateService, PlayerMessage } from '@app/services/game-state-service/game-state.service';
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
+import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -24,7 +25,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
         private readonly letterHolderService: LetterHolderService,
         private readonly gridService: GridService,
         private readonly router: Router,
-        private readonly fontSize: FontSizeService
+        private readonly fontSize: FontSizeService,
+        private readonly waitingRoomManagerService: WaitingRoomManagerService
     ) {}
 
     ngOnInit() {
@@ -32,6 +34,14 @@ export class GamePageComponent implements OnInit, OnDestroy {
             if (gameState.message) this.actionHistory.push(gameState.message);
             this.endGame = gameState.gameOver;
         }));
+        if(this.gameStateService.isTournamentGame()){
+            this.waitingRoomManagerService.getStartGameObservable().subscribe(() => {
+                this.gameStateService.setObserver(-1);
+                this.gameStateService.sendAbandonRequest();
+                this.gameStateService.requestGameState();
+                this.actionHistory = [];
+            });
+        }
         //Reconnection code
         /*
         const id = sessionStorage.getItem('playerID');

@@ -22,12 +22,12 @@ export interface GameData {
 })
 export class TournamentService {
 
-    private gameDataObservable: Observable<GameData[]>;
-    private gameDataObserver: Observer<GameData[]>;
+    private gameDataObservable: Observable<{games: GameData[], timeData : {time: number, phase : number}}>;
+    private gameDataObserver: Observer<{games: GameData[], timeData : {time: number, phase : number}}>;
     private socket: Socket;
 
     constructor(private socketManagerService: SocketManagerService) {
-        this.gameDataObservable = new Observable((observer: Observer<GameData[]>) => {
+        this.gameDataObservable = new Observable((observer: Observer<{games: GameData[], timeData : {time: number, phase : number}}>) => {
             if (!this.socket.active) this.refreshSocketRequests();
             this.gameDataObserver = observer;
         });
@@ -36,8 +36,8 @@ export class TournamentService {
 
     refreshSocketRequests() {
         this.socket = this.socketManagerService.getSocket();
-        this.socket.on('Tournament Data Response', (rooms) => {
-            this.gameDataObserver.next(rooms)
+        this.socket.on('Tournament Data Response', (rooms, timeData) => {
+            this.gameDataObserver.next({games: rooms, timeData : timeData});
         });
     }
 
@@ -61,7 +61,7 @@ export class TournamentService {
         this.socketManagerService.getSocket().emit('Get Tournament Data');
     }
 
-    getGameDataObservable(): Observable<GameData[]> {
+    getGameDataObservable(): Observable<{games: GameData[], timeData : {time: number, phase : number}}> {
         return this.gameDataObservable;
     }
 }

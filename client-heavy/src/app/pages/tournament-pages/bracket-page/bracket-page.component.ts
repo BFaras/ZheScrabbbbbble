@@ -5,6 +5,7 @@ import { TIMER_VALUES } from "@app/constants/timer-constants";
 import { GameStateService } from "@app/services/game-state-service/game-state.service";
 import { GameData, GameStatus, TournamentService } from "@app/services/tournament-service/tournament.service";
 import { WaitingRoomManagerService } from "@app/services/waiting-room-manager-service/waiting-room-manager.service";
+import { first } from "rxjs/operators";
 
 @Component({
     selector: 'app-bracket-page',
@@ -14,7 +15,7 @@ import { WaitingRoomManagerService } from "@app/services/waiting-room-manager-se
 export class BracketPageComponent implements OnDestroy {
     timer: any;
     currentTime: Timer = { minute: 0, second: 0 };
-    betweenRounds: boolean = true;
+    phase: number;
     private stopTimer: boolean = false;
 
     semi1: GameData;
@@ -24,12 +25,13 @@ export class BracketPageComponent implements OnDestroy {
     private games: GameData[] = [];
 
     constructor(private tournamentService: TournamentService, private waitingRoomManagerService: WaitingRoomManagerService, private gameStateService: GameStateService, private router: Router) {
+        this.initTimer();
         this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this));
-        this.tournamentService.getGameDataObservable().subscribe((data) => {
-            this.games = data;
+        this.tournamentService.getGameDataObservable().subscribe((data : {games: GameData[], timeData : {time: number, phase : number}}) => {
+            this.games = data.games;
             this.setupGames();
-            this.resetTimer({ minute: 0, second: 20 });
-            this.initTimer();
+            this.phase = data.timeData.phase;
+            this.resetTimer({ minute: Math.floor(data.timeData.time / 60), second: (data.timeData.time % 60) });
         });
         this.tournamentService.getGameData();
     }
@@ -108,5 +110,18 @@ export class BracketPageComponent implements OnDestroy {
         this.router.navigate(['/game']).then(() => {
             this.gameStateService.requestGameState();
         });
+    }
+
+    observeInProgressGame(game : GameData){
+        if(game.status !== GameStatus.IN_PROGRESS) return;
+        this.waitingRoomManagerService.setObserver(true);
+        this.waitingRoomManagerService.joinRoomResponse().pipe(first()).subscribe(() => {
+            this.gameStateService.setObserver(0);
+            this.gameStateService.setTournamentGame(true);
+            this.router.navigate(['/game']).then(() => {
+                this.gameStateService.requestGameState();
+            });
+        });
+        this.waitingRoomManagerService.joinRoom(game.roomCode);
     }
 }

@@ -217,7 +217,7 @@ export class SocketManager {
                         const tournament = this.roomManager.findTournamentFromPlayer(this.accountInfoService.getUsername(socket));
                         if (!tournament) return;
                         tournament.setGameWinner(currentRoom.getID(), currentRoom.getGame.getWinner());
-                        this.sio.in(tournament.getID()).emit('Tournament Data Response', tournament.getGameData());
+                        this.sio.in(tournament.getID()).emit('Tournament Data Response', tournament.getGameData(), tournament.getTimePhase());
                     }
                 }
                 this.playVirtualTurns(currentRoom);
@@ -239,20 +239,22 @@ export class SocketManager {
                         const tournament = this.roomManager.findTournamentFromPlayer(this.accountInfoService.getUsername(socket));
                         if (!tournament) return;
                         tournament.setGameWinner(currentRoom.getID(), this.accountInfoService.getUsername(socket), true);
-                        this.sio.in(tournament.getID()).emit('Tournament Data Response', tournament.getGameData());
+                        this.sio.in(tournament.getID()).emit('Tournament Data Response', tournament.getGameData(), tournament.getTimePhase());
                     }
                     currentRoom.removePlayer(socket.id);
-                    if (currentRoom.getRealPlayerCount() === 0) {
+                    if (currentRoom.getRealPlayerCount(true) === 0) {
                         this.roomManager.deleteRoom(currentRoom.getID());
                     }
                     return;
                 }
                 currentRoom.replacePlayer(socket.id);
-                if (currentRoom.getRealPlayerCount() === 0) {
+                if (currentRoom.getRealPlayerCount(false) === 0) {
                     const message = currentRoom.getGame.endGame();
                     this.sendGameState(currentRoom, { messageType: DISCONNECT_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
                     this.sendGameState(currentRoom, { messageType: END_GAME_MESSAGE, values: [message] });
-                    this.roomManager.deleteRoom(currentRoom.getID());
+                    if(currentRoom.getRealPlayerCount(true) === 0){
+                        this.roomManager.deleteRoom(currentRoom.getID());
+                    }
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
@@ -282,7 +284,7 @@ export class SocketManager {
             socket.on('Get Tournament Data', () => {
                 const tournament = this.roomManager.findTournamentFromPlayer(this.accountInfoService.getUsername(socket));
                 if (!tournament) return;
-                socket.emit('Tournament Data Response', tournament.getGameData());
+                socket.emit('Tournament Data Response', tournament.getGameData(), tournament.getTimePhase());
             });
 
             socket.on('Exit Tournament', () => {
@@ -307,10 +309,10 @@ export class SocketManager {
                         const tournament = this.roomManager.findTournamentFromPlayer(this.accountInfoService.getUsername(socket));
                         if (!tournament) return;
                         tournament.setGameWinner(room.getID(), this.accountInfoService.getUsername(socket), true);
-                        this.sio.in(tournament.getID()).emit('Tournament Data Response', tournament.getGameData());
+                        this.sio.in(tournament.getID()).emit('Tournament Data Response', tournament.getGameData(), tournament.getTimePhase());
                     }
                     room.removePlayer(socket.id);
-                    if (room.getRealPlayerCount() === 0) {
+                    if (room.getRealPlayerCount(true) === 0) {
                         this.roomManager.deleteRoom(room.getID());
                     }
                     return;
@@ -328,11 +330,13 @@ export class SocketManager {
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
-                if (room.getRealPlayerCount() === 0) {
+                if (room.getRealPlayerCount(false) === 0) {
                     const message = room.getGame.endGame();
                     this.sendGameState(room, { messageType: DISCONNECT_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
                     this.sendGameState(room, { messageType: END_GAME_MESSAGE, values: [message] });
-                    this.roomManager.deleteRoom(room.getID());
+                    if(room.getRealPlayerCount(true) === 0){
+                        this.roomManager.deleteRoom(room.getID());
+                    }
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
@@ -366,7 +370,7 @@ export class SocketManager {
                 const tournament = this.roomManager.findTournamentFromPlayer(username);
                 if (!tournament) return
                 tournament.setGameWinner(room.getID(), room.getGame.getWinner())
-                this.sio.in(tournament.getID()).emit('Tournament Data Response', tournament.getGameData());
+                this.sio.in(tournament.getID()).emit('Tournament Data Response', tournament.getGameData(), tournament.getTimePhase());
             }
             return;
         };
@@ -374,7 +378,6 @@ export class SocketManager {
     }
 
     private startTournamentRound(tid: string, rooms: string[]) {
-        console.log(this.sio.sockets.adapter.rooms);
         this.roomManager.getRoom(rooms[0]).startGame(this.timerCallback.bind(this));
         this.roomManager.updateTournamentGameStatus(tid, rooms[0], GameStatus.IN_PROGRESS);
         this.roomManager.getRoom(rooms[1]).startGame(this.timerCallback.bind(this));
@@ -405,5 +408,6 @@ export class SocketManager {
             this.sendGameState(endMessage.room, { messageType: ROUND_OVER_MESSAGE, values: [] });
             this.sendGameState(endMessage.room, { messageType: END_GAME_MESSAGE, values: [endMessage.endMessage] });
         }
+        this.sio.in(tid).emit('Tournament Data Response', this.roomManager.getTournamentGameData(tid), this.roomManager.getTournamentTimeData(tid));
     }
 }

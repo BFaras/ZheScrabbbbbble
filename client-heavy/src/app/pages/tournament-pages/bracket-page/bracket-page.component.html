@@ -2,30 +2,30 @@
 <div class="container justified">
     <div>
         <h1 class="header-item">{{ 'TOURNAMENT-BRACKET.TITLE' | translate }}</h1>
-        <div id="timer">
-            <h2>{{(betweenRounds ? 'TOURNAMENT-BRACKET.NEXT-GAME-TIMER' : 'TOURNAMENT-BRACKET.ROUND-TIMER') | translate }} {{ getTimer().minute + ':' + (getTimer().second | number: '2.0-0') }}</h2>
+        <div id="timer" *ngIf="phase !== 2">
+            <h2>{{(phase === 0 ? 'TOURNAMENT-BRACKET.NEXT-GAME-TIMER' : 'TOURNAMENT-BRACKET.ROUND-TIMER') | translate }} {{ getTimer().minute + ':' + (getTimer().second | number: '2.0-0') }}</h2>
         </div>
     </div>
     <div>
     <div class="match-list">
         <h2 class="round-title">{{'TOURNAMENT-BRACKET.ROUND' | translate}} 1</h2>
         <h2 class="round-title">{{'TOURNAMENT-BRACKET.ROUND' | translate}} 2</h2>
-        <div class="game" [class.in-progress]="semi1.status === 1">
+        <div class="game" [class.in-progress]="semi1.status === 1" (click)="observeInProgressGame(semi1)">
             <h2 class="player" [class.winner]="semi1.status === 2 && semi1.winnerIndex === 0">{{semi1.players[0] ? semi1.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
             <h2 class="vs">VS</h2>
             <h2 class="player" [class.winner]="semi1.status === 2 && semi1.winnerIndex === 1">{{semi1.players[1] ? semi1.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
         </div>
-        <div class="game" [class.in-progress]="final1.status === 1">
+        <div class="game" [class.in-progress]="final1.status === 1" (click)="observeInProgressGame(final1)">
             <h2 class="player" [class.winner]="final1.status === 2 && final1.winnerIndex === 0">{{final1.players[0] ? final1.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
             <h2 class="vs">VS</h2>
             <h2 class="player" [class.winner]="final1.status === 2 && final1.winnerIndex === 1">{{final1.players[1] ? final1.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
         </div>
-        <div class="game" [class.in-progress]="semi2.status === 1">
+        <div class="game" [class.in-progress]="semi2.status === 1" (click)="observeInProgressGame(semi2)">
             <h2 class="player" [class.winner]="semi2.status === 2 && semi2.winnerIndex === 0">{{semi2.players[0] ? semi2.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
             <h2 class="vs">VS</h2>
             <h2 class="player" [class.winner]="semi2.status === 2 && semi2.winnerIndex === 1">{{semi2.players[1] ? semi2.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
         </div>
-        <div class="game" [class.in-progress]="final2.status === 1">
+        <div class="game" [class.in-progress]="final2.status === 1" (click)="observeInProgressGame(final2)">
             <h2 class="player" [class.winner]="final2.status === 2 && final2.winnerIndex === 0">{{final2.players[0] ? final2.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
             <h2 class="vs">VS</h2>
             <h2 class="player" [class.winner]="final2.status === 2 && final2.winnerIndex === 1">{{final2.players[1] ? final2.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>

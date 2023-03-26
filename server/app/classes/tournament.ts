@@ -2,7 +2,7 @@ import { MILLISECOND_IN_MINUTES, TOURNAMENT_ROUND_START_TIMER } from '@app/const
 import * as io from 'socket.io';
 
 export const MAX_TOURNAMENT_CODE = 100000;
-export const TOURNAMENT_ROUND_LENGTH = 20;
+export const TOURNAMENT_ROUND_LENGTH = 2;
 
 export enum GameStatus {
     PENDING,
@@ -26,6 +26,8 @@ export class Tournament {
     private roundTimer: NodeJS.Timer;
     private rooms: string[];
     private round: number = 0;
+    private tournamentPhase: number;
+    private time: number; 
 
     private gameCreationCallback: (tid: string, users: io.Socket[], round: number) => string[];
     private gameStartCallback: (tid: string, rooms: string[]) => void;
@@ -85,6 +87,8 @@ export class Tournament {
             users.push(player.socket);
         }
         this.rooms = this.gameCreationCallback(this.id, users, this.round);
+        this.tournamentPhase = 0;
+        this.time = Date.now();
         setTimeout(() => {
             this.gameStartCallback(this.id, this.rooms);
             this.startRoundTimer();
@@ -131,12 +135,30 @@ export class Tournament {
             return;
         }
         if (this.getGame('Final1')?.status === GameStatus.FINISHED && this.getGame('Final2')?.status === GameStatus.FINISHED && this.round === 2) {
+            this.tournamentPhase = 2;
+            this.time = Date.now();
             console.log('Tournament Over');
         }
     }
 
-    startSecondRound() {
-        console.log('Second round start');
+    getTimePhase(): {time: number, phase: number}{
+        const secondsElapsed = Math.floor((Date.now() - this.time) / 1000);
+        let timeLeft;
+        switch(this.tournamentPhase){
+            case 0 : 
+                timeLeft = (TOURNAMENT_ROUND_START_TIMER / 1000) - secondsElapsed;
+                break;
+            case 1 : 
+                timeLeft = (TOURNAMENT_ROUND_LENGTH * MILLISECOND_IN_MINUTES / 1000) - secondsElapsed;
+                break;
+            default  : 
+                timeLeft = 0;
+                break;
+        }
+        return {time : timeLeft, phase : this.tournamentPhase}
+    }
+
+    private startSecondRound() {
         const final1 = this.getGame('Final1');
         if (!final1) return;
         const final2 = this.getGame('Final2');
@@ -145,14 +167,13 @@ export class Tournament {
         const users: string[] = final1.players.concat(final2.players);
         const sockets = this.getSocketFromNames(users);
         this.rooms = this.gameCreationCallback(this.id, sockets, this.round);
-        console.log('Second round games created');
+        this.tournamentPhase = 0;
+        this.time = Date.now();
         setTimeout(() => {
-            console.log('Second round timeout over');
             this.gameStartCallback(this.id, this.rooms);
             this.startRoundTimer();
         }, TOURNAMENT_ROUND_START_TIMER);
-    }
-
+    } 
 
     private getSocketFromNames(users: string[]): io.Socket[] {
         const sockets = [];
@@ -176,6 +197,8 @@ export class Tournament {
 
     private startRoundTimer() {
         let nbMinLeft = TOURNAMENT_ROUND_LENGTH;
+        this.tournamentPhase = 1;
+        this.time = Date.now();
         this.roundTimer = setInterval(() => {
             nbMinLeft--;
             if (nbMinLeft <= 0) {
