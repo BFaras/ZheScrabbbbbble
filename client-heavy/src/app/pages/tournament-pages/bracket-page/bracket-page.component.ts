@@ -24,13 +24,14 @@ export class BracketPageComponent implements OnDestroy {
     private games: GameData[] = [];
 
     constructor(private tournamentService: TournamentService, private waitingRoomManagerService: WaitingRoomManagerService, private gameStateService: GameStateService, private router: Router) {
-        this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this))
-        this.tournamentService.getGameData().subscribe((data) => {
+        this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this));
+        this.tournamentService.getGameDataObservable().subscribe((data) => {
             this.games = data;
             this.setupGames();
             this.resetTimer({ minute: 0, second: 20 });
             this.initTimer();
         });
+        this.tournamentService.getGameData();
     }
 
     setupGames() {

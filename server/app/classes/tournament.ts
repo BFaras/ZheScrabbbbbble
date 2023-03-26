@@ -88,35 +88,34 @@ export class Tournament {
     setGameWinner(id: string, name: string, isLoser: boolean = false) {
         for (let game of this.games) {
             if (game.roomCode !== id) continue;
-            let loserName = '';
+            let otherName = '';
             game.status = GameStatus.FINISHED;
             for (let i = 0; i < game.players.length; i++) {
                 if (game.players[i] === name) {
-                    if (isLoser) {
-                        loserName = game.players[i];
-                    } else {
+                    if (!isLoser) {
                         game.winnerIndex = i;
                     }
                 } else {
+                    otherName = game.players[i];
                     if (isLoser) {
                         game.winnerIndex = i;
-                    } else {
-                        loserName = game.players[i];
                     }
                 }
             }
             if (game.type.includes('Semi')) {
+                const loser = isLoser ? name : otherName;
+                const winner = isLoser ? otherName : name;
                 const final1 = this.getGame('Final1');
                 if (final1) {
-                    final1.players.push(name);
+                    final1.players.push(winner);
                 } else {
-                    this.games.push({ type: 'Final1', status: GameStatus.PENDING, players: [name], winnerIndex: 0, roomCode: '' });
+                    this.games.push({ type: 'Final1', status: GameStatus.PENDING, players: [winner], winnerIndex: 0, roomCode: '' });
                 }
                 const final2 = this.getGame('Final2');
                 if (final2) {
-                    final2.players.push(loserName);
+                    final2.players.push(loser);
                 } else {
-                    this.games.push({ type: 'Final2', status: GameStatus.PENDING, players: [loserName], winnerIndex: 0, roomCode: '' });
+                    this.games.push({ type: 'Final2', status: GameStatus.PENDING, players: [loser], winnerIndex: 0, roomCode: '' });
                 }
             }
         }
