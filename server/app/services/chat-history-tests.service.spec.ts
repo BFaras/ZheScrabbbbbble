@@ -1,6 +1,7 @@
 /* eslint-disable dot-notation */
 /* eslint-disable max-len */
 import { NO_ERROR } from '@app/constants/error-code-constants';
+import { ROOM_ID_BEGINNING } from '@app/constants/room-constants';
 import { ChatType } from '@app/interfaces/chat-info';
 import { ChatMessage, ChatMessageDB } from '@app/interfaces/chat-message';
 import { Question } from '@app/interfaces/question';
@@ -8,6 +9,7 @@ import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Container } from 'typedi';
 import { AuthentificationService } from './authentification.service';
+import { ChatGameHistoryService } from './chat-game-history.service';
 import { ChatService } from './chat.service';
 import { DatabaseService } from './database.service';
 
@@ -27,6 +29,7 @@ describe('Chat History Tests', async () => {
     let dbService: DatabaseService;
     let authService: AuthentificationService;
     let chatService: ChatService;
+    let chatGameHistoryService: ChatGameHistoryService;
     let accountCreated = false;
     let account2Created = false;
     let user1Id = '';
@@ -42,6 +45,7 @@ describe('Chat History Tests', async () => {
     beforeEach(async () => {
         authService = Container.get(AuthentificationService);
         chatService = Container.get(ChatService);
+        chatGameHistoryService = Container.get(ChatGameHistoryService);
 
         const accountCreationError = await authService.createAccount(testUsername1, testPassword, testEmail, testAvatar1, testSecurityQuestion);
         const accountCreationError2 = await authService.createAccount(testUsername2, testPassword, testEmail, testAvatar2, testSecurityQuestion);
@@ -186,5 +190,37 @@ describe('Chat History Tests', async () => {
         expect(await chatService.getChatHistory(chatIds[testChatPos])).to.deep.contain(chatMessage);
         expect(await chatService.getChatHistory(chatIds[testChatPos])).to.deep.contain(chatMessage2);
         expect(await chatService.getChatHistory(chatIds[testChatPos])).to.deep.contain(chatMessage3);
+    });
+
+    it('should recognize that it is a game chat on isGameChat()', async () => {
+        const testGameId = ROOM_ID_BEGINNING + 'Hello';
+        expect(await chatGameHistoryService.isGameChat(testGameId)).to.be.true;
+    });
+
+    it('add the message to the game chatHistory if it is a game chat on addChatMessageToHistory()', async () => {
+        const testGameChatMessage = ROOM_ID_BEGINNING + 'Hello';
+        const chatMessage: ChatMessage = {
+            message: 'testMessage',
+            username: testUsername1,
+            avatar: testAvatar1,
+            timestamp: '00',
+        };
+        const expectedChatMessage: ChatMessageDB = chatService['createChatMessageDB'](user1Id, chatMessage);
+
+        await chatService.addChatMessageToHistory(user1Id, testGameChatMessage, chatMessage);
+        expect(chatGameHistoryService.getGameChatHistory(testGameChatMessage)).to.deep.contain(expectedChatMessage);
+    });
+
+    it('should get the chat message in the client chat format for game chats on getChatHistory()', async () => {
+        const testGameId = ROOM_ID_BEGINNING + 'Hello';
+        const chatMessage: ChatMessage = {
+            message: 'testMessage',
+            username: testUsername1,
+            avatar: testAvatar1,
+            timestamp: '00',
+        };
+
+        await chatService.addChatMessageToHistory(user1Id, testGameId, chatMessage);
+        expect(await chatService.getChatHistory(testGameId)).to.deep.contain(chatMessage);
     });
 });
