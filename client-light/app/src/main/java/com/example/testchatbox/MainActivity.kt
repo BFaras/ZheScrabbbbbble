@@ -75,7 +75,10 @@ object ThemeManager {
     fun setCustomizedThemes(context: Context, theme: String?) {
         when (theme) {
             "cremebrulee" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            "eclipse" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            "eclipse" -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                context.setTheme(R.style.EclipseTheme)
+            }
             "astronaute" -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 context.setTheme(R.style.PinkTheme)
