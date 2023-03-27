@@ -26,9 +26,11 @@ export class ProfileSocketService {
             socket.emit('Avatar Change Response', await this.profileService.changeAvatar(this.accountInfoService.getUserId(socket), newAvatar));
         });
 
-        socket.on('Get Theme and Language', async () => {
-            const userSettings = await this.profileService.getUserSettings(this.accountInfoService.getUserId(socket));
-            socket.emit('Theme and Language Response', userSettings.theme, userSettings.language);
+        socket.on('Change Language', async (newLanguage: string) => {
+            socket.emit(
+                'Language Change Response',
+                await this.profileService.changeUserSettings(this.accountInfoService.getUserId(socket), newLanguage, false, true),
+            );
         });
 
         socket.on('Change Theme', async (newTheme: string) => {
@@ -56,12 +58,12 @@ export class ProfileSocketService {
         });
 
         socket.on('Get All Avatars', async () => {
-            const listNameAllAvatars: string[] = ['cat','dog','flower'];
+            const listNameAllAvatars: string[] = ['cat', 'dog', 'flower'];
             const listAvatars: string[] = [];
             listNameAllAvatars.forEach((value, index) => {
                 const contents = fs.readFileSync('./assets/avatar/' + listNameAllAvatars[index] + '.jpg', { encoding: 'base64' });
                 listAvatars.push(contents);
-            })
+            });
             socket.emit('Get All Avatars Response', listAvatars);
         });
     }
