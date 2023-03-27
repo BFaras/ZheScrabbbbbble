@@ -19,6 +19,8 @@
     <string name="rejoindre">veut rejoindre votre partie</string>
     <string name="accepter">Accepter</string>
     <string name="refuser">Refuser</string>
+    <string name="ajouter">Ajouter</string>
+    <string name="FriendCode">Entrez le code se trouvant sur le profil de votre ami pour l\'ajouter </string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -39,6 +41,7 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Courriel</string>
+    <string name="prompt_friendcode">Code d\'ami</string>
     <string name="prompt_username">Nom d\'utilisateur</string>
     <string name="prompt_password">Mot de passe</string>
     <string name="action_sign_in">Connection</string>
@@ -54,6 +57,7 @@
     <!-- Strings related to errors -->
     <string name="NO_ERROR">Aucune erreur </string>
     <string name="ERROR">Erreur</string>
+    <string name="WRONG_FRIEND_CODE">Le code d\'ami est incorrect</string>
     <string name="FIELD_EMPTY"> Une entrée est vide</string>
     <string name="USERNAME_INVALID">Le nom est invalide</string>
     <string name="PASSWORD_INVALID">Le mot de passe est invalide</string>
