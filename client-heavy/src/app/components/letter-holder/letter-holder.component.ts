@@ -37,10 +37,10 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     listTileManipulated = isManipulated;
     listTileSelected = isSelected;
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
-    private gameState : GameState;
+    private gameState: GameState;
 
     constructor(
-        private readonly accountService : AccountService,
+        private readonly accountService: AccountService,
         private readonly letterHolderService: LetterHolderService,
         private readonly gameStateService: GameStateService,
         private chatService: ChatService,
@@ -48,38 +48,39 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         private manipulationRack: ManipulationRackService,
     ) {
         this.subscription = this.gameStateService.getGameStateObservable().subscribe((gameState) => {
-            if(this.viewLoaded){
+            if (this.viewLoaded) {
                 this.updateHolder(gameState)
             }
             this.gameState = gameState;
         });
     }
 
-    cancelManipulationAndSelection(event:CdkDragStart){
+    cancelManipulationAndSelection(event: CdkDragStart) {
         this.manipulationRack.cancelAll(isSelected);
         this.manipulationRack.cancelManipulation()
     }
 
-    getLetterIfNotBlank(letter:string){
-        if (letter === 'blank'){
+    getLetterIfNotBlank(letter: string) {
+        if (letter === 'blank') {
             return ''
-        }else{
+        } else {
             return letter.toUpperCase()
         }
     }
 
-    getPointIfNotBlank(point:number){
-        if (point === 0 ){
+    getPointIfNotBlank(point: number) {
+        if (point === 0) {
             return ''
-        }else{
+        } else {
             return point
         }
     }
 
     @HostListener('click', ['$event'])
-    clickInside(e: MouseEvent,indexOfElement:number) {
+    clickInside(e: MouseEvent, indexOfElement: number) {
+        if (this.isObserver())
+            return;
         if (e.button === MouseButton.Right) {
-            if(this.isObserver()) return;
             this.manipulationRack.cancelManipulation();
             this.manipulationRack.selectLetterOnRack(indexOfElement + 1);
             this.makingSelection = Object.values(isSelected).some((selection) => selection === true);
@@ -87,7 +88,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
             e.stopPropagation();
             this.makingSelection = false;
             this.manipulationRack.cancelAll(isSelected);
-            this.manipulationRack.manipulateLetterOnRack(indexOfElement+1);
+            this.manipulationRack.manipulateLetterOnRack(indexOfElement + 1);
             this.initialPosition = indexOfElement + 1;
             this.counter = 0;
         }
@@ -140,7 +141,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     @HostListener('window:wheel', ['$event'])
     onWheel(e: WheelEvent) {
         e.stopPropagation();
-        if (!this.mouseIsIn || this.makingSelection) return;
+        if (!this.mouseIsIn || this.makingSelection || this.isObserver()) return;
         if (e.deltaY > 0) {
             this.manipulationRack.moveLetter('right', this.initialPosition, this.playerHand);
             this.initialPosition++;
@@ -172,23 +173,23 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
         this.viewLoaded = true;
-        this.subscriptionHolderPoints = this.letterHolderService.getNewHolderStatePoints().subscribe((holderHandPoints)=>{
+        this.subscriptionHolderPoints = this.letterHolderService.getNewHolderStatePoints().subscribe((holderHandPoints) => {
             this.playerHandPoints = holderHandPoints
         })
         this.updateHolder(this.gameState);
     }
 
-    switchObserverView(){
+    switchObserverView() {
         let index = this.gameStateService.getObserverIndex();
         index = (index + 1) % this.gameState.players.length;
         this.gameStateService.setObserver(index);
-        this.updateHolder(this.gameState); 
+        this.updateHolder(this.gameState);
     }
 
-    isDraggingMode(){
-        if (this.letterAdderService.letterAdderMode === "dragAndDrop" || this.letterAdderService.letterAdderMode === ""){
+    isDraggingMode() {
+        if (this.letterAdderService.letterAdderMode === "dragAndDrop" || this.letterAdderService.letterAdderMode === "") {
             return false
-        }else{
+        } else {
             return true
         }
     }
@@ -196,10 +197,10 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
 
     updateHolder(gameState: GameState) {
         let playerIndex = this.gameStateService.getObserverIndex();
-        if(playerIndex < 0){
-            for(playerIndex = 0; playerIndex < gameState.players.length; playerIndex++){
+        if (playerIndex < 0) {
+            for (playerIndex = 0; playerIndex < gameState.players.length; playerIndex++) {
                 console.log(this.accountService.getUsername())
-                if(gameState.players[playerIndex].username === this.accountService.getUsername()) break;
+                if (gameState.players[playerIndex].username === this.accountService.getUsername()) break;
             }
         }
         this.letterHolderService.setHolderState(this.formatHandState([...gameState.players[playerIndex].hand]));
@@ -299,7 +300,8 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
             });
     }
 
-    isObserver() : boolean{
+    isObserver(): boolean {
+
         return this.gameStateService.getObserverIndex() >= 0;
     }
 
