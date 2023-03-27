@@ -128,4 +128,22 @@ export class BracketPageComponent implements OnDestroy {
     leaveTournamentLogic(){
         this.tournamentService.leaveTournament();
     }
+
+    leaveTournamentBtn(){
+        this.tournamentService.leaveTournament();
+        this.router.navigate(['/home']);
+    }
+
+    resultsBtn(){
+        this.tournamentService.leaveTournament();
+        const winners = [];
+        const index1 = this.final1.winnerIndex < 0 ? 0 : this.final1.winnerIndex;
+        winners.push(this.final1.players[index1]);
+        winners.push(this.final1.players[(index1 + 1) % 2]);
+        const index2 = this.final2.winnerIndex < 0 ? 0 : this.final2.winnerIndex;
+        winners.push(this.final2.players[index2]);
+        winners.push(this.final2.players[(index2 + 1) % 2]);
+        this.tournamentService.setTournamentWinners(winners);
+        this.router.navigate(['/tournament-result']);
+    }
 }

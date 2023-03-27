@@ -44,6 +44,7 @@ import { PublicChatsComponent } from './pages/public-chats/public-chats.componen
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
 import { BracketPageComponent } from './pages/tournament-pages/bracket-page/bracket-page.component';
 import { QueuePageComponent } from './pages/tournament-pages/queue-page/queue-page.component';
+import { ResultPageComponent } from './pages/tournament-pages/result-page/result-page.component';
 import { ChatService } from './services/chat-service/chat.service';
 /**
  * Main module that is used in main.ts.
@@ -95,7 +96,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         FriendsPageComponent,
         PublicChatsComponent,
         QueuePageComponent,
-        BracketPageComponent
+        BracketPageComponent,
+        ResultPageComponent
     ],
     imports: [
         AppMaterialModule,

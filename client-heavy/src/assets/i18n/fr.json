@@ -183,6 +183,12 @@
         "ROUND-TIMER": "Fin de la ronde dans : ",
         "NEXT-GAME-TIMER": "Prochaine partie commence dans : ",
         "TBD": "À déterminer",
-        "ROUND": "Ronde"
+        "ROUND": "Ronde",
+        "LEAVE": "Quitter le tournois",
+        "RESULTS": "Voir les résultats du tournois"
+    },
+    "TOURNAMENT-RESULT": {
+        "TITLE": "Résultats du tournois",
+        "RETURN": "Retourner au menu principal"
     }
 }

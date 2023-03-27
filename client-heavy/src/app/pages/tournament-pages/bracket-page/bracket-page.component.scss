@@ -35,11 +35,18 @@
 
 .match-list {
     display: grid;
-    grid-template-rows: 0.5fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr;
     column-gap: 250px;
-    row-gap: 100px;
+    row-gap: 80px;
     margin-top: 50px;
+    height: min-content;
+}
+
+.round-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 250px;
 }
 
 .game {
@@ -73,6 +80,49 @@
     margin: 0;
 }
 
+.mode-buttons {
+    margin-top: 50px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.button.cancel {
+    background-color: var(--button-secondary);
+}
+
+.cancel:hover:enabled {
+    background: var(--button-secondary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+.button, .inactive-button {
+    text-decoration: none;
+    margin-top: 20px;
+    text-align: center;
+    border: none;
+    padding: 10px;
+    background-color: var(--button-primary);
+    border-radius: 7px;
+    width: 50vh;
+    box-shadow: var(--box-shadow);
+    font-size: 17px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: var(--button-text-default);
+    transition: color 0.5s linear;
+    -webkit-transition: color 0.2s linear;
+}
+
+.button:hover {
+    color: var(--button-text-hover);
+    cursor: pointer;
+    background: var(--button-primary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
 .player.winner {
     color: var(--button-text-hover);
     text-shadow: 0 0 5px var(--button-text-default), 0 0 10px var(--button-text-default);
@@ -82,6 +132,9 @@
     color: var(--text-default);
     text-align: center;
     font-size: xx-large;
+    margin: 0;
+    height: min-content;
+    width: 200px;
 }
 
 .vs{

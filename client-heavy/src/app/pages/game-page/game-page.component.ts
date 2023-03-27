@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
 import { GameStateService, PlayerMessage } from '@app/services/game-state-service/game-state.service';
 import { GridService } from '@app/services/grid-service/grid.service';
+import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 import { Subscription } from 'rxjs';
@@ -26,7 +27,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
         private readonly gridService: GridService,
         private readonly router: Router,
         private readonly fontSize: FontSizeService,
-        private readonly waitingRoomManagerService: WaitingRoomManagerService
+        private readonly waitingRoomManagerService: WaitingRoomManagerService,
+        private readonly letterAdderService: LetterAdderService
     ) {}
 
     ngOnInit() {
@@ -41,17 +43,11 @@ export class GamePageComponent implements OnInit, OnDestroy {
             this.waitingRoomManagerService.getStartGameObservable().subscribe(() => {
                 this.gameStateService.setObserver(-1);
                 this.gameStateService.sendAbandonRequest();
+                this.letterAdderService.resetMappedBoard();
                 this.gameStateService.requestGameState();
                 this.actionHistory = [];
             });
         }
-        //Reconnection code
-        /*
-        const id = sessionStorage.getItem('playerID');
-        if (id) this.gameStateService.reconnect(id);
-        this.subscriptions.push(this.gameStateService.getPlayerID().subscribe((newID) => sessionStorage.setItem('playerID', newID)));
-        this.gameStateService.requestId();
-        */
     }
 
     ngOnDestroy(): void {

@@ -293,7 +293,15 @@ export class SocketManager {
                     this.tournamentQueue.splice(index, 1);
                     return;
                 }
-                
+                const username = this.accountInfoService.getUsername(socket);
+                const tournament = this.roomManager.findTournamentFromPlayer(username);
+                if(!tournament) return;
+                socket.leave(tournament.getID());
+                tournament.removePlayer(username);
+                const room = this.roomManager.findRoomFromPlayer(socket.id);
+                if (!room) return;
+                socket.leave(room.getID());
+                room.removePlayer(socket.id);
             });
 
             socket.on('disconnect', async () => {

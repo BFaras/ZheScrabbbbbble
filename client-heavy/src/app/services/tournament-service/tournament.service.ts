@@ -21,7 +21,7 @@ export interface GameData {
     providedIn: 'root',
 })
 export class TournamentService {
-
+    private tournamentWinners: string[];
     private gameDataObservable: Observable<{games: GameData[], timeData : {time: number, phase : number}}>;
     private gameDataObserver: Observer<{games: GameData[], timeData : {time: number, phase : number}}>;
     private socket: Socket;
@@ -63,5 +63,13 @@ export class TournamentService {
 
     getGameDataObservable(): Observable<{games: GameData[], timeData : {time: number, phase : number}}> {
         return this.gameDataObservable;
+    }
+
+    setTournamentWinners(winners: string[]){
+        this.tournamentWinners = winners;
+    }
+
+    getTournamentWinners(): string[]{
+        return this.tournamentWinners;
     }
 }

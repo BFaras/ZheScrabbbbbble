@@ -183,6 +183,12 @@
         "ROUND-TIMER": "Round ends in : ",
         "NEXT-GAME-TIMER": "Next game starts in : ",
         "TBD": "To be determined",
-        "ROUND": "Round"
+        "ROUND": "Round",
+        "LEAVE": "Leave the tournament",
+        "RESULTS": "View tournament results"
+    },
+    "TOURNAMENT-RESULT": {
+        "TITLE": "Tournament results",
+        "RETURN": "Return to main menu"
     }
 }

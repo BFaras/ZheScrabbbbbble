@@ -2,7 +2,7 @@ import { MILLISECOND_IN_MINUTES, TOURNAMENT_ROUND_START_TIMER } from '@app/const
 import * as io from 'socket.io';
 
 export const MAX_TOURNAMENT_CODE = 100000;
-export const TOURNAMENT_ROUND_LENGTH = 2;
+export const TOURNAMENT_ROUND_LENGTH = 15;
 export const TIME_LEFT_WARNINGS = [10, 5, 1];
 
 export enum GameStatus {
@@ -162,9 +162,11 @@ export class Tournament {
         if (final1?.status === GameStatus.FINISHED && final2?.status === GameStatus.FINISHED && this.round === 2) {
             this.tournamentPhase = 2;
             this.time = Date.now();
-            const firstPlace = final1?.players[final1.winnerIndex];
-            const secondPlace = final1?.players[(final2.winnerIndex + 1) % 2];
-            const thridPlace = final2?.players[final2.winnerIndex];
+            const index1 = final1.winnerIndex < 0 ? 0 : final1.winnerIndex;
+            const firstPlace = final1.players[index1];
+            const secondPlace = final1.players[(index1 + 1) % 2];
+            const index2 = final2.winnerIndex < 0 ? 0 : final2.winnerIndex;
+            const thridPlace = final2.players[index2];
             if(firstPlace !== 'N/A'){
                 //TODO Give gold medal
             }

@@ -6,10 +6,11 @@
             <h2>{{(phase === 0 ? 'TOURNAMENT-BRACKET.NEXT-GAME-TIMER' : 'TOURNAMENT-BRACKET.ROUND-TIMER') | translate }} {{ getTimer().minute + ':' + (getTimer().second | number: '2.0-0') }}</h2>
         </div>
     </div>
-    <div>
-    <div class="match-list">
+    <div class="round-list">
         <h2 class="round-title">{{'TOURNAMENT-BRACKET.ROUND' | translate}} 1</h2>
         <h2 class="round-title">{{'TOURNAMENT-BRACKET.ROUND' | translate}} 2</h2>
+    </div>
+    <div class="match-list">
         <div class="game" [class.in-progress]="semi1.status === 1" (click)="observeInProgressGame(semi1)">
             <h2 class="player" [class.winner]="semi1.status === 2 && semi1.winnerIndex === 0">{{semi1.players[0] ? semi1.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
             <h2 class="vs">VS</h2>
@@ -30,5 +31,9 @@
             <h2 class="vs">VS</h2>
             <h2 class="player" [class.winner]="final2.status === 2 && final2.winnerIndex === 1">{{final2.players[1] ? final2.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
         </div>
+    </div>
+    <div class="mode-buttons">
+        <button *ngIf="phase !== 2" class="button cancel" (click)="leaveTournamentBtn()">{{ 'TOURNAMENT-BRACKET.LEAVE' | translate }}</button>
+        <button *ngIf="phase === 2" class="button cancel" (click)="resultsBtn()">{{ 'TOURNAMENT-BRACKET.RESULTS' | translate }}</button>
     </div>
 </div>
