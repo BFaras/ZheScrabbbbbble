@@ -293,25 +293,27 @@ export class SocketManager {
                     this.tournamentQueue.splice(index, 1);
                     return;
                 }
+                
+            });
+
+            socket.on('disconnect', async () => {
+                console.log(new Date().toLocaleTimeString() + ' | User Disconnected from server');
+                this.usersStatusService.removeOnlineUser(this.accountInfoService.getUserId(socket));
+                const index = this.tournamentQueue.indexOf(socket);
+                if (index >= 0) {
+                    this.tournamentQueue.splice(index, 1);
+                    return;
+                }
                 const username = this.accountInfoService.getUsername(socket);
                 const tournament = this.roomManager.findTournamentFromPlayer(username);
                 if(!tournament) return;
                 socket.leave(tournament.getID());
                 tournament.removePlayer(username);
                 const room = this.roomManager.findRoomFromPlayer(socket.id);
-                if(!room) return;
-                socket.leave(room.getID());
-                room.removePlayer(socket.id);
-            });
-
-            socket.on('disconnect', async () => {
-                console.log(new Date().toLocaleTimeString() + ' | User Disconnected from server');
-                this.usersStatusService.removeOnlineUser(this.accountInfoService.getUserId(socket));
-                const room = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!room) return;
                 let isObserver;
                 if (room.getVisibility() === RoomVisibility.Tournament) {
-                    if (!room.getGame.isGameOver()) {
+                    if (room.isGameStarted() && !room.getGame.isGameOver()) {
                         const message = room.getGame.endGame();
                         this.sendGameState(room, { messageType: DISCONNECT_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
                         this.sendGameState(room, { messageType: END_GAME_MESSAGE, values: [message] });
@@ -321,7 +323,7 @@ export class SocketManager {
                         this.sio.in(tournament.getID()).emit('Tournament Data Response', tournament.getGameData(), tournament.getTimePhase());
                     }
                     room.removePlayer(socket.id);
-                    if (room.getRealPlayerCount(true) === 0) {
+                    if (room.isGameStarted() && room.getRealPlayerCount(true) === 0) {
                         this.roomManager.deleteRoom(room.getID());
                     }
                     return;
