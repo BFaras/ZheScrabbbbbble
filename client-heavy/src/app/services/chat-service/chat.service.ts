@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ChatInfo, ChatMessage } from '@app/classes/chat-info';
-import { Message } from '@app/classes/message';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { Observable, Observer } from 'rxjs';
 import { Socket } from 'socket.io-client';
@@ -13,7 +12,7 @@ export class ChatService {
 
     messageLog = new Map<string, ChatMessage[]>();
     chatList: ChatInfo[] = [];
-
+    chatInGameRoom:string;
     chatMessageObserver : Observer<Map<string, ChatMessage[]>>;
 
     constructor(private socketManagerService: SocketManagerService) {
@@ -65,9 +64,26 @@ export class ChatService {
         this.socketManagerService.getSocket().emit('Play Turn', command, argument.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
     }
 
-    getMessages(): Observable<Message> {
-        return new Observable((observer: Observer<Message>) => {
-            this.socketManagerService.getSocket().on('new-message', (message: Message) => observer.next(message));
+    getChatInGameRoom(): string{
+        return this.chatInGameRoom;
+    }
+
+    setChatInGameRoom(chatGameRoom :string){
+        this.chatInGameRoom = chatGameRoom;
+    }
+    getMessagesInGame(): Observable<{chatCode:string,message:ChatMessage}> {
+        return new Observable((observer: Observer<{chatCode:string,message:ChatMessage}>) => {
+            this.socketManagerService.getSocket().on('New Chat Message', (chatCode:string,chatMessage: ChatMessage) =>
+            {
+                const response = {
+                    chatCode:chatCode as string,
+                    message:chatMessage as ChatMessage,
+                }
+                observer.next(response)
+            } );
         });
     }
+
+
+    
 }

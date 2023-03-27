@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
 import { COLOUR_COORDINATES, COLUMNS, GRID_COLOURS_CLASSIC, GRID_COLOURS_GREEN, GRID_COLOURS_INVERTED, GRID_COLOURS_PINK, GRID_CONSTANTS, GRID_OFFSETS, GRID_WORDS_EN, GRID_WORDS_FR, ROWS } from '@app/constants/grid-constants';
 import { HOLDER_MEASUREMENTS, LETTER_POINTS } from '@app/constants/letters-constants';
 import { classic, green, inverted, pink } from '@app/constants/themes';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { PreviewPlayersActionService } from '../preview-players-action-service/preview-players-action.service';
 import { ThemesService } from '../themes-service/themes-service';
 
 const isCoordinateOf = (colourCoords: number[][], coord: number[]): boolean => {
@@ -28,7 +30,7 @@ const isCoordinateOf = (colourCoords: number[][], coord: number[]): boolean => {
 @Injectable({
     providedIn: 'root',
 })
-export class GridService {
+export class GridService implements OnDestroy{
     gridContext: CanvasRenderingContext2D;
     horizontalArrow = '🢚';
     verticalArrow = '🢛';
@@ -36,9 +38,25 @@ export class GridService {
     GRID_WORDS = GRID_WORDS_FR;
     private boardState: string[][] = [];
     private canvasSize: Vec2 = { x: GRID_CONSTANTS.defaultWidth, y: GRID_CONSTANTS.defaultHeight };
+    private subscriptionAddPreview:Subscription;
+    private subscriptionRemovePreview:Subscription;
+    constructor(private size: FontSizeService,
+         private theme: ThemesService,
+         public translate: TranslateService,
+         private previewPlayerActionService: PreviewPlayersActionService
+         ) {
 
-    constructor(private size: FontSizeService, private theme: ThemesService, public translate: TranslateService) {}
+        this.subscriptionAddPreview = this.previewPlayerActionService.getActivePlayerFirstTile().subscribe(
+            (activeSquare) => {this.showActivePlayerFirstTile(activeSquare)})
 
+        this.subscriptionRemovePreview = this.previewPlayerActionService.getSelectedTileStatus().subscribe(
+            (activeSquare)=>{this.deleteActivePlayerFirstTile(activeSquare)})
+    }
+    
+    ngOnDestroy(): void {
+        this.subscriptionAddPreview.unsubscribe();
+        this.subscriptionRemovePreview.unsubscribe();
+    }
     setGrids() {
         switch (this.theme.getActiveTheme()) {
             case classic:
@@ -58,6 +76,18 @@ export class GridService {
         if (this.translate.currentLang === 'en') this.GRID_WORDS = GRID_WORDS_EN;
     }
 
+    /**monter la position firstTile */
+    showActivePlayerFirstTile(activeSquare:{x:string,y:number}){
+        console.log('received add preview: ')
+        console.log(activeSquare);
+        this.gridContext.strokeStyle = 'orange';
+        this.gridContext.lineWidth = 3;
+        this.gridContext.strokeRect(COLUMNS[activeSquare.y], ROWS[activeSquare.x], GRID_CONSTANTS.defaultSide, GRID_CONSTANTS.defaultSide);
+    }
+
+    deleteActivePlayerFirstTile(activeSquare:{x:string,y:number}){
+        this.deleteAndRedraw();
+    }
     drawIdentificators() {
         this.setGrids();
         this.gridContext.beginPath();

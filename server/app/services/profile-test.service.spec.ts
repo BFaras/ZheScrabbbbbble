@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation */
 /* eslint-disable max-len */
-import { NO_ERROR } from '@app/constants/error-code-constants';
-import { ConnectionInfo, ConnectionType, GameHistoryInfo } from '@app/interfaces/profile-info';
+import { NO_ERROR, USERNAME_TAKEN } from '@app/constants/error-code-constants';
+import { ConnectionInfo, ConnectionType, GameHistoryInfo, LevelInfo } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
 import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -117,10 +117,15 @@ describe('Profile Tests', async () => {
     it('should change the userStats to the right value on updateUserStats()', async () => {
         const userId = await dbService.getUserId(testUsername);
         const newTestUserStats = profileService.getDefaultProfileInformation().stats;
+        const testLevelInfo: LevelInfo = {
+            level: 0,
+            xp: 0,
+            nextLevelXp: 100,
+        };
 
         newTestUserStats[0].statAmount = 3;
         newTestUserStats[2].statAmount = 102;
-        await profileService.updateUserStats(userId, newTestUserStats);
+        await profileService.updateUserStatsAndLevel(userId, newTestUserStats, testLevelInfo);
 
         expect(await profileService.getUserStats(userId)).to.deep.equals(newTestUserStats);
     });
@@ -173,5 +178,35 @@ describe('Profile Tests', async () => {
         const testGameHistory = (await profileService.getProfileInformation(testUsername)).gameHistory;
         expect(testGameHistory[0]).to.deep.equal(newGameToAdd);
         expect(testGameHistory[1]).to.deep.equal(newGameToAdd);
+    });
+
+    it('should change the username if it is not taken by another user on changeUsername()', async () => {
+        const userId = await dbService.getUserId(testUsername);
+        const newUsername = testUsername + 'New';
+        const usernameChangeError = await profileService.changeUsername(userId, newUsername);
+        const usernameInDB = await dbService.getUsernameFromId(userId);
+
+        if (accountCreated) {
+            await dbService.removeUserAccount(newUsername);
+            accountCreated = false;
+        }
+
+        expect(usernameChangeError).to.equal(NO_ERROR);
+        expect(usernameInDB).to.equal(newUsername);
+    });
+
+    it('should not change the username if it is taken by another user on changeUsername()', async () => {
+        const userId = await dbService.getUserId(testUsername);
+        const testUsername2 = 'MyUser1';
+        const newUsername = testUsername2;
+        const accountCreationError = await authService.createAccount(testUsername2, testPassword, testEmail, testAvatar, testSecurityQuestion);
+        const usernameChangeError = await profileService.changeUsername(userId, newUsername);
+
+        if (accountCreationError === NO_ERROR) {
+            await dbService.removeUserAccount(testUsername2);
+        }
+
+        expect(usernameChangeError).to.equal(USERNAME_TAKEN);
+        expect(await dbService.getUsernameFromId(userId)).to.equal(testUsername);
     });
 });

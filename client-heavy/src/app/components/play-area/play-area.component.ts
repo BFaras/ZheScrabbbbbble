@@ -1,3 +1,4 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
 import { GRID_CONSTANTS } from '@app/constants/grid-constants';
@@ -7,7 +8,6 @@ import { GameState, GameStateService } from '@app/services/game-state-service/ga
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
 import { Subscription } from 'rxjs';
-
 @Component({
     selector: 'app-play-area',
     templateUrl: './play-area.component.html',
@@ -38,11 +38,26 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         });
     }
 
-    @HostListener('keydown', ['$event'])
+    slideLetterToCanvas(letter:CdkDragDrop<string[]>){
+        const leftBoard = document.getElementById("canvas")?.getBoundingClientRect().left as number;
+        const topBorad = document.getElementById("canvas")?.getBoundingClientRect().top as number;
+        this.setReceiver('playarea');
+        const coordinateClick: Vec2 = { x: letter.dropPoint.x - leftBoard, y: letter.dropPoint.y - topBorad };
+        if (this.letterAdderService.onDropLetterSpot(coordinateClick)){
+            this.letterAdderService.addLettersOnDrop(letter.item.data)
+        }
+        this.mouseIsIn = true;
+
+        
+    }
+
+    @HostListener('document:keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
+        if(this.receiver ==="playarea"){
         if(this.gameState.players[this.gameState.playerTurnIndex].username !== this.accountService.getUsername()) return;
         this.buttonPressed = event.key;
         this.letterAdderService.onPressDown(this.buttonPressed);
+        }
     }
 
     ngOnInit(): void {
