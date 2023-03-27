@@ -1,6 +1,7 @@
-import { Component, OnInit ,OnDestroy} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { connectionHistory } from '@app/classes/connection-history';
 import { ProfileInfo } from '@app/classes/profileInfo';
 import { AvatarPopUpComponent } from '@app/components/profil-pop-up/avatar-pop-up/avatar-pop-up.component';
 import { NO_ERROR } from '@app/constants/error-codes';
@@ -14,10 +15,15 @@ import { Subscription } from 'rxjs';
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.scss']
 })
-export class ProfilePageComponent implements OnInit,OnDestroy {
+export class ProfilePageComponent implements OnInit, OnDestroy {
   accountProfile: ProfileInfo
   accountUsername: string;
   subscriptionChangeAvatar: Subscription;
+  progressionBarValue: number
+  connectionHistory: connectionHistory = {
+    connections: [],
+    disconnections: [],
+  };
   constructor(private accountService: AccountService, public dialogAvatar: MatDialog, private themeService: ThemesService, private router: Router) {
     this.subscriptionChangeAvatar = this.accountService.getAvatarChangeStatus()
       .subscribe((errorCode: string) => {
@@ -29,9 +35,10 @@ export class ProfilePageComponent implements OnInit,OnDestroy {
       })
     this.getUserName();
     this.accountProfile = this.accountService.getProfile();
+    this.progressionBarValue = (this.accountProfile.levelInfo.xp / this.accountProfile.levelInfo.nextLevelXp) * 100
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subscriptionChangeAvatar.unsubscribe();
   }
 
