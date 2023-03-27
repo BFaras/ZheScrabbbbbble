@@ -90,7 +90,7 @@ export class FriendService {
         let generatedFriendCode = 'Friend';
 
         for (let i = 0; i < FRIEND_CODE_LENGTH; i++) {
-            let randomCharCode = Math.floor(Math.random() * (MAX_ASCII_LETTER + 1));
+            let randomCharCode = Math.floor(Math.random() * MAX_ASCII_LETTER);
             if (randomCharCode < MIN_ASCII_LETTER) {
                 randomCharCode += MIN_ASCII_LETTER;
             }
