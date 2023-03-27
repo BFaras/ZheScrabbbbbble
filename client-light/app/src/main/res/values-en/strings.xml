@@ -43,12 +43,8 @@
     <!-- Strings related to errors -->
     <string name="NO_ERROR">No error</string>
     <string name="ERROR">Error</string>
-<<<<<<< HEAD
-    <string name="FIELD_EMPTY">" You left a empty field"</string>
-=======
     <string name="WRONG_FRIEND_CODE">Friend code is incorrect</string>
     <string name="FIELD_EMPTY"> you  left a field empty</string>
->>>>>>> feature/LigthProfile
     <string name="USERNAME_INVALID">The username is invalid</string>
     <string name="PASSWORD_INVALID">The password is invalid</string>
     <string name="EMAIL_INVALID">The email is invalid</string>

@@ -6,4 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".ProfileActivity">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:theme="@style/Theme.TestChatBox.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Theme.TestChatBox.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <include
+        layout="@layout/content_profile"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

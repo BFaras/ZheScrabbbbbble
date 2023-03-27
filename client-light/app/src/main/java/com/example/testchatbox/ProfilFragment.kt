@@ -1,18 +1,23 @@
 package com.example.testchatbox
 
 import SocketHandler
+import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentMainMenuBinding
 import com.example.testchatbox.databinding.FragmentProfilBinding
 import com.example.testchatbox.login.model.LoggedInUser
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.*
+import kotlin.collections.ArrayList
 
 enum class ConnectionType {
     CONNECTION,
@@ -28,8 +33,6 @@ data class Statistic(val name: String, val statAmount: Number)
 data class ConnectionInfo (val connectionType: ConnectionType, val date: String, val time: String)
 
 data class GameHistoryInfo (val date: String, val time: String, val isWinner: Boolean)
-
-data class PlayerGameInfo (val name: String, val score: Int)
 
 data class ProfileInfo (var avatar: String, var level: Int, var userCode: String, val stats: ArrayList<Statistic>, val tournamentWins: ArrayList<Int>, val connectionHistory: ArrayList<ConnectionInfo>, val gameHistory: ArrayList<GameHistoryInfo>)
 
@@ -52,8 +55,72 @@ class ProfilFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getProfile(LoggedInUser.getName())
+        binding.darkTheme.setOnClickListener {
+            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "eclipse") };
+            changeTheme("eclipse")
+            activity?.let { it1 ->
+                ThemeManager.setCustomizedThemes(
+                    it1.applicationContext,
+                    "eclipse"
+                )
+            };
+            activity?.let { it1 -> ActivityCompat.recreate(it1) }
+        }
 
+        binding.blizzard.setOnClickListener {
+            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "blizzard") };
+            changeTheme("blizzard")
+            activity?.let { it1 ->
+                ThemeManager.setCustomizedThemes(
+                    it1.applicationContext,
+                    "blizzard"
+                )
+            };
+            activity?.let { it1 -> ActivityCompat.recreate(it1) }
+        }
+
+        binding.lightTheme.setOnClickListener {
+            activity?.applicationContext?.let { it1 ->
+                ThemeStorage.setThemeColor(
+                    it1,
+                    "cremebrulee"
+                )
+            };
+            changeTheme("cremebrulee")
+            activity?.let { it1 ->
+                ThemeManager.setCustomizedThemes(
+                    it1.applicationContext,
+                    "cremebrulee"
+                )
+            };
+            activity?.let { it1 -> ActivityCompat.recreate(it1) }
+        }
+
+        binding.astro.setOnClickListener {
+            activity?.applicationContext?.let { it1 ->
+                ThemeStorage.setThemeColor(
+                    it1,
+                    "astronaute"
+                )
+            };
+            changeTheme("astronaute")
+            activity?.let { it1 ->
+                ThemeManager.setCustomizedThemes(
+                    it1.applicationContext,
+                    "astronaute"
+                )
+            };
+            activity?.let { it1 -> ActivityCompat.recreate(it1) }
+        }
+
+        binding.changeToFr.setOnClickListener { setLocale("fr"); changeLang("fr");refreshActivity() }
+        binding.changeToEn.setOnClickListener { setLocale("en"); changeLang("en");refreshActivity() }
+
+        binding.button2.setOnClickListener {
+            findNavController().navigate(R.id.action_profilFragment_to_mainActivity2)
+        }
     }
+
 
     private  fun getProfile(username:String){
         SocketHandler.getSocket().once("User Profile Response"){args->
@@ -130,6 +197,7 @@ class ProfilFragment : Fragment() {
                     if(errorMessage == R.string.NO_ERROR ){
                         binding.theme.text= "Theme : $newTheme";
                         LoggedInUser.setTheme(newTheme)
+
                     }else{
                         val appContext = context?.applicationContext
                         Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
@@ -169,5 +237,20 @@ class ProfilFragment : Fragment() {
         binding.avatar.text= "Avatar : ${profile.avatar}";
         binding.avatar.text= "Level : ${profile.level}";
         binding.avatar.text= "Friend Code : ${profile.userCode}";
+    }
+
+    private fun setLocale(lang:String){
+        val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        activity?.baseContext?.resources?.updateConfiguration(
+            config,
+            activity?.baseContext?.resources!!.displayMetrics
+        )
+    }
+    private fun refreshActivity(){
+        var refresh = Intent(context, ProfileActivity::class.java)
+        startActivity(refresh)
     }
 }

@@ -38,7 +38,7 @@ private var _binding: FragmentMainMenuBinding? = null
         }
 
         binding.buttonprofil.setOnClickListener {
-            findNavController().navigate(R.id.action_MainMenuFragment_to_profilFragment)
+            findNavController().navigate(R.id.action_MainMenuFragment_to_profileActivity)
         }
 
         binding.buttonfriends.setOnClickListener {
@@ -53,7 +53,7 @@ private var _binding: FragmentMainMenuBinding? = null
             SocketHandler.closeConnection();
             LoggedInUser.disconnectUser();
             SocketHandler.establishConnection();
-            findNavController().navigate(R.id.action_MainMenuFragment_to_loginFragment)
+            findNavController().navigate(R.id.action_MainMenuFragment_to_loginActivity2)
         }
     }
 

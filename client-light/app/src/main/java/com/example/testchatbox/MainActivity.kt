@@ -1,18 +1,22 @@
 package com.example.testchatbox
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.app.AppCompatDelegate
 import com.example.testchatbox.ThemeManager.setCustomizedThemes
 import com.example.testchatbox.ThemeStorage.getThemeColor
 import com.example.testchatbox.databinding.ActivityMainBinding
+import com.example.testchatbox.login.model.LoggedInUser
+import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         setCustomizedThemes(this,getThemeColor(this));
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setLocale();
 
         setSupportActionBar(binding.toolbar)
 
@@ -52,6 +57,17 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
             || super.onSupportNavigateUp()
+    }
+
+    private fun setLocale(){
+        val locale = Locale(LoggedInUser.getLang())
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        baseContext.resources.updateConfiguration(
+            config,
+            baseContext.resources.displayMetrics
+        )
     }
 }
 

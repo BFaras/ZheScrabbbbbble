@@ -2,6 +2,8 @@ package com.example.testchatbox.login.model
 
 import SocketHandler
 import android.util.Log
+import com.example.testchatbox.ThemeManager
+import com.example.testchatbox.ThemeStorage
 
 
 data class User(val username:String) {
@@ -17,14 +19,6 @@ object LoggedInUser {
     fun connectUser(userName : String){
         if(this.user.username==""){
             this.user = User(userName);
-            SocketHandler.getSocket().on("Theme and Language Response"){args ->
-                if(args[0]!=null && args[1]!=null){
-                    this.user.theme = args[0] as String;
-                    this.user.lang = args[1] as String;
-                    //TODO: Match language and theme in app
-                }
-            }
-            SocketHandler.getSocket().emit("Get Theme and Language")
         }
     }
 
@@ -50,4 +44,5 @@ object LoggedInUser {
         this.user = User("");
         SocketHandler.getSocket().off("Theme and Language Response")
     }
+
 }

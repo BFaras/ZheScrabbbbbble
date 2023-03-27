@@ -6,6 +6,121 @@
     tools:context=".ProfilFragment">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="80dp"
+        android:layout_marginRight="10dp"
+        android:gravity="top">
+        <FrameLayout
+            android:id="@+id/lightTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_chat_input"
+            android:backgroundTint="?colorPrimary">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_sun"
+                android:tint="?colorOnPrimary">
+            </androidx.appcompat.widget.AppCompatImageView>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/darkTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_chat_input"
+            android:backgroundTint="?colorPrimary">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_night"
+                android:tint="?colorOnPrimary">
+            </androidx.appcompat.widget.AppCompatImageView>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/astro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_chat_input"
+            android:backgroundTint="?colorPrimary">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_pink"
+                android:tint="?colorOnPrimary">
+            </androidx.appcompat.widget.AppCompatImageView>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/blizzard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:background="@drawable/background_chat_input"
+            android:backgroundTint="?colorPrimary">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_snow"
+                android:tint="?colorOnPrimary">
+            </androidx.appcompat.widget.AppCompatImageView>
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="100dp"
+        android:orientation="horizontal">
+        <FrameLayout
+            android:id="@+id/changeToFr"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="55dp"
+                android:layout_height="wrap_content"
+                android:text="@string/fr"
+                android:textStyle="bold"
+                android:textColor="?colorOnPrimary"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:padding="10dp"
+                android:background="@drawable/background_letter_rack">
+            </TextView>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/changeToEn"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="55dp"
+                android:layout_height="wrap_content"
+                android:text="@string/en"
+                android:textStyle="bold"
+                android:textColor="?colorOnPrimary"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:padding="10dp"
+                android:background="@drawable/background_letter_rack">
+            </TextView>
+        </FrameLayout>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/theme"
         android:layout_width="wrap_content"
@@ -36,28 +151,12 @@
         android:layout_height="wrap_content"
         android:text="" />
 
-    <TextView
-        android:id="@+id/wins"
+    <Button
+        android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:text="Retour"
+        android:layout_gravity="bottom"/>
 
-    <TextView
-        android:id="@+id/statistique"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="" />
-
-    <TextView
-        android:id="@+id/connections"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="" />
-
-    <TextView
-        android:id="@+id/gameHistory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="" />
 
 </FrameLayout>

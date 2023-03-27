@@ -85,6 +85,7 @@ class FriendsFragment : Fragment() {
         SocketHandler.getSocket().once("Friend List Response"){args->
             if(args[0] != null){
                 friendList = arrayListOf()
+                Log.i("friend", args[0].toString())
                 val friends = args[0] as JSONArray
                 for (i in 0 until friends.length()){
                     val friend = friends.get(i) as JSONObject
