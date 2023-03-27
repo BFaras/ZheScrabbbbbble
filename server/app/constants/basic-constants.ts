@@ -34,6 +34,7 @@ export const BETWEEN_THIRTEEN_TO_EIGHTEEN_PROBABILITY = 0.7;
 export const VALUE_FOR_SWAP = 0.1;
 export const VALUE_FOR_PASS = 0.9;
 
+export const TOURNAMENT_ROUND_START_TIMER = 20000;
 export const MILLISECOND_IN_SECONDS = 1000;
 export const MILLISECOND_IN_MINUTES = 60000;
 export const MILLISECOND_IN_HOURS = 3600000;
@@ -48,6 +49,7 @@ export const AT_LEAST_EIGHT_LETTER_CONST = 7;
 export const TWO_SPECIALS_CASES_CONSTANT = 2;
 
 export const MAX_NUMBER_OF_PLAYERS = 4;
+export const TOURNAMENT_SIZE = 4;
 
 export enum Direction {
     Vertical,
@@ -57,5 +59,6 @@ export enum Direction {
 export enum RoomVisibility {
     Private = 'Private',
     Public = 'Public',
-    Protected = 'Protected'
+    Protected = 'Protected',
+    Tournament = 'Tournament'
 }

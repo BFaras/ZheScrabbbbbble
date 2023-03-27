@@ -1,0 +1,13 @@
+<app-navigation-bar></app-navigation-bar>
+<div class="container justified">
+    <div class="logo">Scrabble</div>
+    <h1 class="header-item">{{ 'TOURNAMENT-RESULT.TITLE' | translate }}</h1>
+    <div id="page-content">
+        <div class="list">
+            <h2 *ngFor="let player of placement; let i = index" class="placement">{{(i + 1) + '- ' + player}}</h2>
+        </div>
+        <div class="mode-buttons">
+            <button class="button cancel" (click)="leaveToMenu()">{{ 'TOURNAMENT-RESULT.RETURN' | translate }}</button>
+        </div>
+    </div>
+</div>
