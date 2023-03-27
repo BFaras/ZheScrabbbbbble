@@ -1,11 +1,11 @@
 import { MAX_ASCII_SYMBOL, MIN_ASCII_SYMBOL } from '@app/constants/authentification-constants';
 import { DATABASE_UNAVAILABLE, NO_ERROR, WRONG_FRIEND_CODE } from '@app/constants/error-code-constants';
 import { FRIEND_CODE_LENGTH, FRIEND_ROOM_BASE_NAME } from '@app/constants/profile-constants';
-import { ChatCreationResponse } from '@app/interfaces/chat-info';
 import { ConnectivityStatus, Friend } from '@app/interfaces/friend-info';
 import { Container, Service } from 'typedi';
 import { ChatService } from './chat.service';
 import { DatabaseService } from './database.service';
+import { UserSocketService } from './user-socket.service';
 import { UsersStatusService } from './users-status.service';
 
 @Service()
@@ -13,11 +13,13 @@ export class FriendService {
     private readonly dbService: DatabaseService;
     private readonly usersStatusService: UsersStatusService;
     private readonly chatService: ChatService;
+    private userSocketService: UserSocketService;
 
     constructor() {
         this.dbService = Container.get(DatabaseService);
         this.usersStatusService = Container.get(UsersStatusService);
         this.chatService = Container.get(ChatService);
+        this.userSocketService = Container.get(UserSocketService);
     }
 
     async generateUniqueFriendCode(): Promise<string> {
@@ -42,35 +44,39 @@ export class FriendService {
         return await this.dbService.getUserIdFromFriendCode(friendCode);
     }
 
-    async addFriend(userId: string, friendCode: string): Promise<ChatCreationResponse> {
-        let chatCreationResponse: ChatCreationResponse = { errorCode: WRONG_FRIEND_CODE, chatId: '' };
+    async addFriend(userId: string, friendCode: string): Promise<string> {
+        let errorCode: string = WRONG_FRIEND_CODE;
         if (await this.isFriendCodeExistant(friendCode)) {
             const friendUserId: string = await this.dbService.getUserIdFromFriendCode(friendCode);
 
-            chatCreationResponse.errorCode = DATABASE_UNAVAILABLE;
+            errorCode = DATABASE_UNAVAILABLE;
 
             if (friendUserId !== '') {
-                chatCreationResponse.errorCode = await this.dbService.addFriend(userId, friendUserId);
-                chatCreationResponse.errorCode = await this.dbService.addFriend(friendUserId, userId);
-                if (chatCreationResponse.errorCode === NO_ERROR) {
-                    chatCreationResponse = await this.chatService.createFriendsChat(userId, friendUserId);
+                errorCode = await this.dbService.addFriend(userId, friendUserId);
+                errorCode = await this.dbService.addFriend(friendUserId, userId);
+                if (errorCode === NO_ERROR) {
+                    errorCode = await this.chatService.createFriendsChat(userId, friendUserId);
+                    this.userSocketService.userSocketJoinRoom(userId, this.getFriendRoomName(friendUserId));
+                    this.userSocketService.userSocketJoinRoom(friendUserId, this.getFriendRoomName(userId));
                 }
             }
         }
-        return chatCreationResponse;
+        return errorCode;
     }
 
-    async removeFriend(userId: string, friendUserId: string): Promise<ChatCreationResponse> {
-        let chatLeaveResponse: ChatCreationResponse = { errorCode: DATABASE_UNAVAILABLE, chatId: '' };
+    async removeFriend(userId: string, friendUserId: string): Promise<string> {
+        let errorCode: string = DATABASE_UNAVAILABLE;
 
         if (friendUserId !== '') {
-            chatLeaveResponse.errorCode = await this.dbService.removeFriend(userId, friendUserId);
-            chatLeaveResponse.errorCode = await this.dbService.removeFriend(friendUserId, userId);
-            if (chatLeaveResponse.errorCode === NO_ERROR) {
-                chatLeaveResponse = await this.chatService.removeFriendsChat(userId, friendUserId);
+            errorCode = await this.dbService.removeFriend(userId, friendUserId);
+            errorCode = await this.dbService.removeFriend(friendUserId, userId);
+            if (errorCode === NO_ERROR) {
+                errorCode = await this.chatService.removeFriendsChat(userId, friendUserId);
+                this.userSocketService.userSocketLeaveRoom(userId, this.getFriendRoomName(friendUserId));
+                this.userSocketService.userSocketLeaveRoom(friendUserId, this.getFriendRoomName(userId));
             }
         }
-        return chatLeaveResponse;
+        return errorCode;
     }
 
     async isFriendCodeExistant(userFriendCode: string): Promise<boolean> {

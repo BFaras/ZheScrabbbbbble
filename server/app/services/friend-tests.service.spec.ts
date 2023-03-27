@@ -1,5 +1,6 @@
 /* eslint-disable dot-notation */
 /* eslint-disable max-len */
+import { ServerSocketTestHelper } from '@app/classes/server-socket-test-helper';
 import { NO_ERROR } from '@app/constants/error-code-constants';
 import { ConnectivityStatus, Friend } from '@app/interfaces/friend-info';
 import { Question } from '@app/interfaces/question';
@@ -56,8 +57,8 @@ describe('Friend Tests', async () => {
         user2Id = await dbService.getUserId(testUsername2);
         user1FriendCode = (await profileService.getProfileInformation(testUsername)).userCode;
         user2FriendCode = (await profileService.getProfileInformation(testUsername2)).userCode;
-        usersStatusService.addOnlineUser(user1Id, {} as unknown as io.Socket);
-        usersStatusService.addOnlineUser(user2Id, {} as unknown as io.Socket);
+        usersStatusService.addOnlineUser(user1Id, new ServerSocketTestHelper('fdsjhshdf464fds65') as unknown as io.Socket);
+        usersStatusService.addOnlineUser(user2Id, new ServerSocketTestHelper('uusahdsfnbnsah89') as unknown as io.Socket);
     });
 
     afterEach(async () => {
