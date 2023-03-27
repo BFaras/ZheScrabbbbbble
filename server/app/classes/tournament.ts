@@ -3,6 +3,7 @@ import * as io from 'socket.io';
 
 export const MAX_TOURNAMENT_CODE = 100000;
 export const TOURNAMENT_ROUND_LENGTH = 2;
+export const TIME_LEFT_WARNINGS = [10, 5, 1];
 
 export enum GameStatus {
     PENDING,
@@ -32,6 +33,7 @@ export class Tournament {
     private gameCreationCallback: (tid: string, users: io.Socket[], round: number) => string[];
     private gameStartCallback: (tid: string, rooms: string[]) => void;
     private gameEndCallback: (tid: string) => void;
+    private timerMessageCallback: (tid: string, timeLeft: string) => void;
 
     constructor(players: { socket: io.Socket, username: string }[]) {
         this.players = []
@@ -77,10 +79,11 @@ export class Tournament {
         return this.rooms;
     }
 
-    startTournament(gameCreationCallback: (tid: string, users: io.Socket[], round: number) => string[], gameStartCallback: (tid: string, rooms: string[]) => void, gameEndCallback: (tid: string) => void) {
+    startTournament(gameCreationCallback: (tid: string, users: io.Socket[], round: number) => string[], gameStartCallback: (tid: string, rooms: string[]) => void, gameEndCallback: (tid: string) => void, timerMessageCallback: (tid : string, timeLeft : string) => void) {
         this.gameCreationCallback = gameCreationCallback;
         this.gameStartCallback = gameStartCallback;
         this.gameEndCallback = gameEndCallback;
+        this.timerMessageCallback = timerMessageCallback;
         this.round = 1;
         let users: io.Socket[] = [];
         for (let player of this.players) {
@@ -201,7 +204,10 @@ export class Tournament {
         this.time = Date.now();
         this.roundTimer = setInterval(() => {
             nbMinLeft--;
-            if (nbMinLeft <= 0) {
+            if(TIME_LEFT_WARNINGS.includes(nbMinLeft)){
+                this.timerMessageCallback(this.id, nbMinLeft.toString());
+            }
+            if(nbMinLeft <= 0) {
                 clearInterval(this.roundTimer);
                 this.gameEndCallback(this.id);
             }

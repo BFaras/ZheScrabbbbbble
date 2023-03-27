@@ -28,8 +28,12 @@ export interface PlayerState {
 })
 export class GameStateService {
     private socket: Socket;
+    
     private gameStateObservable: Observable<GameState>;
     private gameStateObservers: Observer<GameState>[] = [];
+    private actionMessageObservable: Observable<PlayerMessage>;
+    private actionMessageObserver: Observer<PlayerMessage>; 
+
     private observerIndex: number;
     private tournamentGame: boolean;
 
@@ -38,6 +42,10 @@ export class GameStateService {
             if (!this.socket.active) this.refreshSocket();
             this.gameStateObservers.push(observer);
         });
+        this.actionMessageObservable = new Observable((observer: Observer<PlayerMessage>) => {
+            if (!this.socket.active) this.refreshSocket();
+            this.actionMessageObserver = observer;
+        });
         this.refreshSocket();
     }
 
@@ -45,15 +53,21 @@ export class GameStateService {
         this.gameStateObservers = [];
         this.socket = this.socketManagerService.getSocket();
         this.socket.on('Game State Update', (state: GameState) => {
-            console.log(state);
             for (let observer of this.gameStateObservers) {
                 observer.next(state);
             }
+        });
+        this.socket.on('Message Action History', (msg: PlayerMessage) => {
+            this.actionMessageObserver.next(msg);
         });
     }
 
     getGameStateObservable(): Observable<GameState> {
         return this.gameStateObservable;
+    }
+
+    getActionMessageObservable(): Observable<PlayerMessage> {
+        return this.actionMessageObservable;
     }
 
     requestGameState() {

@@ -34,6 +34,9 @@ export class GamePageComponent implements OnInit, OnDestroy {
             if (gameState.message) this.actionHistory.push(gameState.message);
             this.endGame = gameState.gameOver;
         }));
+        this.subscriptions.push(this.gameStateService.getActionMessageObservable().subscribe((message) => {
+            this.actionHistory.push(message);
+        }));
         if(this.gameStateService.isTournamentGame()){
             this.waitingRoomManagerService.getStartGameObservable().subscribe(() => {
                 this.gameStateService.setObserver(-1);

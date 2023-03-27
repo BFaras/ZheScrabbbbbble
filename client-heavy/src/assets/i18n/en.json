@@ -156,7 +156,10 @@
         "MSG-4": "$0 passed their turn",
         "MSG-5": "$0 disconnected and was replaced by a virtual player",
         "MSG-6": "$0 ran out of time and passed their turn",
-        "MSG-7": "Game over - letters left $0"
+        "MSG-7": "Game over - letters left $0",
+        "MSG-8": "Round is over. The next game will start in 20 seconds",
+        "MSG-9": "$0 minute(s) left until the end of the round",
+        "MSG-10": "$0 disconnected"
     },
     "FRIENDS-PAGE": {
         "MESSAGE": "You can manage your friends here!",
