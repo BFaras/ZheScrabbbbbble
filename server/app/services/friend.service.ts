@@ -1,6 +1,5 @@
-import { MAX_ASCII_SYMBOL, MIN_ASCII_SYMBOL } from '@app/constants/authentification-constants';
 import { DATABASE_UNAVAILABLE, NO_ERROR, WRONG_FRIEND_CODE } from '@app/constants/error-code-constants';
-import { FRIEND_CODE_LENGTH, FRIEND_ROOM_BASE_NAME } from '@app/constants/profile-constants';
+import { FRIEND_CODE_LENGTH, FRIEND_ROOM_BASE_NAME, MAX_ASCII_LETTER, MIN_ASCII_LETTER } from '@app/constants/profile-constants';
 import { ConnectivityStatus, Friend } from '@app/interfaces/friend-info';
 import { Container, Service } from 'typedi';
 import { ChatService } from './chat.service';
@@ -91,7 +90,10 @@ export class FriendService {
         let generatedFriendCode = 'Friend';
 
         for (let i = 0; i < FRIEND_CODE_LENGTH; i++) {
-            const randomCharCode = Math.floor(Math.random() * (MAX_ASCII_SYMBOL + 1)) + MIN_ASCII_SYMBOL;
+            let randomCharCode = Math.floor(Math.random() * (MAX_ASCII_LETTER + 1));
+            if (randomCharCode < MIN_ASCII_LETTER) {
+                randomCharCode += MIN_ASCII_LETTER;
+            }
             generatedFriendCode += String.fromCharCode(randomCharCode);
         }
 
