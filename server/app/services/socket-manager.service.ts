@@ -293,6 +293,15 @@ export class SocketManager {
                     this.tournamentQueue.splice(index, 1);
                     return;
                 }
+                const username = this.accountInfoService.getUsername(socket);
+                const tournament = this.roomManager.findTournamentFromPlayer(username);
+                if(!tournament) return;
+                socket.leave(tournament.getID());
+                tournament.removePlayer(username);
+                const room = this.roomManager.findRoomFromPlayer(socket.id);
+                if(!room) return;
+                socket.leave(room.getID());
+                room.removePlayer(socket.id);
             });
 
             socket.on('disconnect', async () => {
@@ -378,21 +387,50 @@ export class SocketManager {
     }
 
     private startTournamentRound(tid: string, rooms: string[]) {
-        this.roomManager.getRoom(rooms[0]).startGame(this.timerCallback.bind(this));
-        this.roomManager.updateTournamentGameStatus(tid, rooms[0], GameStatus.IN_PROGRESS);
-        this.roomManager.getRoom(rooms[1]).startGame(this.timerCallback.bind(this));
-        this.roomManager.updateTournamentGameStatus(tid, rooms[1], GameStatus.IN_PROGRESS);
+        const room1 = this.roomManager.getRoom(rooms[0]);
+        if(room1.getPlayerCount() === 2){
+            room1.startGame(this.timerCallback.bind(this));
+            this.roomManager.updateTournamentGameStatus(tid, rooms[0], GameStatus.IN_PROGRESS);
+            this.sio.in(rooms[0]).emit('Game Started');
+        }else if(room1.getPlayerCount() === 1){
+            const player = room1.getPlayerFromIndex(0);
+            const tournament = this.roomManager.findTournamentFromId(tid);
+            const socket = tournament.getSocketFromName(player.getName());
+            socket?.leave(rooms[0]);
+            this.roomManager.deleteRoom(rooms[0]);
+            tournament.setGameWinner(rooms[0], player.getName());
+        }else{
+            this.roomManager.deleteRoom(rooms[0]);
+            this.roomManager.findTournamentFromId(tid).setGameWinner(rooms[0], '');
+        }
+        const room2 = this.roomManager.getRoom(rooms[1]);
+        if(room2.getPlayerCount() === 2){
+            room2.startGame(this.timerCallback.bind(this));
+            this.roomManager.updateTournamentGameStatus(tid, rooms[1], GameStatus.IN_PROGRESS);
+            this.sio.in(rooms[1]).emit('Game Started');
+        }else if(room2.getPlayerCount() === 1){
+            const player = room2.getPlayerFromIndex(0);
+            const tournament = this.roomManager.findTournamentFromId(tid);
+            const socket = tournament.getSocketFromName(player.getName());
+            socket?.leave(rooms[1]);
+            this.roomManager.deleteRoom(rooms[1]);
+            this.roomManager.findTournamentFromId(tid).setGameWinner(rooms[1], player.getName());
+        }else{
+            this.roomManager.deleteRoom(rooms[1]);
+            this.roomManager.findTournamentFromId(tid).setGameWinner(rooms[1], '');
+        }
+        this.sio.in(tid).emit('Tournament Data Response', this.roomManager.getTournamentGameData(tid), this.roomManager.getTournamentTimeData(tid));
         console.log(new Date().toLocaleTimeString() + ' | New tournament games started');
-        this.sio.in(rooms[0]).emit('Game Started');
-        this.sio.in(rooms[1]).emit('Game Started');
     }
 
-    private createTournamentRound(tid: string, users: io.Socket[], round: number): string[] {
+    private createTournamentRound(tid: string, users: (io.Socket|null)[], round: number): string[] {
         const rooms = [this.roomManager.createRoom(tid + ('-' + round + '-1'), RoomVisibility.Tournament), this.roomManager.createRoom(tid + ('-' + round + '-2'), RoomVisibility.Tournament)];
         for (let i = 0; i < users.length; i++) {
+            const user = users[i];
+            if(!user) continue;
             const index = i < 2 ? 0 : 1;
-            users[i].join(rooms[index]);
-            this.roomManager.addPlayer(rooms[index], new Player(users[i].id, this.accountInfoService.getUsername(users[i])));
+            user.join(rooms[index]);
+            this.roomManager.addPlayer(rooms[index], new Player(user.id, this.accountInfoService.getUsername(user)));
         }
         if (round === 1) {
             this.roomManager.registerTournamentGames(tid, rooms[0], rooms[1]);

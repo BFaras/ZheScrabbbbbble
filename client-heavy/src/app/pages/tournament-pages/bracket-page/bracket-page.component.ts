@@ -124,4 +124,8 @@ export class BracketPageComponent implements OnDestroy {
         });
         this.waitingRoomManagerService.joinRoom(game.roomCode);
     }
+
+    leaveTournamentLogic(){
+        this.tournamentService.leaveTournament();
+    }
 }

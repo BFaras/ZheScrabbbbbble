@@ -30,7 +30,7 @@ export class Tournament {
     private tournamentPhase: number;
     private time: number; 
 
-    private gameCreationCallback: (tid: string, users: io.Socket[], round: number) => string[];
+    private gameCreationCallback: (tid: string, users: (io.Socket|null)[], round: number) => string[];
     private gameStartCallback: (tid: string, rooms: string[]) => void;
     private gameEndCallback: (tid: string) => void;
     private timerMessageCallback: (tid: string, timeLeft: string) => void;
@@ -71,6 +71,18 @@ export class Tournament {
         return false;
     }
 
+    removePlayer(username: string){
+        let index = -1;
+        for (let player of this.players) {
+            if (player.username === username){
+                index = this.players.indexOf(player);
+                break;
+            }
+        }
+        if(index < 0) return;
+        this.players.splice(index, 1);
+    }
+
     getGameData(): GameData[] {
         return this.games;
     }
@@ -93,8 +105,8 @@ export class Tournament {
         this.tournamentPhase = 0;
         this.time = Date.now();
         setTimeout(() => {
-            this.gameStartCallback(this.id, this.rooms);
             this.startRoundTimer();
+            this.gameStartCallback(this.id, this.rooms);
         }, TOURNAMENT_ROUND_START_TIMER);
     }
 
@@ -103,21 +115,29 @@ export class Tournament {
             if (game.roomCode !== id) continue;
             let otherName = '';
             game.status = GameStatus.FINISHED;
-            for (let i = 0; i < game.players.length; i++) {
-                if (game.players[i] === name) {
-                    if (!isLoser) {
-                        game.winnerIndex = i;
-                    }
-                } else {
-                    otherName = game.players[i];
-                    if (isLoser) {
-                        game.winnerIndex = i;
+            if(!name) {
+                game.winnerIndex = -1;
+            }else{
+                for (let i = 0; i < game.players.length; i++) {
+                    if (game.players[i] === name) {
+                        if (!isLoser) {
+                            game.winnerIndex = i;
+                        }
+                    } else {
+                        otherName = game.players[i];
+                        if (isLoser) {
+                            game.winnerIndex = i;
+                        }
                     }
                 }
             }
             if (game.type.includes('Semi')) {
-                const loser = isLoser ? name : otherName;
-                const winner = isLoser ? otherName : name;
+                let loser = isLoser ? name : otherName;
+                if(!loser) loser = 'N/A';
+                else if(!this.getSocketFromName(loser)) loser = 'N/A';
+                let winner = isLoser ? otherName : name;
+                if(!winner) winner = 'N/A';
+                else if(!this.getSocketFromName(winner)) winner = 'N/A';
                 const final1 = this.getGame('Final1');
                 if (final1) {
                     final1.players.push(winner);
@@ -137,10 +157,24 @@ export class Tournament {
             this.startSecondRound();
             return;
         }
-        if (this.getGame('Final1')?.status === GameStatus.FINISHED && this.getGame('Final2')?.status === GameStatus.FINISHED && this.round === 2) {
+        const final1 = this.getGame('Final1');
+        const final2 = this.getGame('Final2');
+        if (final1?.status === GameStatus.FINISHED && final2?.status === GameStatus.FINISHED && this.round === 2) {
             this.tournamentPhase = 2;
             this.time = Date.now();
-            console.log('Tournament Over');
+            const firstPlace = final1?.players[final1.winnerIndex];
+            const secondPlace = final1?.players[(final2.winnerIndex + 1) % 2];
+            const thridPlace = final2?.players[final2.winnerIndex];
+            if(firstPlace !== 'N/A'){
+                //TODO Give gold medal
+            }
+            if(secondPlace !== 'N/A'){
+                //TODO Give silver medal
+            }
+            if(thridPlace !== 'N/A'){
+                //TODO Give bronze medal
+            }
+            console.log(new Date().toLocaleTimeString() + ' | Tournament Over');
         }
     }
 
@@ -161,6 +195,15 @@ export class Tournament {
         return {time : timeLeft, phase : this.tournamentPhase}
     }
 
+    getSocketFromName(user: string): (io.Socket|null){
+        for (let player of this.players) {
+            if (user === player.username) {
+                return player.socket;
+            }
+        }
+        return null;
+    }
+
     private startSecondRound() {
         const final1 = this.getGame('Final1');
         if (!final1) return;
@@ -173,20 +216,15 @@ export class Tournament {
         this.tournamentPhase = 0;
         this.time = Date.now();
         setTimeout(() => {
-            this.gameStartCallback(this.id, this.rooms);
             this.startRoundTimer();
+            this.gameStartCallback(this.id, this.rooms);
         }, TOURNAMENT_ROUND_START_TIMER);
     } 
 
-    private getSocketFromNames(users: string[]): io.Socket[] {
+    private getSocketFromNames(users: string[]): (io.Socket|null)[] {
         const sockets = [];
         for (let user of users) {
-            for (let player of this.players) {
-                if (user === player.username) {
-                    sockets.push(player.socket);
-                    break;
-                }
-            }
+            sockets.push(this.getSocketFromName(user));
         }
         return sockets;
     }

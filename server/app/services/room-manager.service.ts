@@ -130,6 +130,10 @@ export class RoomManagerService {
         return null;
     }
 
+    findTournamentFromId(tid: string): Tournament{
+        return this.tournaments[tid];
+    }
+
     endTournamentGames(tid: string) : {room: GameRoom, endMessage: string}[]{
         const tournament = this.tournaments[tid]
         const rooms = tournament.getGameRooms();
