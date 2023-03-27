@@ -368,4 +368,8 @@ export class LetterAdderService {
         this.gridService.highlightCoords(this.activeSquare.y, this.activeSquare.x);
         this.gridService.addArrow(this.activeSquare.y, this.activeSquare.x, this.arrowDirection);
     }
+
+    setAdderMode(mode: string) {
+        this.letterAdderMode = mode;
+    }
 }
