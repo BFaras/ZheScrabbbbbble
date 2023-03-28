@@ -7,7 +7,7 @@
     <string name="collaboratif">COOP</string>
     <string name="classique">CLASSIC</string>
     <string name="disconnect">DISCONNECT</string>
-    <string name="rejoindre">want to join your game</string>
+    <string name="rejoindre"><![CDATA[%1$s want to join your game.]]></string>
     <string name="accepter">Accept</string>
     <string name="refuser">Reject</string>
 

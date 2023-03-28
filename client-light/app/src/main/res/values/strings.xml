@@ -16,7 +16,7 @@
     <string name="tripleWord">TM</string>
     <string name="reserve">LETTRES RESTANTES DANS LA RÉSERVE</string>
     <string name="abandonner">Abandonner</string>
-    <string name="rejoindre">veut rejoindre votre partie</string>
+    <string name="rejoindre"><![CDATA[%1$s veut rejoindre votre partie.]]></string>
     <string name="accepter">Accepter</string>
     <string name="refuser">Refuser</string>
 
@@ -39,10 +39,10 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Courriel</string>
-    <string name="prompt_username">Nom d\'utilisateur</string>
-    <string name="prompt_password">Mot de passe</string>
-    <string name="action_sign_in">Connection</string>
-    <string name="action_sign_in_short">Connection</string>
+    <string name="prompt_username"><i>Nom d\'utilisateur</i></string>
+    <string name="prompt_password"><i>Mot de passe</i></string>
+    <string name="action_sign_in">Se connecter</string>
+    <string name="action_sign_in_short">Se connecter</string>
     <string name="welcome">"Bienvenue!"</string>
     <string name="invalid_username">Pas un nom valid</string>
     <string name="invalid_email">Pas un courriel valid</string>
@@ -95,5 +95,16 @@
     <string name="talkingIntext">Now talking in</string>
     <string name="manage_chats">Manage Chats</string>
     <string name="hello_message"><![CDATA[Hello <b>%1$s</b>!]]></string>
+    <string name="privateRoom">Private</string>
+    <string name="publicRoom">Public</string>
+    <string name="protectedRoom">Protected</string>
+    <string name="join_game_text">Do you want to join the game as an observer?</string>
+    <string name="enter_the_room_password">enter the room password</string>
+    <string name="quit">Quitter</string>
+    <string name="winnerName"><![CDATA[%1$s a gagné la partie!]]></string>
+    <string name="waitingRoomText">Si l\'hôte décide de lancer la partie et qu\'il y a au minimum 2 joueurs , les places restantes seront comblées par des Joueurs Virtuels.</string>
+    <string name="create_a_room">create a room</string>
+    <string name="enter_a_room_name"><i>Enter a room name</i></string>
+    <string name="enter_a_chat_name"><i>Enter a chat name</i></string>
 
 </resources>

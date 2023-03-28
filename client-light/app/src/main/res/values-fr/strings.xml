@@ -17,7 +17,7 @@
     <string name="tripleWord">TM</string>
     <string name="reserve">LETTRES RESTANTES DANS LA RÉSERVE</string>
     <string name="abandonner">Abandonner</string>
-    <string name="rejoindre">veut rejoindre votre partie</string>
+    <string name="rejoindre"><![CDATA[%1$s veut rejoindre votre partie.]]></string>
     <string name="accepter">Accepter</string>
     <string name="refuser">Refuser</string>
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
