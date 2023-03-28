@@ -12,7 +12,7 @@
         <item name="colorPrimaryVariant">@color/darkCorail</item>
         <item name="colorOnPrimary">@color/lightBeige</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/Crimson</item>
+        <item name="colorSecondary">#cce0b7</item>
         <item name="colorSecondaryVariant">@color/Brown</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
@@ -28,6 +28,7 @@
         <item name="lettersOnBoard">@color/NavajoWhite</item>
         <item name="lettersInHand">@color/AntiqueWhite</item>
         <item name="chatBox">@color/lightBeige</item>
+        <item name="activeTile">@color/purple_700</item>
     </style>
     <style name="Theme.TestChatBox.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -54,6 +55,7 @@
         <item name="lettersOnBoard">@color/BabyPink</item>
         <item name="lettersInHand">@color/AntiqueWhite</item>
         <item name="chatBox">@color/white</item>
+        <item name="activeTile">@color/purple_700</item>
     </style>
 
     <style name="EclipseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -76,16 +78,17 @@
         <item name="lettersOnBoard">@color/SlateGray</item>
         <item name="lettersInHand">@color/AntiqueWhite</item>
         <item name="chatBox">@color/Platinium</item>
+        <item name="activeTile">@color/Gold</item>
     </style>
 
     <style name="BlizzardTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="backgroundColor">@color/SlateWhite</item>
-        <item name="android:textColor">@color/BlueBlack</item>
+        <item name="android:textColor">@color/BackSea</item>
         <item name="colorAccent">@color/BrightSunset</item>
         <item name="colorPrimary">@color/grayWhite</item>
         <item name="android:statusBarColor">@color/BlueBlack</item>
         <item name="colorPrimaryVariant">@color/DarkGray</item>
-        <item name="colorOnPrimary">@color/DimGray</item>
+        <item name="colorOnPrimary">@color/BackSea</item>
         <item name="android:textColorHighlight">@color/BrightSunset</item>
         <item name="colorSecondary">@color/BrightSunset</item>
         <item name="colorSecondaryVariant">@color/Sunset</item>
@@ -99,6 +102,7 @@
         <item name="boardBackground">@color/WhiteSmoke</item>
         <item name="lettersOnBoard">@color/grayWhite</item>
         <item name="lettersInHand">@color/SlateWhite</item>
+        <item name="activeTile">@color/purple_700</item>
     </style>
 
 
