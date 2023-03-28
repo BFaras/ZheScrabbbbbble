@@ -42,6 +42,9 @@ import { PasswordLostPageComponent } from './pages/password-lost-page/password-l
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { PublicChatsComponent } from './pages/public-chats/public-chats.component';
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
+import { BracketPageComponent } from './pages/tournament-pages/bracket-page/bracket-page.component';
+import { QueuePageComponent } from './pages/tournament-pages/queue-page/queue-page.component';
+import { ResultPageComponent } from './pages/tournament-pages/result-page/result-page.component';
 import { ChatService } from './services/chat-service/chat.service';
 import { SignUpAvatarPopUpComponent } from './components/sign-up-avatar-pop-up/sign-up-avatar-pop-up.component';
 /**
@@ -93,6 +96,9 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         NavigationBarComponent,
         FriendsPageComponent,
         PublicChatsComponent,
+        QueuePageComponent,
+        BracketPageComponent,
+        ResultPageComponent,
         SignUpAvatarPopUpComponent,
     ],
     imports: [

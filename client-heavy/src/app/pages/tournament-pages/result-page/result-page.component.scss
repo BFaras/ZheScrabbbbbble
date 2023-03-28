@@ -1,0 +1,91 @@
+.container {
+    background-color: var(--background-default);
+    height: 70%;
+    padding: 5%;
+}
+
+.justified {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#page-content{
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    height: 50vh;
+}   
+
+.logo {
+    margin-top: 1%;
+    font-family: "Shrikhand";
+    font-size: 95px;
+    color: var(--text-default);
+}
+
+.header-item {
+    color: var(--text-default);
+    justify-content: center;
+    text-align: center;
+    padding: 0px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 20px;
+}
+
+.mode-buttons {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.button.cancel {
+    background-color: var(--button-secondary);
+}
+
+.list {
+    align-self: center;
+}
+
+.placement {
+    margin-bottom: 25px;
+    color: var(--text-default);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.cancel:hover:enabled {
+    background: var(--button-secondary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+.button, .inactive-button {
+    text-decoration: none;
+    margin-top: 20px;
+    text-align: center;
+    border: none;
+    padding: 10px;
+    background-color: var(--button-primary);
+    border-radius: 7px;
+    width: 50vh;
+    box-shadow: var(--box-shadow);
+    font-size: 17px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: var(--button-text-default);
+    transition: color 0.5s linear;
+    -webkit-transition: color 0.2s linear;
+}
+
+.button:hover {
+    color: var(--button-text-hover);
+    cursor: pointer;
+    background: var(--button-primary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
