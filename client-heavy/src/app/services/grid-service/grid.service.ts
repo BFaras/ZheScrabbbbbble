@@ -30,7 +30,7 @@ const isCoordinateOf = (colourCoords: number[][], coord: number[]): boolean => {
 @Injectable({
     providedIn: 'root',
 })
-export class GridService implements OnDestroy{
+export class GridService implements OnDestroy {
     gridContext: CanvasRenderingContext2D;
     horizontalArrow = '🢚';
     verticalArrow = '🢛';
@@ -38,21 +38,21 @@ export class GridService implements OnDestroy{
     GRID_WORDS = GRID_WORDS_FR;
     private boardState: string[][] = [];
     private canvasSize: Vec2 = { x: GRID_CONSTANTS.defaultWidth, y: GRID_CONSTANTS.defaultHeight };
-    private subscriptionAddPreview:Subscription;
-    private subscriptionRemovePreview:Subscription;
+    private subscriptionAddPreview: Subscription;
+    private subscriptionRemovePreview: Subscription;
     constructor(private size: FontSizeService,
-         private theme: ThemesService,
-         public translate: TranslateService,
-         private previewPlayerActionService: PreviewPlayersActionService
-         ) {
+        private theme: ThemesService,
+        public translate: TranslateService,
+        private previewPlayerActionService: PreviewPlayersActionService
+    ) {
 
         this.subscriptionAddPreview = this.previewPlayerActionService.getActivePlayerFirstTile().subscribe(
-            (activeSquare) => {this.showActivePlayerFirstTile(activeSquare)})
+            (activeSquare) => { this.showActivePlayerFirstTile(activeSquare) })
 
         this.subscriptionRemovePreview = this.previewPlayerActionService.getSelectedTileStatus().subscribe(
-            (activeSquare)=>{this.deleteActivePlayerFirstTile(activeSquare)})
+            (activeSquare) => { this.deleteActivePlayerFirstTile(activeSquare) })
     }
-    
+
     ngOnDestroy(): void {
         this.subscriptionAddPreview.unsubscribe();
         this.subscriptionRemovePreview.unsubscribe();
@@ -77,7 +77,7 @@ export class GridService implements OnDestroy{
     }
 
     /**monter la position firstTile */
-    showActivePlayerFirstTile(activeSquare:{x:string,y:number}){
+    showActivePlayerFirstTile(activeSquare: { x: string, y: number }) {
         console.log('received add preview: ')
         console.log(activeSquare);
         this.gridContext.strokeStyle = 'orange';
@@ -85,7 +85,7 @@ export class GridService implements OnDestroy{
         this.gridContext.strokeRect(COLUMNS[activeSquare.y], ROWS[activeSquare.x], GRID_CONSTANTS.defaultSide, GRID_CONSTANTS.defaultSide);
     }
 
-    deleteActivePlayerFirstTile(activeSquare:{x:string,y:number}){
+    deleteActivePlayerFirstTile(activeSquare: { x: string, y: number }) {
         this.deleteAndRedraw();
     }
     drawIdentificators() {
@@ -191,6 +191,9 @@ export class GridService implements OnDestroy{
                 COLUMNS[column] + GRID_CONSTANTS.defaultSide / GRID_OFFSETS.letterOffsetH,
                 ROWS[checkedRow] + GRID_CONSTANTS.defaultSide / GRID_OFFSETS.letterOffsetV,
             );
+            console.log(COLUMNS[column])
+            console.log(ROWS[checkedRow])
+
 
             this.gridContext.textBaseline = 'top';
             this.gridContext.font = `bold ${this.size.getFontSize().get('gridPointSize')}px Courier`;
