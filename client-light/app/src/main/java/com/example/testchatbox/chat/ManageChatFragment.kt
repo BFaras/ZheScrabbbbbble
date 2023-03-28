@@ -100,7 +100,7 @@ class ManageChatFragment : Fragment(), ObserverChat {
         }
     }
 
-    override fun updateMessage(chatCode: String) {}
+    override fun updateMessage(chatCode: String, message: Message) {}
 
     override fun updateChannels() {
         activity?.runOnUiThread(Runnable {

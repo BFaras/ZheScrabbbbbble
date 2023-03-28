@@ -20,22 +20,16 @@ enum class  ChatType{
     }
 }
 
-class Message(val username:String, val timestamp:String, val message: String){
+class Message(val username:String, val timestamp:String, val message: String, val avatar:String){
     override fun toString() : String{
         return "$timestamp | $username : $message"
     }
 }
 
-class Chat(val chatType : ChatType, val chatName :String, val _id:String){
-    var messages = arrayListOf<Message>();
-
-    fun pushMessage(username:String, timestamp:String, message: String){
-        this.messages.add(Message(username, timestamp, message));
-    }
-}
+class Chat(val chatType : ChatType, val chatName :String, val _id:String)
 
 interface ObserverChat {
-    fun updateMessage(chatCode: String)
+    fun updateMessage(chatCode: String, message: Message)
 
     fun updateChannels()
 
@@ -53,8 +47,8 @@ interface ObservableChat{
         observers.remove(observer)
     }
 
-    fun notifyNewMessage(chatCode:String) {
-        observers.forEach { it.updateMessage(chatCode) }
+    fun notifyNewMessage(chatCode:String, message: Message) {
+        observers.forEach { it.updateMessage(chatCode, message) }
     }
 
     fun notifyNewChanel() {
@@ -67,7 +61,7 @@ interface ObservableChat{
 }
 
 object ChatModel : ObservableChat {
-    private val chatList = LinkedHashMap<String,Chat> ();
+    private val chatList = LinkedHashMap<String,Chat>();
     private val publicChatList = LinkedHashMap<String,Chat> ();
     override val observers: ArrayList<ObserverChat> = arrayListOf();
 
@@ -129,6 +123,7 @@ object ChatModel : ObservableChat {
         SocketHandler.getSocket().on("Join Chat Response") { args ->
             if(args[0] != null ){
                 val errorMessage = args[0] as String;
+                Log.i("Join", errorMessage)
                 if(errorMessage == "0"){
                     updateList();
                     publicChatList.remove(_id);
@@ -156,6 +151,7 @@ object ChatModel : ObservableChat {
         SocketHandler.getSocket().on("Leave Chat Response") { args ->
             if(args[0] != null){
                 val errorMessage = args[0] as String;
+                Log.i("Leave", errorMessage)
                 if(errorMessage == "0"){
                     chatList.remove(_id)
                     notifyNewChanel();
@@ -174,14 +170,12 @@ object ChatModel : ObservableChat {
             if(args[0] != null && args[1] != null ){
                 val chatCode = args[0] as String;
                 val chatMessage = args[1] as JSONObject;
-                if(chatList[chatCode] != null){
-                    chatList[chatCode]?.pushMessage(chatMessage.get("username") as String, chatMessage.get("timestamp") as String, chatMessage.get("message") as String);
-                } else {
-                    updateList();
-                    Thread.sleep(500);
-                    chatList[chatCode]?.pushMessage(chatMessage.get("username") as String, chatMessage.get("timestamp") as String, chatMessage.get("message") as String);
-                }
-                notifyNewMessage(chatCode);
+                val message = Message(chatMessage.get("username") as String,
+                    chatMessage.get("timestamp") as String,
+                    chatMessage.get("message") as String, chatMessage.get("avatar") as String
+                )
+                updateList();
+                notifyNewMessage(chatCode, message);
             }
         }
     }

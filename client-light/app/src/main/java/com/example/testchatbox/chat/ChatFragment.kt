@@ -14,6 +14,8 @@ import com.example.testchatbox.MainActivity
 import com.example.testchatbox.R
 import com.example.testchatbox.databinding.FragmentChatBinding
 import com.example.testchatbox.login.model.LoggedInUser
+import org.json.JSONArray
+import org.json.JSONObject
 import java.util.*
 
 
@@ -79,15 +81,21 @@ class ChatFragment : Fragment(), ObserverChat {
     }
 
     private fun loadChatMessages(){
-        val messagesBox = binding.textView
-        messagesBox.text = "";
-        for(message in chatsList[selectedChatIndex].messages){
-            messagesBox.append(message.toString() + System.getProperty("line.separator"))
+        SocketHandler.getSocket().once("Chat History Response"){args ->
+            val messageArray= args[0] as JSONArray
+            val messagesBox = binding.textView
+            messagesBox.text = "";
+            for(i in 0 until messageArray.length()){
+                val messageJSON = messageArray.get(i) as JSONObject
+                val message = Message(messageJSON.get("username") as String, messageJSON.get("timestamp") as String, messageJSON.get("message") as String, messageJSON.get("avatar") as String)
+                messagesBox.append(message.toString() + System.getProperty("line.separator"))
+            }
+            activity?.runOnUiThread(Runnable {
+                messagesBox.invalidate();
+                messagesBox.requestLayout();
+            });
         }
-        activity?.runOnUiThread(Runnable {
-            messagesBox.invalidate();
-            messagesBox.requestLayout();
-        });
+        SocketHandler.getSocket().emit("Get Chat History", chatsList[selectedChatIndex]._id)
     }
 
     private fun loadList(){
@@ -108,10 +116,18 @@ class ChatFragment : Fragment(), ObserverChat {
             chatListView.addView(btn)
         }
     }
+    private fun addMessage(message:Message){
+        binding.textView.append(message.toString() + System.getProperty("line.separator"))
+        activity?.runOnUiThread(Runnable {
+            binding.textView.invalidate();
+            binding.textView.requestLayout();
+        });
+    }
 
-    override fun updateMessage(chatCode: String) {
+
+    override fun updateMessage(chatCode: String, message: Message) {
         if(chatsList[selectedChatIndex]._id == chatCode)
-            loadChatMessages();
+            addMessage(message);
     }
 
     override fun updateChannels() {
