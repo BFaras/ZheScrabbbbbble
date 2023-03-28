@@ -1,0 +1,154 @@
+.container {
+    background-color: var(--background-default);
+    height: 70%;
+    padding: 5%;
+}
+
+.justified {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    margin-top: 1%;
+    font-family: 'Shrikhand';
+    font-size: 95px;
+    color: var(--text-default);
+}
+
+.header-item {
+    color: var(--text-default);
+    justify-content: center;
+    text-align: center;
+    padding: 0px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 40px;
+}
+
+#timer {
+    color: var(--text-default);
+    text-align: center;
+}
+
+.match-list {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 250px;
+    row-gap: 80px;
+    margin-top: 50px;
+    height: min-content;
+}
+
+.round-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 250px;
+}
+
+.game {
+    width: 200px;
+    display: inline-grid;
+    background-color: var(--button-primary);
+    border-radius: 15px;
+    box-shadow: var(--box-shadow);
+}
+
+.game.in-progress {
+    background-color: var(--button-primary-hover);
+    border: 2px solid transparent;
+}
+
+.game.in-progress:hover {
+    border: 2px solid var(--button-text-hover);
+}
+
+.game.in-progress > .player,
+.game.in-progress > .vs {
+    border-color: var(--button-primary-hover);
+    color: var(--button-text-hover);
+    animation: glow 1s ease-in-out infinite alternate;
+}
+
+.player {
+    color: var(--button-text-default);
+    text-align: center;
+    padding: 5%;
+    margin: 0;
+}
+
+.mode-buttons {
+    margin-top: 50px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.button.cancel {
+    background-color: var(--button-secondary);
+}
+
+.cancel:hover:enabled {
+    background: var(--button-secondary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+.button, .inactive-button {
+    text-decoration: none;
+    margin-top: 20px;
+    text-align: center;
+    border: none;
+    padding: 10px;
+    background-color: var(--button-primary);
+    border-radius: 7px;
+    width: 50vh;
+    box-shadow: var(--box-shadow);
+    font-size: 17px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: var(--button-text-default);
+    transition: color 0.5s linear;
+    -webkit-transition: color 0.2s linear;
+}
+
+.button:hover {
+    color: var(--button-text-hover);
+    cursor: pointer;
+    background: var(--button-primary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+.player.winner {
+    color: var(--button-text-hover);
+    text-shadow: 0 0 5px var(--button-text-default), 0 0 10px var(--button-text-default);
+}
+
+.round-title{
+    color: var(--text-default);
+    text-align: center;
+    font-size: xx-large;
+    margin: 0;
+    height: min-content;
+    width: 200px;
+}
+
+.vs{
+    text-align: center;
+    color: var(--button-text-default);
+    margin: 0;
+}
+  
+@keyframes glow {
+    from {
+      text-shadow: 0 0 5px var(--button-text-default), 0 0 10px var(--button-text-default);
+    }
+    
+    to {
+      text-shadow: 0 0 10px var(--button-text-default);
+    }
+}

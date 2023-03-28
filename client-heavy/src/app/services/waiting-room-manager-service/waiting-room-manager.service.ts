@@ -57,6 +57,7 @@ export class WaitingRoomManagerService {
             this.joinRoomResponseObserver = observer;
         });
         this.gameStartObservable = new Observable((observer: Observer<null>) => {
+            console.log('Subbed');
             if(!this.socket.active) this.refreshSocketRequests();
             this.gameStartObserver = observer;
         });
@@ -79,6 +80,7 @@ export class WaitingRoomManagerService {
             this.joinRoomResponseObserver.next({ errorCode, playerNames })
         });
         this.socket.on('Game Started', () => {
+            console.log('Socket Received');
             this.gameStartObserver.next(null);
         });
         this.socket.on('Room Player Update', (playerNames) => {

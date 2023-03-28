@@ -145,7 +145,10 @@ export class AuthentificationService {
         let generatedString = '';
 
         for (let i = 0; i < stringLength; i++) {
-            const randomCharCode = Math.floor(Math.random() * (MAX_ASCII_SYMBOL + 1)) + MIN_ASCII_SYMBOL;
+            let randomCharCode = Math.floor(Math.random() * MAX_ASCII_SYMBOL);
+            if (randomCharCode < MIN_ASCII_SYMBOL) {
+                randomCharCode += MIN_ASCII_SYMBOL;
+            }
             generatedString += String.fromCharCode(randomCharCode);
         }
 

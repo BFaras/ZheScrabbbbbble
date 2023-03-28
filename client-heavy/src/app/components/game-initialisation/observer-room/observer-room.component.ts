@@ -15,7 +15,7 @@ export class ObserverRoomComponent {
         this.waitingRoomManagerService.isGameStarted();
     }
 
-    cancelObservation(){
+    cancelObservation() {
         this.waitingRoomManagerService.leaveRoom();
         this.router.navigate(['/join-game']);
     }
@@ -24,14 +24,15 @@ export class ObserverRoomComponent {
         this.waitingRoomManagerService.leaveRoom();
     }
 
-    goToGame(){
+    goToGame() {
         this.gameStateService.setObserver(0);
+        this.gameStateService.setTournamentGame(false);
         this.router.navigate(['/game']).then(() => {
             this.gameStateService.requestGameState();
         });
     }
 
-    gameStartVerif(gameStarted: boolean){
-        if(gameStarted) this.goToGame();
+    gameStartVerif(gameStarted: boolean) {
+        if (gameStarted) this.goToGame();
     }
 }
