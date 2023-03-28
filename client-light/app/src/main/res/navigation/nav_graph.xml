@@ -99,6 +99,9 @@
                 app:argType="integer"
                 android:defaultValue="0" />
         </action>
+        <action
+            android:id="@+id/action_gameListFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameRoomFragment"

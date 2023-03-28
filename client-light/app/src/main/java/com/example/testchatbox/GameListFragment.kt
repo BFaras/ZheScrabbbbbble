@@ -83,6 +83,9 @@ class GameListFragment : Fragment() {
         binding.createBtn.setOnClickListener{
             createRoom();
         }
+        binding.buttonchat.setOnClickListener {
+            findNavController().navigate(R.id.action_gameListFragment_to_ChatFragment)
+        }
         SocketHandler.getSocket().on("Game Room List Response"){ args ->
             if(args[0] != null){
                 val list = args[0] as JSONArray;
