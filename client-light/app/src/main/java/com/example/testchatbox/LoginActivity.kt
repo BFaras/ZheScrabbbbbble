@@ -44,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        val navController = findNavController(R.id.nav_host_fragment_login)
         return navController.navigateUp(appBarConfiguration)
             || super.onSupportNavigateUp()
     }

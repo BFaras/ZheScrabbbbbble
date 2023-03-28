@@ -28,13 +28,19 @@ enum class ConnectionType {
     }
 }
 
+data class LevelInfo (
+    val level: Int,
+    val xp: Int,
+    val nextLevelXp: Int,
+    )
+
 data class Statistic(val name: String, val statAmount: Number)
 
 data class ConnectionInfo (val connectionType: ConnectionType, val date: String, val time: String)
 
 data class GameHistoryInfo (val date: String, val time: String, val isWinner: Boolean)
 
-data class ProfileInfo (var avatar: String, var level: Int, var userCode: String, val stats: ArrayList<Statistic>, val tournamentWins: ArrayList<Int>, val connectionHistory: ArrayList<ConnectionInfo>, val gameHistory: ArrayList<GameHistoryInfo>)
+data class ProfileInfo (var avatar: String, var level: LevelInfo, var userCode: String, val stats: ArrayList<Statistic>, val tournamentWins: ArrayList<Int>, val connectionHistory: ArrayList<ConnectionInfo>, val gameHistory: ArrayList<GameHistoryInfo>)
 
 
 class ProfilFragment : Fragment() {
@@ -127,7 +133,7 @@ class ProfilFragment : Fragment() {
             if(args[0]!=null) {
                 var profileTemp = ProfileInfo(
                     "",
-                    -1,
+                    LevelInfo(-1,-1,-1),
                     "",
                     arrayListOf(),
                     arrayListOf(),
@@ -136,7 +142,8 @@ class ProfilFragment : Fragment() {
                 )
                 val profileJSON = args[0] as JSONObject
                 profileTemp.avatar= profileJSON.get("avatar") as String;
-                profileTemp.level= profileJSON.get("level") as Int;
+                val levelJSON= profileJSON.get("levelInfo") as JSONObject;
+                profileTemp.level= LevelInfo(levelJSON.get("level") as Int,levelJSON.get("xp") as Int,levelJSON.get("nextLevelXp") as Int)
                 profileTemp.userCode= profileJSON.get("userCode") as String;
                 val tournamentWins = profileJSON.get("tournamentWins") as JSONArray
                 for(i in 0 until tournamentWins.length()){
@@ -158,9 +165,12 @@ class ProfilFragment : Fragment() {
                     profileTemp.gameHistory.add(GameHistoryInfo(gameHistory.get("date") as String,gameHistory.get("time") as String, gameHistory.get("isWinner") as Boolean))
                 }
                 profile=profileTemp;
+                activity?.runOnUiThread(Runnable {
+                    updateView()
+                });
             }
         }
-        SocketHandler.getSocket().emit("Get Profile Information")
+        SocketHandler.getSocket().emit("Get Profile Information", username)
     }
 
     private fun changeAvatar(newAvatar:String){
@@ -235,7 +245,7 @@ class ProfilFragment : Fragment() {
         binding.language.text= "Language : ${LoggedInUser.getLang()}";
         binding.theme.text= "Theme : ${LoggedInUser.getTheme()}";
         binding.avatar.text= "Avatar : ${profile.avatar}";
-        binding.avatar.text= "Level : ${profile.level}";
+        binding.avatar.text= "Level : ${profile.level.level}";
         binding.avatar.text= "Friend Code : ${profile.userCode}";
     }
 

@@ -27,13 +27,16 @@ interface Observable{
 
 object GameRoomModel :Observable{
     var gameRoom: GameRoom? = null;
+    var isPlayer =true;
     var joinRequest: ArrayList<String> = arrayListOf();
     override var observers: ArrayList<Observer> = arrayListOf();
 
-    fun initialise(gameRoom: GameRoom){
+    fun initialise(gameRoom: GameRoom, observer: Boolean){
         this.gameRoom = gameRoom;
         ChatModel.addGameChat(gameRoom)
-        gameRoom.players=gameRoom.players.plus(LoggedInUser.getName())
+        isPlayer=!observer
+        if(isPlayer)
+            gameRoom.players=gameRoom.players.plus(LoggedInUser.getName())
         SocketHandler.getSocket().on("Room Player Update"){ args ->
             if(args[0] != null){
                 gameRoom.players = arrayOf()
