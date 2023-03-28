@@ -226,18 +226,6 @@
         </LinearLayout>
     </LinearLayout>
 
-
-    <Button
-        android:id="@+id/gameTest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GAMETEST"
-        android:layout_gravity="center|top"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center"></Button>
-
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="wrap_content"

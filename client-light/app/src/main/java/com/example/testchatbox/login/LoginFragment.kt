@@ -61,7 +61,6 @@ class LoginFragment : Fragment() {
         var resetButton = binding.reset
         val loadingProgressBar = binding.loading
 
-        val gameTest = binding.gameTest
 
         binding.darkTheme.setOnClickListener {
             activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "eclipse") };
@@ -190,10 +189,6 @@ class LoginFragment : Fragment() {
         }
         registerButton.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
-        }
-
-        gameTest.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_fullscreenFragment)
         }
 
         resetButton.setOnClickListener {
