@@ -122,34 +122,44 @@
     </LinearLayout>
 
     <TextView
+        android:layout_marginTop="120dp"
+        android:layout_gravity="center"
         android:id="@+id/theme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:text="Theme:" />
 
     <TextView
+        android:layout_marginTop="40dp"
+        android:layout_gravity="center"
         android:id="@+id/language"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:text="Language:" />
 
     <TextView
+        android:layout_marginTop="60dp"
+        android:layout_gravity="center"
         android:id="@+id/avatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:text="Avatar:" />
 
     <TextView
+        android:layout_marginTop="80dp"
+        android:layout_gravity="center"
         android:id="@+id/level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:text="Level :" />
 
     <TextView
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center"
         android:id="@+id/friendcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:text="FriendCode:" />
 
     <Button
         android:id="@+id/button2"

@@ -83,7 +83,7 @@ class FriendsFragment : Fragment() {
 
     private fun updateFriendList(){
         SocketHandler.getSocket().once("Friend List Response"){args->
-            if(args[0] != null){
+            try{
                 friendList = arrayListOf()
                 Log.i("friend", args[0].toString())
                 val friends = args[0] as JSONArray
@@ -91,6 +91,7 @@ class FriendsFragment : Fragment() {
                     val friend = friends.get(i) as JSONObject
                     friendList.add(Friend(friend.get("username") as String, ConnectionStatus.fromInt(friend.get("status") as Int)))
                 }
+            }catch(e:Exception){
                 activity?.runOnUiThread(Runnable {
                     updateView()
                 });

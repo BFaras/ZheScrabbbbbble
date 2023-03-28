@@ -60,11 +60,11 @@ class LoginFragment : Fragment() {
 
 
         binding.darkTheme.setOnClickListener {
-            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "eclipse") };
+            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "inverted") };
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
-                    "eclipse"
+                    "inverted"
                 )
             };
             activity?.let { it1 -> ActivityCompat.recreate(it1) }
@@ -85,13 +85,13 @@ class LoginFragment : Fragment() {
             activity?.applicationContext?.let { it1 ->
                 ThemeStorage.setThemeColor(
                     it1,
-                    "cremebrulee"
+                    "classic"
                 )
             };
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
-                    "cremebrulee"
+                    "classic"
                 )
             };
             activity?.let { it1 -> ActivityCompat.recreate(it1) }
@@ -101,13 +101,13 @@ class LoginFragment : Fragment() {
             activity?.applicationContext?.let { it1 ->
                 ThemeStorage.setThemeColor(
                     it1,
-                    "astronaute"
+                    "pink"
                 )
             };
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
-                    "astronaute"
+                    "pink"
                 )
             };
             activity?.let { it1 -> ActivityCompat.recreate(it1) }

@@ -49,7 +49,7 @@ export class AuthSocketService {
                     await this.setupUser(socket, username);
                     console.log(new Date().toLocaleTimeString() + ' | Register successfull');
                 }
-                socket.emit('Creation result', accountCreationStatus === NO_ERROR);
+                socket.emit('Creation result', accountCreationStatus);
             },
         );
 

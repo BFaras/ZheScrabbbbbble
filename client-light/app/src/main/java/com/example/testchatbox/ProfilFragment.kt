@@ -62,12 +62,12 @@ class ProfilFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         getProfile(LoggedInUser.getName())
         binding.darkTheme.setOnClickListener {
-            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "eclipse") };
-            changeTheme("eclipse")
+            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "inverted") };
+            changeTheme("inverted")
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
-                    "eclipse"
+                    "inverted"
                 )
             };
             activity?.let { it1 -> ActivityCompat.recreate(it1) }
@@ -89,14 +89,14 @@ class ProfilFragment : Fragment() {
             activity?.applicationContext?.let { it1 ->
                 ThemeStorage.setThemeColor(
                     it1,
-                    "cremebrulee"
+                    "classic"
                 )
             };
-            changeTheme("cremebrulee")
+            changeTheme("classic")
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
-                    "cremebrulee"
+                    "classic"
                 )
             };
             activity?.let { it1 -> ActivityCompat.recreate(it1) }
@@ -106,14 +106,14 @@ class ProfilFragment : Fragment() {
             activity?.applicationContext?.let { it1 ->
                 ThemeStorage.setThemeColor(
                     it1,
-                    "astronaute"
+                    "pink"
                 )
             };
-            changeTheme("astronaute")
+            changeTheme("pink")
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
-                    "astronaute"
+                    "pink"
                 )
             };
             activity?.let { it1 -> ActivityCompat.recreate(it1) }
@@ -245,8 +245,8 @@ class ProfilFragment : Fragment() {
         binding.language.text= "Language : ${LoggedInUser.getLang()}";
         binding.theme.text= "Theme : ${LoggedInUser.getTheme()}";
         binding.avatar.text= "Avatar : ${profile.avatar}";
-        binding.avatar.text= "Level : ${profile.level.level}";
-        binding.avatar.text= "Friend Code : ${profile.userCode}";
+        binding.level.text= "Level : ${profile.level.level}";
+        binding.friendcode.text= "Friend Code : ${profile.userCode}";
     }
 
     private fun setLocale(lang:String){

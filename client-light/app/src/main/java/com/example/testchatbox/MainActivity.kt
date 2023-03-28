@@ -88,15 +88,18 @@ object ThemeStorage {
 object ThemeManager {
     fun setCustomizedThemes(context: Context, theme: String?) {
         when (theme) {
-            "cremebrulee" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            "eclipse" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            "astronaute" -> {
+            "classic" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            "inverted" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            "pink" -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 context.setTheme(R.style.PinkTheme)
             }
             "blizzard" -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 context.setTheme(R.style.BlizzardTheme)
+            }
+            else ->{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
         }
     }
