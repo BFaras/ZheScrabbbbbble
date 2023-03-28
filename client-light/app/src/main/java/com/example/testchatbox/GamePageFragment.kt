@@ -19,9 +19,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import androidx.core.app.ActivityCompat
 import androidx.core.text.HtmlCompat
-import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -33,6 +31,7 @@ import com.example.testchatbox.Coordinates.rowsPos
 import com.example.testchatbox.LetterPoints.letterPoints
 import com.example.testchatbox.databinding.FragmentFullscreenBinding
 import com.example.testchatbox.login.model.LoggedInUser
+import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
@@ -99,10 +98,17 @@ class GamePageFragment : Fragment() {
     private var isPlaying = 0
     private var isYourTurn = true
     private var chosenDirection = "h"
+    private var gameOver = false
 
     lateinit var playerHand: ArrayList<String>
     lateinit var lettersOnBoard: Array<Array<String>>
     lateinit var gameObserver: Observer<GameState>
+    lateinit var activeTileObserver: Observer<Pair<String, Int>>
+    lateinit var deleteActiveTileObserver: Observer<Pair<String, Int>>
+    var firstLetterPlaced = false
+    lateinit var firstLetterPlace: LetterInHand
+    var oldPosRow: String = ""
+    var oldPosCol: Int = 0
     var moveInfo: PlayerMessage = PlayerMessage("", arrayListOf())
 
 
@@ -122,52 +128,62 @@ class GamePageFragment : Fragment() {
         Coordinates.setCoordinates()
         timer = setTimer()
 
-        //visible = true
-        //gameModel.getGameState
-
         gameObserver = Observer<GameState> { gameState ->
             // Update the UI.)
             timer.start()
-            Log.d("GAME OBSERVER", "!!")
             binding.reserveLength.text = gameState.reserveLength.toString()
-            Log.d("GAME OBSERVER", "!!")
             isPlaying = gameState.playerTurnIndex
-            Log.d("IS PLAYING ", isPlaying.toString())
-//            isYourTurn = true
             isYourTurn = (gameState.players[isPlaying].username == LoggedInUser.getName())
-            Log.d("IS PLAYING ", isPlaying.toString())
-            Log.d("IS PLAYING", gameState.players[isPlaying].toString())
 
+            binding.buttonPlay.isEnabled = isYourTurn && (isPlaced.size > 0)
+            binding.buttonPass.isEnabled = isYourTurn
+            binding.buttonHint.isEnabled = isYourTurn
+            binding.backInHand.visibility = GONE
+
+            if (gameState.gameOver) {
+                gameOver = true
+                timer.cancel()
+                binding.abandonButton.text = getString(R.string.quit)
+                isYourTurn = false
+                clearTurn()
+            }
             for (player in gameState.players) {
                 if (player.username == LoggedInUser.getName()) playerHand = player.hand
             }
-            Log.d("PLAYERS", "!!")
-
-//            playerHand = gameState.players[0].hand
 
             lettersOnBoard = gameState.board
             moveInfo = gameState.message!!
-            Log.d("MOVEINFO", "!!")
-
             updateMoveInfo(moveInfo)
-            Log.d("MOVEINFO AFTER", "!!")
             updatePlayersInfo(gameState.players)
-            Log.d("updatePlayersInfo AFTER", "!!")
-            updateRack(playerHand)
-            updateBoard(lettersOnBoard)
+            clearTurn()
         }
         gameModel.gameState.observe(viewLifecycleOwner, gameObserver)
 
+        activeTileObserver = Observer<Pair<String, Int>> { activeTile ->
+            binding.gameBoard.removeView(binding.gameBoard.findViewWithTag("activeTile"))
+            val selectedTile = layoutInflater.inflate(R.layout.active_tile, binding.gameBoard, false)
 
-//        for (i in 1..5) {
-//            val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
-//            val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
-//            displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_4, "Sarah"), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
-//            binding.moveInfoPanel.addView(moveInfoLayout)
-//            binding.scrollMoveInfo.post { binding.scrollMoveInfo.fullScroll(View.FOCUS_DOWN) }
-//        } //tests a enlever
+            val columnCoordinates = columnsPos[activeTile.second-1].first
+            val rowCoordinates = ROWS[activeTile.first.uppercase()]
 
-        //val hintList = arrayListOf("h6h acd", "v2a h", "h3c je", "h8h go", "v3e lo")
+            val params = RelativeLayout.LayoutParams(
+                GridConstants.DEFAULT_SIDE.toInt(),
+                GridConstants.DEFAULT_SIDE.toInt()
+            )
+            params.leftMargin = columnCoordinates.toInt() //x
+            params.topMargin = rowCoordinates!!.toInt() //y
+
+            selectedTile.tag = "activeTile"
+            binding.gameBoard.addView(selectedTile, params)
+        }
+        gameModel.activeTile.observe(viewLifecycleOwner, activeTileObserver)
+
+        deleteActiveTileObserver = Observer<Pair<String, Int>> {
+            binding.gameBoard.removeView(binding.gameBoard.findViewWithTag("activeTile"))
+        }
+        gameModel.deleteActiveTile.observe(viewLifecycleOwner, deleteActiveTileObserver)
+
+        //val hintList = arrayListOf("h6h acd", "v2a h", "h3c je", "h8h go", "v15e lo")
 
         binding.apply {
             buttonchat.setOnClickListener {
@@ -176,7 +192,7 @@ class GamePageFragment : Fragment() {
 
             buttonPass.setOnClickListener {
                 SocketHandler.getSocket().emit("Play Turn", "Pass", "")
-                updateTurn()
+                clearTurn()
             }
 
 //            buttonHint.setOnClickListener {
@@ -195,7 +211,8 @@ class GamePageFragment : Fragment() {
 //
 //                        val direction = str[0].toString()
 //                        var col = Character.digit(str[1], 10)
-//                        var row = str[2]
+                        //if (str[2].isDigit()) col += str[2] col.toInt() var row = str[3] val m = 5
+//                        else {var row = str[2] val m = 4}
 //
 //                        Log.d("COL ", col.toString())
 //                        Log.d("ROW ", row.toString())
@@ -207,7 +224,7 @@ class GamePageFragment : Fragment() {
 //                        Log.d("COL COORD ", columnCoordinates.toString())
 //                        Log.d("ROW COORD ", rowCoordinates.toString())
 //                        var tileSize = 0
-//                        for (i in 4 until str.length) {
+//                        for (i in m until str.length) {
 //                            Log.d("LETTER TO DRAW ", str[i].toString())
 //                            val letterTile = layoutInflater.inflate(R.layout.letter_tile, binding.gameBoard, false)
 //                            val letter: TextView = letterTile.findViewById(R.id.letter)
@@ -278,14 +295,14 @@ class GamePageFragment : Fragment() {
                 isSelected.forEachIndexed { index,i ->
                     if (i == 1) {
                         val letter = binding.letterRack.getChildAt(index).findViewById<TextView>(R.id.letter).text as String
-                        lettersToSwap += if (letter == "") "*" else letter.lowercase()
+                        lettersToSwap += if (letter == "") "*" else letter.lowercase() //A CHECK!!
                         Log.d(tag, "letters to swap $lettersToSwap")
                     }
                 }
 
                 SocketHandler.getSocket()
                     .emit("Play Turn", "Swap", lettersToSwap)
-                updateTurn()
+                clearTurn()
             }
 
             buttonPlay.setOnClickListener {
@@ -315,21 +332,22 @@ class GamePageFragment : Fragment() {
                                 break
                             }
                 }
+                if (letters != "") {
+                    val playingArgs = "$row$col$chosenDirection $letters"
 
-                val playingArgs = "$row$col$chosenDirection $letters"
-
-                Log.d(tag, "TO SEND - $letters")
-                Log.d(tag, "TO SEND - $playingArgs")
-                SocketHandler.getSocket().emit("Play Turn", "Place", playingArgs)
-                updateTurn()
-                Log.d("HEEEERRE", "!!!!!")
-                //gameModel.getGameState()
+                    Log.d(tag, "TO SEND - $letters")
+                    Log.d(tag, "TO SEND - $playingArgs")
+                    SocketHandler.getSocket().emit("Play Turn", "Place", playingArgs)
+                    clearTurn()
+                } else {
+                    Toast.makeText(context, "INVALID MOVE!", Toast.LENGTH_SHORT).show()
+                    clearTurn()
+                }
             }
 
 
-
             backInHand.setOnClickListener {
-                updateTurn()
+                clearTurn()
             }
 
 //            directionToggle.setOnCheckedChangeListener { _, isChecked ->
@@ -354,6 +372,7 @@ class GamePageFragment : Fragment() {
             val lettre = draggableItem.findViewById<TextView>(R.id.letter).text.toString()
             val lettrePoint = draggableItem.findViewById<TextView>(R.id.letterPoint).text.toString()
 
+
             event?.let {
                 when (event.action) {
                     DragEvent.ACTION_DRAG_STARTED -> {
@@ -372,57 +391,93 @@ class GamePageFragment : Fragment() {
                         if (isYourTurn) {
                             val letterInHand = getPosition(event)
                             if (lettrePoint == "0") letterInHand.letter = lettre.uppercase() else letterInHand.letter = lettre.lowercase()
+                            val letterTagOnBoard = "${letterInHand.col}${letterInHand.row}"
 
-                            Log.d(tag, "letterPoints - $lettrePoint")
-                            letterInHand.viewTag = draggableItem.tag as Int
-                            Log.d(tag, "PLACED LETTER - $letterInHand")
+                            if (binding.gameBoard.findViewWithTag<View>(letterTagOnBoard) == null)  { //does the place already taken?
+                                val letterAlreadyInPosition = isPlaced.find { it.col == letterInHand.col && it.row == letterInHand.row }
+                                if (letterAlreadyInPosition == null) {
 
-                            when (draggableItem.parent) {
-                                is LinearLayout -> {
-                                    val index = (draggableItem.parent as LinearLayout).indexOfChild(
-                                        draggableItem
+                                    if (!isInside) {
+                                        firstLetterPlace = letterInHand
+                                        oldPosCol = letterInHand.col
+                                        oldPosRow = letterInHand.row
+                                    }
+
+                                    if (!isInside) SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("x" to letterInHand.row, "y" to letterInHand.col)))
+
+                                    if (letterInHand.viewTag == firstLetterPlace.viewTag) SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("x" to oldPosRow, "y" to oldPosCol)))
+
+                                    Log.d("NEW PLACEMENT ", letterTagOnBoard)
+                                    Log.d("DOES IT EXIST? ",
+                                        (binding.gameBoard.findViewWithTag<View>(letterTagOnBoard) == null).toString()
                                     )
-                                    isSelected.remove(index)
+                                    Log.d(tag, "letterPoints - $lettrePoint")
+                                    letterInHand.viewTag = draggableItem.tag as Int
+                                    Log.d(tag, "PLACED LETTER - $letterInHand")
+
+                                    when (draggableItem.parent) {
+                                        is LinearLayout -> {
+                                            val index = (draggableItem.parent as LinearLayout).indexOfChild(
+                                                draggableItem
+                                            )
+                                            isSelected.remove(index)
+                                            isPlaced.add(letterInHand)
+                                            (draggableItem.parent as LinearLayout).removeView(draggableItem)
+
+                                        }
+                                        is GameBoardView -> {
+                                            (draggableItem.parent as GameBoardView).removeView(draggableItem)
+
+                                            if (letterInHand.viewTag == firstLetterPlace.viewTag) {
+                                                SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("x" to oldPosRow, "y" to oldPosCol)))
+                                            }
+
+                                        }
+                                        else -> {}
+                                    }
+
+                                    val params = RelativeLayout.LayoutParams(
+                                        draggableItem.width,
+                                        draggableItem.height
+                                    )
+
+                                    params.leftMargin = letterInHand.xPosition.toInt() //x
+                                    params.topMargin = letterInHand.yPosition.toInt() //y
+
+                                    binding.gameBoard.addView(draggableItem, params)
+                                    isPlaced.removeAll { it.viewTag == draggableItem.tag }
                                     isPlaced.add(letterInHand)
-                                    Log.d(tag, "LETTERS PLACED FROM CHEVALET - $isPlaced")
-                                    (draggableItem.parent as LinearLayout).removeView(draggableItem)
-                                    Log.d(tag, "ITEM TAG - " + draggableItem.tag)
 
+                                    if (letterInHand.viewTag == firstLetterPlace.viewTag)  {
+                                        SocketHandler.getSocket().emit("Share First Tile", JSONObject(mapOf("x" to letterInHand.row, "y" to letterInHand.col)))
+                                        oldPosCol = letterInHand.col
+                                        oldPosRow = letterInHand.row
+                                    }
+
+                                    if (letterInHand.letter == "") binding.jokerDetected.visibility = VISIBLE
+
+                                    Log.d(tag, "LETTERS PLACED - $isPlaced")
+                                    isInside = true
+                                    true
+                                } else {
+                                    false
                                 }
-                                is GameBoardView -> {
-                                    (draggableItem.parent as GameBoardView).removeView(draggableItem)
-                                    Log.d(tag, "LETTERS PLACED FROM BOARD - $isPlaced")
-                                    Log.d(tag, "ITEM TAG - " + draggableItem.tag)
-                                }
-                                else -> {}
+                            } else {
+                                false
                             }
-
-                            val params = RelativeLayout.LayoutParams(
-                                draggableItem.width,
-                                draggableItem.height
-                            )
-                            params.leftMargin = letterInHand.xPosition.toInt() //x
-                            params.topMargin = letterInHand.yPosition.toInt() //y
-
-                            binding.gameBoard.addView(draggableItem, params)
-                            isPlaced.removeAll { it.viewTag == draggableItem.tag }
-                            isPlaced.add(letterInHand)
-
-                            if (letterInHand.letter == "") binding.jokerDetected.visibility = VISIBLE
-
-                            Log.d(tag, "LETTERS PLACED - $isPlaced")
-                            isInside = true
-                            true
                         } else {
                             false
                         }
                     }
 
                     DragEvent.ACTION_DRAG_ENDED -> {
-                        if (binding.gameBoard.childCount > 0) {
-                            binding.buttonPlay.isEnabled = !isPlaced.any {it.letter == ""}
-                            binding.backInHand.visibility = VISIBLE
-                            //binding.directionPanel.visibility = VISIBLE
+                        Log.d("IS PLACED?", isPlaced.toString())
+                         if (isPlaced.size > 0) {
+                             binding.buttonPlay.isEnabled = !isPlaced.any {it.letter == ""}
+                             binding.backInHand.visibility = VISIBLE
+                        } else {
+                             binding.backInHand.visibility = GONE
+                             binding.buttonPlay.isEnabled = false
                         }
                         draggableItem.visibility = VISIBLE
                         view.invalidate()
@@ -665,7 +720,20 @@ class GamePageFragment : Fragment() {
     }
 
     private fun updatePlayersInfo(playersList: ArrayList<PlayersState>) {
+        val isYouColor = TypedValue()
+        context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, isYouColor, true)
+        var isWinner: PlayersState? = null
+
         binding.playersInfoHolder.removeAllViews()
+        if (gameOver) {
+            var isHigher = playersList[0].score
+            for (player in playersList) {
+                if (player.score > isHigher) {
+                    isHigher = player.score
+                    isWinner = player
+                }
+            }
+        }
         for (player in playersList) {
             val playerInfo =
                 layoutInflater.inflate(R.layout.player_info, binding.playersInfoHolder, false)
@@ -677,9 +745,20 @@ class GamePageFragment : Fragment() {
             playerPoints.text = player.score.toString()
             playerPoints.typeface = Typeface.DEFAULT_BOLD
 
-            if (playersList.indexOf(player) == isPlaying) {
-                playerTurn.setBackgroundResource(R.drawable.player_turn_border)
+            if (player.username == LoggedInUser.getName()) {
+                playerName.setTextColor(isYouColor.data)
+                playerPoints.setTextColor(isYouColor.data)
             }
+            if (!gameOver) {
+                if (playersList.indexOf(player) == isPlaying) {
+                    playerTurn.setBackgroundResource(R.drawable.player_turn_border)
+                }
+            } else {
+                if (player == isWinner) playerTurn.setBackgroundColor(isYouColor.data)
+                binding.gameWinnerHolder.visibility = VISIBLE
+                binding.gameWinner.setText(HtmlCompat.fromHtml(getString(R.string.winnerName, player.username), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+            }
+
             binding.playersInfoHolder.addView(playerInfo)
         }
     }
@@ -716,7 +795,6 @@ class GamePageFragment : Fragment() {
         context?.theme?.resolveAttribute(R.attr.lettersOnBoard, alreadyOnBoard, true)
 
         binding.gameBoard.removeAllViews()
-
         for (row in gameBoardCoord.indices) { //row
             for (col in 0 until gameBoardCoord[row].size) { //col
                 if (gameBoardCoord[row][col] != "") {
@@ -761,17 +839,27 @@ class GamePageFragment : Fragment() {
         letterPoint.text = letterPoints[letter.text].toString()
         background.setCardBackgroundColor(backgroundColor)
 
-        if (letterToDraw[0].isUpperCase()) {
+        if (letterToDraw.length > 4) {
+            if (letterToDraw.substring(0,5) == "blank") {
+                letter.text = letterToDraw.substring(5,6).uppercase()
+                letterPoint.text = letterPoints["BLANK"].toString()
+            }
+        } else if (letterToDraw[0].isUpperCase()) {
+            letter.text = letterToDraw[0].toString()
+            letterPoint.text = letterPoints["BLANK"].toString()
+        } else if (letterToDraw == "BLANK") {
             letter.text = letterToDraw
             letterPoint.text = letterPoints["BLANK"].toString()
         }
+
         return letterTile
     }
 
-    private fun updateTurn() {
-        Log.d("UPDATE TURN ", "START")
+    private fun clearTurn() {
         updateBoard(lettersOnBoard)
         updateRack(playerHand)
+        binding.gameBoard.removeView(binding.gameBoard.findViewWithTag("activeTile"))
+        if (isInside) SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("x" to oldPosRow, "y" to oldPosCol)))
         isPlaced.clear()
         binding.buttonPlay.isEnabled = false
         binding.backInHand.visibility = GONE
@@ -779,7 +867,6 @@ class GamePageFragment : Fragment() {
         binding.jokerDetected.visibility = GONE
         binding.hintPanel.visibility = GONE
         isInside = false
-        Log.d("UPDATE TURN ", "END")
     }
 
     private fun updateMoveInfo(moveInfo: PlayerMessage?) {
@@ -922,6 +1009,9 @@ class GamePageFragment : Fragment() {
     private fun setTimer(): CountDownTimer {
         return object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
+                val initialColor = TypedValue()
+                context?.theme?.resolveAttribute(android.R.attr.textColor, initialColor, true)
+                binding.secondsTimer.setTextColor(initialColor.data)
                 val f : NumberFormat = DecimalFormat("00")
                 binding.timesup.visibility = GONE
                 if ((millisUntilFinished / 1000 % 60) < 10) {
@@ -931,6 +1021,7 @@ class GamePageFragment : Fragment() {
                 } else {
                     binding.minutesTimer.text = f.format(millisUntilFinished / 60000 % 60)
                     binding.secondsTimer.text = f.format(millisUntilFinished / 1000 % 60)
+                    binding.secondsTimer.setTextColor(initialColor.data)
                 }
 
             }

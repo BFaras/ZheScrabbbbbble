@@ -41,6 +41,14 @@ class GameStateModel: ViewModel() {
     val gameState: LiveData<GameState>
         get() = _gameState
 
+    private var _activeTile = MutableLiveData<Pair<String, Int>>()
+    val activeTile: LiveData<Pair<String, Int>>
+        get() = _activeTile
+
+    private var _deleteActiveTile = MutableLiveData<Pair<String, Int>>()
+    val deleteActiveTile: LiveData<Pair<String, Int>>
+        get() = _deleteActiveTile
+
     private var _timer = MutableLiveData<Timer>()
     val timer: LiveData<Timer>
         get() = _timer
@@ -94,6 +102,23 @@ class GameStateModel: ViewModel() {
 
         getGameState()
 
+        SocketHandler.getSocket().on("Get First Tile") { args ->
+            Log.i("args  ", args.toString())
+            val firstTileJSON = args[0] as JSONObject
+            Log.i("firstTileJSON ", firstTileJSON.toString())
+            val firstTileTemp = Pair(firstTileJSON.get("x") as String, firstTileJSON.get("y") as Int)
+            Log.i("firstTileTemp ", firstTileTemp.toString())
+            _activeTile.postValue(firstTileTemp)
+        }
+
+        SocketHandler.getSocket().on("Remove Selected Tile Response") { args ->
+            Log.i("args  ", args.toString())
+            val firstTileJSON = args[0] as JSONObject
+            Log.i("firstTileJSON ", firstTileJSON.toString())
+            val firstTileTemp = Pair(firstTileJSON.get("x") as String, firstTileJSON.get("y") as Int)
+            Log.i("firstTileTemp ", firstTileTemp.toString())
+            _deleteActiveTile.postValue(firstTileTemp)
+        }
     }
 
     fun getGameState() {
