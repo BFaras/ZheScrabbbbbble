@@ -26,8 +26,9 @@ export class WaitingRoomComponent {
         this.waitingRoomManagerService.startGame();
     }
 
-    goToGame(){
+    goToGame() {
         this.gameStateService.setObserver(-1);
+        this.gameStateService.setTournamentGame(false);
         this.router.navigate(['/game']).then(() => {
             this.gameStateService.requestGameState();
         });
@@ -43,27 +44,27 @@ export class WaitingRoomComponent {
         this.waitingRoomManagerService.leaveRoom();
     }
 
-    isHostPlayer(): boolean{
+    isHostPlayer(): boolean {
         return this.playersInRoom[0] === this.accountService.getUsername();
     }
 
-    newJoinRequest(data: [string, boolean]){
+    newJoinRequest(data: [string, boolean]) {
         this.pendingRequests.push(data);
     }
 
-    respondNextRequest(response: boolean){
+    respondNextRequest(response: boolean) {
         const data = this.pendingRequests.shift();
-        if(!data) return;
+        if (!data) return;
         this.waitingRoomManagerService.respondJoinRequest(response, data[0]);
-        if(response && this.playersInRoom.length >= 3){
+        if (response && this.playersInRoom.length >= 3) {
             this.refuseEveryone(false);
         }
     }
 
-    private refuseEveryone(refuseObservers: boolean){
+    private refuseEveryone(refuseObservers: boolean) {
         const newPendingRequests = [];
-        for(let data of this.pendingRequests){
-            if(!refuseObservers && data[1]){
+        for (let data of this.pendingRequests) {
+            if (!refuseObservers && data[1]) {
                 newPendingRequests.push(data);
                 continue;
             }
