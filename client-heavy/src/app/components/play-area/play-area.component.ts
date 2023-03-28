@@ -88,7 +88,6 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         if (this.receiver === "playarea") {
             if (this.gameState.players[this.gameState.playerTurnIndex].username !== this.accountService.getUsername()) return;
             this.buttonPressed = event.key;
-            console.log(this.buttonPressed);
             this.letterAdderService.onPressDown(this.buttonPressed);
         }
     }
