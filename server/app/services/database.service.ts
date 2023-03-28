@@ -276,6 +276,17 @@ export class DatabaseService {
         return errorCode;
     }
 
+    async removeFriend(userId: string, friendUserId: string): Promise<string> {
+        let errorCode: string = NO_ERROR;
+        await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)
+            ?.updateOne({ _id: new ObjectId(userId) }, { $pull: { friendsId: friendUserId } })
+            .catch(() => {
+                errorCode = DATABASE_UNAVAILABLE;
+            });
+
+        return errorCode;
+    }
+
     async getUserFriendList(userId: string): Promise<string[]> {
         let friendsList: string[] = [];
         const userFriendsDoc = await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)?.findOne({
@@ -351,7 +362,7 @@ export class DatabaseService {
         return error;
     }
 
-    async leaveChatCanal(userId: string, chatId: string) {
+    async leaveChatCanal(userId: string, chatId: string): Promise<boolean> {
         let wasUserRemovedFromChat = false;
         if (await this.isUserInChat(userId, chatId)) {
             wasUserRemovedFromChat = true;
@@ -435,8 +446,28 @@ export class DatabaseService {
         let chatId = '';
 
         if (globalChatDoc !== undefined && globalChatDoc !== null) {
-            chatId = (globalChatDoc as unknown as ChatInfo)._id;
+            chatId = (globalChatDoc as unknown as ChatInfo)._id.toString();
         }
+        return chatId;
+    }
+
+    async getFriendChatId(possibleChatName1: string, possibleChatName2: string): Promise<string> {
+        const possibleChatDoc1 = await this.getCollection(CollectionType.CHATCANALS)?.findOne(
+            { chatType: ChatType.PRIVATE, chatName: possibleChatName1 },
+            { projection: { chatType: 1, chatName: 1 } },
+        );
+        const possibleChatDoc2 = await this.getCollection(CollectionType.CHATCANALS)?.findOne(
+            { chatType: ChatType.PRIVATE, chatName: possibleChatName2 },
+            { projection: { chatType: 1, chatName: 1 } },
+        );
+        let chatId = '';
+
+        if (possibleChatDoc1 !== undefined && possibleChatDoc1 !== null) {
+            chatId = (possibleChatDoc1 as unknown as ChatInfo)._id.toString();
+        } else if (possibleChatDoc2 !== undefined && possibleChatDoc2 !== null) {
+            chatId = (possibleChatDoc2 as unknown as ChatInfo)._id.toString();
+        }
+
         return chatId;
     }
 
