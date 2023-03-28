@@ -1,3 +1,4 @@
+import { NO_ERROR } from '@app/constants/error-code-constants';
 import { UserStatus } from '@app/interfaces/friend-info';
 import * as io from 'socket.io';
 import { Container, Service } from 'typedi';
@@ -43,6 +44,10 @@ export class FriendSocketService {
             const friendUserId = await this.dbService.getUserId(friendUsername);
             const errorCode: string = await this.friendService.removeFriend(this.accountInfoService.getUserId(socket), friendUserId);
 
+            if (errorCode === NO_ERROR) {
+                this.updateFriendRemovedAsFriend(friendUserId, this.accountInfoService.getUsername(socket));
+            }
+
             socket.emit('Remove Friend Response', errorCode);
         });
     }
@@ -54,5 +59,11 @@ export class FriendSocketService {
     private async updateFriendsWithNewStatus(userStatus: UserStatus) {
         const username: string = await this.dbService.getUsernameFromId(userStatus.userId);
         this.sio?.in(this.friendService.getFriendRoomName(userStatus.userId)).emit('Update friend status', username, userStatus.status);
+    }
+
+    private async updateFriendRemovedAsFriend(userId: string, usernameOfFriend: string) {
+        if (this.usersStatusService.isUserOnline(userId)) {
+            this.usersStatusService.getUserSocketFromId(userId)?.emit('Friend removed you as friend', usernameOfFriend);
+        }
     }
 }

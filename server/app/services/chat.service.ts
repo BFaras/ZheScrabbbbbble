@@ -37,6 +37,7 @@ export class ChatService {
 
         if (friendUserId !== '') {
             const chatCreationResponse: ChatCreationResponse = await this.createChat(userId, chatName, ChatType.PRIVATE);
+            errorCode = chatCreationResponse.errorCode;
             if (errorCode === NO_ERROR) {
                 errorCode = await this.joinChat(friendUserId, chatCreationResponse.chatId);
             }
@@ -65,6 +66,7 @@ export class ChatService {
         let errorCode = NO_ERROR;
         if (!(await this.dbService.joinChatCanal(userId, chatId))) {
             errorCode = DATABASE_UNAVAILABLE;
+        } else {
             this.userSocketService.userSocketJoinRoom(userId, this.getChatRoomName(chatId));
         }
         return errorCode;
@@ -75,6 +77,7 @@ export class ChatService {
 
         if (!(await this.dbService.leaveChatCanal(userId, chatId))) {
             errorCode = DATABASE_UNAVAILABLE;
+        } else {
             this.userSocketService.userSocketLeaveRoom(userId, this.getChatRoomName(chatId));
         }
         return errorCode;

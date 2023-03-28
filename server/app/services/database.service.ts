@@ -446,7 +446,7 @@ export class DatabaseService {
         let chatId = '';
 
         if (globalChatDoc !== undefined && globalChatDoc !== null) {
-            chatId = (globalChatDoc as unknown as ChatInfo)._id;
+            chatId = (globalChatDoc as unknown as ChatInfo)._id.toString();
         }
         return chatId;
     }
@@ -463,9 +463,9 @@ export class DatabaseService {
         let chatId = '';
 
         if (possibleChatDoc1 !== undefined && possibleChatDoc1 !== null) {
-            chatId = (possibleChatDoc1 as unknown as ChatInfo)._id;
+            chatId = (possibleChatDoc1 as unknown as ChatInfo)._id.toString();
         } else if (possibleChatDoc2 !== undefined && possibleChatDoc2 !== null) {
-            chatId = (possibleChatDoc2 as unknown as ChatInfo)._id;
+            chatId = (possibleChatDoc2 as unknown as ChatInfo)._id.toString();
         }
 
         return chatId;
