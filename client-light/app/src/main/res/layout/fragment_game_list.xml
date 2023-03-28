@@ -1,289 +1,376 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?backgroundColor"
     tools:context=".GameListFragment">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:fontFamily="@font/shrikhand"
+        android:text="@string/scrabbleName"
+        android:textColor="?colorSecondary"
+        android:layout_marginTop="70dp"
+        android:textSize="70sp">
+    </TextView>
 
-    <ScrollView
-        android:id="@+id/gameListSection"
-        android:layout_width="400dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="@drawable/background_side_panel"
+        android:backgroundTint="?colorSecondary"
+        android:layout_gravity="center|end">
+
+        <ImageButton
+            android:id="@+id/buttonprofil"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/ic_profil"
+            android:layout_gravity="center_vertical" />
+
+        <ImageButton
+            android:id="@+id/buttonchat"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_chat"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="300dp"
-        android:padding="30dp"
-        android:paddingBottom="50dp"
-        android:layout_marginTop="50dp"
-        app:layout_constraintHorizontal_bias="0.25"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
+        android:layout_gravity="center"
+        android:divider="@drawable/letters_hand_divider"
+        android:showDividers="middle"
+        android:gravity="center_vertical|center"
+        android:orientation="horizontal"
+        >
         <LinearLayout
-            android:id="@+id/gameList"
-            android:layout_width="match_parent"
+            android:id="@+id/gameListSection"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:overScrollMode="never"
-            android:scrollbars="vertical"
-            tools:layout_editor_absoluteX="1dp"
-            tools:layout_editor_absoluteY="25dp"/>
-    </ScrollView>
+            android:layout_marginRight="15dp"
+            android:padding="8dp"
+            android:background="@drawable/background_direction_panel"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:fontFeatureSettings="smcp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:text="join a room">
+
+            </TextView>
+            <ScrollView
+                android:layout_width="400dp"
+                android:layout_height="match_parent"
+                android:scrollbars="none"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:id="@+id/gameList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:overScrollMode="never"
+                    android:scrollbars="vertical">
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+
+
+        <FrameLayout
+            android:id="@+id/createSection"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|end"
+            android:background="@drawable/background_direction_panel"
+            android:visibility="visible"
+            android:padding="15dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:fontFeatureSettings="smcp"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:text="@string/create_a_room" />
+
+                <RadioGroup
+                    android:id="@+id/roomType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center"
+
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/privateRoom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="?colorSecondary"
+                        android:text="@string/privateRoom" />
+
+                    <RadioButton
+                        android:id="@+id/publicRoom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:buttonTint="?colorSecondary"
+                        android:text="@string/publicRoom" />
+
+                    <RadioButton
+                        android:id="@+id/protectedRoom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="?colorSecondary"
+                        android:text="@string/protectedRoom" />
+                </RadioGroup>
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="Room name"
+                    android:background="@drawable/background_direction_panel"
+                    android:backgroundTint="?colorPrimaryVariant"
+                    android:padding="8dp"
+                    android:hint="@string/enter_a_room_name"
+                    android:imeOptions="actionDone"
+                    android:importantForAutofill="no"
+                    android:includeFontPadding="true"
+                    android:inputType="textShortMessage"
+                    android:textSize="15dp"
+                    android:textColorHint="?colorOnPrimary"
+                    android:textColor="?colorOnPrimary"
+                    android:selectAllOnFocus="true" />
+
+                <EditText
+                    android:id="@+id/createPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_direction_panel"
+                    android:backgroundTint="?colorPrimaryVariant"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp"
+                    android:autofillHints="@string/prompt_password"
+                    android:hint="@string/prompt_password"
+                    android:fontFeatureSettings="smcp"
+                    android:textSize="15dp"
+                    android:imeOptions="actionDone"
+                    android:importantForAutofill="no"
+                    android:includeFontPadding="true"
+                    android:inputType="textShortMessage"
+                    android:selectAllOnFocus="true"
+                    android:textColorHint="?colorOnPrimary"
+                    android:visibility="gone" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/createBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/background_chat_input"
+                    android:backgroundTint="?colorSecondary"
+                    android:textColor="@color/black"
+                    android:text="Create" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/observerSection"
         android:layout_width="400dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
-        android:background="?colorOnPrimary"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@drawable/background_direction_panel"
+        android:backgroundTint="?colorSecondary"
+        android:visibility="gone">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="30dp"
-            android:text="Do you want to join as an observer?"
-            app:layout_constraintHorizontal_bias="0.50" />
-
-
-        <Button
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/cancel_observer_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_cancel"
+            android:backgroundTint="?colorPrimary"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="top|end"
+            android:text="Cancel" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="120dp"
-            android:layout_marginEnd="48dp"
-            android:layout_marginBottom="24dp"
-            android:text="Cancel"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.50"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.2" />
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:gravity="center">
 
-        <Button
-            android:id="@+id/player_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="138dp"
-            android:layout_marginTop="120dp"
-            android:layout_marginEnd="48dp"
-            android:layout_marginBottom="24dp"
-            android:text="Player"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.50"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.2" />
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:fontFeatureSettings="smcp"
+                android:text="@string/join_game_text" />
 
-        <Button
-            android:id="@+id/observer_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="245dp"
-            android:layout_marginTop="120dp"
-            android:layout_marginEnd="28dp"
-            android:layout_marginBottom="24dp"
-            android:text="Observer"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.50"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.2" />
-    </FrameLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/player_button"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/background_chat_input"
+                    android:backgroundTint="?colorPrimary"
+                    android:textStyle="bold"
+                    android:text="Player" />
 
-    <FrameLayout
-        android:id="@+id/passwordSection"
-        android:layout_width="300dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:background="?colorOnPrimary"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="30dp"
-            android:text="Enter the password"
-            app:layout_constraintHorizontal_bias="0.50" />
-
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="70dp"
-            android:autofillHints="@string/prompt_password"
-            android:hint="@string/prompt_password"
-            android:inputType="text"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/cancel_protected_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="120dp"
-            android:layout_marginEnd="48dp"
-            android:layout_marginBottom="24dp"
-            android:text="Cancel"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.50"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.2" />
-
-        <Button
-            android:id="@+id/join_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="128dp"
-            android:layout_marginTop="120dp"
-            android:layout_marginEnd="48dp"
-            android:layout_marginBottom="24dp"
-            android:text="Join"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.50"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.2" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/observer_button"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_chat_input"
+                    android:backgroundTint="?colorPrimary"
+                    android:textStyle="bold"
+                    android:text="Observer" />
+            </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/cancelSection"
         android:layout_width="300dp"
-        android:layout_height="200dp"
+        android:layout_height="170dp"
         android:layout_gravity="center"
-        android:background="?colorOnPrimary"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="30dp"
-            android:text="Waiting for host approval"
-            app:layout_constraintHorizontal_bias="0.50" />
-
-
-        <Button
-            android:id="@+id/cancel_private_button"
+        android:background="@drawable/background_direction_panel"
+        android:backgroundTint="?colorSecondary"
+        android:visibility="gone">
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="48dp"
-            android:layout_marginTop="120dp"
-            android:layout_marginEnd="48dp"
-            android:layout_marginBottom="24dp"
-            android:text="Cancel"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.50"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.2" />
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:fontFeatureSettings="smcp"
+                android:layout_marginBottom="8dp"
+                android:text="waiting for host approval" />
+            <ProgressBar
+                android:layout_weight="1"
+                android:id="@+id/progressBar_cyclic"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:indeterminate="true"
+                android:indeterminateTint="?colorPrimary"
+                android:layout_height="0dp"
+                android:minHeight="40dp"
+                android:minWidth="40dp" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/cancel_private_button"
+                android:layout_marginTop="8dp"
+                android:layout_width="150dp"
+                android:layout_height="35dp"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorPrimary"
+                android:text="Cancel" />
+        </LinearLayout>
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/createSection"
-        android:layout_width="250dp"
-        android:layout_height="300dp"
-        android:layout_marginEnd="200dp"
-        android:layout_marginBottom="200dp"
-        android:background="?colorOnPrimary"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:id="@+id/passwordSection"
+        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
 
-        <RadioGroup
-            android:id="@+id/roomType"
-            android:layout_width="250dp"
-            android:layout_height="300dp"
-            android:layout_marginTop="30dp"
-            android:orientation="horizontal">
+        android:background="@drawable/background_direction_panel"
+        android:backgroundTint="?colorSecondary"
+        android:visibility="gone">
 
-            <RadioButton
-                android:id="@+id/privateRoom"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cancel_protected_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_cancel"
+            android:backgroundTint="?colorPrimary"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="top|end"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="30dp"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Private" />
+                android:fontFeatureSettings="smcp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp"
+                android:text="@string/enter_the_room_password" />
 
-            <RadioButton
-                android:id="@+id/publicRoom"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Public" />
+                android:background="@drawable/background_direction_panel"
+                android:backgroundTint="?colorPrimary"
+                android:padding="8dp"
+                android:textSize="15dp"
+                android:fontFeatureSettings="smcp"
+                android:autofillHints="@string/prompt_password"
+                android:hint="@string/prompt_password"
+                android:inputType="text"
+                android:selectAllOnFocus="true" />
 
-            <RadioButton
-                android:id="@+id/protectedRoom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Protected" />
-        </RadioGroup>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/join_button"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorPrimary"
+                android:text="Join" />
+        </LinearLayout>
 
-        <EditText
-            android:id="@+id/name"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="80dp"
-            android:layout_marginEnd="20dp"
-            android:autofillHints="Room name"
-            android:hint="Room name"
-            android:inputType="text"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/createPassword"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="130dp"
-            android:layout_marginEnd="20dp"
-            android:autofillHints="@string/prompt_password"
-            android:hint="@string/prompt_password"
-            android:inputType="text"
-            android:selectAllOnFocus="true"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/name" />
-
-        <Button
-            android:id="@+id/createBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginStart="70dp"
-            android:layout_marginTop="220dp"
-            android:layout_marginEnd="70dp"
-            android:text="Create"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/createPassword" />
     </FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

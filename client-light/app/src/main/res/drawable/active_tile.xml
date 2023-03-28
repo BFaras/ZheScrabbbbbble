@@ -8,14 +8,13 @@
 
     <!-- View border color and width -->
     <stroke
-        android:width="3dp"
-        android:color="?attr/playerSelection" >
+        android:width="5dp"
+        android:color="?activeTile" >
     </stroke>
 
     <!-- The radius makes the corners rounded -->
     <corners
-        android:radius="5dp"   >
+        android:radius="2dp"   >
     </corners>
-
 
 </shape>

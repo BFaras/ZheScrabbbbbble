@@ -1,7 +1,7 @@
 package com.example.testchatbox
 
+import android.content.Context
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -9,6 +9,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatDelegate
+import com.example.testchatbox.ThemeManager.setCustomizedThemes
+import com.example.testchatbox.ThemeStorage.getThemeColor
 import com.example.testchatbox.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setCustomizedThemes(this,getThemeColor(this));
         SocketHandler.setSocket()
         SocketHandler.establishConnection()
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -50,5 +54,39 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
             || super.onSupportNavigateUp()
+    }
+}
+
+object ThemeStorage {
+    fun setThemeColor(context: Context, themeColor: String?) {
+        val sharedpreferences = context.getSharedPreferences("theme_data", Context.MODE_PRIVATE)
+        val editor = sharedpreferences.edit()
+        editor.putString("theme", themeColor)
+        editor.apply()
+    }
+
+    fun getThemeColor(context: Context): String? {
+        val sharedpreferences = context.getSharedPreferences("theme_data", Context.MODE_PRIVATE)
+        return sharedpreferences.getString("theme", "grey")
+    }
+}
+
+object ThemeManager {
+    fun setCustomizedThemes(context: Context, theme: String?) {
+        when (theme) {
+            "cremebrulee" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            "eclipse" -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                context.setTheme(R.style.EclipseTheme)
+            }
+            "astronaute" -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                context.setTheme(R.style.PinkTheme)
+            }
+            "blizzard" -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                context.setTheme(R.style.BlizzardTheme)
+            }
+        }
     }
 }

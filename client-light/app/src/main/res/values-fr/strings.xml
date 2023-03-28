@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">SCRABBLE</string>
 
@@ -19,9 +20,6 @@
     <string name="rejoindre"><![CDATA[%1$s veut rejoindre votre partie.]]></string>
     <string name="accepter">Accepter</string>
     <string name="refuser">Refuser</string>
-
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="swap">Échanger</string>
     <string name="reserveText">LETTRES RESTANTES DANS LA RÉSERVE</string>
@@ -39,13 +37,13 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Courriel</string>
-    <string name="prompt_username"><i>Nom d\'utilisateur</i></string>
-    <string name="prompt_password"><i>Mot de passe</i></string>
-    <string name="action_sign_in">Se connecter</string>
-    <string name="action_sign_in_short">Se connecter</string>
+    <string name="prompt_username">Nom d\'utilisateur</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="action_sign_in">Se Connecter</string>
+    <string name="action_sign_in_short">Se Connecter</string>
     <string name="welcome">"Bienvenue!"</string>
-    <string name="invalid_username">Pas un nom valid</string>
-    <string name="invalid_email">Pas un courriel valid</string>
+    <string name="invalid_username">Pas un nom valide</string>
+    <string name="invalid_email">Pas un courriel valide</string>
     <string name="invalid_password">Le mot de passe doit contenir au moins 5 caractères</string>
     <string name="invalid_question">La question ne peut être vide</string>
     <string name="invalid_answer">La réponse ne peut être vide</string>
@@ -82,29 +80,13 @@
     <string name="forgotPasswordText">Mot de passe oublié?</string>
     <string name="reset_password">Réinitialiser mot de passe</string>
     <string name="register">Inscription</string>
-    <string name="fr" translatable="false">FR</string>
-    <string name="en" translatable="false">EN</string>
     <string name="security_question">Question de sécurité</string>
     <string name="answer">Réponse</string>
-    <string name="passwordResetProcess">Enter a username to start the password reset process.</string>
-    <string name="reset">Reset</string>
+    <string name="passwordResetProcess">Tapez un nom pour commencer le processus de récupération du mot de passe.</string>
+    <string name="reset">"réinitialisation "</string>
     <string name="answerReset">Réponse</string>
     <string name="new_password">Nouveau mot de passe</string>
-    <string name="register_new_passsword">Register New Passsword</string>
-    <string name="times_up">TIME\'S UP!</string>
-    <string name="talkingIntext">Now talking in</string>
-    <string name="manage_chats">Manage Chats</string>
-    <string name="hello_message"><![CDATA[Hello <b>%1$s</b>!]]></string>
-    <string name="privateRoom">Private</string>
-    <string name="publicRoom">Public</string>
-    <string name="protectedRoom">Protected</string>
-    <string name="join_game_text">Do you want to join the game as an observer?</string>
-    <string name="enter_the_room_password">enter the room password</string>
-    <string name="quit">Quitter</string>
-    <string name="winnerName"><![CDATA[%1$s a gagné la partie!]]></string>
-    <string name="waitingRoomText">Si l\'hôte décide de lancer la partie et qu\'il y a au minimum 2 joueurs , les places restantes seront comblées par des Joueurs Virtuels.</string>
-    <string name="create_a_room">create a room</string>
-    <string name="enter_a_room_name"><i>Enter a room name</i></string>
-    <string name="enter_a_chat_name"><i>Enter a chat name</i></string>
-
+    <string name="register_new_passsword">Enregister le nouveau mot de passe</string>
+    <string name="times_up">TEMPS ÉCOULÉ!</string>
+    <string name="talkingIntext">Présentement dans</string>
 </resources>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_200">#FFBB86FC</color>
+    <color name="SlateWhite">#fbf9fb</color>
+    <color name="grayWhite">#e3e1e3</color>
+    <color name="BlueBlack">#343239</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
@@ -37,6 +40,11 @@
     <color name="FloralWhite">#FFFAF0</color>
     <color name="LemonChiffon">#FFFACD</color>
     <color name="Cornsilk">#FFF8DC</color>
+    <color name="BrightSunset">#EE4540</color>
+    <color name="Sunset">#C72C41</color>
+    <color name="LowSunset">#801336</color>
+    <color name="PurpleSunset">#510A32</color>
+    <color name="DarkSunset">#2D142C</color>
     <color name="Seashell">#FFF5EE</color>
     <color name="LavenderBlush">#FFF0F5</color>
     <color name="PapayaWhip">#FFEFD5</color>
@@ -158,6 +166,7 @@
     <color name="SpringGreen">#00FF7F</color>
     <color name="clearSea">#164557</color>
     <color name="Lime">#00FF00</color>
+    <color name="BabyPink">#cf9cb2</color>
     <color name="MediumSpringGreen">#00FA9A</color>
     <color name="DarkTurquoise">#00CED1</color>
     <color name="DeepSkyBlue">#00BFFF</color>
@@ -170,6 +179,7 @@
     <color name="MediumBlue">#0000CD</color>
     <color name="DarkBlue">#00008B</color>
     <color name="Navy">#000080</color>
+    <color name="Platinium">#274e5c</color>
     <color name="Black">#000000</color>
     <color name="light_blue_400">#FF29B6F6</color>
     <color name="light_blue_600">#FF039BE5</color>
