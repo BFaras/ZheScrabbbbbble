@@ -1,126 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="?backgroundColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
     tools:context=".chat.ManageChatFragment">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="@drawable/background_side_panel"
+        android:backgroundTint="?colorSecondary"
+        android:layout_gravity="center|end">
 
-    <ScrollView
+        <ImageButton
+            android:id="@+id/buttonprofil"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/ic_profil"
+            android:layout_gravity="center_vertical" />
+
+        <ImageButton
+            android:id="@+id/buttonchat"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_chat"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="500dp"
+    android:orientation="horizontal"
+    android:layout_gravity="center"
+    android:showDividers="middle"
+    android:divider="@drawable/letters_hand_divider"
+    android:gravity="center_vertical">
+
+    <LinearLayout
         android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:padding="30dp"
-        android:paddingBottom="50dp"
-        android:layout_marginTop="50dp"
-        app:layout_constraintBottom_toBottomOf="@id/viewBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/viewBackground">
-
-        <LinearLayout
-            android:id="@+id/chatList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:overScrollMode="never"
-            android:scrollbars="vertical"
-            tools:layout_editor_absoluteX="1dp"
-            tools:layout_editor_absoluteY="25dp"/>
-    </ScrollView>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="300dp"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:background="@drawable/background_direction_panel"
+        android:gravity="center">
 
         <TextView
-            android:id="@+id/textviewCreate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:fontFeatureSettings="smcp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:text="joined public chats"></TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:fontFeatureSettings="smcp"
+            android:textStyle="bold|italic"
+            android:textSize="12sp"
+            android:textColor="?colorSecondary"
+            android:text="(pss...you can quit any room by clicking it)"></TextView>
+        <ScrollView
+            android:layout_width="300dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="65dp"
-            android:text="You can create a public chat or join one from the list on the right"
-            android:textSize="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:padding="30dp"
+            android:background="@drawable/background_direction_panel">
+
+            <LinearLayout
+                android:id="@+id/chatList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center|top"
+    android:showDividers="middle"
+    android:layout_marginTop="50dp"
+    android:divider="@drawable/letters_hand_divider"
+    android:gravity="center">
+    <TextView
+        android:id="@+id/textviewCreate"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginBottom="50dp"
+        android:text="you can create a public chat or join one from the list on the right"
+        android:fontFeatureSettings="smcp"
+        android:textAlignment="center"
+        android:textSize="18dp" />
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:background="@drawable/background_direction_panel"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:fontFeatureSettings="smcp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_marginBottom="10dp"
+            android:text="create a public chat" />
 
         <EditText
             android:id="@+id/chatName"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:background="@drawable/background_chat_input"
-            android:ems="10"
-            android:hint="Chat name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:background="@drawable/background_direction_panel"
+            android:backgroundTint="?colorPrimaryVariant"
+            android:textColorHint="?colorOnPrimary"
+            android:textColor="?colorOnPrimary"
+            android:hint="@string/enter_a_chat_name"
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:includeFontPadding="true"
             android:inputType="textShortMessage"
-            android:padding="10dp"
-            android:paddingStart="20dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.50" />
-
-        <Button
-            android:id="@+id/createChat"
-            android:layout_width="90dp"
-            android:layout_height="40dp"
-            android:layout_margin="50dp"
-            android:text="Create"
-            android:textSize="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.603"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.65" />
-
-        <Button
-            android:id="@+id/reloadChats"
-            android:layout_width="90dp"
-            android:layout_height="40dp"
-            android:layout_margin="50dp"
-            android:text="Reload"
-            android:textSize="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.603"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.75" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ScrollView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:padding="30dp"
-        android:paddingBottom="50dp"
-        android:layout_marginTop="50dp"
-        app:layout_constraintBottom_toBottomOf="@id/viewBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/viewBackground">
+            android:textSize="15sp"
+            android:visibility="visible" />
 
         <LinearLayout
-            android:id="@+id/publicChatList"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/createChat"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorSecondary"
+                android:textColor="@color/black"
+                android:text="Create"
+                android:textSize="12dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/reloadChats"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorSecondary"
+                android:textColor="@color/black"
+                android:text="Reload"
+                android:textSize="12dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:background="@drawable/background_direction_panel"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:fontFeatureSettings="smcp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:text="join a public chat"></TextView>
+        <ScrollView
+            android:layout_width="300dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:overScrollMode="never"
-            android:scrollbars="vertical"
-            tools:layout_editor_absoluteX="1dp"
-            tools:layout_editor_absoluteY="25dp"/>
+            android:padding="30dp"
+           >
+            <LinearLayout
+                android:id="@+id/publicChatList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:overScrollMode="never"
+                android:scrollbars="none"/>
 
-    </ScrollView>
-
+        </ScrollView>
+    </LinearLayout>
 
 </LinearLayout>
+
+
+
+
+
+
+
+</FrameLayout>
