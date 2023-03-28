@@ -16,6 +16,7 @@ export class GameRoom {
     private gameStarted: boolean;
     private observers: string[] = [];
 
+
     constructor(id: string, name: string, visibility: RoomVisibility, password?: string) {
         this.id = id;
         this.name = name;
@@ -89,11 +90,12 @@ export class GameRoom {
         return this.players.length;
     }
 
-    getRealPlayerCount(): number {
+    getRealPlayerCount(includeObservers: boolean): number {
         let count = 0; 
         for(const player of this.players){
             if(!(player instanceof VirtualPlayer)) count++;
         }
+        if(includeObservers) count += this.observers.length;
         return count;
     }
 

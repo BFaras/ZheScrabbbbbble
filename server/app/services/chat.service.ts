@@ -1,19 +1,22 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
-import { ChatCreationResponse, ChatInfo, ChatInfoDB, ChatType, PRIVATE_CHAT_IDS_SEPARATOR } from '@app/interfaces/chat-info';
+import { ChatCreationResponse, ChatInfo, ChatInfoDB, ChatType, CHAT_ROOM_BEGINNING, PRIVATE_CHAT_IDS_SEPARATOR } from '@app/interfaces/chat-info';
 import { ChatMessage, ChatMessageDB, ChatUserInfo } from '@app/interfaces/chat-message';
 import { Container, Service } from 'typedi';
 import { ChatGameHistoryService } from './chat-game-history.service';
 import { DatabaseService } from './database.service';
+import { UserSocketService } from './user-socket.service';
 
 @Service()
 export class ChatService {
     private dbService: DatabaseService;
     private chatGameHistoryService: ChatGameHistoryService;
+    private userSocketService: UserSocketService;
 
     constructor() {
         this.dbService = Container.get(DatabaseService);
         this.chatGameHistoryService = Container.get(ChatGameHistoryService);
+        this.userSocketService = Container.get(UserSocketService);
     }
 
     async createChat(userId: string, chatName: string, chatType: ChatType): Promise<ChatCreationResponse> {
@@ -29,13 +32,30 @@ export class ChatService {
     }
 
     async createFriendsChat(userId: string, friendUserId: string): Promise<string> {
-        const chatName = userId + PRIVATE_CHAT_IDS_SEPARATOR + friendUserId;
-        let errorCode = DATABASE_UNAVAILABLE;
+        const chatName = this.getFriendChatName(userId, friendUserId);
+        let errorCode: string = DATABASE_UNAVAILABLE;
 
         if (friendUserId !== '') {
             const chatCreationResponse: ChatCreationResponse = await this.createChat(userId, chatName, ChatType.PRIVATE);
-            if (chatCreationResponse.errorCode === NO_ERROR) {
+            errorCode = chatCreationResponse.errorCode;
+            if (errorCode === NO_ERROR) {
                 errorCode = await this.joinChat(friendUserId, chatCreationResponse.chatId);
+            }
+        }
+
+        return errorCode;
+    }
+
+    async removeFriendsChat(userId: string, friendUserId: string): Promise<string> {
+        const possibleChatName1 = this.getFriendChatName(userId, friendUserId);
+        const possibleChatName2 = this.getFriendChatName(friendUserId, userId);
+        const friendChatId = await this.dbService.getFriendChatId(possibleChatName1, possibleChatName2);
+        let errorCode: string = DATABASE_UNAVAILABLE;
+
+        if (friendChatId !== '' && friendUserId !== '') {
+            errorCode = await this.leaveChat(userId, friendChatId);
+            if (errorCode === NO_ERROR) {
+                await this.leaveChat(friendUserId, friendChatId);
             }
         }
 
@@ -46,6 +66,8 @@ export class ChatService {
         let errorCode = NO_ERROR;
         if (!(await this.dbService.joinChatCanal(userId, chatId))) {
             errorCode = DATABASE_UNAVAILABLE;
+        } else {
+            this.userSocketService.userSocketJoinRoom(userId, this.getChatRoomName(chatId));
         }
         return errorCode;
     }
@@ -55,6 +77,8 @@ export class ChatService {
 
         if (!(await this.dbService.leaveChatCanal(userId, chatId))) {
             errorCode = DATABASE_UNAVAILABLE;
+        } else {
+            this.userSocketService.userSocketLeaveRoom(userId, this.getChatRoomName(chatId));
         }
         return errorCode;
     }
@@ -98,6 +122,10 @@ export class ChatService {
         }
     }
 
+    getChatRoomName(chatId: string) {
+        return CHAT_ROOM_BEGINNING + chatId;
+    }
+
     private async createGlobalChat(userId: string): Promise<boolean> {
         if (!(await this.dbService.isGlobalChatExistant())) {
             await this.createChat(userId, 'Global Chat', ChatType.GLOBAL);
@@ -110,6 +138,10 @@ export class ChatService {
         const idsInChatName: string[] = currentChatName.split(PRIVATE_CHAT_IDS_SEPARATOR);
         const friendUserId = idsInChatName[0] !== userId ? idsInChatName[0] : idsInChatName[1];
         return this.dbService.getUsernameFromId(friendUserId);
+    }
+
+    private getFriendChatName(userId: string, friendUserId: string): string {
+        return userId + PRIVATE_CHAT_IDS_SEPARATOR + friendUserId;
     }
 
     private createChatMessageDB(userId: string, chatMessage: ChatMessage): ChatMessageDB {
