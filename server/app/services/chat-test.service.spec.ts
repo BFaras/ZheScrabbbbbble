@@ -4,13 +4,16 @@
 /* eslint-disable dot-notation */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
+import { ServerSocketTestHelper } from '@app/classes/server-socket-test-helper';
 import { NO_ERROR } from '@app/constants/error-code-constants';
 import { ChatInfo, ChatType } from '@app/interfaces/chat-info';
 import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import * as io from 'socket.io';
 import { Container } from 'typedi';
 import { ChatService } from './chat.service';
 import { DatabaseService } from './database.service';
+import { UsersStatusService } from './users-status.service';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 
@@ -25,6 +28,7 @@ describe('Chat Tests', async () => {
     let mongoServer: MongoMemoryServer;
     let chatService: ChatService;
     let dbService: DatabaseService;
+    let usersStatusService: UsersStatusService;
     let chatIds: string[] = [];
 
     before(async () => {
@@ -35,6 +39,9 @@ describe('Chat Tests', async () => {
 
     beforeEach(async () => {
         chatService = Container.get(ChatService);
+        usersStatusService = Container.get(UsersStatusService);
+        usersStatusService.addOnlineUser(testUserId, new ServerSocketTestHelper('fdsjhshdf464fds65') as unknown as io.Socket);
+        usersStatusService.addOnlineUser(testUserId2, new ServerSocketTestHelper('uusahdsfnbnsah89') as unknown as io.Socket);
     });
 
     afterEach(async () => {
