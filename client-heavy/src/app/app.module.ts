@@ -18,7 +18,11 @@ import { MaterialPageComponent } from '@app/pages/material-page/material-page.co
 import { SoloMultiPageComponent } from '@app/pages/solo-multi-page/solo-multi-page.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { BlankTilePopUpComponent } from './components/blank-tile-pop-up/blank-tile-pop-up.component';
+import { ChangeNamePopUpComponent } from './components/change-name-pop-up/change-name-pop-up.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { ConnectionHistoryAreaComponent } from './components/connection-history-area/connection-history-area.component';
+import { FormerActionHistoryAreaComponent } from './components/former-action-history-area/former-action-history-area.component';
 import { CreateGameComponent } from './components/game-initialisation/create-game/create-game.component';
 import { JoinGameComponent } from './components/game-initialisation/join-game/join-game.component';
 import { ObserverRoomComponent } from './components/game-initialisation/observer-room/observer-room.component';
@@ -33,6 +37,7 @@ import { NavigationBarComponent } from './components/navigation-bar/navigation-b
 import { PasswordLostAreaComponent } from './components/password-lost-area/password-lost-area.component';
 import { AvatarPopUpComponent } from './components/profil-pop-up/avatar-pop-up/avatar-pop-up.component';
 import { SignUpAreaComponent } from './components/sign-up-area/sign-up-area.component';
+import { SignUpAvatarPopUpComponent } from './components/sign-up-avatar-pop-up/sign-up-avatar-pop-up.component';
 import { TimerComponent } from './components/timer/timer.component';
 import { WindowComponent } from './components/window/window.component';
 import { ChatPageComponent } from './pages/chat-page/chat-page.component';
@@ -42,9 +47,10 @@ import { PasswordLostPageComponent } from './pages/password-lost-page/password-l
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { PublicChatsComponent } from './pages/public-chats/public-chats.component';
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
+import { BracketPageComponent } from './pages/tournament-pages/bracket-page/bracket-page.component';
+import { QueuePageComponent } from './pages/tournament-pages/queue-page/queue-page.component';
+import { ResultPageComponent } from './pages/tournament-pages/result-page/result-page.component';
 import { ChatService } from './services/chat-service/chat.service';
-import { SignUpAvatarPopUpComponent } from './components/sign-up-avatar-pop-up/sign-up-avatar-pop-up.component';
-import { BlankTilePopUpComponent } from './components/blank-tile-pop-up/blank-tile-pop-up.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -94,8 +100,14 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         NavigationBarComponent,
         FriendsPageComponent,
         PublicChatsComponent,
+        QueuePageComponent,
+        BracketPageComponent,
+        ResultPageComponent,
         SignUpAvatarPopUpComponent,
         BlankTilePopUpComponent,
+        ConnectionHistoryAreaComponent,
+        FormerActionHistoryAreaComponent,
+        ChangeNamePopUpComponent,
     ],
     imports: [
         AppMaterialModule,
@@ -118,7 +130,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
             }
         })
     ],
-    providers: [ChatService],
+    providers: [ChatService, ProfilePageComponent, LanguageComponent],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

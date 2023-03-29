@@ -2,7 +2,8 @@
     <app-language></app-language>
     <div id="buttons">
         <p class="tabs" routerLink="/home" (click)="callNavLogic()" >{{ 'NAVBAR.HOME' | translate }}</p>
-        <p class="tabs" routerLink="/profile-page" (click)="callNavLogic()" >{{ 'NAVBAR.PROFILE' | translate }}</p>
+        <p class="tabs" routerLink="/profile-page" (click)="callNavLogic()">{{ 'NAVBAR.PROFILE' | translate }}</p>
+        <p class="tabs" routerLink="/friends-page" (click)="callNavLogic()" >{{ 'NAVBAR.FRIENDS' | translate }}</p>
         <p class="tabs" routerLink="/chat" (click)="callNavLogic()" >{{ 'NAVBAR.CHAT' | translate }}</p>
         <p class="tabs" (click) = "disconnectUser()" routerLink="/login">{{ 'NAVBAR.SIGNOUT' | translate }}</p>
     </div> 

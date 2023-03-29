@@ -57,6 +57,7 @@ export class WaitingRoomManagerService {
             this.joinRoomResponseObserver = observer;
         });
         this.gameStartObservable = new Observable((observer: Observer<null>) => {
+            console.log('Subbed');
             if(!this.socket.active) this.refreshSocketRequests();
             this.gameStartObserver = observer;
         });
@@ -79,6 +80,7 @@ export class WaitingRoomManagerService {
             this.joinRoomResponseObserver.next({ errorCode, playerNames })
         });
         this.socket.on('Game Started', () => {
+            console.log('Socket Received');
             this.gameStartObserver.next(null);
         });
         this.socket.on('Room Player Update', (playerNames) => {
@@ -139,9 +141,15 @@ export class WaitingRoomManagerService {
         this.socketManagerService.getSocket().emit('Start Game');
     }
 
-    createRoomResponse(): Observable<string> {
-        return new Observable((observer: Observer<string>) => {
-            this.socketManagerService.getSocket().once('Room Creation Response', (errorCode) => observer.next(errorCode));
+    createRoomResponse(): Observable<{codeError:string,roomId:string}> {
+        return new Observable((observer: Observer<{codeError:string,roomId:string}>) => {
+            this.socketManagerService.getSocket().once('Room Creation Response', (codeErrorResponse,roomIdResponse) => {
+            const response = {
+                codeError:codeErrorResponse as string,
+                roomId:roomIdResponse as string,
+            }
+            observer.next(response)
+        });
         });
     }
 

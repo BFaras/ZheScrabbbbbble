@@ -1,4 +1,7 @@
+import { ChatMessageDB } from './chat-message';
+
 export const PRIVATE_CHAT_IDS_SEPARATOR = ' & ';
+export const CHAT_ROOM_BEGINNING = 'chat';
 
 export enum ChatType {
     PUBLIC,
@@ -10,6 +13,7 @@ export interface ChatInfoDB {
     chatName: string;
     chatType: ChatType;
     usersIds: string[];
+    chatHistory: ChatMessageDB[];
 }
 
 export interface ChatInfo {

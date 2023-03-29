@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
-import { COLOUR_COORDINATES, COLUMNS, GRID_COLOURS_CLASSIC, GRID_COLOURS_GREEN, GRID_COLOURS_INVERTED, GRID_COLOURS_PINK, GRID_CONSTANTS, GRID_OFFSETS, GRID_WORDS_EN, GRID_WORDS_FR, ROWS } from '@app/constants/grid-constants';
+import { COLOUR_COORDINATES, COLUMNS, GRID_COLOURS_BLIZZARD, GRID_COLOURS_CLASSIC, GRID_COLOURS_GREEN, GRID_COLOURS_INVERTED, GRID_COLOURS_PINK, GRID_CONSTANTS, GRID_OFFSETS, GRID_WORDS_EN, GRID_WORDS_FR, ROWS } from '@app/constants/grid-constants';
 import { HOLDER_MEASUREMENTS, LETTER_POINTS } from '@app/constants/letters-constants';
-import { classic, green, inverted, pink } from '@app/constants/themes';
+import { blizzard, classic, green, inverted, pink } from '@app/constants/themes';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -70,6 +70,9 @@ export class GridService implements OnDestroy {
                 break;
             case pink:
                 this.GRID_COLOURS = GRID_COLOURS_PINK;
+                break;
+            case blizzard:
+                this.GRID_COLOURS = GRID_COLOURS_BLIZZARD;
                 break;
             default:
         }

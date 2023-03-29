@@ -3,13 +3,13 @@
     <section id="chat-list">
         <div id="title-tabs">"
             <p class="title">Chats</p>
-            <p class="tabs active" (click)="setVisibility($event, global)">{{ 'TABS.GLOBAL' | translate }}</p>
-            <p class="tabs" (click)="setVisibility($event, public)">{{ 'TABS.PUBLIC' | translate }}</p>
-            <p class="tabs" (click)="setVisibility($event, private)">{{ 'TABS.PRIVATE' | translate }}</p>
+            <p class="tabs active" id="global" (click)="setVisibility($event, global)">{{ 'TABS.GLOBAL' | translate }}</p>
+            <p class="tabs" id="public" (click)="setVisibility($event, public)">{{ 'TABS.PUBLIC' | translate }}</p>
+            <p class="tabs" id="private" (click)="setVisibility($event, private)">{{ 'TABS.PRIVATE' | translate }}</p>
         </div>
         <div class="chats-container">
             <ng-container *ngFor="let chat of chatList">
-                <button class="chat-button" *ngIf="chat.chatType === visibility" (click)="selectChat($event, chat._id)"> 
+                <button class="chat-button" id="{{ chat._id }}" *ngIf="chat.chatType === visibility" (click)="selectChat($event, chat._id)" > 
                     <p class="chat-content">{{ chat.chatName }}</p>
                 </button>
             </ng-container>

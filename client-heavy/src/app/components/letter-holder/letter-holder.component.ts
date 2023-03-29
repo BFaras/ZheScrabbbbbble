@@ -301,7 +301,6 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     }
 
     isObserver(): boolean {
-
         return this.gameStateService.getObserverIndex() >= 0;
     }
 

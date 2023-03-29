@@ -7,9 +7,11 @@
     <string name="collaboratif">COOP</string>
     <string name="classique">CLASSIC</string>
     <string name="disconnect">DISCONNECT</string>
-    <string name="rejoindre">want to join your game</string>
+    <string name="rejoindre"><![CDATA[%1$s want to join your game.]]></string>
     <string name="accepter">Accept</string>
     <string name="refuser">Reject</string>
+    <string name="ajouter">Add</string>
+    <string name="FriendCode">Enter your friend\'s code to add him </string>
 
 
     <!-- Strings used for fragments for navigation -->
@@ -25,6 +27,7 @@
     <string name="tripleLetter">TL</string>
     <string name="abandonner">Give Up</string>
     <string name="prompt_email">Email</string>
+    <string name="prompt_friendcode">Friend Code</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
@@ -40,6 +43,7 @@
     <!-- Strings related to errors -->
     <string name="NO_ERROR">No error</string>
     <string name="ERROR">Error</string>
+    <string name="WRONG_FRIEND_CODE">Friend code is incorrect</string>
     <string name="FIELD_EMPTY"> you  left a field empty</string>
     <string name="USERNAME_INVALID">The username is invalid</string>
     <string name="PASSWORD_INVALID">The password is invalid</string>
@@ -56,4 +60,30 @@
     <string name="pass">Pass</string>
     <string name="tillNextRound">TILL NEXT ROUND</string>
     <string name="play">Play</string>
+    <string name="ReplaceLetter"><i>Enter a letter to replace...</i></string>
+    <string name="MSG_1"><![CDATA[<b>%1$s</b> placed <i>%2$s</i> for %3$s point(s).]]></string>
+    <string name="MSG_2"><![CDATA[<b>%1$s</b> tried to place an invalid word.]]></string>
+    <string name="MSG_3"><![CDATA[<b>%1$s</b> swapped %2$s letter(s).]]></string>
+    <string name="MSG_4"><![CDATA[<b>%1$s</b> passed their turn.]]></string>
+    <string name="MSG_5"><![CDATA[<b>%1$s</b> disconnected and was replaced by a VP.]]></string>
+    <string name="MSG_6"><![CDATA[<b>%1$s</b> ran out of time and passed their time.]]></string>
+    <string name="MSG_7"><![CDATA[Game Over - <b>%1$s</b> letters left]]></string>
+    <string name="scrabbleName">SCRABBLE</string>
+    <string name="info_panel">INFO PANEL</string>
+    <string name="detectedJoker">A JOKER HAS BEEN DETECTED!</string>
+    <string name="blankLetterOnBoard">A blank letter is on the board.</string>
+    <string name="blankLetterWarning">Once chosen, blank letters cannot be changed. Choose carefully!</string>
+    <string name="registerText">Dont\'t have an account? Register below!</string>
+    <string name="forgotPasswordText">Forgot your password?</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="register">Register</string>
+    <string name="security_question">Security question</string>
+    <string name="answer">Answer</string>
+    <string name="passwordResetProcess">Enter a username to start the password reset process.</string>
+    <string name="reset">Reset</string>
+    <string name="answerReset">Answer</string>
+    <string name="new_password">New Password</string>
+    <string name="register_new_passsword">Register New Passsword</string>
+    <string name="times_up">TIME\'S UP!</string>
+    <string name="talkingIntext">Now talking in</string>
 </resources>

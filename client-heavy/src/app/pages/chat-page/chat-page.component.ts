@@ -1,10 +1,12 @@
-import { AfterContentChecked, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ChatInfo, ChatMessage, ChatType } from '@app/classes/chat-info';
 import { AccountService } from '@app/services/account-service/account.service';
 //import { AccountService } from '@app/services/account-service/account.service';
 import { Router } from '@angular/router';
+import { ConnectivityStatus, Friend } from '@app/classes/friend-info';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { Subscription } from 'rxjs';
+
 //import { chat, chatlist } from './chats';
 
 @Component({
@@ -12,7 +14,9 @@ import { Subscription } from 'rxjs';
     templateUrl: './chat-page.component.html',
     styleUrls: ['./chat-page.component.scss'],
 })
-export class ChatPageComponent implements AfterContentChecked, OnInit {
+export class ChatPageComponent implements AfterContentChecked, OnInit, AfterViewInit, ViewChildren {
+    @ViewChildren('chat-button') chatItems: QueryList<ElementRef>;
+
     chatText: string = '';
     nextMessage: string = '';
     chatList: ChatInfo[];
@@ -25,20 +29,68 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
     subscriptions: Subscription[] = [];
     username: string;
     isDisabled: boolean = true;
+    friend: Friend = { username: 'cat', status: ConnectivityStatus.ONLINE };
+    redirect: boolean = false;
+    angular: any;
+    //chatButton: HTMLElement;
 
-    constructor(private changeDetector: ChangeDetectorRef, private chatService: ChatService, private account: AccountService, private router: Router) {
+    constructor(private changeDetector: ChangeDetectorRef,
+        private chatService: ChatService,
+        private account: AccountService,
+        private router: Router,
+        /*private friendsPage: FriendsPageComponent*/) {
         this.username = this.account.getUsername();
     }
+    descendants: boolean;
+    emitDistinctChangesOnly: boolean;
+    first: boolean;
+    read: any;
+    isViewQuery: boolean;
+    selector: any;
+    static?: boolean | undefined;
 
     ngOnInit() {
         this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
             this.chatList = chatList;
             this.chatLog = this.chatService.messageLog;
+            /*
+            this.setFriendRedirect();
+            if (true) {
+                
+                let chatId: string = "";
+                this.chatList.forEach((chat: ChatInfo) => {
+                    if (this.friend.username === chat.chatName && chat.chatType === this.private) chatId = chat._id;
+                });
+                //document.querySelectorAll(chatId);
+                document.getElementById('private')!.click();
+                this.redirect = false;
+            }
+            */
         }));
         this.subscriptions.push(this.chatService.getNewMessages().subscribe((messageLog: Map<string, ChatMessage[]>) => {
             this.chatLog = messageLog;
         }));
     }
+
+    public ngAfterViewInit() {
+        /*
+        if (this.redirect) {
+            //let chatId: string = "";
+            let chatIndex: number = 0;
+            this.chatList.forEach((chat: ChatInfo, index: number) => {
+                if (this.friend.username === chat.chatName && chat.chatType === this.private) {
+                    //chatId = chat._id;
+                    chatIndex = index;
+                }
+            });
+            //let privateChats = this.chatList.filter((chat: ChatInfo) => chat.chatType === ChatType.PRIVATE);
+            this.chatItems.forEach((item, index) => {
+                if (index === chatIndex) (item.nativeElement as HTMLElement).click();
+            });
+        }
+        */
+    }
+
 
     ngAfterContentChecked(): void {
         this.changeDetector.detectChanges();
@@ -58,6 +110,23 @@ export class ChatPageComponent implements AfterContentChecked, OnInit {
     updateScroll(scroll: number): number {
         return scroll;
     }
+
+    /*
+    setFriendRedirect() {
+        this.friend = this.friendsPage.friend;
+        this.redirect = this.friendsPage.redirect;
+        //this.friendsPage.redirect = false;
+    }
+
+    findFriend() {
+        let chatId: string = "";
+        this.chatList.forEach((chat: ChatInfo) => {
+            if (this.friend.username === chat.chatName && chat.chatType === this.private) chatId = chat._id;
+        });
+        document.getElementById('private')!.click();
+        document.getElementById(chatId)!.click();
+    }
+    */
 
     setVisibility(event: Event, newVisibility: ChatType) {
         this.visibility = newVisibility;

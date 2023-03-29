@@ -6,9 +6,9 @@
         <p id="title-chat">{{'CHATBOX.CHATBOX' | translate}}</p><!--<button (click)="goToLink()">chat</button>-->
         <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
             <div *ngFor="let message of messageHistory">
-                <ul [ngStyle]="{ color: message.color }">
-                    <div *ngIf="message.username === '[SERVER]'; else elseBlock">{{ message.body }}</div>
-                    <ng-template #elseBlock>{{ message.username }} : {{ message.body }}</ng-template>
+                <ul >
+                    <div *ngIf="message.username === '[SERVER]'; else elseBlock">{{ message.message }}</div>
+                    <ng-template #elseBlock style="color: white;">{{ message.username }} : {{ message.message }}</ng-template>
                 </ul>
             </div>
         </div>

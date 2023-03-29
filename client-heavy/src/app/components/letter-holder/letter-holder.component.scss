@@ -5,7 +5,7 @@
     align-items: center;
 }
 
-#rack{
+#rack {
     padding: 10px;
     margin: 5px 50px 15px 50px;
     border-radius: 10px;
@@ -16,20 +16,19 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap:10px
+    gap: 10px;
 }
 
-.tile:hover{
-    cursor:pointer
-    
+.tile:hover {
+    cursor: pointer;
 }
-.green{
+.green {
     background-color: green;
 }
 
-#letter{
-    font-size:27px;
-    margin:0px;
+#letter {
+    font-size: 27px;
+    margin: 0px;
     text-align: center;
     font-family: 'Courrier New';
 }
@@ -42,8 +41,7 @@
     font-weight: bold;
 }
 
-
-.tile{
+.tile {
     position: relative;
     width:50px;
     height:50px;
@@ -59,11 +57,11 @@
     
 }
 
-.red{
+.red {
     background-color: rgba(255, 0, 0, 0.3);
 }
 
-.green{
+.green {
     background-color: rgba(75, 186, 52, 0.3);
 }
 #holder-buttons-container {

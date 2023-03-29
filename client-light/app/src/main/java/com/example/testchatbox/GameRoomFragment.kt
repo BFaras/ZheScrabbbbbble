@@ -1,12 +1,19 @@
 package com.example.testchatbox
 
 import SocketHandler
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.chat.ChatModel
 import com.example.testchatbox.databinding.FragmentGameListBinding
@@ -72,22 +79,44 @@ class GameRoomFragment : Fragment(), Observer {
         });
     }
 
+    @SuppressLint("MissingInflatedId")
     private fun updateNames(){
-        val playerView = arrayOf(binding.player1,binding.player2, binding.player3, binding.player4)
-        for(i in 0..3){
-            if(i< GameRoomModel.gameRoom!!.players.size)
-                playerView[i].text = GameRoomModel.gameRoom!!.players[i];
-            else
-                playerView[i].text = "";
+        binding.roomName.text = GameRoomModel.gameRoom!!.name
+        binding.waitingPlayersList.removeAllViews()
+        for (player in GameRoomModel.gameRoom!!.players) {
+            val playerInfo =
+                layoutInflater.inflate(R.layout.waiting_players, binding.waitingPlayersList, false)
+            val playerName: TextView = playerInfo.findViewById(R.id.waitingPlayerName)
+            val isOwner: ImageView = playerInfo.findViewById(R.id.isRoomOwner)
+            isOwner.visibility = GONE
+            playerName.text = player
+
+            if (player == GameRoomModel.gameRoom!!.players[0]) {
+                isOwner.visibility = VISIBLE
+            } else {
+                isOwner.visibility = GONE
+            }
+
+            binding.waitingPlayersList.addView(playerInfo)
+//            binding.startGame.visibility=View.VISIBLE
         }
+//        for(i in 0..3){
+//            if(i< GameRoomModel.gameRoom!!.players.size)
+//                playerView[i].text = GameRoomModel.gameRoom!!.players[i];
+//            else
+//                playerView[i].text = "";
+//        }
         if(LoggedInUser.getName()==GameRoomModel.gameRoom!!.players[0])
-            binding.startGame.visibility=View.VISIBLE
+            binding.startGame.visibility = VISIBLE
     }
 
     private fun showJoinSection(){
-        binding.joinSection.visibility=View.VISIBLE
-        binding.playerName.text=GameRoomModel.joinRequest[0]+" "+binding.playerName.text
+        binding.joinSection.visibility=VISIBLE
+        val playerJoin = GameRoomModel.joinRequest[0]
+        binding.playerName.setText(HtmlCompat.fromHtml(getString(R.string.rejoindre, playerJoin), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+        //binding.playerName.text=GameRoomModel.joinRequest[0]+" "+binding.playerName.text
         binding.startGame.isClickable=false
+        binding.leave.isClickable=false
         binding.cancelButton.setOnClickListener {
             hideJoinSection(false)
         }
