@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ChatInfo } from '@app/classes/chat-info';
+import { ChatInfo, ChatType } from '@app/classes/chat-info';
+import { ChatService } from '@app/services/chat-service/chat.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-public-chats',
@@ -7,16 +9,92 @@ import { ChatInfo } from '@app/classes/chat-info';
   styleUrls: ['./public-chats.component.scss']
 })
 export class PublicChatsComponent implements OnInit {
-  chatList: ChatInfo[];
+  absentChatList: ChatInfo[];
+  presentChatList: ChatInfo[] = [];
+  subscriptions: Subscription[] = [];
+  activeInput: number;
 
-  constructor() {}
-
-  ngOnInit(): void {
+  constructor(private chatService: ChatService) {
+    this.updateChats();
   }
 
-  alert() {
+  updateChats() {
+    this.subscriptions.push(this.chatService.getPublicChatObservable().subscribe((publicChats: ChatInfo[]) => {
+      this.absentChatList = publicChats;
+    }));
+    this.chatService.getPublicChats();
+    this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
+      const newChats: ChatInfo[] = [];
+      chatList.forEach((chat: ChatInfo) => {
+        if (chat.chatType === ChatType.PUBLIC) newChats.push(chat);
+        this.presentChatList = newChats;
+      });
+    }));
+  }
+
+  ngOnInit(): void {
+
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) subscription.unsubscribe();
+  }
+
+  alert(chat: ChatInfo) {
     const text = 'Êtes-vous sûr(e) de vouloir quitter ce chat?';
-    if (confirm(text)) {}
+    if (confirm(text)) {
+      this.chatService.leaveChat(chat).subscribe((errorCode: string) => {
+        this.updateChats();
+        console.log(errorCode);
+      });
+    }
+  }
+
+  joinChat(chat: ChatInfo) {
+    this.chatService.joinChat(chat).subscribe((errorCode: string) => {
+      this.updateChats();
+      console.log(errorCode);
+    });
+  }
+
+  addChat() {
+    const chatName = (document.getElementById('chat-name') as HTMLInputElement).value;
+    if (chatName.length < 35) {
+      this.chatService.createChat(chatName).subscribe((errorCode: string) => {
+        this.updateChats();
+        console.log(errorCode);
+      });
+    }
+    else alert("Le nom du chat est trop long. Il ne doit pas dépasser 35 caractères.");
+    (document.getElementById('chat-name') as HTMLInputElement).value = "";
+  }
+
+  setActive(input: number) {
+    this.activeInput = input;
+  }
+
+  searchFilter() {
+    let input, filter, a, i, txtValue;
+    let container: any = [];
+    let containerDiv: any = [];
+    let span: any = [];
+    input = document.getElementsByClassName('chat-input');
+    filter = (input[this.activeInput] as HTMLInputElement).value.toUpperCase();
+    container = document.getElementsByClassName("chats-container");
+    containerDiv = container[this.activeInput]!.getElementsByClassName("chat-container");
+    for (let i = 0; i < containerDiv.length; i++) {
+      span.push(containerDiv[i].getElementsByTagName('span'))
+    }
+
+    for (i = 0; i < span.length; i++) {
+      a = span[i][0];
+      txtValue = a.textContent || a.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        containerDiv[i].style.display = "";
+      } else {
+        containerDiv[i].style.display = "none";
+      }
+    }
   }
 
 }

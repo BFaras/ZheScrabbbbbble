@@ -23,6 +23,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   subscriptionChangeAvatar: Subscription;
   subscriptionUsername: Subscription;
   progressionBarValue: number
+  currentTheme: Theme = classic;
   connectionHistory: connectionHistory = {
     connections: [],
     disconnections: [],
@@ -96,6 +97,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    /*
     let current = localStorage.getItem("currentTheme");
     if (current) {
       this.changeThemeTo(current);
@@ -105,13 +107,17 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       localStorage.setItem("currentTheme", classic.toString());
       document.getElementById('classic')!.className += " active";
     }
+    */
   }
 
   changeThemeTo(newTheme: string) {
     this.themeService.getAvailableThemes().forEach((theme: Theme) => {
-      if (theme.name.toString() === newTheme) this.themeService.setActiveTheme(theme);
+      if (theme.name.toString() === newTheme) {
+        this.themeService.setActiveTheme(theme);
+        this.updateUserTheme(newTheme);
+      }
     });
-    localStorage.setItem("currentTheme", newTheme);
+    //localStorage.setItem("currentTheme", newTheme);
   }
 
   setActive(event: Event) {
@@ -125,4 +131,9 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   goToFriends() {
     this.router.navigate(['/friends-page']);
   }
+
+  updateUserTheme(theme: string) {
+    this.accountService.changeTheme(theme);
+  }
+
 }

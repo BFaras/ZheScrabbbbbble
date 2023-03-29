@@ -26,6 +26,12 @@ export interface GameInfo {
     gameMode: string;
 }
 
+export interface GameHistoryInfo {
+    date: string;
+    time: string;
+    isWinner: boolean;
+}
+
 export interface PlayerGameInfo {
     name: string;
     score: number;
@@ -42,7 +48,7 @@ export interface ProfileInfo {
     stats: StatisticInfo[];
     tournamentWins: number[];
     connectionHistory: ConnectionInfo[];
-    gameHistory: GameInfo[];
+    gameHistory: GameHistoryInfo[];
 }
 
 export interface ProfileSettings {

@@ -18,14 +18,18 @@ export class LoginAreaComponent implements OnInit, OnDestroy {
     avatar: "",
     securityQuestion: { question: "", answer: "" },
   }
-  subscription: Subscription
+  subscription: Subscription;
   hide: boolean = true;
   isConnected: boolean = false;
 
   constructor(private accountAuthenticationService: AccountAuthenticationService, private router: Router, private account: AccountService) {
+<<<<<<< HEAD
     this.accountAuthenticationService.setUpSocket()
     this.subscription = this.accountAuthenticationService.getStatusOfAuthentication().subscribe(
       (status: boolean) => this.showStatus(status));
+=======
+    this.accountAuthenticationService.setUpSocket();
+>>>>>>> main
   }
 
   ngOnInit(): void {

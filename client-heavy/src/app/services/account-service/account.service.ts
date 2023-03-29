@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ProfileInfo } from '@app/classes/profileInfo';
+import { ProfileInfo, ProfileSettings } from '@app/classes/profileInfo';
 import { Observable, Observer } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { SocketManagerService } from '../socket-manager-service/socket-manager.service';
@@ -10,6 +10,8 @@ export class AccountService {
   private username: string;
   private socket: Socket;
   private profile: ProfileInfo;
+  private usercode: string;
+
   constructor(private socketManagerService: SocketManagerService) {
     this.setUpSocket()
   }
@@ -18,7 +20,7 @@ export class AccountService {
     this.socket = this.socketManagerService.getSocket();
   }
   /* enlever cela apres quand profile sera obtenu*/
-  public setUsername(username: string) {
+  setUsername(username: string) {
     this.username = username;
   }
   /* enlever cela apres quand profile sera obtenu*/
@@ -38,26 +40,51 @@ export class AccountService {
     console.log(this.getUsername())
     this.socket.emit("Get Profile Information", this.getUsername());
   }
+  setUpUserCode(profile: ProfileInfo) {
+    this.usercode = profile.userCode;
+  }
+
+
+
 
   getUserProfileInformation(): Observable<ProfileInfo> {
+    this.socket.emit("Get Profile Information", this.getUsername());
     return new Observable((observer: Observer<ProfileInfo>) => {
       this.socket.on('User Profile Response', (profileInfo: ProfileInfo) => {
         observer.next(profileInfo);
       });
     });
-
   }
 
   changeAvatar(newAvatar: string) {
     this.socket.emit('Change Avatar', newAvatar);
   }
+
+  changeTheme(theme: string) {
+    this.socket.emit('Change Theme', theme);
+  }
+
+  changeLanguage(lang: string) {
+    console.log(lang);
+    this.socket.emit('Change Language', lang);
+  }
+
   getAvatarChangeStatus(): Observable<string> {
     return new Observable((observer: Observer<string>) => {
       this.socket.on('Avatar Change Response', (status: string) => {
         observer.next(status);
       });
     });
+  }
 
+  getThemeAndLanguage(): Observable<ProfileSettings> {
+    this.socket.emit('Get Theme and Language');
+    return new Observable((observer: Observer<ProfileSettings>) => {
+      this.socket.once('Theme and Language Response', (theme: string, lang: string) => {
+        const profile: ProfileSettings = { theme: theme, language: lang };
+        observer.next(profile);
+      });
+    });
   }
 
   MakeAllAvatarBase64(AllAvatars: string[]): string[] {
