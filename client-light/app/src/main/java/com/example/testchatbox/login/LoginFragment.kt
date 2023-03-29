@@ -188,8 +188,6 @@ class LoginFragment : Fragment() {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
 
-
-
         resetButton.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_resetFragment)
         }

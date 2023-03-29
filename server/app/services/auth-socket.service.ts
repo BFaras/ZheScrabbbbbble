@@ -77,16 +77,16 @@ export class AuthSocketService {
         const userId = await this.authentificationService.getUserId(username);
         this.accountInfoService.setUsername(socket, username);
         this.accountInfoService.setUserId(socket, userId);
-        await this.chatService.joinGlobalChat(userId);
         await this.joinUserChatRooms(userId, socket);
         await this.joinUserFriendsRooms(userId, socket);
+        await this.chatService.joinGlobalChat(userId);
         this.usersStatusService.addOnlineUser(userId, socket);
     }
 
     private async joinUserChatRooms(userId: string, socket: io.Socket) {
         const userChats: ChatInfo[] = await this.chatService.getUserChats(userId);
         userChats.forEach((userChatInfo: ChatInfo) => {
-            socket.join(userChatInfo._id);
+            socket.join(this.chatService.getChatRoomName(userChatInfo._id));
         });
     }
 

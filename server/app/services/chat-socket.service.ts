@@ -53,17 +53,11 @@ export class ChatSocketService {
 
         socket.on('Join Public Chat', async (chatCode: string) => {
             const errorMessage = await this.chatService.joinChat(this.accountInfoService.getUserId(socket), chatCode);
-            if (errorMessage === NO_ERROR) {
-                socket.join(chatCode);
-            }
             socket.emit('Join Chat Response', errorMessage);
         });
 
         socket.on('Leave Public Chat', async (chatCode: string) => {
             const errorMessage = await this.chatService.leaveChat(this.accountInfoService.getUserId(socket), chatCode);
-            if (errorMessage === NO_ERROR) {
-                socket.leave(chatCode);
-            }
             socket.emit('Leave Chat Response', errorMessage);
         });
 

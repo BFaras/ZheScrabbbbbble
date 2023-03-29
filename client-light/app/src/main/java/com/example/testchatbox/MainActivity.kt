@@ -89,7 +89,10 @@ object ThemeManager {
     fun setCustomizedThemes(context: Context, theme: String?) {
         when (theme) {
             "classic" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            "inverted" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            "inverted" -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                context.setTheme(R.style.EclipseTheme)
+            }
             "pink" -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 context.setTheme(R.style.PinkTheme)

@@ -1,5 +1,6 @@
 package com.example.testchatbox.chat
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import com.example.testchatbox.MainActivity
+import com.example.testchatbox.R
 import com.example.testchatbox.databinding.FragmentManageChatBinding
 import java.util.*
 
@@ -44,6 +47,7 @@ class ManageChatFragment : Fragment(), ObserverChat {
             if(name.isNotEmpty()) {
                 ChatModel.createPublicChat(name);
                 binding.chatName.setText("");
+                binding.chatName.clearFocus()
             }
         }
         binding.reloadChats.setOnClickListener {
@@ -63,20 +67,30 @@ class ManageChatFragment : Fragment(), ObserverChat {
         ChatModel.removeObserver(this);
     }
 
+    @SuppressLint("MissingInflatedId")
     private fun loadList(){
         chatList = ChatModel.getList();
         val chatListView = binding.chatList;
         chatListView.removeAllViews()
         for((i, chat) in chatList.withIndex()){
             if (chat.chatType==ChatType.PUBLIC){
-                val btn = Button((activity as MainActivity?)!!)
-                btn.text = chat.chatName;
-                btn.id = i;
-                btn.textSize= 30F;
-                btn.setOnClickListener{
+                val chatRoomLayout = layoutInflater.inflate(R.layout.joined_chat, chatListView, false)
+                val chatRoomName = chatRoomLayout.findViewById<TextView>(R.id.chatbutton)
+                chatRoomName.text = chat.chatName
+                chatRoomLayout.id = i
+                chatRoomLayout.setOnClickListener{
                     ChatModel.leaveChat(chatList[i]._id)
                 }
-                chatListView.addView(btn)
+                chatListView.addView(chatRoomLayout)
+
+//                val btn = Button((activity as MainActivity?)!!)
+//                btn.text = chat.chatName;
+//                btn.id = i;
+//                btn.textSize= 30F;
+//                btn.setOnClickListener{
+//                    ChatModel.leaveChat(chatList[i]._id)
+//                }
+//                chatListView.addView(btn)
             }
         }
     }
@@ -87,15 +101,24 @@ class ManageChatFragment : Fragment(), ObserverChat {
         val chatListView = binding.publicChatList;
         chatListView.removeAllViews()
         for((i, chat) in publicChatList.withIndex()){
-            if (chat.chatType==ChatType.PUBLIC){
-                val btn = Button((activity as MainActivity?)!!)
-                btn.text = chat.chatName;
-                btn.id = i;
-                btn.textSize= 30F;
-                btn.setOnClickListener{
+            if (chat.chatType==ChatType.PUBLIC) {
+                val chatRoomLayout = layoutInflater.inflate(R.layout.joined_chat, chatListView, false)
+                val chatRoomName = chatRoomLayout.findViewById<TextView>(R.id.chatbutton)
+                chatRoomName.text = chat.chatName
+                chatRoomLayout.id = i
+                chatRoomLayout.setOnClickListener{
                     ChatModel.joinPublicList(publicChatList[i]._id)
                 }
-                chatListView.addView(btn)
+                chatListView.addView(chatRoomLayout)
+
+//                val btn = Button((activity as MainActivity?)!!)
+//                btn.text = chat.chatName;
+//                btn.id = i;
+//                btn.textSize= 30F;
+//                btn.setOnClickListener{
+//                    ChatModel.joinPublicList(publicChatList[i]._id)
+//                }
+//                chatListView.addView(btn)
             }
         }
     }

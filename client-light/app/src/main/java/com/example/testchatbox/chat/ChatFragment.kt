@@ -1,13 +1,18 @@
 package com.example.testchatbox.chat
 
 import SocketHandler
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.MainActivity
@@ -16,6 +21,7 @@ import com.example.testchatbox.databinding.FragmentChatBinding
 import com.example.testchatbox.login.model.LoggedInUser
 import org.json.JSONArray
 import org.json.JSONObject
+import org.w3c.dom.Text
 import java.util.*
 
 
@@ -51,6 +57,12 @@ class ChatFragment : Fragment(), ObserverChat {
             }
             false
         }
+        binding.inputText.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
+        }
+
         binding.send.setOnClickListener {
             sendMessage()
         }
@@ -61,11 +73,12 @@ class ChatFragment : Fragment(), ObserverChat {
     }
 
     private fun sendMessage() {
-        var text = binding.inputText.text.toString().trim()
+        val text = binding.inputText.text.toString().trim()
         if(text.isNotEmpty()){
             binding.inputText.setText("")
             SocketHandler.getSocket().emit("New Chat Message", text, chatsList[selectedChatIndex]._id)
-            binding.scrollView.fullScroll(View.FOCUS_DOWN)
+            binding.scrollView.post { binding.scrollView.fullScroll(View.FOCUS_DOWN) }
+            binding.inputText.clearFocus()
         }
     }
 
@@ -84,11 +97,29 @@ class ChatFragment : Fragment(), ObserverChat {
         SocketHandler.getSocket().once("Chat History Response"){args ->
             val messageArray= args[0] as JSONArray
             val messagesBox = binding.textView
-            messagesBox.text = "";
+            activity?.runOnUiThread(java.lang.Runnable {
+                messagesBox.removeAllViews()
+            })
             for(i in 0 until messageArray.length()){
                 val messageJSON = messageArray.get(i) as JSONObject
                 val message = Message(messageJSON.get("username") as String, messageJSON.get("timestamp") as String, messageJSON.get("message") as String, messageJSON.get("avatar") as String)
-                messagesBox.append(message.toString() + System.getProperty("line.separator"))
+                val messageContainer : View = if (message.username == LoggedInUser.getName()) {
+                    layoutInflater.inflate(R.layout.sent_message, messagesBox, false)
+                } else {
+                    layoutInflater.inflate(R.layout.received_message, messagesBox, false)
+                }
+
+                val messageText: TextView = messageContainer.findViewById(R.id.textMessage)
+                val usernameMessage: TextView = messageContainer.findViewById(R.id.usernameMessage)
+                val timeStampMessage: TextView = messageContainer.findViewById(R.id.textDateTime)
+
+                messageText.text = message.message
+                usernameMessage.text = message.username
+                timeStampMessage.text = message.timestamp
+
+                activity?.runOnUiThread(java.lang.Runnable {
+                    messagesBox.addView(messageContainer)
+                })
             }
             activity?.runOnUiThread(Runnable {
                 messagesBox.invalidate();
@@ -103,13 +134,14 @@ class ChatFragment : Fragment(), ObserverChat {
         val chatListView = binding.chatList;
         chatListView.removeAllViews()
         for((i, chat) in chatsList.withIndex()){
-            val btn = Button((activity as MainActivity?)!!)
-            btn.text = chat.chatName;
-            btn.id = i;
-            btn.textSize= 30F;
+            val btn = layoutInflater.inflate(R.layout.chat_rooms_button, chatListView, false)
+            val btnText: TextView = btn.findViewById(R.id.roomName)
+            btnText.text = chat.chatName
+            btn.id = i
             btn.setOnClickListener{
                 if(selectedChatIndex!=btn.id){
                     selectedChatIndex=btn.id;
+                    binding.chatRoomName.text = btnText.text
                     loadChatMessages();
                 }
             }
@@ -117,10 +149,27 @@ class ChatFragment : Fragment(), ObserverChat {
         }
     }
     private fun addMessage(message:Message){
-        binding.textView.append(message.toString() + System.getProperty("line.separator"))
+        val messagesBox = binding.textView
+        val messageContainer : View = if (message.username == LoggedInUser.getName()) {
+            layoutInflater.inflate(R.layout.sent_message, messagesBox, false)
+        } else {
+            layoutInflater.inflate(R.layout.received_message, messagesBox, false)
+        }
+
+        val messageText: TextView = messageContainer.findViewById(R.id.textMessage)
+        val usernameMessage: TextView = messageContainer.findViewById(R.id.usernameMessage)
+        val timeStampMessage: TextView = messageContainer.findViewById(R.id.textDateTime)
+
+        messageText.text = message.message
+        usernameMessage.text = message.username
+        timeStampMessage.text = message.timestamp
+
+        activity?.runOnUiThread(java.lang.Runnable {
+            messagesBox.addView(messageContainer)
+        })
         activity?.runOnUiThread(Runnable {
-            binding.textView.invalidate();
-            binding.textView.requestLayout();
+            messagesBox.invalidate();
+            messagesBox.requestLayout();
         });
     }
 
@@ -137,5 +186,10 @@ class ChatFragment : Fragment(), ObserverChat {
     }
 
     override fun updatePublicChannels() {}
+
+    private fun hideKeyboard() {
+        val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+    }
 
 }

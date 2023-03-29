@@ -1,17 +1,19 @@
 package com.example.testchatbox
 
 import SocketHandler
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentGameListBinding
-import com.example.testchatbox.login.model.LoggedInUser
 import org.json.JSONArray
 
 enum class Visibility{
@@ -73,8 +75,8 @@ class GameListFragment : Fragment() {
         binding.roomType.setOnCheckedChangeListener { radioGroup, i ->
             Log.i("Radio", i.toString())
             when (radioGroup.checkedRadioButtonId) {
-                R.id.publicRoom -> binding.createPassword.visibility=View.INVISIBLE
-                R.id.privateRoom -> binding.createPassword.visibility=View.INVISIBLE
+                R.id.publicRoom -> binding.createPassword.visibility=View.GONE
+                R.id.privateRoom -> binding.createPassword.visibility=View.GONE
                 R.id.protectedRoom -> binding.createPassword.visibility=View.VISIBLE
             }
         }
@@ -110,15 +112,45 @@ class GameListFragment : Fragment() {
         val gameListView = binding.gameList;
         gameListView.removeAllViews()
         for((i, gameRoom) in gameList.withIndex()){
-            val btn = Button((activity as MainActivity?)!!)
-            val status = if(gameRoom.hasStarted) "Started" else "Waiting for players"
-            btn.text = gameRoom.name +" | "+gameRoom.visibility + " | "+ gameRoom.getPlayersNames()+ " | " + status;
-            btn.id = i;
-            btn.textSize= 18F;
-            btn.setOnClickListener{
+            Log.d("PLAYERS IN ROOM", gameRoom.getPlayersNames())
+            val gameRoomInfo = layoutInflater.inflate(R.layout.gameroom_info, gameListView, false)
+            val roomName: TextView = gameRoomInfo.findViewById(R.id.gameRoomName)
+            val roomVisibiliy: TextView = gameRoomInfo.findViewById(R.id.roomVisibility)
+            val roomStatus: TextView = gameRoomInfo.findViewById(R.id.roomStatus)
+            val roomPlayersList: LinearLayout = gameRoomInfo.findViewById(R.id.roomPlayersNames)
+
+            roomName.text = gameRoom.name.lowercase()
+            roomVisibiliy.text = gameRoom.visibility.toString().lowercase()
+            when (roomVisibiliy.text) {
+                "public" -> { roomVisibiliy.setTextColor(Color.GREEN) }
+                "private" -> { roomVisibiliy.setTextColor(Color.RED) }
+                "protected" -> { roomVisibiliy.setTextColor(Color.YELLOW) }
+                else -> {}
+            }
+            roomStatus.text = if(gameRoom.hasStarted) "started" else "waiting for players"
+            val players = gameRoom.getPlayersNames().split(",".toRegex()).toTypedArray()
+            for (playerInRoom in players){
+                if (playerInRoom != " ") {
+                    val player = TextView(context)
+                    player.text = playerInRoom
+                    roomPlayersList.addView(player)
+                }
+            }
+
+            gameRoomInfo.id = i
+            gameRoomInfo.setOnClickListener{
                 askObserver(gameRoom)
             }
-            gameListView.addView(btn)
+            gameListView.addView(gameRoomInfo)
+//            val btn = Button((activity as MainActivity?)!!)
+//            val status = if(gameRoom.hasStarted) "Started" else "Waiting for players"
+//            btn.text = gameRoom.name +" | "+gameRoom.visibility + " | "+ gameRoom.getPlayersNames()+ " | " + status;
+//            btn.id = i;
+//            btn.textSize= 18F;
+//            btn.setOnClickListener{
+//                askObserver(gameRoom)
+//            }
+//            gameListView.addView(btn)
         }
     }
 

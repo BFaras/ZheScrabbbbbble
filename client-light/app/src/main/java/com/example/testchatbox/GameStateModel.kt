@@ -41,6 +41,14 @@ class GameStateModel: ViewModel() {
     val gameState: LiveData<GameState>
         get() = _gameState
 
+    private var _activeTile = MutableLiveData<Pair<String, Int>>()
+    val activeTile: LiveData<Pair<String, Int>>
+        get() = _activeTile
+
+    private var _deleteActiveTile = MutableLiveData<Pair<String, Int>>()
+    val deleteActiveTile: LiveData<Pair<String, Int>>
+        get() = _deleteActiveTile
+
     private var _timer = MutableLiveData<Timer>()
     val timer: LiveData<Timer>
         get() = _timer
@@ -51,7 +59,6 @@ class GameStateModel: ViewModel() {
     init {
         getGameState()
         SocketHandler.getSocket().on("Game State Update") { args ->
-            try {
                 val gameJSON = args[0] as JSONObject
                 Log.i("gameState", gameJSON.toString())
                 var gameStateTemp = GameState(arrayOf(), arrayListOf(), -1, -1, false, PlayerMessage("", arrayListOf()));
@@ -78,23 +85,40 @@ class GameStateModel: ViewModel() {
                 gameStateTemp.reserveLength=gameJSON.get("reserveLength") as Int
                 gameStateTemp.gameOver=gameJSON.get("gameOver") as Boolean
 
-                val messageJSON = gameJSON.get("message") as JSONObject
-                val messageArray = messageJSON.get("values") as JSONArray
-                val messages = arrayListOf<String>()
-                for (i in 0 until messageArray.length()){
-                    messages.add(messageArray.get(i) as String)
+                try {
+                    val messageJSON = gameJSON.get("message") as JSONObject
+                    val messageArray = messageJSON.get("values") as JSONArray
+                    val messages = arrayListOf<String>()
+                    for (i in 0 until messageArray.length()) {
+                        messages.add(messageArray.get(i) as String)
+                    }
+                    gameStateTemp.message = PlayerMessage(messageJSON.get("messageType") as String, messages)
+                }catch (e:Exception){
+                    Log.e("Game State", e.toString())
                 }
-                gameStateTemp.message= PlayerMessage(messageJSON.get("messageType") as String, messages)
 
                 _gameState.postValue(gameStateTemp);
             }
-            catch (e:Exception){
-                Log.e("Game State", e.toString())
-            }
-        }
 
         getGameState()
 
+        SocketHandler.getSocket().on("Get First Tile") { args ->
+            Log.i("args  ", args.toString())
+            val firstTileJSON = args[0] as JSONObject
+            Log.i("firstTileJSON ", firstTileJSON.toString())
+            val firstTileTemp = Pair(firstTileJSON.get("x") as String, firstTileJSON.get("y") as Int)
+            Log.i("firstTileTemp ", firstTileTemp.toString())
+            _activeTile.postValue(firstTileTemp)
+        }
+
+        SocketHandler.getSocket().on("Remove Selected Tile Response") { args ->
+            Log.i("args  ", args.toString())
+            val firstTileJSON = args[0] as JSONObject
+            Log.i("firstTileJSON ", firstTileJSON.toString())
+            val firstTileTemp = Pair(firstTileJSON.get("x") as String, firstTileJSON.get("y") as Int)
+            Log.i("firstTileTemp ", firstTileTemp.toString())
+            _deleteActiveTile.postValue(firstTileTemp)
+        }
     }
 
     fun getGameState() {
@@ -107,7 +131,7 @@ class GameStateModel: ViewModel() {
 
 }
 
-
+//
 //
 //class GameStateModel: ViewModel() {
 //
@@ -137,9 +161,9 @@ class GameStateModel: ViewModel() {
 //        val player4Mock =  PlayersState("player2Mock", arrayListOf("b", "e", "f", "z", "", "j"), 20)
 //        gameMock = GameState(
 //            arrayOf(
-//                arrayOf("", "*", "c"),
-//                arrayOf("", "a", ""),
-//                arrayOf("", "", "b")
+//                arrayOf("", "", "c"),
+//                arrayOf("", "B", ""),
+//                arrayOf("", "c", "b")
 //            ),
 //            arrayListOf(player1Mock, player2Mock, player3Mock,player4Mock),
 //            1,

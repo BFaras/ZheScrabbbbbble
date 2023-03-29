@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="58dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:padding="3dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/background_direction_panel"
+    android:backgroundTint="?colorOnPrimary">
+
+    <TextView
+        android:id="@+id/displayedHint"
+        android:layout_width="match_parent"
+        android:padding="3dp"
+        android:textSize="10dp"
+        android:textColor="?colorSecondary"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:text="H 6B FAC"
+        android:layout_height="wrap_content"
+        android:justificationMode="inter_word" />
+</FrameLayout>

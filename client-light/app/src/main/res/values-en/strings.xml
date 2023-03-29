@@ -7,7 +7,7 @@
     <string name="collaboratif">COOP</string>
     <string name="classique">CLASSIC</string>
     <string name="disconnect">DISCONNECT</string>
-    <string name="rejoindre">want to join your game</string>
+    <string name="rejoindre"><![CDATA[%1$s want to join your game.]]></string>
     <string name="accepter">Accept</string>
     <string name="refuser">Reject</string>
     <string name="ajouter">Add</string>
@@ -85,4 +85,5 @@
     <string name="new_password">New Password</string>
     <string name="register_new_passsword">Register New Passsword</string>
     <string name="times_up">TIME\'S UP!</string>
+    <string name="talkingIntext">Now talking in</string>
 </resources>
