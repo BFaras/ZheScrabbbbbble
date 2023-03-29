@@ -35,11 +35,6 @@ import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
-
-/**
- * An example full-screen fragment that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
 class GamePageFragment : Fragment() {
     private val hideHandler = Handler(Looper.myLooper()!!)
 
@@ -48,17 +43,16 @@ class GamePageFragment : Fragment() {
     @Suppress("InlinedApi")
     private val hidePart2Runnable = Runnable {
         // Delayed removal of status and navigation bar
-
         // Note that some of these constants are new as of API 16 (Jelly Bean)
         // and API 19 (KitKat). It is safe to use them, as they are inlined
         // at compile-time and do nothing on earlier devices.
         val flags =
-            View.SYSTEM_UI_FLAG_LOW_PROFILE or
-                View.SYSTEM_UI_FLAG_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            SYSTEM_UI_FLAG_LOW_PROFILE or
+                SYSTEM_UI_FLAG_FULLSCREEN or
+                SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+                SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                SYSTEM_UI_FLAG_HIDE_NAVIGATION
         activity?.window?.decorView?.systemUiVisibility = flags
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
     }
@@ -67,29 +61,10 @@ class GamePageFragment : Fragment() {
         fullscreenContentControls?.visibility = VISIBLE
     }
     private var visible: Boolean = false
-    lateinit var timer: CountDownTimer
     private val hideRunnable = Runnable { hide() }
-
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private val delayHideTouchListener = View.OnTouchListener { _, _ ->
-        if (AUTO_HIDE) {
-            delayedHide(AUTO_HIDE_DELAY_MILLIS)
-        }
-        false
-    }
-
-    private var dummyButton: Button? = null
     private var fullscreenContent: View? = null
     private var fullscreenContentControls: View? = null
-
     private var _binding: FragmentFullscreenBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     private var isSelected = ArrayList<Int>() //a changer pour ArrayList<Pair>()
@@ -100,17 +75,17 @@ class GamePageFragment : Fragment() {
     private var chosenDirection = "h"
     private var gameOver = false
 
-    lateinit var playerHand: ArrayList<String>
-    lateinit var lettersOnBoard: Array<Array<String>>
-    lateinit var gameObserver: Observer<GameState>
-    lateinit var activeTileObserver: Observer<Pair<String, Int>>
-    lateinit var deleteActiveTileObserver: Observer<Pair<String, Int>>
-    var firstLetterPlaced = false
-    lateinit var firstLetterPlace: LetterInHand
-    var oldPosRow: String = ""
-    var oldPosCol: Int = 0
-    var moveInfo: PlayerMessage = PlayerMessage("", arrayListOf())
+    private lateinit var playerHand: ArrayList<String>
+    private lateinit var lettersOnBoard: Array<Array<String>>
+    private lateinit var gameObserver: Observer<GameState>
+    private lateinit var activeTileObserver: Observer<Pair<String, Int>>
+    private lateinit var deleteActiveTileObserver: Observer<Pair<String, Int>>
+    private lateinit var firstLetterPlaced: LetterInHand
+    private lateinit var timer: CountDownTimer
 
+    private var oldPosRow: String = ""
+    private var oldPosCol: Int = 0
+    private var moveInfo: PlayerMessage = PlayerMessage("", arrayListOf())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -124,12 +99,9 @@ class GamePageFragment : Fragment() {
     @SuppressLint("MissingInflatedId")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         Coordinates.setCoordinates()
         timer = setTimer()
-
         gameObserver = Observer<GameState> { gameState ->
-            // Update the UI.)
             timer.start()
             binding.reserveLength.text = gameState.reserveLength.toString()
             isPlaying = gameState.playerTurnIndex
@@ -139,7 +111,6 @@ class GamePageFragment : Fragment() {
             binding.buttonPass.isEnabled = isYourTurn
             binding.buttonHint.isEnabled = isYourTurn
             binding.backInHand.visibility = GONE
-
             if (gameState.gameOver) {
                 gameOver = true
                 timer.cancel()
@@ -150,7 +121,6 @@ class GamePageFragment : Fragment() {
             for (player in gameState.players) {
                 if (player.username == LoggedInUser.getName()) playerHand = player.hand
             }
-
             lettersOnBoard = gameState.board
             moveInfo = gameState.message!!
             updateMoveInfo(moveInfo)
@@ -162,7 +132,6 @@ class GamePageFragment : Fragment() {
         activeTileObserver = Observer<Pair<String, Int>> { activeTile ->
             binding.gameBoard.removeView(binding.gameBoard.findViewWithTag("activeTile"))
             val selectedTile = layoutInflater.inflate(R.layout.active_tile, binding.gameBoard, false)
-
             val columnCoordinates = columnsPos[activeTile.second-1].first
             val rowCoordinates = ROWS[activeTile.first.uppercase()]
 
@@ -172,7 +141,6 @@ class GamePageFragment : Fragment() {
             )
             params.leftMargin = columnCoordinates.toInt() //x
             params.topMargin = rowCoordinates!!.toInt() //y
-
             selectedTile.tag = "activeTile"
             binding.gameBoard.addView(selectedTile, params)
         }
@@ -184,18 +152,20 @@ class GamePageFragment : Fragment() {
         gameModel.deleteActiveTile.observe(viewLifecycleOwner, deleteActiveTileObserver)
 
         //val hintList = arrayListOf("h6h acd", "v2a h", "h3c je", "h8h go", "v15e lo")
-
         binding.apply {
             buttonchat.setOnClickListener {
                 findNavController().navigate(R.id.action_fullscreenFragment_to_ChatFragment)
             }
-
             buttonPass.setOnClickListener {
                 SocketHandler.getSocket().emit("Play Turn", "Pass", "")
                 clearTurn()
             }
-
 //            buttonHint.setOnClickListener {
+            //show progress
+            //emit socket ask for indice
+            //observer socket on {
+            // tout code du dessous
+            // }
 //                updateTurn()
 //                hintHolder.removeAllViews()
 //                hintPanel.visibility = VISIBLE
@@ -275,21 +245,18 @@ class GamePageFragment : Fragment() {
 //
 //            }
 
-            binding.confirmLetter.setOnClickListener {
+            confirmLetter.setOnClickListener {
                 sendBlankLetter()
             }
-
-            binding.replaceLetterInput.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            replaceLetterInput.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     hideKeyboard()
                 }
             }
-
             abandonButton.setOnClickListener {
                 SocketHandler.getSocket().emit("Abandon")
                 findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
             }
-
             buttonExchange.setOnClickListener {
                 var lettersToSwap = ""
                 isSelected.forEachIndexed { index,i ->
@@ -299,7 +266,6 @@ class GamePageFragment : Fragment() {
                         Log.d(tag, "letters to swap $lettersToSwap")
                     }
                 }
-
                 SocketHandler.getSocket()
                     .emit("Play Turn", "Swap", lettersToSwap)
                 clearTurn()
@@ -309,7 +275,6 @@ class GamePageFragment : Fragment() {
                 var row = ""
                 var col = 0
                 var letters = ""
-
                 for (i in 0 until isPlaced.size) {
                             if (isPlaced.size == 1) {
                                 chosenDirection = "h"
@@ -334,9 +299,6 @@ class GamePageFragment : Fragment() {
                 }
                 if (letters != "") {
                     val playingArgs = "$row$col$chosenDirection $letters"
-
-                    Log.d(tag, "TO SEND - $letters")
-                    Log.d(tag, "TO SEND - $playingArgs")
                     SocketHandler.getSocket().emit("Play Turn", "Place", playingArgs)
                     clearTurn()
                 } else {
@@ -344,34 +306,15 @@ class GamePageFragment : Fragment() {
                     clearTurn()
                 }
             }
-
-
             backInHand.setOnClickListener {
                 clearTurn()
             }
-
-//            directionToggle.setOnCheckedChangeListener { _, isChecked ->
-//                if (isChecked) {
-//                    chosenDirection = "v"
-//                    Log.d("", chosenDirection)
-//                    verticalDirection.setTextColor(isChosenColor.data)
-//                    horizontalDirection.setTextColor(isNotChosenColor.data)
-//                } else {
-//                    chosenDirection = "h"
-//                    Log.d("", chosenDirection)
-//                    horizontalDirection.setTextColor(isChosenColor.data)
-//                    verticalDirection.setTextColor(isNotChosenColor.data)
-//                }
-//            }
         }
 
         val dragListener = OnDragListener { view, event ->
-            val tag = "Drag and drop"
             val draggableItem = event.localState as View
-
             val lettre = draggableItem.findViewById<TextView>(R.id.letter).text.toString()
             val lettrePoint = draggableItem.findViewById<TextView>(R.id.letterPoint).text.toString()
-
 
             event?.let {
                 when (event.action) {
@@ -380,12 +323,10 @@ class GamePageFragment : Fragment() {
                     }
                     DragEvent.ACTION_DRAG_ENTERED -> {
                         true
-                        Log.d(tag, "ACTION_DRAG_ENTERED")
                     }
                     DragEvent.ACTION_DRAG_EXITED -> {
-                        //view.invalidate()
+                        view.invalidate()
                         true
-                        Log.d(tag, "ACTION_DRAG_ENDED")
                     }
                     DragEvent.ACTION_DROP -> {
                         if (isYourTurn) {
@@ -398,49 +339,32 @@ class GamePageFragment : Fragment() {
                                 if (letterAlreadyInPosition == null) {
 
                                     if (!isInside) {
-                                        firstLetterPlace = letterInHand
+                                        firstLetterPlaced = letterInHand
                                         oldPosCol = letterInHand.col
                                         oldPosRow = letterInHand.row
                                     }
-
                                     if (!isInside) SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("x" to letterInHand.row, "y" to letterInHand.col)))
+                                    if (letterInHand.viewTag == firstLetterPlaced.viewTag) SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("x" to oldPosRow, "y" to oldPosCol)))
 
-                                    if (letterInHand.viewTag == firstLetterPlace.viewTag) SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("x" to oldPosRow, "y" to oldPosCol)))
-
-                                    Log.d("NEW PLACEMENT ", letterTagOnBoard)
-                                    Log.d("DOES IT EXIST? ",
-                                        (binding.gameBoard.findViewWithTag<View>(letterTagOnBoard) == null).toString()
-                                    )
-                                    Log.d(tag, "letterPoints - $lettrePoint")
                                     letterInHand.viewTag = draggableItem.tag as Int
-                                    Log.d(tag, "PLACED LETTER - $letterInHand")
 
                                     when (draggableItem.parent) {
                                         is LinearLayout -> {
-                                            val index = (draggableItem.parent as LinearLayout).indexOfChild(
-                                                draggableItem
-                                            )
-                                            isSelected.remove(index)
                                             isPlaced.add(letterInHand)
                                             (draggableItem.parent as LinearLayout).removeView(draggableItem)
-
                                         }
                                         is GameBoardView -> {
                                             (draggableItem.parent as GameBoardView).removeView(draggableItem)
-
-                                            if (letterInHand.viewTag == firstLetterPlace.viewTag) {
+                                            if (letterInHand.viewTag == firstLetterPlaced.viewTag) {
                                                 SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("x" to oldPosRow, "y" to oldPosCol)))
                                             }
-
                                         }
                                         else -> {}
                                     }
-
                                     val params = RelativeLayout.LayoutParams(
                                         draggableItem.width,
                                         draggableItem.height
                                     )
-
                                     params.leftMargin = letterInHand.xPosition.toInt() //x
                                     params.topMargin = letterInHand.yPosition.toInt() //y
 
@@ -448,12 +372,11 @@ class GamePageFragment : Fragment() {
                                     isPlaced.removeAll { it.viewTag == draggableItem.tag }
                                     isPlaced.add(letterInHand)
 
-                                    if (letterInHand.viewTag == firstLetterPlace.viewTag)  {
+                                    if (letterInHand.viewTag == firstLetterPlaced.viewTag)  {
                                         SocketHandler.getSocket().emit("Share First Tile", JSONObject(mapOf("x" to letterInHand.row, "y" to letterInHand.col)))
                                         oldPosCol = letterInHand.col
                                         oldPosRow = letterInHand.row
                                     }
-
                                     if (letterInHand.letter == "") binding.jokerDetected.visibility = VISIBLE
 
                                     Log.d(tag, "LETTERS PLACED - $isPlaced")
@@ -469,7 +392,6 @@ class GamePageFragment : Fragment() {
                             false
                         }
                     }
-
                     DragEvent.ACTION_DRAG_ENDED -> {
                         Log.d("IS PLACED?", isPlaced.toString())
                          if (isPlaced.size > 0) {
@@ -552,7 +474,6 @@ class GamePageFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
@@ -562,7 +483,6 @@ class GamePageFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
         // Clear the systemUiVisibility flag
         activity?.window?.decorView?.systemUiVisibility = 0
         show()
@@ -573,22 +493,9 @@ class GamePageFragment : Fragment() {
         timer.cancel()
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         timer.cancel()
-
-        dummyButton = null
-        fullscreenContent = null
-        fullscreenContentControls = null
-    }
-
-    private fun toggle() {
-        if (visible) {
-            hide()
-        } else {
-            show()
-        }
     }
 
     private fun hide() {
@@ -606,7 +513,7 @@ class GamePageFragment : Fragment() {
         // Show the system bar
         fullscreenContent?.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         visible = true
 
         // Schedule a runnable to display UI elements after a delay
@@ -659,7 +566,6 @@ class GamePageFragment : Fragment() {
             isSelectedColor,
             true
         )
-
         for ((i, letterInHand) in playerHand.withIndex()) {
             isSelected.add(0)
             val letterTile = layoutInflater.inflate(R.layout.letter_tile, binding.letterRack, false)
@@ -675,15 +581,12 @@ class GamePageFragment : Fragment() {
                 letter.text = ""
                 letterPoint.text = letterPoints["BLANK"].toString()
             }
-
             letterTile.tag = i
             binding.letterRack.addView(letterTile)
-
             val gesture = GestureDetector(context, object : SimpleOnGestureListener() {
                 override fun onDown(e: MotionEvent): Boolean {
                     return true
                 }
-
                 override fun onDoubleTap(e: MotionEvent): Boolean { //action pour swap
                     Log.d("myApp", "double tap")
                     return if (isYourTurn && !isInside) {
@@ -699,7 +602,6 @@ class GamePageFragment : Fragment() {
                         true
                     } else false
                 }
-
                 override fun onLongPress(e: MotionEvent) {
                     if (!isSelected.contains(1)) {
                         val data = ClipData.newPlainText("", "")
@@ -723,7 +625,6 @@ class GamePageFragment : Fragment() {
         val isYouColor = TypedValue()
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, isYouColor, true)
         var isWinner: PlayersState? = null
-
         binding.playersInfoHolder.removeAllViews()
         if (gameOver) {
             var isHigher = playersList[0].score
@@ -758,7 +659,6 @@ class GamePageFragment : Fragment() {
                 binding.gameWinnerHolder.visibility = VISIBLE
                 binding.gameWinner.setText(HtmlCompat.fromHtml(getString(R.string.winnerName, player.username), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
             }
-
             binding.playersInfoHolder.addView(playerInfo)
         }
     }
@@ -800,7 +700,6 @@ class GamePageFragment : Fragment() {
                 if (gameBoardCoord[row][col] != "") {
                     val columnCoordinates = columnsPos[col].first
                     val rowCoordinates = rowsPos[row].first
-
                     val trueColumn = col + 1
                     val trueRow = (row + 'A'.code).toChar()
 
@@ -818,7 +717,6 @@ class GamePageFragment : Fragment() {
                     params.topMargin = rowCoordinates.toInt() //y
 
                     letterTile?.tag = "$trueColumn$trueRow"
-                    Log.d("LETTERS ON BOARD TAG ", letterTile?.tag as String)
                     binding.gameBoard.addView(letterTile, params)
                 }
             }
@@ -851,7 +749,6 @@ class GamePageFragment : Fragment() {
             letter.text = letterToDraw
             letterPoint.text = letterPoints["BLANK"].toString()
         }
-
         return letterTile
     }
 
@@ -953,11 +850,6 @@ class GamePageFragment : Fragment() {
                         return isHorizontalStick
                      }
             }
-//            isHorizontalStick =
-//                (kotlin.math.abs(isPlaced[i].col - isPlaced[i + 1].col) == 1) && (kotlin.math.abs(
-//                    isPlaced[i].row.first() - isPlaced[i + 1].row.first()
-//                ) == 0)
-            //if (!isHorizontalStick) break
         }
         Log.d(tag, "IS H STICK? - $isHorizontalStick")
         return isHorizontalStick
@@ -997,11 +889,6 @@ class GamePageFragment : Fragment() {
                     return isVerticalStick
                 }
             }
-//            isVerticalStick =
-//                ((kotlin.math.abs(isPlaced[i].col - isPlaced[i + 1].col) == 0) && (kotlin.math.abs(
-//                    isPlaced[i].row.first() - isPlaced[i + 1].row.first()
-//                ) == 1))
-//            if (!isVerticalStick) break
         }
         Log.d(tag, "IS V STICK? - $isVerticalStick")
         return isVerticalStick
@@ -1035,7 +922,6 @@ class GamePageFragment : Fragment() {
             }
         }
     }
-
     private fun hideKeyboard() {
         val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
@@ -1055,21 +941,5 @@ class GamePageFragment : Fragment() {
         binding.buttonPlay.isEnabled = !isPlaced.any {it.letter == ""}
         binding.replaceLetterInput.setText("")
         binding.replaceLetterInput.clearFocus()
-        Log.d(tag, "changement blanc $isPlaced")
     }
-
-//
-//    private class TouchListener : OnTouchListener {
-//        override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
-//            return if (motionEvent?.action == MotionEvent.ACTION_DOWN) {
-//                val data = ClipData.newPlainText("", "")
-//                val shadowBuilder = DragShadowBuilder(view)
-//                view?.startDragAndDrop(data, shadowBuilder, view, DRAG_FLAG_OPAQUE)
-//                view?.visibility = INVISIBLE
-//                 true
-//            } else {
-//                false
-//            }
-//        }
-//    }
 }
