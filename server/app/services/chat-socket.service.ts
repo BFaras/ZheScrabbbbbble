@@ -47,7 +47,7 @@ export class ChatSocketService {
             socket.emit('Chat Creation Response', chatCreationResponse);
         });
 
-        socket.on('Public Chat List Response', async () => {
+        socket.on('Get Public Chat List', async () => {
             socket.emit('Public Chat List Response', await this.chatService.getPublicChatsUserCanJoin(this.accountInfoService.getUserId(socket)));
         });
 

@@ -21,10 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.testchatbox.MainActivity
-import com.example.testchatbox.R
-import com.example.testchatbox.ThemeManager
-import com.example.testchatbox.ThemeStorage
+import com.example.testchatbox.*
 import com.example.testchatbox.chat.ChatModel
 import com.example.testchatbox.databinding.FragmentLoginBinding
 import com.example.testchatbox.login.model.LoggedInUser
@@ -63,11 +60,11 @@ class LoginFragment : Fragment() {
 
 
         binding.darkTheme.setOnClickListener {
-            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "eclipse") };
+            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "inverted") };
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
-                    "eclipse"
+                    "inverted"
                 )
             };
             activity?.let { it1 -> ActivityCompat.recreate(it1) }
@@ -88,13 +85,13 @@ class LoginFragment : Fragment() {
             activity?.applicationContext?.let { it1 ->
                 ThemeStorage.setThemeColor(
                     it1,
-                    "cremebrulee"
+                    "classic"
                 )
             };
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
-                    "cremebrulee"
+                    "classic"
                 )
             };
             activity?.let { it1 -> ActivityCompat.recreate(it1) }
@@ -104,13 +101,13 @@ class LoginFragment : Fragment() {
             activity?.applicationContext?.let { it1 ->
                 ThemeStorage.setThemeColor(
                     it1,
-                    "astronaute"
+                    "pink"
                 )
             };
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
-                    "astronaute"
+                    "pink"
                 )
             };
             activity?.let { it1 -> ActivityCompat.recreate(it1) }
@@ -195,14 +192,33 @@ class LoginFragment : Fragment() {
             findNavController().navigate(R.id.action_loginFragment_to_resetFragment)
         }
 
-        binding.changeToFr.setOnClickListener { setLocale("fr") }
-        binding.changeToEn.setOnClickListener { setLocale("en") }
+        binding.changeToFr.setOnClickListener { setLocale("fr"); refreshActivity() }
+        binding.changeToEn.setOnClickListener { setLocale("en"); refreshActivity() }
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
         ChatModel.initialiseChat();
         LoggedInUser.connectUser(model.displayName)
-        findNavController().navigate(R.id.action_loginFragment_to_MainMenuFragment)
+        SocketHandler.getSocket().on("Theme and Language Response"){args ->
+            if(args[0]!=null && args[1]!=null){
+                val theme = args[0] as String;
+                val lang = args[1] as String;
+                LoggedInUser.setTheme(theme);
+                LoggedInUser.setLang(lang);
+                activity?.applicationContext?.let { it1 ->
+                    ThemeStorage.setThemeColor(
+                        it1,
+                        theme
+                    )
+                };
+                activity?.runOnUiThread(Runnable {
+                    setLocale(lang)
+                    findNavController().navigate(R.id.action_loginFragment_to_MainMenuFragment)
+                });
+            }
+        }
+        SocketHandler.getSocket().emit("Get Theme and Language")
+
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
@@ -226,7 +242,10 @@ class LoginFragment : Fragment() {
         activity?.baseContext?.resources?.updateConfiguration(conf,
             activity?.baseContext?.resources!!.displayMetrics
         )
-        var refresh = Intent(context, MainActivity::class.java)
+    }
+
+    private fun refreshActivity(){
+        var refresh = Intent(context, LoginActivity::class.java)
         startActivity(refresh)
     }
 }

@@ -1,18 +1,22 @@
 package com.example.testchatbox
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.app.AppCompatDelegate
 import com.example.testchatbox.ThemeManager.setCustomizedThemes
 import com.example.testchatbox.ThemeStorage.getThemeColor
 import com.example.testchatbox.databinding.ActivityMainBinding
+import com.example.testchatbox.login.model.LoggedInUser
+import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,10 +26,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCustomizedThemes(this,getThemeColor(this));
-        SocketHandler.setSocket()
-        SocketHandler.establishConnection()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setLocale();
 
         setSupportActionBar(binding.toolbar)
 
@@ -55,6 +58,17 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
             || super.onSupportNavigateUp()
     }
+
+    private fun setLocale(){
+        val locale = Locale(LoggedInUser.getLang())
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        baseContext.resources.updateConfiguration(
+            config,
+            baseContext.resources.displayMetrics
+        )
+    }
 }
 
 object ThemeStorage {
@@ -74,18 +88,21 @@ object ThemeStorage {
 object ThemeManager {
     fun setCustomizedThemes(context: Context, theme: String?) {
         when (theme) {
-            "cremebrulee" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            "eclipse" -> {
+            "classic" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            "inverted" -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 context.setTheme(R.style.EclipseTheme)
             }
-            "astronaute" -> {
+            "pink" -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 context.setTheme(R.style.PinkTheme)
             }
             "blizzard" -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 context.setTheme(R.style.BlizzardTheme)
+            }
+            else ->{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
         }
     }

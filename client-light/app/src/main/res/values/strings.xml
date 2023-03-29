@@ -19,6 +19,8 @@
     <string name="rejoindre"><![CDATA[%1$s veut rejoindre votre partie.]]></string>
     <string name="accepter">Accepter</string>
     <string name="refuser">Refuser</string>
+    <string name="ajouter">Ajouter</string>
+    <string name="FriendCode">Entrez le code se trouvant sur le profil de votre ami pour l\'ajouter </string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -32,13 +34,14 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Menu principal</string>
     <string name="second_fragment_label">Boîte de clavardage</string>
-    <string name="next" >Clavardage</string>
+    <string name="next">Clavardage</string>
     <string name="previous">Précédant</string>
     <string name="reset_fragment_label">Mot de passe oublié</string>
 
 
     <!-- Strings related to login -->
     <string name="prompt_email">Courriel</string>
+    <string name="prompt_friendcode">Code d\'ami</string>
     <string name="prompt_username"><i>Nom d\'utilisateur</i></string>
     <string name="prompt_password"><i>Mot de passe</i></string>
     <string name="action_sign_in">Se connecter</string>
@@ -54,6 +57,7 @@
     <!-- Strings related to errors -->
     <string name="NO_ERROR">Aucune erreur </string>
     <string name="ERROR">Erreur</string>
+    <string name="WRONG_FRIEND_CODE">Le code d\'ami est incorrect</string>
     <string name="FIELD_EMPTY"> Une entrée est vide</string>
     <string name="USERNAME_INVALID">Le nom est invalide</string>
     <string name="PASSWORD_INVALID">Le mot de passe est invalide</string>

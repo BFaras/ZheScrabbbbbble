@@ -20,13 +20,13 @@ export class LetterAdderService {
     mappedBoardState = new Map<string, string>();
     key: string;
     canPlay: boolean;
-    letterAdderMode:string = '';
+    letterAdderMode: string = '';
     constructor(private letterHolderService: LetterHolderService,
-         private gridService: GridService,
-          private chatService: ChatService,
-          private previewPlayerActionService: PreviewPlayersActionService) {
+        private gridService: GridService,
+        private chatService: ChatService,
+        private previewPlayerActionService: PreviewPlayersActionService) {
 
-          }
+    }
 
     onLeftClick(coords: Vec2) {
         if (this.canClick(coords)) {
@@ -39,7 +39,7 @@ export class LetterAdderService {
         }
     }
 
-    onDropLetterSpot(coords: Vec2){
+    onDropLetterSpot(coords: Vec2) {
         if (this.canDrop(coords)) {
             this.gridService.deleteAndRedraw();
             this.prevActiveSquare = this.activeSquare;
@@ -47,45 +47,44 @@ export class LetterAdderService {
         } else return false
     }
 
-    isFormerTileUsed(row:string,column:number){
-        if(this.arrowDirection){
-         const foundLetter = this.mappedBoardState.get(row + (column - 1));
-         const isDirectionLeftToRight = this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row;
-        return Boolean(foundLetter ) && isDirectionLeftToRight;
+    isFormerTileUsed(row: string, column: number) {
+        if (this.arrowDirection) {
+            const foundLetter = this.mappedBoardState.get(row + (column - 1));
+            const isDirectionLeftToRight = this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row;
+            return Boolean(foundLetter) && isDirectionLeftToRight;
         }
-        else{     
-        const foundLetter = this.mappedBoardState.get((String.fromCharCode(row.charCodeAt(0) - 1)) + column);
-        const isDirectionTopToBottom = this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row;
-        return Boolean(foundLetter) && isDirectionTopToBottom;
+        else {
+            const foundLetter = this.mappedBoardState.get((String.fromCharCode(row.charCodeAt(0) - 1)) + column);
+            const isDirectionTopToBottom = this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row;
+            return Boolean(foundLetter) && isDirectionTopToBottom;
         }
     }
 
-    findDirectionOfDrop(row:string,column:number){
-        if(this.addedLettersLog.size === ONE_LETTER_IN_LOGGER){
-            if(this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row){
+    findDirectionOfDrop(row: string, column: number) {
+        if (this.addedLettersLog.size === ONE_LETTER_IN_LOGGER) {
+            if (this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row) {
                 this.arrowDirection = false;
-            }else if(this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row)
-            {
+            } else if (this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row) {
                 this.arrowDirection = true;
             }
         }
     }
 
-    isTileAround(xIndex:string,yIndex:number):boolean{
-        if(this.addedLettersLog.size === 0 || this.isFormerTileUsed(xIndex,yIndex) ||( yIndex  === this.prevActiveSquare.y + 1 &&  xIndex == this.prevActiveSquare.x) || ( xIndex.charCodeAt(0) === this.prevActiveSquare.x.charCodeAt(0) + 1 && yIndex  === this.prevActiveSquare.y) ){
+    isTileAround(xIndex: string, yIndex: number): boolean {
+        if (this.addedLettersLog.size === 0 || this.isFormerTileUsed(xIndex, yIndex) || (yIndex === this.prevActiveSquare.y + 1 && xIndex == this.prevActiveSquare.x) || (xIndex.charCodeAt(0) === this.prevActiveSquare.x.charCodeAt(0) + 1 && yIndex === this.prevActiveSquare.y)) {
             this.activeSquare = { x: xIndex, y: yIndex }
             return true;
         }
         return false;
     }
 
-    isRightDirection(row:string,column:number):boolean{
-        if(this.addedLettersLog.size >= 1){
-            if(this.arrowDirection == true && this.prevActiveSquare.y === column)
+    isRightDirection(row: string, column: number): boolean {
+        if (this.addedLettersLog.size >= 1) {
+            if (this.arrowDirection == true && this.prevActiveSquare.y === column)
                 return false
-            else if(this.arrowDirection == false && this.prevActiveSquare.x === row)
+            else if (this.arrowDirection == false && this.prevActiveSquare.x === row)
                 return false
-        }else{
+        } else {
             return true
         }
         return true;
@@ -94,8 +93,8 @@ export class LetterAdderService {
 
     canDrop(coords: Vec2): boolean {
         const foundCoords = this.findCoords(coords.x, coords.y);
-        this.findDirectionOfDrop(foundCoords.row,foundCoords.column)
-        return this.canPlay &&  foundCoords.valid &&  this.isTileAround(foundCoords.row,foundCoords.column) && !this.isPositionTaken() && this.isRightDirection(foundCoords.row,foundCoords.column) ;
+        this.findDirectionOfDrop(foundCoords.row, foundCoords.column)
+        return this.canPlay && foundCoords.valid && this.isTileAround(foundCoords.row, foundCoords.column) && !this.isPositionTaken() && this.isRightDirection(foundCoords.row, foundCoords.column);
     }
 
     canClick(coords: Vec2): boolean {
@@ -119,7 +118,7 @@ export class LetterAdderService {
                 break;
             }
             default: {
-                if(this.letterAdderMode === "keyPress" || this.letterAdderMode === ""){
+                if (this.letterAdderMode === "keyPress" || this.letterAdderMode === "") {
                     this.addLetters(key);
                 }
             }
@@ -134,7 +133,7 @@ export class LetterAdderService {
                 /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty ecrie lettre*/
                 console.log(this.playerHand)
                 console.log(this.activeSquare)
-                if (this.playerHand.length === 6){
+                if (this.playerHand.length === 6) {
                     console.log('sent first Tile')
                     this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
                 }
@@ -155,10 +154,9 @@ export class LetterAdderService {
         if (this.inPlayerHand() && this.isInBounds()) {
             if (!this.isPositionTaken()) {
                 this.addToHand(false);
-                /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty poser lettre*/
                 console.log(this.playerHand)
                 console.log(this.activeSquare)
-                if (this.playerHand.length === 6){
+                if (this.playerHand.length === 6) {
                     console.log('sent first Tile')
                     this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
                 }
@@ -181,7 +179,7 @@ export class LetterAdderService {
 
     removeLetters() {
         const decrement = -1;
-        if (this.addedLettersLog.size === 1){
+        if (this.addedLettersLog.size === 1) {
             this.letterAdderMode = "";
             this.previewPlayerActionService.removeSelectedTile(this.activeSquare);
         }
@@ -194,7 +192,7 @@ export class LetterAdderService {
         while (this.isPositionTaken()) {
             this.changeActivePosition(decrement);
         }
-        if(this.letterAdderMode =="keyPress"){
+        if (this.letterAdderMode == "keyPress") {
             if (this.addedLettersLog.size) {
                 this.addArrowSquare();
             } else {

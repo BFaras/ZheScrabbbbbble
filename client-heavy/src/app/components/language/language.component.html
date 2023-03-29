@@ -1,4 +1,3 @@
 <div class="lang">
-    <p class="lang-p" id="en" (click)="translateLanguageTo('en')" *ngIf="currentLang === 'fr'">EN</p> 
-    <p class="lang-p" id="fr" (click)="translateLanguageTo('fr')" *ngIf="currentLang === 'en'">FR</p> 
+    <p class="lang-p" id="en" (click)="translateLanguageTo(oppositeLang)">{{ oppositeLang }}</p> 
 </div>

@@ -190,3 +190,50 @@ export const pink: Theme = {
         "--box-shadow": "0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11)"
     }
 };
+
+export const blizzard: Theme = {
+    name: "blizzard",
+    properties: {
+        "--accent-default": "#EE4540",
+        "--playarea-motx2": "#EE4540",
+        "--playarea-motx3": "#708090",
+        "--playarea-letterx2": "#9C9A9A",
+        "--playarea-letterx3": "#B7C1CC",
+        "--playarea-background": "#F5F5F5",
+        "--playarea-coords": "#C72C41",
+        "--playarea-grid": "black",
+
+        "--background-default": "#fbf9fb",
+        "--background-secondary": " #FFFFFF",
+        "--background-tertiary": "#F3F3F3",
+        "--background-quaternary": "#EFF4F5",
+
+        "--text-default": "#343239",
+        "--text-secondary": "#C72C41",
+        "--input-highlight": "#EE4540",
+
+        "--button-text-default": "black",
+        "--button-text-hover": "white",
+
+        "--button-primary": "#E3E1E3",
+        "--button-primary-hover": "#C72C41",
+
+        "--button-secondary": "#CBC6C6",
+        "--button-secondary-hover": "#585858",
+
+        "--button-tertiary": "#EE4540",
+        "--button-tertiary-hover": "#C72C41",
+
+        "--button-quaternary": "#B6C5D4",
+        "--button-quaternary-hover": "#4B5763",
+
+        "--scroll-default": "#FFFFFF",
+        "--scroll-background": "#fbf9fb",
+        "--scroll-hover": "#EE4540",
+
+        "--tile-on-board": "#A9A9A9",
+        "--tile-on-holder": "#A9A9A9",
+
+        "--box-shadow": "0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11)"
+    }
+};
