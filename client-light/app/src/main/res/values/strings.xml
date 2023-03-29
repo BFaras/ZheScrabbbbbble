@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">SCRBBLE</string>
+    <string name="app_name" translatable="false">SCRABBLE</string>
 
     <string name="action_settings">Paramètres</string>
     <string name="tapez_quelque_chose">Tapez quelque chose...</string>
@@ -16,9 +16,11 @@
     <string name="tripleWord">TM</string>
     <string name="reserve">LETTRES RESTANTES DANS LA RÉSERVE</string>
     <string name="abandonner">Abandonner</string>
-    <string name="rejoindre">veut rejoindre votre partie</string>
+    <string name="rejoindre"><![CDATA[%1$s veut rejoindre votre partie.]]></string>
     <string name="accepter">Accepter</string>
     <string name="refuser">Refuser</string>
+    <string name="ajouter">Ajouter</string>
+    <string name="FriendCode">Entrez le code se trouvant sur le profil de votre ami pour l\'ajouter </string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -32,17 +34,18 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Menu principal</string>
     <string name="second_fragment_label">Boîte de clavardage</string>
-    <string name="next" >Clavardage</string>
+    <string name="next">Clavardage</string>
     <string name="previous">Précédant</string>
     <string name="reset_fragment_label">Mot de passe oublié</string>
 
 
     <!-- Strings related to login -->
     <string name="prompt_email">Courriel</string>
-    <string name="prompt_username">Nom d\'utilisateur</string>
-    <string name="prompt_password">Mot de passe</string>
-    <string name="action_sign_in">Connection</string>
-    <string name="action_sign_in_short">Connection</string>
+    <string name="prompt_friendcode">Code d\'ami</string>
+    <string name="prompt_username"><i>Nom d\'utilisateur</i></string>
+    <string name="prompt_password"><i>Mot de passe</i></string>
+    <string name="action_sign_in">Se connecter</string>
+    <string name="action_sign_in_short">Se connecter</string>
     <string name="welcome">"Bienvenue!"</string>
     <string name="invalid_username">Pas un nom valid</string>
     <string name="invalid_email">Pas un courriel valid</string>
@@ -54,10 +57,11 @@
     <!-- Strings related to errors -->
     <string name="NO_ERROR">Aucune erreur </string>
     <string name="ERROR">Erreur</string>
+    <string name="WRONG_FRIEND_CODE">Le code d\'ami est incorrect</string>
     <string name="FIELD_EMPTY"> Une entrée est vide</string>
-    <string name="USERNAME_INVALID">Le nom est invalid</string>
-    <string name="PASSWORD_INVALID">Le mot de passe est invalid</string>
-    <string name="EMAIL_INVALID">Le courriel est invalid</string>
+    <string name="USERNAME_INVALID">Le nom est invalide</string>
+    <string name="PASSWORD_INVALID">Le mot de passe est invalide</string>
+    <string name="EMAIL_INVALID">Le courriel est invalide</string>
     <string name="USERNAME_TAKEN">Le nom est déjà utilisé</string>
     <string name="DATABASE_UNAVAILABLE">La base de données est indisponible. Veuillez réessayer plus tard.</string>
     <string name="WRONG_SECURITY_ANSWER">Mauvaise réponse</string>
@@ -65,4 +69,46 @@
     <string name="ROOM_PASSWORD_INCORRECT">Le mot de passe est incorrect</string>
     <string name="JOIN_REQUEST_REFUSED">Votre demande d\'adhésion a été refusée</string>
     <string name="ROOM_IS_FULL">La salle est déjà pleine</string>
+    <string name="ReplaceLetter"><i>Tapez une lettre à remplacer.</i></string>
+    <string name="MSG_1"><![CDATA[<b>%1$s</b> a placé <i>%2$s</i> pour %3$s point(s).]]></string>
+    <string name="MSG_2"><![CDATA[<b>%1$s</b> a tenté de placer un mot invalide.]]></string>
+    <string name="MSG_3"><![CDATA[<b>%1$s</b> a échangé %2$s lettre(s).]]></string>
+    <string name="MSG_4"><![CDATA[<b>%1$s</b> a passé son tour.]]></string>
+    <string name="MSG_5"><![CDATA[<b>%1$s</b> s\'est déconnecté et a été remplacé par un JV.]]></string>
+    <string name="MSG_6"><![CDATA[<b>%1$s</b> a manqué de temps et a passé son tour.]]></string>
+    <string name="MSG_7"><![CDATA[Fin de partie - <b>%1$s</b> lettres restantes]]></string>
+    <string name="scrabbleName">SCRABBLE</string>
+    <string name="info_panel">PANNEAU INFORMATIF</string>
+    <string name="detectedJoker">JOKER DÉTECTÉ!</string>
+    <string name="blankLetterOnBoard">Une lettre blanche a été placée sur le plateau.</string>
+    <string name="blankLetterWarning">Une fois choisies, les lettres ne peuvent plus être changées. Choisissez bien!</string>
+    <string name="registerText">Pas de compte? Inscrivez-vous!</string>
+    <string name="forgotPasswordText">Mot de passe oublié?</string>
+    <string name="reset_password">Réinitialiser mot de passe</string>
+    <string name="register">Inscription</string>
+    <string name="fr" translatable="false">FR</string>
+    <string name="en" translatable="false">EN</string>
+    <string name="security_question">Question de sécurité</string>
+    <string name="answer">Réponse</string>
+    <string name="passwordResetProcess">Enter a username to start the password reset process.</string>
+    <string name="reset">Reset</string>
+    <string name="answerReset">Réponse</string>
+    <string name="new_password">Nouveau mot de passe</string>
+    <string name="register_new_passsword">Register New Passsword</string>
+    <string name="times_up">TIME\'S UP!</string>
+    <string name="talkingIntext">Now talking in</string>
+    <string name="manage_chats">Manage Chats</string>
+    <string name="hello_message"><![CDATA[Hello <b>%1$s</b>!]]></string>
+    <string name="privateRoom">Private</string>
+    <string name="publicRoom">Public</string>
+    <string name="protectedRoom">Protected</string>
+    <string name="join_game_text">Do you want to join the game as an observer?</string>
+    <string name="enter_the_room_password">enter the room password</string>
+    <string name="quit">Quitter</string>
+    <string name="winnerName"><![CDATA[%1$s a gagné la partie!]]></string>
+    <string name="waitingRoomText">Si l\'hôte décide de lancer la partie et qu\'il y a au minimum 2 joueurs , les places restantes seront comblées par des Joueurs Virtuels.</string>
+    <string name="create_a_room">create a room</string>
+    <string name="enter_a_room_name"><i>Enter a room name</i></string>
+    <string name="enter_a_chat_name"><i>Enter a chat name</i></string>
+
 </resources>
