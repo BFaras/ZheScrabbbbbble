@@ -18,7 +18,10 @@ import { MaterialPageComponent } from '@app/pages/material-page/material-page.co
 import { SoloMultiPageComponent } from '@app/pages/solo-multi-page/solo-multi-page.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ChangeNamePopUpComponent } from './components/change-name-pop-up/change-name-pop-up.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { ConnectionHistoryAreaComponent } from './components/connection-history-area/connection-history-area.component';
+import { FormerActionHistoryAreaComponent } from './components/former-action-history-area/former-action-history-area.component';
 import { CreateGameComponent } from './components/game-initialisation/create-game/create-game.component';
 import { JoinGameComponent } from './components/game-initialisation/join-game/join-game.component';
 import { ObserverRoomComponent } from './components/game-initialisation/observer-room/observer-room.component';
@@ -100,6 +103,9 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         BracketPageComponent,
         ResultPageComponent,
         SignUpAvatarPopUpComponent,
+        ConnectionHistoryAreaComponent,
+        FormerActionHistoryAreaComponent,
+        ChangeNamePopUpComponent,
     ],
     imports: [
         AppMaterialModule,

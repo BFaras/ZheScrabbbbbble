@@ -154,7 +154,6 @@ export class LetterAdderService {
         if (this.inPlayerHand() && this.isInBounds()) {
             if (!this.isPositionTaken()) {
                 this.addToHand(false);
-                /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty poser lettre*/
                 console.log(this.playerHand)
                 console.log(this.activeSquare)
                 if (this.playerHand.length === 6) {

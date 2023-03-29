@@ -1,10 +1,12 @@
-import { Component, OnInit ,OnDestroy} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { connectionHistory } from '@app/classes/connection-history';
 import { ProfileInfo } from '@app/classes/profileInfo';
+import { ChangeNamePopUpComponent } from '@app/components/change-name-pop-up/change-name-pop-up.component';
 import { AvatarPopUpComponent } from '@app/components/profil-pop-up/avatar-pop-up/avatar-pop-up.component';
-import { NO_ERROR } from '@app/constants/error-codes';
-import { classic, Theme } from '@app/constants/themes';
+import { NO_ERROR, USERNAME_TAKEN } from '@app/constants/error-codes';
+import { Theme } from '@app/constants/themes';
 import { AccountService } from '@app/services/account-service/account.service';
 import { ThemesService } from '@app/services/themes-service/themes-service';
 import { Subscription } from 'rxjs';
@@ -14,32 +16,45 @@ import { Subscription } from 'rxjs';
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.scss']
 })
-export class ProfilePageComponent implements OnInit,OnDestroy {
+export class ProfilePageComponent implements OnInit, OnDestroy {
   accountProfile: ProfileInfo
   accountUsername: string;
+  errorCodeUsername: string
   subscriptionChangeAvatar: Subscription;
-  currentTheme: Theme = classic;
+  subscriptionUsername: Subscription;
+  progressionBarValue: number
+  connectionHistory: connectionHistory = {
+    connections: [],
+    disconnections: [],
+  };
+  constructor(private accountService: AccountService,
+    public dialog: MatDialog,
+    private themeService: ThemesService,
+    private router: Router) {}
 
-  constructor(private accountService: AccountService, public dialogAvatar: MatDialog, private themeService: ThemesService, private router: Router) {
-    this.subscriptionChangeAvatar = this.accountService.getAvatarChangeStatus()
-      .subscribe((errorCode: string) => {
-        if (errorCode === NO_ERROR) {
-          window.alert("Changement d'avatar réussi!")
-        } else {
-          window.alert("La base de données est inacessible!")
-        }
-      })
-    this.getUserName();
-    this.accountProfile = this.accountService.getProfile();
-
+  ngOnDestroy() {
+    this.subscriptionChangeAvatar.unsubscribe();
+    this.subscriptionUsername.unsubscribe()
   }
 
-  ngOnDestroy(){
-    this.subscriptionChangeAvatar.unsubscribe();
+  openDialogChangeName(): void {
+    const dialogRef = this.dialog.open(ChangeNamePopUpComponent, {
+      width: '250px',
+      height: '250px',
+      data: { accountService: this.accountService }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(this.errorCodeUsername)
+      if (result.name && this.errorCodeUsername === "0") {
+        this.accountService.setUsername(result.name);
+        this.getUserName();
+      }
+    });
+
   }
 
   openDialogChangeColor(): void {
-    const dialogReference = this.dialogAvatar.open(AvatarPopUpComponent, {
+    const dialogReference = this.dialog.open(AvatarPopUpComponent, {
       width: '900px',
       height: '600px',
       data: { accountService: this.accountService }
@@ -57,17 +72,27 @@ export class ProfilePageComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
-    /*
-    let current = localStorage.getItem("currentTheme");
-    if (current) {
-      this.changeThemeTo(current);
-      document.getElementById(current)!.className += " active";
-    }
-    else {
-      localStorage.setItem("currentTheme", classic.toString());
-      document.getElementById('classic')!.className += " active";
-    }
-    */
+    this.subscriptionChangeAvatar = this.accountService.getAvatarChangeStatus()
+      .subscribe((errorCode: string) => {
+        if (errorCode === NO_ERROR) {
+          window.alert("Changement d'avatar réussi!")
+        } else {
+          window.alert("La base de données est inacessible!")
+        }
+      })
+    this.subscriptionUsername = this.accountService.getChangeUserNameResponse().subscribe((errorCode: string) => {
+      this.errorCodeUsername = errorCode;
+      if (errorCode === NO_ERROR) {
+        window.alert("Changement du nom de l'utilisateur réussi!")
+      } else if (errorCode === USERNAME_TAKEN) {
+        window.alert("Le nom choisi n'est pas disponible!")
+      } else {
+        window.alert("La base de données est inacessible!")
+      }
+    })
+    this.getUserName();
+    this.accountProfile = this.accountService.getProfile();
+    this.progressionBarValue = (this.accountProfile.levelInfo.xp / this.accountProfile.levelInfo.nextLevelXp) * 100
   }
 
   changeThemeTo(newTheme: string) {

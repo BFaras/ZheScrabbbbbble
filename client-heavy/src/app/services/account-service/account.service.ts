@@ -66,11 +66,7 @@ export class AccountService {
     console.log(lang);
     this.socket.emit('Change Language', lang);
   }
-  /*
-  askProfileInformation(): void {
-    this.socket.emit("Get Profile Information", this.getUsername());
-  }
-*/
+
   getAvatarChangeStatus(): Observable<string> {
     return new Observable((observer: Observer<string>) => {
       this.socket.on('Avatar Change Response', (status: string) => {
@@ -111,6 +107,22 @@ export class AccountService {
     });
 
   }
+
+  changeUsername(newUsername: string) {
+    this.socket.emit('Change Username', newUsername);
+  }
+
+
+  getChangeUserNameResponse(): Observable<string> {
+    return new Observable((observer: Observer<string>) => {
+      this.socket.on('Username Change Response', (response: string) => {
+        observer.next(response);
+      });
+    });
+
+  }
+
+
 
 
 }
