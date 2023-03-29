@@ -1,4 +1,4 @@
-import { Component, OnInit ,OnDestroy} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ProfileInfo } from '@app/classes/profileInfo';
@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.scss']
 })
-export class ProfilePageComponent implements OnInit,OnDestroy {
+export class ProfilePageComponent implements OnInit, OnDestroy {
   accountProfile: ProfileInfo
   accountUsername: string;
   subscriptionChangeAvatar: Subscription;
@@ -31,10 +31,9 @@ export class ProfilePageComponent implements OnInit,OnDestroy {
       })
     this.getUserName();
     this.accountProfile = this.accountService.getProfile();
-
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subscriptionChangeAvatar.unsubscribe();
   }
 

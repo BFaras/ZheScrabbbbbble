@@ -98,7 +98,7 @@
     "NAVBAR":{
         "HOME": "Home",
         "PROFILE": "Profile",
-        "CHAT": "Chat",
+        "CHAT": "Chat Pop Up",
         "FRIENDS":"Friends",
         "SIGNOUT": "Sign Out"
     },

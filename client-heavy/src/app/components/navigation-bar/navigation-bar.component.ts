@@ -9,7 +9,7 @@ import { SocketManagerService } from '@app/services/socket-manager-service/socke
 export class NavigationBarComponent {
 
   @Output("navLogic") navLogic: EventEmitter<void> = new EventEmitter();
-
+  active: boolean = true;
   constructor(private socketManager: SocketManagerService) {}
 
   disconnectUser() {
@@ -19,5 +19,13 @@ export class NavigationBarComponent {
 
   callNavLogic() {
     this.navLogic.emit();
+  }
+
+  openChat() {
+    (window as any).openChat();
+  }
+
+  setActive(chat: boolean) {
+    this.active = chat;
   }
 }

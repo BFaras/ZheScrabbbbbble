@@ -63,7 +63,6 @@ export class AccountService {
   }
 
   changeLanguage(lang: string) {
-    console.log(lang);
     this.socket.emit('Change Language', lang);
   }
   /*
