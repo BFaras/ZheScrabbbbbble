@@ -10,3 +10,6 @@ export const GAME_TIME_AVRG_STAT_NAME = 'Average Game Time';
 
 export const FRIEND_CODE_LENGTH = 20;
 export const FRIEND_ROOM_BASE_NAME = 'friend';
+
+export const MIN_ASCII_LETTER = 65;
+export const MAX_ASCII_LETTER = 122;

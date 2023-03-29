@@ -9,7 +9,7 @@
     android:background="@color/black"
     card_view:cardCornerRadius="5dp"
     card_view:cardElevation="5dp"
-    card_view:cardBackgroundColor="@color/AntiqueWhite"
+    card_view:cardBackgroundColor="?lettersInHand"
     card_view:cardUseCompatPadding="false">
 
     <RelativeLayout

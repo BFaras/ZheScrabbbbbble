@@ -36,13 +36,19 @@ export class FriendSocketService {
         });
 
         socket.on('Send Friend Request', async (friendCode: string) => {
-            const errorCode = await this.friendService.addFriend(this.accountInfoService.getUserId(socket), friendCode);
+            const errorCode: string = await this.friendService.addFriend(this.accountInfoService.getUserId(socket), friendCode);
+            socket.emit('Send Request Response', errorCode);
+        });
+
+        socket.on('Remove Friend', async (friendUsername: string) => {
+            const friendUserId = await this.dbService.getUserId(friendUsername);
+            const errorCode: string = await this.friendService.removeFriend(this.accountInfoService.getUserId(socket), friendUserId);
 
             if (errorCode === NO_ERROR) {
-                this.addFriendsToSocket(socket, await this.friendService.getFriendIdFromCode(friendCode));
+                this.updateFriendRemovedAsFriend(friendUserId, this.accountInfoService.getUsername(socket));
             }
 
-            socket.emit('Send Request Response', errorCode);
+            socket.emit('Remove Friend Response', errorCode);
         });
     }
 
@@ -55,13 +61,9 @@ export class FriendSocketService {
         this.sio?.in(this.friendService.getFriendRoomName(userStatus.userId)).emit('Update friend status', username, userStatus.status);
     }
 
-    private async addFriendsToSocket(socket: io.Socket, friendUserId: string) {
-        socket.join(this.friendService.getFriendRoomName(friendUserId));
-
-        if (this.usersStatusService.isUserOnline(friendUserId)) {
-            this.usersStatusService
-                .getUserSocketFromId(friendUserId)
-                ?.join(this.friendService.getFriendRoomName(this.accountInfoService.getUserId(socket)));
+    private async updateFriendRemovedAsFriend(userId: string, usernameOfFriend: string) {
+        if (this.usersStatusService.isUserOnline(userId)) {
+            this.usersStatusService.getUserSocketFromId(userId)?.emit('Friend removed you as friend', usernameOfFriend);
         }
     }
 }
