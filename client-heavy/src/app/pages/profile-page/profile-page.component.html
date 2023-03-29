@@ -25,6 +25,12 @@
         <p class = "name">Code d'utilisateur: {{accountProfile.userCode}}</p>
         <p class = "level"> Niveau : {{accountProfile.levelInfo.level}} </p>
         </div>
+        <div id="tournamentMedals" >
+            <div class ="medals" *ngFor = "let medal of accountProfile.tournamentWins">
+                <i class="fab fa-medal"></i>
+                <p class="numberOfMedals">{{medal}}</p>
+            </div>
+        </div>
     </mat-card>
     <div id = "account-other-info">
         <div id="stats-and-former-actions">

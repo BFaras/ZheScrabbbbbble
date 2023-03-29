@@ -14,6 +14,12 @@
     font-family: 'Courier New', Courier, monospace;
     font-size: 24px;
     font-weight: bold;
+    display: flex;
+    position: relative;
+    width: 79%;
+    height: 25%;
+    padding: 10px;
+    justify-content: space-around;
 }
 
 .avatarSection{
@@ -32,14 +38,21 @@
 #changeName{
 
 }
+#tournamentMedals{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    justify-content: space-around;
+    width: 30%;
+    height: 100%;
+}
 
 #nameLevel{
     display: flex;
     flex-direction: column;
     position: relative;
-    align-items: center;
     justify-content: center;
-    left: 1vw;
     font-size: 32px;
     align-items: flex-start;
 }
