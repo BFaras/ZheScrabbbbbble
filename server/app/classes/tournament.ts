@@ -1,5 +1,8 @@
 import { MILLISECOND_IN_MINUTES, TOURNAMENT_ROUND_START_TIMER } from '@app/constants/basic-constants';
+import { AccountInfoService } from '@app/services/account-info.service';
+import { ProfileService } from '@app/services/profile.service';
 import * as io from 'socket.io';
+import Container from 'typedi';
 
 export const MAX_TOURNAMENT_CODE = 100000;
 export const TOURNAMENT_ROUND_LENGTH = 15;
@@ -28,9 +31,11 @@ export class Tournament {
     private rooms: string[];
     private round: number = 0;
     private tournamentPhase: number;
-    private time: number; 
+    private time: number;
+    private profileService: ProfileService;
+    private accountInfoService: AccountInfoService;
 
-    private gameCreationCallback: (tid: string, users: (io.Socket|null)[], round: number) => string[];
+    private gameCreationCallback: (tid: string, users: (io.Socket | null)[], round: number) => string[];
     private gameStartCallback: (tid: string, rooms: string[]) => void;
     private gameEndCallback: (tid: string) => void;
     private timerMessageCallback: (tid: string, timeLeft: string) => void;
@@ -42,6 +47,8 @@ export class Tournament {
         }
         Tournament.tournamentCode = (Tournament.tournamentCode + 1) % MAX_TOURNAMENT_CODE;
         this.id = 'T' + Tournament.tournamentCode;
+        this.profileService = Container.get(ProfileService);
+        this.accountInfoService = Container.get(AccountInfoService);
     }
 
     getID(): string {
@@ -58,8 +65,8 @@ export class Tournament {
         }
     }
 
-    updateGameRoomCodes(rooms: string[]){
-        for(let i = 0; i < rooms.length; i++){
+    updateGameRoomCodes(rooms: string[]) {
+        for (let i = 0; i < rooms.length; i++) {
             this.games[i + 2].roomCode = rooms[i];
         }
     }
@@ -71,15 +78,15 @@ export class Tournament {
         return false;
     }
 
-    removePlayer(username: string){
+    removePlayer(username: string) {
         let index = -1;
         for (let player of this.players) {
-            if (player.username === username){
+            if (player.username === username) {
                 index = this.players.indexOf(player);
                 break;
             }
         }
-        if(index < 0) return;
+        if (index < 0) return;
         this.players.splice(index, 1);
     }
 
@@ -91,7 +98,7 @@ export class Tournament {
         return this.rooms;
     }
 
-    startTournament(gameCreationCallback: (tid: string, users: io.Socket[], round: number) => string[], gameStartCallback: (tid: string, rooms: string[]) => void, gameEndCallback: (tid: string) => void, timerMessageCallback: (tid : string, timeLeft : string) => void) {
+    startTournament(gameCreationCallback: (tid: string, users: io.Socket[], round: number) => string[], gameStartCallback: (tid: string, rooms: string[]) => void, gameEndCallback: (tid: string) => void, timerMessageCallback: (tid: string, timeLeft: string) => void) {
         this.gameCreationCallback = gameCreationCallback;
         this.gameStartCallback = gameStartCallback;
         this.gameEndCallback = gameEndCallback;
@@ -115,9 +122,9 @@ export class Tournament {
             if (game.roomCode !== id) continue;
             let otherName = '';
             game.status = GameStatus.FINISHED;
-            if(!name) {
+            if (!name) {
                 game.winnerIndex = -1;
-            }else{
+            } else {
                 for (let i = 0; i < game.players.length; i++) {
                     if (game.players[i] === name) {
                         if (!isLoser) {
@@ -133,11 +140,11 @@ export class Tournament {
             }
             if (game.type.includes('Semi')) {
                 let loser = isLoser ? name : otherName;
-                if(!loser) loser = 'N/A';
-                else if(!this.getSocketFromName(loser)) loser = 'N/A';
+                if (!loser) loser = 'N/A';
+                else if (!this.getSocketFromName(loser)) loser = 'N/A';
                 let winner = isLoser ? otherName : name;
-                if(!winner) winner = 'N/A';
-                else if(!this.getSocketFromName(winner)) winner = 'N/A';
+                if (!winner) winner = 'N/A';
+                else if (!this.getSocketFromName(winner)) winner = 'N/A';
                 const final1 = this.getGame('Final1');
                 if (final1) {
                     final1.players.push(winner);
@@ -167,37 +174,49 @@ export class Tournament {
             const secondPlace = final1.players[(index1 + 1) % 2];
             const index2 = final2.winnerIndex < 0 ? 0 : final2.winnerIndex;
             const thridPlace = final2.players[index2];
-            if(firstPlace !== 'N/A'){
-                //TODO Give gold medal
+            if (firstPlace !== 'N/A') {
+                let socket = this.getSocketFromName(firstPlace);
+                if (socket) {
+                    let userId = this.accountInfoService.getUserId(socket);
+                    this.profileService.addTournamentWin(userId, 1);
+                }
             }
-            if(secondPlace !== 'N/A'){
-                //TODO Give silver medal
+            if (secondPlace !== 'N/A') {
+                let socket = this.getSocketFromName(secondPlace);
+                if (socket) {
+                    let userId = this.accountInfoService.getUserId(socket);
+                    this.profileService.addTournamentWin(userId, 2);
+                }
             }
-            if(thridPlace !== 'N/A'){
-                //TODO Give bronze medal
+            if (thridPlace !== 'N/A') {
+                let socket = this.getSocketFromName(thridPlace);
+                if (socket) {
+                    let userId = this.accountInfoService.getUserId(socket);
+                    this.profileService.addTournamentWin(userId, 3);
+                }
             }
             console.log(new Date().toLocaleTimeString() + ' | Tournament Over');
         }
     }
 
-    getTimePhase(): {time: number, phase: number}{
+    getTimePhase(): { time: number, phase: number } {
         const secondsElapsed = Math.floor((Date.now() - this.time) / 1000);
         let timeLeft;
-        switch(this.tournamentPhase){
-            case 0 : 
+        switch (this.tournamentPhase) {
+            case 0:
                 timeLeft = (TOURNAMENT_ROUND_START_TIMER / 1000) - secondsElapsed;
                 break;
-            case 1 : 
+            case 1:
                 timeLeft = (TOURNAMENT_ROUND_LENGTH * MILLISECOND_IN_MINUTES / 1000) - secondsElapsed;
                 break;
-            default  : 
+            default:
                 timeLeft = 0;
                 break;
         }
-        return {time : timeLeft, phase : this.tournamentPhase}
+        return { time: timeLeft, phase: this.tournamentPhase }
     }
 
-    getSocketFromName(user: string): (io.Socket|null){
+    getSocketFromName(user: string): (io.Socket | null) {
         for (let player of this.players) {
             if (user === player.username) {
                 return player.socket;
@@ -221,9 +240,9 @@ export class Tournament {
             this.startRoundTimer();
             this.gameStartCallback(this.id, this.rooms);
         }, TOURNAMENT_ROUND_START_TIMER);
-    } 
+    }
 
-    private getSocketFromNames(users: string[]): (io.Socket|null)[] {
+    private getSocketFromNames(users: string[]): (io.Socket | null)[] {
         const sockets = [];
         for (let user of users) {
             sockets.push(this.getSocketFromName(user));
@@ -244,10 +263,10 @@ export class Tournament {
         this.time = Date.now();
         this.roundTimer = setInterval(() => {
             nbMinLeft--;
-            if(TIME_LEFT_WARNINGS.includes(nbMinLeft)){
+            if (TIME_LEFT_WARNINGS.includes(nbMinLeft)) {
                 this.timerMessageCallback(this.id, nbMinLeft.toString());
             }
-            if(nbMinLeft <= 0) {
+            if (nbMinLeft <= 0) {
                 clearInterval(this.roundTimer);
                 this.gameEndCallback(this.id);
             }
