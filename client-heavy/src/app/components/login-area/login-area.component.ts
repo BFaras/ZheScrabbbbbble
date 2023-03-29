@@ -18,7 +18,7 @@ export class LoginAreaComponent implements OnInit, OnDestroy {
     avatar: "",
     securityQuestion: { question: "", answer: "" },
   }
-  subscription: Subscription
+  subscription: Subscription;
   hide: boolean = true;
   isConnected: boolean = false;
 

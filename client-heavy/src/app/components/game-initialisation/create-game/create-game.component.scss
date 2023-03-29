@@ -1,13 +1,12 @@
 .container {
     background-color: var(--background-default);
-    height: 75.5%;
-    padding: 5% 0% 4% 0%;
+    height: 94vh;
 }
 
 .justified {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
@@ -57,7 +56,7 @@ mat-radio-button {
 }
 
 .logo {
-    margin-top: 1%;
+    margin: 50px 0px 120px 0px;
     font-family: "Shrikhand";
     font-size: 95px;
     color: var(--text-default);

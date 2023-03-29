@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/MainMenuFragment">
 
     <fragment
         android:id="@+id/MainMenuFragment"
@@ -15,11 +15,17 @@
             android:id="@+id/action_MainMenuFragment_to_ChatFragment"
             app:destination="@id/ChatFragment" />
         <action
-            android:id="@+id/action_MainMenuFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-        <action
             android:id="@+id/action_MainMenuFragment_to_gameListFragment"
             app:destination="@id/gameListFragment" />
+        <action
+            android:id="@+id/action_MainMenuFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
+        <action
+            android:id="@+id/action_MainMenuFragment_to_profileActivity"
+            app:destination="@id/profileActivity" />
+        <action
+            android:id="@+id/action_MainMenuFragment_to_loginActivity2"
+            app:destination="@id/loginActivity2" />
     </fragment>
     <fragment
         android:id="@+id/ChatFragment"
@@ -34,41 +40,7 @@
             android:id="@+id/action_ChatFragment_to_manageChatFragment"
             app:destination="@id/manageChatFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.testchatbox.login.LoginFragment"
-        android:label="Log In"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_loginFragment_to_MainMenuFragment"
-            app:destination="@id/MainMenuFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_registerFragment"
-            app:destination="@id/registerFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_resetFragment"
-            app:destination="@id/resetFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/registerFragment"
-        android:name="com.example.testchatbox.login.RegisterFragment"
-        android:label="Register"
-        tools:layout="@layout/fragment_register" >
-        <action
-            android:id="@+id/action_registerFragment_to_MainMenuFragment"
-            app:destination="@id/MainMenuFragment" />
 
-    </fragment>
-    <fragment
-        android:id="@+id/resetFragment"
-        android:name="com.example.testchatbox.login.ResetPasswordFragment"
-        android:label="@string/reset_fragment_label"
-        tools:layout="@layout/fragment_register" >
-        <action
-            android:id="@+id/action_resetFragment_to_MainMenuFragment"
-            app:destination="@id/MainMenuFragment" />
-
-    </fragment>
     <fragment
         android:id="@+id/manageChatFragment"
         android:name="com.example.testchatbox.chat.ManageChatFragment"
@@ -115,4 +87,21 @@
             android:id="@+id/action_gameRoomFragment_to_fullscreenFragment"
             app:destination="@id/fullscreenFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.example.testchatbox.FriendsFragment"
+        android:label="fragment_friends"
+        tools:layout="@layout/fragment_friends" />
+    <activity
+        android:id="@+id/profileActivity"
+        android:name="com.example.testchatbox.ProfileActivity"
+        android:label="activity_profile"
+        tools:layout="@layout/activity_profile" />
+    <activity
+        android:id="@+id/loginActivity2"
+        android:name="com.example.testchatbox.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
+
 </navigation>

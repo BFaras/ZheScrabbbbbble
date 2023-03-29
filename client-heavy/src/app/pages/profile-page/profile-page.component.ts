@@ -6,7 +6,7 @@ import { ProfileInfo } from '@app/classes/profileInfo';
 import { ChangeNamePopUpComponent } from '@app/components/change-name-pop-up/change-name-pop-up.component';
 import { AvatarPopUpComponent } from '@app/components/profil-pop-up/avatar-pop-up/avatar-pop-up.component';
 import { NO_ERROR, USERNAME_TAKEN } from '@app/constants/error-codes';
-import { classic, Theme } from '@app/constants/themes';
+import { Theme } from '@app/constants/themes';
 import { AccountService } from '@app/services/account-service/account.service';
 import { ThemesService } from '@app/services/themes-service/themes-service';
 import { Subscription } from 'rxjs';
@@ -96,6 +96,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    /*
     let current = localStorage.getItem("currentTheme");
     if (current) {
       this.changeThemeTo(current);
@@ -105,13 +106,17 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       localStorage.setItem("currentTheme", classic.toString());
       document.getElementById('classic')!.className += " active";
     }
+    */
   }
 
   changeThemeTo(newTheme: string) {
     this.themeService.getAvailableThemes().forEach((theme: Theme) => {
-      if (theme.name.toString() === newTheme) this.themeService.setActiveTheme(theme);
+      if (theme.name.toString() === newTheme) {
+        this.themeService.setActiveTheme(theme);
+        this.updateUserTheme(newTheme);
+      }
     });
-    localStorage.setItem("currentTheme", newTheme);
+    //localStorage.setItem("currentTheme", newTheme);
   }
 
   setActive(event: Event) {
@@ -125,4 +130,9 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   goToFriends() {
     this.router.navigate(['/friends-page']);
   }
+
+  updateUserTheme(theme: string) {
+    this.accountService.changeTheme(theme);
+  }
+
 }

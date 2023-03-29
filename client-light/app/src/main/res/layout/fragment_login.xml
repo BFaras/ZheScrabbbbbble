@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
+    android:background="?backgroundColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/fragment_horizontal_margin"
@@ -11,102 +12,229 @@
     android:paddingBottom="@dimen/fragment_vertical_margin"
     tools:context=".login.LoginFragment">
 
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginEnd="24dp"
-        android:autofillHints="@string/prompt_username"
-        android:hint="@string/prompt_username"
-        android:inputType="text"
-        android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:autofillHints="@string/prompt_password"
-        android:hint="@string/prompt_password"
-        android:imeActionLabel="@string/action_sign_in_short"
-        android:imeOptions="actionDone"
-        android:inputType="textPassword"
-        android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
-
-    <Button
-        android:id="@+id/login"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginBottom="64dp"
-        android:enabled="false"
-        android:text="@string/action_sign_in"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.2" />
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="center">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="80dp"
+            android:layout_marginRight="10dp"
+            android:gravity="top">
+            <FrameLayout
+                android:id="@+id/lightTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorPrimary">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_sun"
+                    android:tint="?colorOnPrimary">
+                </androidx.appcompat.widget.AppCompatImageView>
+            </FrameLayout>
 
-    <TextView
-        android:id="@+id/register_message"
-        android:layout_width="337dp"
-        android:layout_height="234dp"
-        android:layout_marginTop="16dp"
-        android:text="If you don't already have an account, register below"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/login" />
+            <FrameLayout
+                android:id="@+id/darkTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorPrimary">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_night"
+                    android:tint="?colorOnPrimary">
+                </androidx.appcompat.widget.AppCompatImageView>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/astro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorPrimary">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_pink"
+                    android:tint="?colorOnPrimary">
+                </androidx.appcompat.widget.AppCompatImageView>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/blizzard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorPrimary">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_snow"
+                    android:tint="?colorOnPrimary">
+                </androidx.appcompat.widget.AppCompatImageView>
+            </FrameLayout>
+
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="100dp"
+            android:orientation="horizontal">
+            <FrameLayout
+                android:id="@+id/changeToFr"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="55dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fr"
+                    android:textStyle="bold"
+                    android:textColor="?colorOnPrimary"
+                    android:textSize="15dp"
+                    android:textAlignment="center"
+                    android:padding="10dp"
+                    android:background="@drawable/background_letter_rack">
+                </TextView>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/changeToEn"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="55dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/en"
+                    android:textStyle="bold"
+                    android:textColor="?colorOnPrimary"
+                    android:textSize="15dp"
+                    android:textAlignment="center"
+                    android:padding="10dp"
+                    android:background="@drawable/background_letter_rack">
+                </TextView>
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingTop="35dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="35dp"
+            android:background="@drawable/background_direction_panel"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/shrikhand"
+                android:text="@string/app_name"
+                android:textSize="50dp"></TextView>
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="@string/prompt_username"
+                android:hint="@string/prompt_username"
+                android:inputType="text"
+                android:selectAllOnFocus="true"
+                android:layout_gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="@string/prompt_password"
+                android:hint="@string/prompt_password"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:selectAllOnFocus="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/username" />
+
+            <Button
+                android:id="@+id/login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:enabled="false"
+                android:text="@string/action_sign_in"
+                />
+            <TextView
+                android:id="@+id/forgot_password_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/forgotPasswordText"
+                android:textAlignment="center" />
+            <Button
+                android:id="@+id/reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reset_password"
+                android:backgroundTint="?colorPrimaryVariant"/>
+            <TextView
+                android:id="@+id/register_message"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/registerText"
+                android:textAlignment="center" />
+
+            <Button
+                android:id="@+id/register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/register"
+                android:backgroundTint="?colorPrimaryVariant"/>
+        </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="64dp"
+        android:layout_gravity="center|bottom"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/password"
-        app:layout_constraintStart_toStartOf="@+id/password"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
-
-    <Button
-        android:id="@+id/register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="180dp"
-        android:text="Register"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/register_message" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="40dp"/>
 
 
-    <Button
-        android:id="@+id/reset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="120dp"
-        android:text="Reset Password"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/register" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

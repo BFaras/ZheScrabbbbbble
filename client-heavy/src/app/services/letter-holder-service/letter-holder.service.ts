@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { HOLDER_MEASUREMENTS, LETTER_POINTS, TILE_COLORS_BLIZZARD, TILE_COLORS_CLASSIC, TILE_COLORS_GREEN, TILE_COLORS_INVERTED, TILE_COLORS_PINK } from '@app/constants/letters-constants';
+import { blizzard, classic, green, inverted, pink } from '@app/constants/themes';
 import { Subject } from 'rxjs';
-import { HOLDER_MEASUREMENTS, LETTER_POINTS, TILE_COLORS_CLASSIC, TILE_COLORS_GREEN, TILE_COLORS_INVERTED, TILE_COLORS_PINK } from '@app/constants/letters-constants';
-import { classic, green, inverted, pink } from '@app/constants/themes';
 import { ThemesService } from '../themes-service/themes-service';
 
 @Injectable({
@@ -10,8 +10,8 @@ import { ThemesService } from '../themes-service/themes-service';
 export class LetterHolderService {
     letterLog = new Map<number, string>();
     holderState: string[] = [];
-    holderStatePoints:number[] = [];
-    subjectHolderStatePoints:Subject<number[]> = new Subject()
+    holderStatePoints: number[] = [];
+    subjectHolderStatePoints: Subject<number[]> = new Subject()
     private holderSize = { x: HOLDER_MEASUREMENTS.holderWidth, y: HOLDER_MEASUREMENTS.holderHeight };
 
     TILE_COLOURS = TILE_COLORS_CLASSIC;
@@ -31,6 +31,9 @@ export class LetterHolderService {
             case pink:
                 this.TILE_COLOURS = TILE_COLORS_PINK;
                 break;
+            case blizzard:
+                this.TILE_COLOURS = TILE_COLORS_BLIZZARD;
+                break;
             default:
         }
     }
@@ -49,17 +52,17 @@ export class LetterHolderService {
         } else return '';
     }
 
-    isValidLetter(letter:string){
+    isValidLetter(letter: string) {
         if (letter >= 'A' && letter <= 'Z') return letter;
-            else if (letter === 'blank') return 'BLANK';
-            else if (letter >= 'a' && letter <= 'z') return letter.toUpperCase();
-            else return '';
+        else if (letter === 'blank') return 'BLANK';
+        else if (letter >= 'a' && letter <= 'z') return letter.toUpperCase();
+        else return '';
     }
 
-    getHolderHandPoints(letter:string){
+    getHolderHandPoints(letter: string) {
         const letterHolder = this.isValidLetter(letter);
-        if(letterHolder){
-            return  LETTER_POINTS[letterHolder as keyof typeof LETTER_POINTS];
+        if (letterHolder) {
+            return LETTER_POINTS[letterHolder as keyof typeof LETTER_POINTS];
         }
         return 0;
     }
@@ -68,7 +71,7 @@ export class LetterHolderService {
     setHolderState(holder: string[]) {
         this.holderState = holder;
         this.holderStatePoints = [];
-        this.holderState.forEach((letter)=>{
+        this.holderState.forEach((letter) => {
             this.holderStatePoints.push(this.getHolderHandPoints(letter))
         })
     }
@@ -94,7 +97,7 @@ export class LetterHolderService {
 
     drawTypedLetters(letters: string[]) {
         this.holderStatePoints = [];
-        letters.forEach((letter)=>{
+        letters.forEach((letter) => {
             this.holderStatePoints.push(this.getHolderHandPoints(letter))
         })
         this.getNewHolderStatePoints().next(this.holderStatePoints)
@@ -113,7 +116,7 @@ export class LetterHolderService {
         this.redrawLetter(position);
     }
     /**on tentera de changer de position */
-    changePositionPoints(oldPosition: number, newPosition: number){
+    changePositionPoints(oldPosition: number, newPosition: number) {
         const savedPosition = this.holderStatePoints[oldPosition - 1];
         this.holderStatePoints[oldPosition - 1] = this.holderStatePoints[newPosition - 1];
         this.holderStatePoints[newPosition - 1] = savedPosition
@@ -129,7 +132,7 @@ export class LetterHolderService {
         if (letterToMove && letterToChange) {
             lettersPosition.set(newPosition, letterToMove);
             lettersPosition.set(oldPosition, letterToChange);
-            this.changePositionPoints(oldPosition,newPosition);
+            this.changePositionPoints(oldPosition, newPosition);
             const newLettersMap = new Map([...lettersPosition.entries()].sort(([key1], [key2]) => key1 - key2));
             this.letterLog = newLettersMap;
 
