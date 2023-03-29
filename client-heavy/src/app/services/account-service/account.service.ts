@@ -44,7 +44,9 @@ export class AccountService {
     this.usercode = profile.userCode;
   }
 
-
+  getUserCode() {
+    return this.usercode;
+  }
 
 
   getUserProfileInformation(): Observable<ProfileInfo> {
