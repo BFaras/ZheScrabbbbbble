@@ -23,7 +23,7 @@ export abstract class VirtualPlayer extends Player {
     protected playing: boolean;
 
     constructor(name: string, gameRoom: GameRoom) {
-        super((VirtualPlayer.numberOfInstance++).toString(), name);
+        super((VirtualPlayer.numberOfInstance++).toString(), '', name);
         this.gameRoom = gameRoom;
         this.playing = false;
     }
