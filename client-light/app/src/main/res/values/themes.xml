@@ -30,6 +30,7 @@
         <item name="chatBox">@color/lightBeige</item>
         <item name="activeTile">@color/purple_700</item>
     </style>
+
     <style name="Theme.TestChatBox.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -107,6 +108,7 @@
 
 
     <style name="Theme.TestChatBox.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="Theme.TestChatBox.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="ThemeOverlay.TestChatBox.FullscreenContainer" parent="">
