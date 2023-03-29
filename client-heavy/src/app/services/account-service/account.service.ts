@@ -1,41 +1,42 @@
 import { Injectable } from '@angular/core';
+import { ProfileInfo } from '@app/classes/profileInfo';
+import { Observable, Observer } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { SocketManagerService } from '../socket-manager-service/socket-manager.service';
-import { Observable, Observer } from 'rxjs';
-import { ProfileInfo } from '@app/classes/profileInfo';
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  private username:string;
+  private username: string;
   private socket: Socket;
   private profile: ProfileInfo;
   constructor(private socketManagerService: SocketManagerService) {
     this.setUpSocket()
   }
-  
+
   setUpSocket() {
     this.socket = this.socketManagerService.getSocket();
   }
   /* enlever cela apres quand profile sera obtenu*/
-  setUsername(username:string){
+  public setUsername(username: string) {
     this.username = username;
   }
   /* enlever cela apres quand profile sera obtenu*/
-  getUsername(){
+  getUsername() {
     return this.username;
   }
 
-  setUpProfile(profileInfo:ProfileInfo){
+  setUpProfile(profileInfo: ProfileInfo) {
     this.profile = profileInfo;
   }
 
-  getProfile(){
+  getProfile() {
     return this.profile;
   }
 
-  askProfileInformation():void{
-    this.socket.emit("Get Profile Information",this.getUsername());
+  askProfileInformation(): void {
+    console.log(this.getUsername())
+    this.socket.emit("Get Profile Information", this.getUsername());
   }
 
   getUserProfileInformation(): Observable<ProfileInfo> {
@@ -46,9 +47,9 @@ export class AccountService {
     });
 
   }
-  
-  changeAvatar(newAvatar:string){
-    this.socket.emit('Change Avatar',newAvatar);
+
+  changeAvatar(newAvatar: string) {
+    this.socket.emit('Change Avatar', newAvatar);
   }
   getAvatarChangeStatus(): Observable<string> {
     return new Observable((observer: Observer<string>) => {
@@ -59,9 +60,9 @@ export class AccountService {
 
   }
 
-  MakeAllAvatarBase64(AllAvatars:string[]): string[]{
+  MakeAllAvatarBase64(AllAvatars: string[]): string[] {
     const BASE_64_FORMAT = "data:image/png;base64,";
-    AllAvatars.forEach((value,index)=>{
+    AllAvatars.forEach((value, index) => {
       AllAvatars[index] = BASE_64_FORMAT + AllAvatars[index];
 
     })
@@ -69,7 +70,7 @@ export class AccountService {
     return AllAvatars;
   }
 
-  getAllAvatars(){
+  getAllAvatars() {
     this.socket.emit('Get All Avatars');
   }
 
@@ -81,6 +82,22 @@ export class AccountService {
     });
 
   }
+
+  changeUsername(newUsername: string) {
+    this.socket.emit('Change Username', newUsername);
+  }
+
+
+  getChangeUserNameResponse(): Observable<string> {
+    return new Observable((observer: Observer<string>) => {
+      this.socket.on('Username Change Response', (response: string) => {
+        observer.next(response);
+      });
+    });
+
+  }
+
+
 
 
 }

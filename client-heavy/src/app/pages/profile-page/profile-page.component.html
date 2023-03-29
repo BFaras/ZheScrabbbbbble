@@ -18,7 +18,10 @@
             </button>
         </div>
         <div id="nameLevel">
-        <p class = "name">Nom: {{accountUsername}}</p>
+            <div id="nameContainer">
+                <p class = "name">Nom: {{accountUsername}}</p>
+                <button (click) = "openDialogChangeName()" id="changeName">C</button>
+            </div>
         <p class = "name">Code d'utilisateur: {{accountProfile.userCode}}</p>
         <p class = "level"> Niveau : {{accountProfile.levelInfo.level}} </p>
         </div>

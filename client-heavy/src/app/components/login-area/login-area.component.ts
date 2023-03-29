@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Account } from '@app/classes/account';
 import { VISIBILITY_CONSTANTS } from '@app/constants/visibility-constants';
@@ -10,12 +10,12 @@ import { Subscription } from 'rxjs';
   templateUrl: './login-area.component.html',
   styleUrls: ['./login-area.component.scss']
 })
-export class LoginAreaComponent implements OnInit {
+export class LoginAreaComponent implements OnInit, OnDestroy {
   userAccount: Account = {
     username: "",
     email: "",
     password: "",
-    avatar:"",
+    avatar: "",
     securityQuestion: { question: "", answer: "" },
   }
   subscription: Subscription
@@ -24,9 +24,15 @@ export class LoginAreaComponent implements OnInit {
 
   constructor(private accountAuthenticationService: AccountAuthenticationService, private router: Router, private account: AccountService) {
     this.accountAuthenticationService.setUpSocket()
+    this.subscription = this.accountAuthenticationService.getStatusOfAuthentication().subscribe(
+      (status: boolean) => this.showStatus(status));
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe()
   }
 
   changePasswordVisibility(): string {
@@ -40,8 +46,6 @@ export class LoginAreaComponent implements OnInit {
 
   loginToAccount() {
     this.accountAuthenticationService.LoginToAccount(this.userAccount);
-    this.subscription = this.accountAuthenticationService.getStatusOfAuthentication().subscribe(
-      (status: boolean) => this.showStatus(status));
   }
 
   showStatus(status: boolean) {
