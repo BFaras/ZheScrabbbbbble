@@ -44,6 +44,13 @@ export class ProfileSocketService {
             );
         });
 
+        socket.on('Change Language', async (newLanguage: string) => {
+            socket.emit(
+                'Language Change Response',
+                await this.profileService.changeUserSettings(this.accountInfoService.getUserId(socket), newLanguage, false, true),
+            );
+        });
+
         socket.on('Change Username', async (newUsername: string) => {
             const oldUsername = this.accountInfoService.getUsername(socket);
             const userId = this.accountInfoService.getUserId(socket);

@@ -8,7 +8,7 @@
             <div *ngFor="let message of messageHistory">
                 <ul >
                     <div *ngIf="message.username === '[SERVER]'; else elseBlock">{{ message.message }}</div>
-                    <ng-template #elseBlock>{{ message.username }} : {{ message.message }}</ng-template>
+                    <ng-template #elseBlock style="color: white;">{{ message.username }} : {{ message.message }}</ng-template>
                 </ul>
             </div>
         </div>
