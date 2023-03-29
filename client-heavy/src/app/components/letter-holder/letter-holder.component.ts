@@ -78,8 +78,9 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
 
     @HostListener('click', ['$event'])
     clickInside(e: MouseEvent, indexOfElement: number) {
+        if (this.isObserver())
+            return;
         if (e.button === MouseButton.Right) {
-            if (this.isObserver()) return;
             this.manipulationRack.cancelManipulation();
             this.manipulationRack.selectLetterOnRack(indexOfElement + 1);
             this.makingSelection = Object.values(isSelected).some((selection) => selection === true);
@@ -140,7 +141,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     @HostListener('window:wheel', ['$event'])
     onWheel(e: WheelEvent) {
         e.stopPropagation();
-        if (!this.mouseIsIn || this.makingSelection) return;
+        if (!this.mouseIsIn || this.makingSelection || this.isObserver()) return;
         if (e.deltaY > 0) {
             this.manipulationRack.moveLetter('right', this.initialPosition, this.playerHand);
             this.initialPosition++;

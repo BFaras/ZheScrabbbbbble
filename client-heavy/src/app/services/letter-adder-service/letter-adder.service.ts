@@ -15,6 +15,7 @@ export class LetterAdderService {
     activeSquare: { x: string; y: number } = { x: 'P', y: 0 };
     prevActiveSquare: { x: string; y: number } = { x: 'P', y: 0 };
     addedLettersLog = new Map<string, string>();
+    orderedAddedLetterLog = new Map<string, string>();
     playerHand: string[];
     boardState: string[][];
     mappedBoardState = new Map<string, string>();
@@ -71,7 +72,7 @@ export class LetterAdderService {
     }
 
     isTileAround(xIndex: string, yIndex: number): boolean {
-        if (this.addedLettersLog.size === 0 || this.isFormerTileUsed(xIndex, yIndex) || (yIndex === this.prevActiveSquare.y + 1 && xIndex == this.prevActiveSquare.x) || (xIndex.charCodeAt(0) === this.prevActiveSquare.x.charCodeAt(0) + 1 && yIndex === this.prevActiveSquare.y)) {
+        if (this.addedLettersLog.size === 0 || this.isFormerTileUsed(xIndex, yIndex) || (yIndex !== this.prevActiveSquare.y && xIndex == this.prevActiveSquare.x) || (xIndex.charCodeAt(0) !== this.prevActiveSquare.x.charCodeAt(0) && yIndex === this.prevActiveSquare.y)) {
             this.activeSquare = { x: xIndex, y: yIndex }
             return true;
         }
@@ -154,8 +155,7 @@ export class LetterAdderService {
         if (this.inPlayerHand() && this.isInBounds()) {
             if (!this.isPositionTaken()) {
                 this.addToHand(false);
-                console.log(this.playerHand)
-                console.log(this.activeSquare)
+                /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty poser lettre*/
                 if (this.playerHand.length === 6) {
                     console.log('sent first Tile')
                     this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
@@ -227,6 +227,7 @@ export class LetterAdderService {
             if (lastAddedLetter[1].length === 1) this.playerHand.push(lastAddedLetter[1]);
             else this.playerHand.push(lastAddedLetter[1].slice(0, GRID_CONSTANTS.lastLetter));
         } else {
+            console.log(this.activeSquare.x + this.activeSquare.y);
             this.addedLettersLog.set(this.activeSquare.x + this.activeSquare.y, key);
             if (this.key.length > 1) key = this.key.slice(0, GRID_CONSTANTS.lastLetter);
             const letterIndex = this.playerHand.indexOf(key);
@@ -302,18 +303,33 @@ export class LetterAdderService {
 
     makeMove() {
         if (this.addedLettersLog.size) {
+            console.log(this.formatAddedLetters())
             this.chatService.sendCommand(this.formatAddedLetters(), 'Place');
             this.removeAll();
         }
     }
 
+    orderAddedLetterLog() {
+        if (this.formatDirection() === 'v') {
+            this.orderedAddedLetterLog = new Map<string, string>([...this.addedLettersLog.entries()].sort());
+        } else {
+            this.orderedAddedLetterLog = new Map([...this.addedLettersLog.entries()].sort(
+                (leftLetter, rightLetter) => { return leftLetter[0].substring(1, leftLetter[0].length).localeCompare(rightLetter[0].substring(1, rightLetter[0].length), undefined, { numeric: true }) }));
+
+        }
+    }
+
     formatAddedLetters(): string {
-        const keys = Array.from(this.addedLettersLog.keys());
+        this.orderAddedLetterLog();
+        const keys = Array.from(this.orderedAddedLetterLog.keys());
         keys.forEach((key) => {
-            const value = this.addedLettersLog.get(key);
-            if (value && value?.length > 1) this.addedLettersLog.set(key, value?.substring(value.length - 1).toUpperCase() as string);
+            const value = this.orderedAddedLetterLog.get(key);
+            if (value && value?.length > 1) this.orderedAddedLetterLog.set(key, value?.substring(value.length - 1).toUpperCase() as string);
         });
-        const letters = Array.from(this.addedLettersLog.values()).join('');
+        console.log(keys);
+        console.log(Array.from(this.orderedAddedLetterLog.values()))
+        const letters = Array.from(this.orderedAddedLetterLog.values()).join('');
+        console.log(keys[0].toLowerCase() + this.formatDirection() + ' ' + letters);
         return keys[0].toLowerCase() + this.formatDirection() + ' ' + letters;
     }
 
@@ -368,5 +384,9 @@ export class LetterAdderService {
     addArrowSquare() {
         this.gridService.highlightCoords(this.activeSquare.y, this.activeSquare.x);
         this.gridService.addArrow(this.activeSquare.y, this.activeSquare.x, this.arrowDirection);
+    }
+
+    setAdderMode(mode: string) {
+        this.letterAdderMode = mode;
     }
 }

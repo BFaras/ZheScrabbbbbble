@@ -18,6 +18,7 @@ import { MaterialPageComponent } from '@app/pages/material-page/material-page.co
 import { SoloMultiPageComponent } from '@app/pages/solo-multi-page/solo-multi-page.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { BlankTilePopUpComponent } from './components/blank-tile-pop-up/blank-tile-pop-up.component';
 import { ChangeNamePopUpComponent } from './components/change-name-pop-up/change-name-pop-up.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ConnectionHistoryAreaComponent } from './components/connection-history-area/connection-history-area.component';
@@ -103,6 +104,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         BracketPageComponent,
         ResultPageComponent,
         SignUpAvatarPopUpComponent,
+        BlankTilePopUpComponent,
         ConnectionHistoryAreaComponent,
         FormerActionHistoryAreaComponent,
         ChangeNamePopUpComponent,
