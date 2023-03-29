@@ -38,13 +38,13 @@ export class LoginAreaComponent {
   loginToAccount() {
     this.accountAuthenticationService.LoginToAccount(this.userAccount);
     this.subscription = this.accountAuthenticationService.getStatusOfAuthentication().subscribe((status: boolean) => {
-      console.log('Manuel Test');
       this.showStatus(status);
     });
   }
 
   showStatus(status: boolean) {
     if (status == true) {
+      console.log('Manuel Test');
       this.account.setUsername(this.userAccount.username);
       this.router.navigate(['/home']);
     } else {
@@ -55,6 +55,4 @@ export class LoginAreaComponent {
   moveToPassword() {
     this.router.navigate(['password-lost']);
   }
-
-
 }

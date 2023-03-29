@@ -30,31 +30,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   constructor(private accountService: AccountService,
     public dialog: MatDialog,
     private themeService: ThemesService,
-    private router: Router) {
-    this.subscriptionChangeAvatar = this.accountService.getAvatarChangeStatus()
-      .subscribe((errorCode: string) => {
-        if (errorCode === NO_ERROR) {
-          window.alert("Changement d'avatar réussi!")
-        } else {
-          window.alert("La base de données est inacessible!")
-        }
-      })
-
-    this.subscriptionUsername = this.accountService.getChangeUserNameResponse().subscribe((errorCode: string) => {
-      this.errorCodeUsername = errorCode;
-      if (errorCode === NO_ERROR) {
-        window.alert("Changement du nom de l'utilisateur réussi!")
-      } else if (errorCode === USERNAME_TAKEN) {
-        window.alert("Le nom choisi n'est pas disponible!")
-      } else {
-        window.alert("La base de données est inacessible!")
-      }
-    })
-    this.getUserName();
-    this.accountProfile = this.accountService.getProfile();
-    console.log(this.accountService.getProfile())
-    this.progressionBarValue = (this.accountProfile.levelInfo.xp / this.accountProfile.levelInfo.nextLevelXp) * 100
-  }
+    private router: Router) {}
 
   ngOnDestroy() {
     this.subscriptionChangeAvatar.unsubscribe();
@@ -96,17 +72,27 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    /*
-    let current = localStorage.getItem("currentTheme");
-    if (current) {
-      this.changeThemeTo(current);
-      document.getElementById(current)!.className += " active";
-    }
-    else {
-      localStorage.setItem("currentTheme", classic.toString());
-      document.getElementById('classic')!.className += " active";
-    }
-    */
+    this.subscriptionChangeAvatar = this.accountService.getAvatarChangeStatus()
+      .subscribe((errorCode: string) => {
+        if (errorCode === NO_ERROR) {
+          window.alert("Changement d'avatar réussi!")
+        } else {
+          window.alert("La base de données est inacessible!")
+        }
+      })
+    this.subscriptionUsername = this.accountService.getChangeUserNameResponse().subscribe((errorCode: string) => {
+      this.errorCodeUsername = errorCode;
+      if (errorCode === NO_ERROR) {
+        window.alert("Changement du nom de l'utilisateur réussi!")
+      } else if (errorCode === USERNAME_TAKEN) {
+        window.alert("Le nom choisi n'est pas disponible!")
+      } else {
+        window.alert("La base de données est inacessible!")
+      }
+    })
+    this.getUserName();
+    this.accountProfile = this.accountService.getProfile();
+    this.progressionBarValue = (this.accountProfile.levelInfo.xp / this.accountProfile.levelInfo.nextLevelXp) * 100
   }
 
   changeThemeTo(newTheme: string) {
