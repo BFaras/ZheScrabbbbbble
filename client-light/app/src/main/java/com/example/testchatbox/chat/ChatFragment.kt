@@ -19,6 +19,8 @@ import com.example.testchatbox.MainActivity
 import com.example.testchatbox.R
 import com.example.testchatbox.databinding.FragmentChatBinding
 import com.example.testchatbox.login.model.LoggedInUser
+import org.json.JSONArray
+import org.json.JSONObject
 import org.w3c.dom.Text
 import java.util.*
 
@@ -92,39 +94,39 @@ class ChatFragment : Fragment(), ObserverChat {
     }
 
     private fun loadChatMessages(){
-        val messagesBox = binding.textView
-        activity?.runOnUiThread(java.lang.Runnable {
-            messagesBox.removeAllViews()
-        })
-
-        //messagesBox.text = "";
-        for(message in chatsList[selectedChatIndex].messages){
-            val messageContainer : View = if (message.username == LoggedInUser.getName()) {
-                layoutInflater.inflate(R.layout.sent_message, messagesBox, false)
-            } else {
-                layoutInflater.inflate(R.layout.received_message, messagesBox, false)
-            }
-
-            val messageText: TextView = messageContainer.findViewById(R.id.textMessage)
-            val usernameMessage: TextView = messageContainer.findViewById(R.id.usernameMessage)
-            val timeStampMessage: TextView = messageContainer.findViewById(R.id.textDateTime)
-
-            messageText.text = message.message
-            usernameMessage.text = message.username
-            timeStampMessage.text = message.timestamp
-
+        SocketHandler.getSocket().once("Chat History Response"){args ->
+            val messageArray= args[0] as JSONArray
+            val messagesBox = binding.textView
             activity?.runOnUiThread(java.lang.Runnable {
-                messagesBox.addView(messageContainer)
+                messagesBox.removeAllViews()
             })
+            for(i in 0 until messageArray.length()){
+                val messageJSON = messageArray.get(i) as JSONObject
+                val message = Message(messageJSON.get("username") as String, messageJSON.get("timestamp") as String, messageJSON.get("message") as String, messageJSON.get("avatar") as String)
+                val messageContainer : View = if (message.username == LoggedInUser.getName()) {
+                    layoutInflater.inflate(R.layout.sent_message, messagesBox, false)
+                } else {
+                    layoutInflater.inflate(R.layout.received_message, messagesBox, false)
+                }
 
-            //messagesBox.append(message.toString() + System.getProperty("line.separator"))
+                val messageText: TextView = messageContainer.findViewById(R.id.textMessage)
+                val usernameMessage: TextView = messageContainer.findViewById(R.id.usernameMessage)
+                val timeStampMessage: TextView = messageContainer.findViewById(R.id.textDateTime)
 
+                messageText.text = message.message
+                usernameMessage.text = message.username
+                timeStampMessage.text = message.timestamp
+
+                activity?.runOnUiThread(java.lang.Runnable {
+                    messagesBox.addView(messageContainer)
+                })
+            }
+            activity?.runOnUiThread(Runnable {
+                messagesBox.invalidate();
+                messagesBox.requestLayout();
+            });
         }
-        activity?.runOnUiThread {
-            messagesBox.invalidate();
-            messagesBox.requestLayout();
-        };
-
+        SocketHandler.getSocket().emit("Get Chat History", chatsList[selectedChatIndex]._id)
     }
 
     private fun loadList(){
@@ -146,10 +148,35 @@ class ChatFragment : Fragment(), ObserverChat {
             chatListView.addView(btn)
         }
     }
+    private fun addMessage(message:Message){
+        val messagesBox = binding.textView
+        val messageContainer : View = if (message.username == LoggedInUser.getName()) {
+            layoutInflater.inflate(R.layout.sent_message, messagesBox, false)
+        } else {
+            layoutInflater.inflate(R.layout.received_message, messagesBox, false)
+        }
 
-    override fun updateMessage(chatCode: String) {
+        val messageText: TextView = messageContainer.findViewById(R.id.textMessage)
+        val usernameMessage: TextView = messageContainer.findViewById(R.id.usernameMessage)
+        val timeStampMessage: TextView = messageContainer.findViewById(R.id.textDateTime)
+
+        messageText.text = message.message
+        usernameMessage.text = message.username
+        timeStampMessage.text = message.timestamp
+
+        activity?.runOnUiThread(java.lang.Runnable {
+            messagesBox.addView(messageContainer)
+        })
+        activity?.runOnUiThread(Runnable {
+            messagesBox.invalidate();
+            messagesBox.requestLayout();
+        });
+    }
+
+
+    override fun updateMessage(chatCode: String, message: Message) {
         if(chatsList[selectedChatIndex]._id == chatCode)
-            loadChatMessages();
+            addMessage(message);
     }
 
     override fun updateChannels() {

@@ -175,9 +175,9 @@ class GameListFragment : Fragment() {
                 binding.gameListSection.visibility = View.VISIBLE;
                 binding.createSection.visibility = View.VISIBLE;
                 if(gameRoom.visibility!=Visibility.Protected) {
-                    joinRoom(gameRoom, null)
+                    joinRoom(gameRoom, false,null)
                 }else{
-                    showPasswordPrompt(gameRoom)
+                    showPasswordPrompt(gameRoom, false)
                 }
             }
         }
@@ -190,15 +190,21 @@ class GameListFragment : Fragment() {
             binding.createSection.visibility = View.VISIBLE;
         }
         binding.observerButton.setOnClickListener {
-            //TODO : Implémenter observateur
-            activity?.runOnUiThread(Runnable {
-                val appContext = context?.applicationContext
-                Toast.makeText(appContext, "Not Implemented", Toast.LENGTH_LONG).show()
-            });
+            binding.observerSection.visibility = View.GONE;
+            binding.cancelObserverButton.setOnClickListener(null);
+            binding.observerButton.setOnClickListener(null);
+            binding.playerButton.setOnClickListener(null);
+            binding.gameListSection.visibility = View.VISIBLE;
+            binding.createSection.visibility = View.VISIBLE;
+            if(gameRoom.visibility!=Visibility.Protected) {
+                joinRoom(gameRoom, true,null)
+            }else{
+                showPasswordPrompt(gameRoom, true)
+            }
         }
     }
 
-    private fun joinRoom(gameRoom: GameRoom, password: String?){
+    private fun joinRoom(gameRoom: GameRoom, observer:Boolean, password: String?){
         SocketHandler.getSocket().once("Join Room Response"){ args ->
             if(args[0] != null){
                 val errorMessage = when(args[0] as String){
@@ -210,7 +216,7 @@ class GameListFragment : Fragment() {
                 }
                 activity?.runOnUiThread(Runnable {
                     if(errorMessage == R.string.NO_ERROR){
-                        GameRoomModel.initialise(gameRoom)
+                        GameRoomModel.initialise(gameRoom, observer)
                         findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment)
                     }else{
                     val appContext = context?.applicationContext
@@ -219,7 +225,7 @@ class GameListFragment : Fragment() {
                 });
             }
         }
-        SocketHandler.getSocket().emit("Join Game Room", gameRoom.id, password)
+        SocketHandler.getSocket().emit("Join Game Room", gameRoom.id, observer, password)
         if(gameRoom.visibility==Visibility.Private)
             showCancelPrompt();
     }
@@ -244,7 +250,7 @@ class GameListFragment : Fragment() {
                     }
                     activity?.runOnUiThread(Runnable {
                         if(errorMessage == R.string.NO_ERROR && args[1]!=null){
-                            GameRoomModel.initialise(GameRoom(roomName,args[1] as String, roomType, arrayOf(),false))
+                            GameRoomModel.initialise(GameRoom(roomName,args[1] as String, roomType, arrayOf(),false), false)
                             findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment )
                         }else{
                             val appContext = context?.applicationContext
@@ -256,7 +262,7 @@ class GameListFragment : Fragment() {
             SocketHandler.getSocket().emit("Create Game Room", roomName, roomType, roomPassword.trim())
         }
     }
-    private fun showPasswordPrompt(gameRoom: GameRoom) {
+    private fun showPasswordPrompt(gameRoom: GameRoom, observer: Boolean) {
         binding.createSection.visibility = View.GONE
         binding.gameListSection.visibility = View.GONE;
         binding.passwordSection.visibility = View.VISIBLE;
@@ -268,7 +274,7 @@ class GameListFragment : Fragment() {
                 binding.cancelProtectedButton.setOnClickListener(null);
                 binding.gameListSection.visibility = View.VISIBLE;
                 binding.createSection.visibility = View.VISIBLE
-                joinRoom(gameRoom, password.trim())
+                joinRoom(gameRoom, observer,password.trim())
             }
         }
         binding.cancelProtectedButton.setOnClickListener {

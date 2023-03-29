@@ -55,10 +55,16 @@
         "JOIN": "Joindre des chats publics",
         "SELECT": "Veuillez sélectionner un chat à gauche"
     },
-    "PUBLIC-CHATS": {
-        "MESSAGE": "Joignez des chats publiques ici!",
-        "JOIN": "Joindre",
-        "LEAVE": "Quitter"
+    "PUBLIC-CHATS":{
+        "MESSAGEJOIN":"Joignez des chats publiques",
+        "MESSAGELEAVE":"Quittez des chats publiques",
+        "JOIN":"Joindre",
+        "LEAVE":"Quitter",
+        "CREATE":"Créer un chat publique",
+        "NAME":"Veuillez entrer le nom du chat: ",
+        "BUTTON":"Créer",
+        "SEARCH":"Rechercher un chat: ",
+        "SEARCHBTN":"Rechercher"
     },
     "LETTERHOLDER": {
         "PASS": "Passer",
@@ -93,6 +99,7 @@
         "HOME": "Menu",
         "PROFILE": "Profil",
         "CHAT": "Chat",
+        "FRIENDS":"Amis",
         "SIGNOUT": "Déconnexion"
     },
     "SOLO-MULTI": {
@@ -166,8 +173,7 @@
         "SHARE": "Partagez ce code pour faire une demande d'amitié: ",
         "NEW": "Ajouter un ami",
         "INPUT": "Veuillez entrer le code d'amitié: ",
-        "ACCEPT": "Accepter",
-        "REQUEST": "Demandes d'amitié",
+        "ADD": "Ajouter",
         "FRIENDS": "Liste d'amis",
         "UNFRIEND": "Enlever"
     },

@@ -12,7 +12,7 @@ export class SocketManagerService {
         this.createSocket()
     }
 
-    createSocket(){
+    createSocket() {
         this.socket = io(environment.serverUrl);
     }
 

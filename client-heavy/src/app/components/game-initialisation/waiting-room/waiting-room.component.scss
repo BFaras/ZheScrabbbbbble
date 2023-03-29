@@ -1,18 +1,17 @@
 .container {
     background-color: var(--background-default);
-    height: 57.1%;
-    padding: 8% 10% 10% 10%;
+    height: 94vh;
 }
 
 .justified {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
 }
 
 .logo {
-    margin-top: 1%;
+    margin-bottom: 40px;
     font-family: "Shrikhand";
     font-size: 95px;
     color: var(--text-default);

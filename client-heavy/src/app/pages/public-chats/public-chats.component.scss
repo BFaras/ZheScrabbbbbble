@@ -9,9 +9,29 @@
     margin-bottom: 20%;
 }
 
-#chats-container {
+#chats-wrapper {
     display: flex;
-    height: 655px;
+    flex-direction: row;
+}
+
+#create-chat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#input-container {
+    margin-bottom: 30px;
+    width: 700px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chats-container {
+    display: flex;
+    height: 600px;
     width: 650px;
     justify-content: flex-start;
     align-items: center;
@@ -21,14 +41,11 @@
     box-shadow: var(--box-shadow);
     overflow: auto;
     padding: 30px 0px 30px 0px;
+    margin: 0px 70px;
 }
 
 .button-container {
     width: 220px;
-}
-
-.chat {
-    margin-right: 20px;
 }
 
 .chat-container {
@@ -36,12 +53,47 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    width: 530px;
+    width: 80%;
     background-color: var(--tile-on-holder);
     padding: 10px 15px;
     border-radius: 10px;
     margin: 5px 0px;
 }
+
+.search-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 87%;
+    padding-bottom: 12px;
+    margin-left: 4px;
+}
+
+input {
+    border-radius: 5px;
+    flex-grow: 1;
+    margin: 0% 2% 0% 1%;
+    border: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bolder;
+    font-size: 15px;
+    background-color: var(--background-secondary);
+    color: var(--button-text-default);
+    height: 30px;
+}
+
+input:focus {
+    outline: none;
+    border: solid 2px var(--accent-default);
+}
+
+.chat-input {
+    background-color: var(--tile-on-holder);
+    height: 29px;
+    padding-left: 2%;
+}
+
 
 button {
     font-family: 'Courier New', Courier, monospace;
@@ -50,9 +102,9 @@ button {
     font-size: 15px;
     border: none;
     border-radius: 5px;
-    background-color: var(--accent-default);
+    background-color: var(--button-primary);
     color: var(--text-primary);
-    padding: 5px 0px;
+    padding: 8px 0px;
     margin-right: 10px;
 }
 
@@ -63,6 +115,10 @@ button:hover {
     transition-property: background-color;
     transition-duration: 0.2s;
 } 
+
+.search {
+    margin: 0px;
+}
 
 .text {
     font-family: 'Courier New', Courier, monospace;
@@ -92,6 +148,6 @@ button:hover {
 }
 
 h1 {
-    font-size: 20px;
+    font-size: 22px;
     margin-top: 10px;
 }
