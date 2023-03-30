@@ -25,7 +25,7 @@ export class ProfileSocketService {
                 socket.emit('User Profile Response', DATABASE_UNAVAILABLE);
             }
         });
-        /** *Ajouter tous les avatars */
+        /* Ajouter tous les avatars à enlever quand on pourra envoyer les avatars */
         socket.on('Get All Users Avatar Information', async (usernames: string[]) => {
             const avatars: string[] = [];
             if (usernames !== null && usernames !== undefined) {

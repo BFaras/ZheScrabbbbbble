@@ -38,8 +38,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        const history = sessionStorage.getItem('chat');
-        if (history) this.messageHistory = JSON.parse(history);
     }
 
     updateMessageHistory(chatMessage: ChatMessage) {
