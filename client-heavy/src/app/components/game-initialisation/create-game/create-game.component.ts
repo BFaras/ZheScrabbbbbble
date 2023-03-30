@@ -20,10 +20,12 @@ export class CreateGameComponent {
 
     constructor(
         private waitingRoomManagerService: WaitingRoomManagerService,
-        private accountService: AccountService, 
+        private accountService: AccountService,
         private router: Router,
-        private chatService:ChatService
-    ) {}
+        private chatService: ChatService
+    ) {
+        console.log(this.accountService.getProfile())
+    }
 
 
     getRadioButtonValue(event: MatRadioChange) {
@@ -49,14 +51,14 @@ export class CreateGameComponent {
         const roomNameValue = (document.getElementById('room-name') as HTMLInputElement).value;
         if (this.visibility === RoomVisibility.PROTECTED) {
             this.passwordRoom = (document.getElementById("password-room") as HTMLInputElement).value;
-            if(!this.passwordRoom.trim()){
+            if (!this.passwordRoom.trim()) {
                 this.alertFalseInput();
                 return;
             }
         }
-        
+
         sessionStorage.clear();
-        this.waitingRoomManagerService.createRoomResponse().subscribe((response)=> this.redirectPlayer(response));
+        this.waitingRoomManagerService.createRoomResponse().subscribe((response) => this.redirectPlayer(response));
         this.waitingRoomManagerService.createMultiRoom(roomNameValue, this.visibility, this.passwordRoom);
     }
 
@@ -65,7 +67,7 @@ export class CreateGameComponent {
     }
 
     /**modifier apres avoir confirmer avec manuel si methode est bonne*/
-    redirectPlayer(message: {codeError:string,roomId:string}) {
+    redirectPlayer(message: { codeError: string, roomId: string }) {
         if (message.codeError !== '0') {
             alert('Erreur dans la création de la salle');
             return;

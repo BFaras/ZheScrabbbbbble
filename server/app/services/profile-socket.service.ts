@@ -4,7 +4,7 @@ import { Container, Service } from 'typedi';
 import { AccountInfoService } from './account-info.service';
 import { FriendSocketService } from './friend-socket.service';
 import { ProfileService } from './profile.service';
-const fs = require('fs');
+/* const fs = require('fs');*/
 @Service()
 export class ProfileSocketService {
     private readonly profileService: ProfileService;
@@ -67,7 +67,7 @@ export class ProfileSocketService {
             const userSettings = await this.profileService.getUserSettings(this.accountInfoService.getUserId(socket));
             socket.emit('Theme and Language Response', userSettings.theme, userSettings.language);
         });
-
+        /*
         socket.on('Get All Avatars', async () => {
             const listNameAllAvatars: string[] = ['cat', 'dog', 'flower'];
             const listAvatars: string[] = [];
@@ -76,6 +76,6 @@ export class ProfileSocketService {
                 listAvatars.push(contents);
             });
             socket.emit('Get All Avatars Response', listAvatars);
-        });
+        });*/
     }
 }

@@ -13,9 +13,12 @@ export class WaitingRoomComponent {
 
     pendingRequests: [string, boolean][] = [];
     playersInRoom: string[];
+    avatarOfPlayers: string[] = [];
 
     constructor(private waitingRoomManagerService: WaitingRoomManagerService, private accountService: AccountService, private router: Router, private gameStateService: GameStateService) {
         this.playersInRoom = this.waitingRoomManagerService.getDefaultPlayersInRoom();
+        console.log(this.accountService.getProfile())
+        this.avatarOfPlayers.push(this.accountService.getProfile().avatar);
         this.waitingRoomManagerService.getJoinRoomRequestObservable().subscribe(this.newJoinRequest.bind(this));
         this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this));
         this.waitingRoomManagerService.getRoomPlayerObservable().subscribe((playersInRoom) => this.playersInRoom = playersInRoom);

@@ -11,18 +11,19 @@ import { Subscription } from 'rxjs';
 export class AvatarPopUpComponent implements OnInit, OnDestroy {
   readonly colorsProfile = COLORS_PROFILE;
   colorChosen: string = "";
-  allAvatars: string[];
+  allAvatars: string[] = ["cat.jpg", 'dog.jpg', 'flower.jpg'];
   subscription: Subscription;
   constructor(private dialogRef: MatDialogRef<AvatarPopUpComponent>, @Inject(MAT_DIALOG_DATA) public account: { accountService: AccountService }) {
-    this.subscription = this.account.accountService.getAllAvatarsResponse().subscribe((allAvatars) => {
+    /*this.subscription = this.account.accountService.getAllAvatarsResponse().subscribe((allAvatars) => {
       this.allAvatars = allAvatars;
     })
 
-    this.account.accountService.getAllAvatars();
+    this.account.accountService.getAllAvatars();*/
+
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    //this.subscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -30,6 +31,7 @@ export class AvatarPopUpComponent implements OnInit, OnDestroy {
 
   changeAvatar(value: string) {
     this.colorChosen = value;
+    console.log("test1")
 
 
   }

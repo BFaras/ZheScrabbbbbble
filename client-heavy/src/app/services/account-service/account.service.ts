@@ -85,6 +85,7 @@ export class AccountService {
     });
   }
 
+  /*
   MakeAllAvatarBase64(AllAvatars: string[]): string[] {
     const BASE_64_FORMAT = "data:image/png;base64,";
     AllAvatars.forEach((value, index) => {
@@ -93,20 +94,22 @@ export class AccountService {
     })
 
     return AllAvatars;
-  }
-
+  }*/
+  /*
   getAllAvatars() {
     this.socket.emit('Get All Avatars');
   }
-
-  getAllAvatarsResponse(): Observable<string[]> {
-    return new Observable((observer: Observer<string[]>) => {
-      this.socket.once('Get All Avatars Response', (AllAvatars: string[]) => {
-        observer.next(this.MakeAllAvatarBase64(AllAvatars));
-      });
-    });
-
-  }
+  */
+  /*
+   getAllAvatarsResponse(): Observable<string[]> {
+     return new Observable((observer: Observer<string[]>) => {
+       this.socket.once('Get All Avatars Response', (AllAvatars: string[]) => {
+         observer.next(this.MakeAllAvatarBase64(AllAvatars));
+       });
+     });
+ 
+   }
+   */
 
   changeUsername(newUsername: string) {
     this.socket.emit('Change Username', newUsername);
