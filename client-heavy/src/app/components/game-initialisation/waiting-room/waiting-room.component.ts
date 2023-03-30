@@ -1,21 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountService } from '@app/services/account-service/account.service';
 import { AvatarInRoomsService } from '@app/services/avatar-in-rooms.service';
 import { GameStateService } from '@app/services/game-state-service/game-state.service';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
-
+import { Subscription } from 'rxjs';
 @Component({
     selector: 'app-waiting-room',
     templateUrl: './waiting-room.component.html',
     styleUrls: ['./waiting-room.component.scss'],
 })
-export class WaitingRoomComponent {
+export class WaitingRoomComponent implements OnDestroy {
 
     pendingRequests: [string, boolean][] = [];
     playersInRoom: string[];
     avatarOfPlayers: string[];
-
+    subscriptionAvatar: Subscription;
     constructor(private waitingRoomManagerService: WaitingRoomManagerService,
         private accountService: AccountService,
         private router: Router,
@@ -30,11 +30,13 @@ export class WaitingRoomComponent {
             this.avatarInRoomService.setUsersInRoom(this.playersInRoom);
             this.avatarInRoomService.askAllUsersAvatar();
         });
-        this.avatarInRoomService.getUsersInRoomAvatarObservable().subscribe((avatars) => {
+        this.subscriptionAvatar = this.avatarInRoomService.getUsersInRoomAvatarObservable().subscribe((avatars) => {
             this.avatarOfPlayers = avatars;
         })
     }
-
+    ngOnDestroy(): void {
+        this.subscriptionAvatar.unsubscribe()
+    }
     launchGame(): void {
         this.refuseEveryone(true);
         this.waitingRoomManagerService.startGame();

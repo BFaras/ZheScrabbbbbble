@@ -18,7 +18,7 @@ import { PasswordInputComponent } from '../password-input-dialog/password-input.
 export class JoinGameComponent implements OnDestroy {
     @Input() hostName: string = '';
     @Input() roomName: string = '';
-
+    subscriptionAvatars: Subscription;
     waitingRooms: WaitingRoom[] = [];
     subscription: Subscription;
 
@@ -29,6 +29,7 @@ export class JoinGameComponent implements OnDestroy {
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+        this.subscriptionAvatars.unsubscribe();
     }
 
     ngOnInit() {
@@ -48,7 +49,7 @@ export class JoinGameComponent implements OnDestroy {
             }
             this.waitingRooms = waitingGames.concat(fullGames).concat(startedGames);
         });
-        this.avatarInRoomService.getUsersInRoomAvatarObservable().subscribe((usernameAvatar) => {
+        this.subscriptionAvatars = this.avatarInRoomService.getUsersInRoomAvatarObservable().subscribe((usernameAvatar) => {
             this.avatarInRoomService.setAvatarOfUsers(usernameAvatar);
         })
         this.waitingRoomManagerService.getGameRoomActive()
