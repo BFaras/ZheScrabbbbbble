@@ -48,7 +48,7 @@ export class Game {
     }
 
     startGame(timerCallback: (username: string, result: CommandResult) => void) {
-        if (this.players.length < 2) return;
+        //if (this.players.length < 2) return;
         this.playerTurnIndex = Math.floor(Math.random() * this.players.length);
         for (const player of this.players) {
             player.getHand().addLetters(this.reserve.drawLetters(HAND_SIZE));

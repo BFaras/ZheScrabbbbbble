@@ -15,7 +15,7 @@
             <button class="button cancel join-request" (click)="respondNextRequest(false)">{{ 'WAITING-ROOM.DECLINE' | translate }}</button>
         </div>
         <div class="mode-buttons">
-            <button class="button" *ngIf="isHostPlayer() && playersInRoom.length > 1" (click)="launchGame()">{{ 'WAITING-ROOM.START' | translate }}</button>
+            <button class="button" *ngIf="isHostPlayer()" (click)="launchGame()">{{ 'WAITING-ROOM.START' | translate }}</button>
             <button class="button cancel" (click)="leaveRoom()">{{ 'WAITING-ROOM.LEAVE' | translate }}</button>
         </div>
     </div>

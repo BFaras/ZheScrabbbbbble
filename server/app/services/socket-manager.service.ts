@@ -1,9 +1,9 @@
 import { GameRoom } from '@app/classes/game-room';
 import { Player } from '@app/classes/player';
 import { GameStatus } from '@app/classes/tournament';
-import { VirtualPlayerEasy } from '@app/classes/virtual-player-easy';
-import { VirtualPlayerHard } from '@app/classes/virtual-player-hard';
-import { MAX_NUMBER_OF_PLAYERS, RoomVisibility, TOURNAMENT_SIZE } from '@app/constants/basic-constants';
+//import { VirtualPlayerEasy } from '@app/classes/virtual-player-easy';
+//import { VirtualPlayerHard } from '@app/classes/virtual-player-hard';
+import { /*MAX_NUMBER_OF_PLAYERS,*/ RoomVisibility, TOURNAMENT_SIZE } from '@app/constants/basic-constants';
 import { JOIN_REQUEST_REFUSED, NO_ERROR, ROOM_IS_FULL, ROOM_NAME_TAKEN, ROOM_PASSWORD_INCORRECT } from '@app/constants/error-code-constants';
 import { DISCONNECT_MESSAGE, END_GAME_MESSAGE, OUT_OF_TIME_MESSAGE, REPLACED_MESSAGE, ROUND_OVER_MESSAGE, ROUND_TIME_LEFT_MESSAGE } from '@app/constants/game-state-constants';
 import { CommandController, CommandResult, PlayerMessage } from '@app/controllers/command.controller';
@@ -189,9 +189,10 @@ export class SocketManager {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
                 if (currentRoom.getHostPlayer().getName() !== this.accountInfoService.getUsername(socket)) return;
-                const playerCount = currentRoom.getPlayerCount()
-                if (playerCount < 2) return;
+                //const playerCount = currentRoom.getPlayerCount()
+                //if (playerCount < 2) return;
                 if (currentRoom.isGameStarted()) return;
+                /*
                 for (let i = 0; i < MAX_NUMBER_OF_PLAYERS - playerCount; i++) {
                     let name;
                     let index;
@@ -207,6 +208,7 @@ export class SocketManager {
                     }
                     currentRoom.addPlayer(virtualPlayer);
                 }
+                */
                 currentRoom.startGame(this.timerCallback.bind(this));
                 console.log(new Date().toLocaleTimeString() + ' | New game started');
                 socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
