@@ -3,6 +3,7 @@
         <header id="title" class="centered-title">{{'INFOBOARD.INFOBOARD' | translate}}</header>
         <div id="info">
             <div *ngFor="let player of playersInfo" class="player-container" [class.player-selected]="isPlayerUser(player)">
+                <img src="assets/avatar/{{player.avatar}}" alt="image" height ="40" width ="40" class="image">
                 <span class="data"><strong>{{ player.name }}</strong></span>
                 <span class="status" *ngIf="player.active">{{'INFOBOARD.TURN' | translate}}</span>
                 <span class="status" *ngIf="player.winner">{{'INFOBOARD.WIN' | translate}}</span>

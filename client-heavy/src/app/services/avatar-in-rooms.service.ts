@@ -10,6 +10,7 @@ export class AvatarInRoomsService {
   private socket: Socket;
   private usersInRoom: string[];
   private avatarOfUsers: string[];
+  private avatarUserMap: Map<string, string> = new Map<string, string>();
 
   constructor(private socketManagerService: SocketManagerService) {
     this.setUpSocket()
@@ -21,6 +22,12 @@ export class AvatarInRoomsService {
 
   setUsersInRoom(usersInRoom: string[]) {
     this.usersInRoom = usersInRoom;
+  }
+
+  getAvatarUserMap(username: string) {
+    if (this.avatarUserMap.get(username))
+      return this.avatarUserMap.get(username);
+    return "";
   }
 
   getUsersInRoom() {
@@ -39,9 +46,16 @@ export class AvatarInRoomsService {
     console.log(this.getUsersInRoom())
     this.socket.emit('Get All Users Avatar Information', this.getUsersInRoom());
   }
+
+  prepareMap(avatars: string[]) {
+    this.usersInRoom.forEach((user, indexUser) => {
+      this.avatarUserMap.set(user, avatars[indexUser])
+    })
+  }
   getUsersInRoomAvatarObservable(): Observable<string[]> {
     return new Observable((observer: Observer<string[]>) => {
       this.socket.on('Get All Users Avatar Information Response', (usernameAvatar) => {
+        this.prepareMap(usernameAvatar);
         observer.next(usernameAvatar);
       });
     });
