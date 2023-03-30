@@ -21,7 +21,17 @@ export class WaitingRoomComponent implements OnDestroy {
         private router: Router,
         private gameStateService: GameStateService,
         private avatarInRoomService: AvatarInRoomsService) {
+        this.subscriptionAvatar = this.avatarInRoomService.getUsersInRoomAvatarObservable().subscribe((avatars) => {
+            this.avatarOfPlayers = avatars;
+            console.log("in waiting-room after added player")
+            console.log(this.playersInRoom);
+            console.log(this.avatarOfPlayers);
+        })
         this.playersInRoom = this.waitingRoomManagerService.getDefaultPlayersInRoom();
+        this.avatarInRoomService.setUsersInRoom(this.playersInRoom)
+        console.log(this.playersInRoom)
+        console.log(this.avatarInRoomService.getAvatarOfUsers())
+        this.avatarInRoomService.askAllUsersAvatar()
         this.avatarOfPlayers = this.avatarInRoomService.getAvatarOfUsers()
         console.log("in waiting-room when created")
         console.log(this.playersInRoom);
@@ -33,13 +43,9 @@ export class WaitingRoomComponent implements OnDestroy {
             this.avatarInRoomService.setUsersInRoom(this.playersInRoom);
             this.avatarInRoomService.askAllUsersAvatar();
         });
-        this.subscriptionAvatar = this.avatarInRoomService.getUsersInRoomAvatarObservable().subscribe((avatars) => {
-            this.avatarOfPlayers = avatars;
-            console.log("in waiting-room after added player")
-            console.log(this.playersInRoom);
-            console.log(this.avatarOfPlayers);
-        })
+
     }
+
     ngOnDestroy(): void {
         this.subscriptionAvatar.unsubscribe()
     }

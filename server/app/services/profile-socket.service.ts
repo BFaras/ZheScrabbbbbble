@@ -28,18 +28,20 @@ export class ProfileSocketService {
         /** *Ajouter tous les avatars */
         socket.on('Get All Users Avatar Information', async (usernames: string[]) => {
             const avatars: string[] = [];
-            for (const username of usernames) {
-                if (username !== '' && username !== undefined && username !== null) {
-                    console.log('test1');
-                    avatars.push((await this.profileService.getProfileInformation(username)).avatar);
-                } else {
-                    console.log('test2');
-                    socket.emit('Get All Users Avatar Information Response', DATABASE_UNAVAILABLE);
+            if (usernames !== null && usernames !== undefined) {
+                for (const username of usernames) {
+                    if (username !== '' && username !== undefined && username !== null) {
+                        console.log('test1');
+                        avatars.push((await this.profileService.getProfileInformation(username)).avatar);
+                    } else {
+                        console.log('test2');
+                        socket.emit('Get All Users Avatar Information Response', DATABASE_UNAVAILABLE);
+                    }
                 }
+                console.log('test3');
+                console.log(avatars);
+                socket.emit('Get All Users Avatar Information Response', avatars);
             }
-            console.log('test3');
-            console.log(avatars);
-            socket.emit('Get All Users Avatar Information Response', avatars);
         });
 
         socket.on('Change Avatar', async (newAvatar: string) => {
