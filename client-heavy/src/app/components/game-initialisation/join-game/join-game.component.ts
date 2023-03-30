@@ -51,6 +51,8 @@ export class JoinGameComponent implements OnDestroy {
         });
         this.subscriptionAvatars = this.avatarInRoomService.getUsersInRoomAvatarObservable().subscribe((usernameAvatar) => {
             this.avatarInRoomService.setAvatarOfUsers(usernameAvatar);
+            console.log("test1")
+            console.log(usernameAvatar);
         })
         this.waitingRoomManagerService.getGameRoomActive()
     }
@@ -96,7 +98,9 @@ export class JoinGameComponent implements OnDestroy {
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom(message.playerNames);
         /**d/but partie ajouter : mettre liste dans nom dans service et essayer obtenir les avatar de ceux-ci*/
+        console.log('join public game')
         this.avatarInRoomService.setUsersInRoom(message.playerNames);
+        console.log(message.playerNames);
         this.avatarInRoomService.askAllUsersAvatar();
         /**fin partie ajouter*/
         if (this.waitingRoomManagerService.isObserver()) {
