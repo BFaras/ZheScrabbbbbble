@@ -119,6 +119,7 @@ class ChatFragment : Fragment(), ObserverChat {
 
                 activity?.runOnUiThread(java.lang.Runnable {
                     messagesBox.addView(messageContainer)
+                    binding.scrollView.post { binding.scrollView.fullScroll(View.FOCUS_DOWN) }
                 })
             }
             activity?.runOnUiThread(Runnable {
@@ -166,6 +167,7 @@ class ChatFragment : Fragment(), ObserverChat {
 
         activity?.runOnUiThread(java.lang.Runnable {
             messagesBox.addView(messageContainer)
+            binding.scrollView.post { binding.scrollView.fullScroll(View.FOCUS_DOWN) }
         })
         activity?.runOnUiThread(Runnable {
             messagesBox.invalidate();
