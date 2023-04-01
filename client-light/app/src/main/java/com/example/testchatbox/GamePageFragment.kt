@@ -4,6 +4,7 @@ import SocketHandler
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -17,7 +18,9 @@ import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.View.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.cardview.widget.CardView
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
@@ -34,6 +37,7 @@ import com.example.testchatbox.login.model.LoggedInUser
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.NumberFormat
+
 
 class GamePageFragment : Fragment() {
     private val hideHandler = Handler(Looper.myLooper()!!)
@@ -74,6 +78,7 @@ class GamePageFragment : Fragment() {
     private var isYourTurn = true
     private var chosenDirection = "h"
     private var gameOver = false
+    private var toBeObserved = 0
 
     private lateinit var playerHand: ArrayList<String>
     private lateinit var lettersOnBoard: Array<Array<String>>
@@ -85,6 +90,7 @@ class GamePageFragment : Fragment() {
 
     private var oldPosRow: String = ""
     private var oldPosCol: Int = 0
+    private var isSwap = false
     private var moveInfo: PlayerMessage = PlayerMessage("", arrayListOf())
 
     override fun onCreateView(
@@ -101,6 +107,18 @@ class GamePageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Coordinates.setCoordinates()
         timer = setTimer()
+
+        if (!GameRoomModel.isPlayer) {
+            binding.apply {
+                buttonPlay.visibility = GONE
+                buttonExchange.visibility = GONE
+                buttonHint.visibility = GONE
+                buttonPass.visibility = GONE
+                toggleSwapHolder.visibility = GONE
+                abandonButton.text = "Quitter"
+            }
+        }
+
         gameObserver = Observer<GameState> { gameState ->
             timer.start()
             binding.reserveLength.text = gameState.reserveLength.toString()
@@ -111,6 +129,7 @@ class GamePageFragment : Fragment() {
             binding.buttonPass.isEnabled = isYourTurn
             binding.buttonHint.isEnabled = isYourTurn
             binding.backInHand.visibility = GONE
+
             if (gameState.gameOver) {
                 gameOver = true
                 timer.cancel()
@@ -118,8 +137,28 @@ class GamePageFragment : Fragment() {
                 isYourTurn = false
                 clearTurn()
             }
-            for (player in gameState.players) {
-                if (player.username == LoggedInUser.getName()) playerHand = player.hand
+            if (!GameRoomModel.isPlayer) {
+                playerHand = gameState.players[toBeObserved].hand
+                binding.nowObservingText.setText(HtmlCompat.fromHtml(getString(R.string.now_observing_player1, gameState.players[0].username), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+
+                binding.observedPlayers.removeAllViews()
+                binding.observedHolder.visibility = VISIBLE
+                for (player in gameState.players) {
+                    val btnPlayer = Button(context)
+                    btnPlayer.text = player.username
+                    btnPlayer.id = gameState.players.indexOf(player)
+                    btnPlayer.setOnClickListener {
+                        toBeObserved = btnPlayer.id
+                        playerHand = gameState.players[toBeObserved].hand
+                        binding.nowObservingText.setText(HtmlCompat.fromHtml(getString(R.string.now_observing_player1, player.username), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                        updateRack(player.hand)
+                    }
+                    binding.observedPlayers.addView(btnPlayer)
+                }
+            } else {
+                for (player in gameState.players) {
+                    if (player.username == LoggedInUser.getName()) playerHand = player.hand
+                }
             }
             lettersOnBoard = gameState.board
             moveInfo = gameState.message!!
@@ -158,6 +197,10 @@ class GamePageFragment : Fragment() {
             }
             buttonPass.setOnClickListener {
                 SocketHandler.getSocket().emit("Play Turn", "Pass", "")
+                clearTurn()
+            }
+            toggleSwap.setOnCheckedChangeListener{ _, _ ->
+                isSwap = !isSwap
                 clearTurn()
             }
 //            buttonHint.setOnClickListener {
@@ -244,7 +287,6 @@ class GamePageFragment : Fragment() {
 //                }
 //
 //            }
-
             confirmLetter.setOnClickListener {
                 sendBlankLetter()
             }
@@ -254,9 +296,29 @@ class GamePageFragment : Fragment() {
                 }
             }
             abandonButton.setOnClickListener {
-                GameRoomModel.leaveRoom()
-                SocketHandler.getSocket().emit("Abandon")
-                findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
+                val builder = context?.let { it -> AlertDialog.Builder(it, R.style.CustomAlertDialog).create() }
+                val alertView = layoutInflater.inflate(R.layout.alert_abandon, null)
+                val yesButton = alertView.findViewById<AppCompatButton>(R.id.dialogYes)
+                val noButton = alertView.findViewById<AppCompatButton>(R.id.dialogNo)
+                builder?.setView(alertView)
+                yesButton.setOnClickListener {
+                    GameRoomModel.leaveRoom()
+                    SocketHandler.getSocket().emit("Abandon")
+                    findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
+                    builder?.dismiss()
+                }
+                noButton.setOnClickListener {
+                    builder?.dismiss()
+                }
+
+//                builder!!.setTitle(getString(R.string.confirmAbandon))
+//                builder.setMessage(getString(R.string.confirmButtonText))
+//                builder.setPositiveButton(getString(R.string.yes)){ _, _ ->
+//
+//                }
+//                builder.setNegativeButton(getString(R.string.no),
+//                    DialogInterface.OnClickListener { dialog, _ -> dialog.cancel() })
+                builder?.show()
             }
             buttonExchange.setOnClickListener {
                 var lettersToSwap = ""
@@ -378,7 +440,10 @@ class GamePageFragment : Fragment() {
                                         oldPosCol = letterInHand.col
                                         oldPosRow = letterInHand.row
                                     }
-                                    if (letterInHand.letter == "") binding.jokerDetected.visibility = VISIBLE
+                                    if (letterInHand.letter == "") {
+                                        binding.jokerDetected.visibility = VISIBLE
+                                        binding.scrollMoveInfo.visibility = GONE
+                                    }
 
                                     Log.d(tag, "LETTERS PLACED - $isPlaced")
                                     isInside = true
@@ -404,7 +469,6 @@ class GamePageFragment : Fragment() {
                         }
                         draggableItem.visibility = VISIBLE
                         view.invalidate()
-
                         true
                         Log.d(tag, "ACTION_DRAG_ENDED")
                     }
@@ -415,7 +479,7 @@ class GamePageFragment : Fragment() {
             }
             true
         }
-        binding.gameBoard.setOnDragListener(dragListener)
+        if (GameRoomModel.isPlayer) { binding.gameBoard.setOnDragListener(dragListener) }
 
 //
 //        val rackDragListener = OnDragListener {
@@ -557,6 +621,7 @@ class GamePageFragment : Fragment() {
         _binding = null
     }
 
+
     @SuppressLint("ClickableViewAccessibility")
     private fun updateRack(playerHand: ArrayList<String>) {
         binding.letterRack.removeAllViews()
@@ -584,41 +649,58 @@ class GamePageFragment : Fragment() {
             }
             letterTile.tag = i
             binding.letterRack.addView(letterTile)
+
             val gesture = GestureDetector(context, object : SimpleOnGestureListener() {
                 override fun onDown(e: MotionEvent): Boolean {
+                    if (!isSwap) {
+                        if (!isSelected.contains(1)) {
+                            val data = ClipData.newPlainText("", "")
+                            val shadowBuilder = DragShadowBuilder(letterTile)
+                            letterTile?.startDragAndDrop(
+                                data,
+                                shadowBuilder,
+                                letterTile,
+                                DRAG_FLAG_OPAQUE
+                            )
+                            letterTile?.visibility = INVISIBLE
+                        } else false
+                    }
                     return true
                 }
-                override fun onDoubleTap(e: MotionEvent): Boolean { //action pour swap
+                override fun onSingleTapUp(e: MotionEvent): Boolean { //action pour swap
                     Log.d("myApp", "double tap")
-                    return if (isYourTurn && !isInside) {
-                        val index = binding.letterRack.indexOfChild(letterTile)
-                        if (isSelected[index] == 0) {
-                            background.setCardBackgroundColor(isSelectedColor.data)
-                            isSelected[index] = 1
-                        } else {
-                            background.setCardBackgroundColor(initialBgcolor)
-                            isSelected[index] = 0
-                        }
-                        binding.buttonExchange.isEnabled = isSelected.contains(1)
-                        true
-                    } else false
+                    if (isSwap) {
+                        return if (isYourTurn && !isInside) {
+                            val index = binding.letterRack.indexOfChild(letterTile)
+                            if (isSelected[index] == 0) {
+                                background.setCardBackgroundColor(isSelectedColor.data)
+                                isSelected[index] = 1
+                            } else {
+                                background.setCardBackgroundColor(initialBgcolor)
+                                isSelected[index] = 0
+                            }
+                            binding.buttonExchange.isEnabled = isSelected.contains(1)
+                            true
+                        } else false
+                    }
+                    return false
                 }
                 override fun onLongPress(e: MotionEvent) {
-                    if (!isSelected.contains(1)) {
-                        val data = ClipData.newPlainText("", "")
-                        val shadowBuilder = DragShadowBuilder(letterTile)
-                        letterTile?.startDragAndDrop(
-                            data,
-                            shadowBuilder,
-                            letterTile,
-                            DRAG_FLAG_OPAQUE
-                        )
-                        letterTile?.visibility = INVISIBLE
-                    } else false
+//                    if (!isSelected.contains(1)) {
+//                        val data = ClipData.newPlainText("", "")
+//                        val shadowBuilder = DragShadowBuilder(letterTile)
+//                        letterTile?.startDragAndDrop(
+//                            data,
+//                            shadowBuilder,
+//                            letterTile,
+//                            DRAG_FLAG_OPAQUE
+//                        )
+//                        letterTile?.visibility = INVISIBLE
+//                    } else false
                     super.onLongPress(e)
                 }
             })
-            letterTile.setOnTouchListener { _, event -> gesture.onTouchEvent(event) }
+            if (GameRoomModel.isPlayer) { letterTile.setOnTouchListener { _, event -> gesture.onTouchEvent(event) } }
         }
     }
 
@@ -656,9 +738,11 @@ class GamePageFragment : Fragment() {
                     playerTurn.setBackgroundResource(R.drawable.player_turn_border)
                 }
             } else {
-                if (player == isWinner) playerTurn.setBackgroundColor(isYouColor.data)
-                binding.gameWinnerHolder.visibility = VISIBLE
-                binding.gameWinner.setText(HtmlCompat.fromHtml(getString(R.string.winnerName, player.username), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                if (player == isWinner) {
+                    playerTurn.setBackgroundColor(isYouColor.data)
+                    binding.gameWinnerHolder.visibility = VISIBLE
+                    binding.gameWinner.setText(HtmlCompat.fromHtml(getString(R.string.winnerName, player.username), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                }
             }
             binding.playersInfoHolder.addView(playerInfo)
         }
@@ -764,6 +848,7 @@ class GamePageFragment : Fragment() {
         binding.buttonExchange.isEnabled = false
         binding.jokerDetected.visibility = GONE
         binding.hintPanel.visibility = GONE
+        binding.scrollMoveInfo.visibility = VISIBLE
         isInside = false
     }
 
@@ -938,7 +1023,13 @@ class GamePageFragment : Fragment() {
                 break
             }
         }
-        if (isPlaced.any {it.letter == ""}) binding.jokerDetected.visibility = VISIBLE else binding.jokerDetected.visibility = GONE
+        if (isPlaced.any {it.letter == ""}) {
+            binding.jokerDetected.visibility = VISIBLE
+            binding.scrollMoveInfo.visibility = GONE
+        } else {
+            binding.jokerDetected.visibility = GONE
+            binding.scrollMoveInfo.visibility = VISIBLE
+        }
         binding.buttonPlay.isEnabled = !isPlaced.any {it.letter == ""}
         binding.replaceLetterInput.setText("")
         binding.replaceLetterInput.clearFocus()
