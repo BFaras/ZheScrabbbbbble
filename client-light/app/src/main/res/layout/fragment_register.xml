@@ -18,19 +18,19 @@
         android:orientation="vertical"
         android:layout_gravity="center"
         android:gravity="center"
-        android:paddingTop="35dp"
+        android:paddingTop="100dp"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
         android:paddingBottom="35dp"
         android:background="@drawable/background_direction_panel"
         >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/shrikhand"
-            android:text="@string/app_name"
-            android:textSize="50dp"></TextView>
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:fontFamily="@font/shrikhand"-->
+<!--            android:text="@string/app_name"-->
+<!--            android:textSize="50dp"></TextView>-->
 
         <EditText
             android:id="@+id/username"
@@ -94,4 +94,16 @@
         android:layout_gravity="center|bottom"
         android:layout_marginBottom="70dp"
         android:visibility="gone" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/playerInGameAvatar"
+        android:layout_height="150dp"
+        android:layout_width="150dp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="100dp"
+        app:shapeAppearance="@style/roundedImageViewRounded"
+        android:background="@color/white">
+    </com.google.android.material.imageview.ShapeableImageView>
+
 </FrameLayout>

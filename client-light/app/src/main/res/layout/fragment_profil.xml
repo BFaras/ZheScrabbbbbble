@@ -3,15 +3,324 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?backgroundColor"
     tools:context=".ProfilFragment">
 
+    <LinearLayout
+        android:layout_width="900dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="570dp"
+            android:layout_gravity="center|top"
+            android:background="@drawable/background_profile"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="25dp"
+                    android:gravity="center">
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/playerInGameAvatar"
+                        android:layout_height="150dp"
+                        android:layout_width="150dp"
+                        android:scaleType="centerCrop"
+                        app:shapeAppearance="@style/roundedImageViewRounded"
+                        android:background="@color/BabyPink">
+                    </com.google.android.material.imageview.ShapeableImageView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:fontFeatureSettings="smcp"
+                        android:textStyle="bold"
+                        android:textSize="16dp"
+                        android:textColor="?colorSecondary"
+                        android:text="@string/your_friend_code_is"></TextView>
+
+                    <TextView
+                        android:id="@+id/friendcode"
+                        android:layout_width="190dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_direction_panel"
+                        android:backgroundTint="?colorSecondary"
+                        android:textAlignment="center"
+                        android:padding="5dp"
+                        android:textIsSelectable="true"
+                        android:textSize="16dp"
+                        android:textColor="?colorOnSecondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFeatureSettings="smcp"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        android:textColor="?colorOnSecondary"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/language" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <FrameLayout
+                            android:id="@+id/changeToFr"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/frLangue"
+                                android:layout_width="55dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/fr"
+                                android:textStyle="bold"
+                                android:textColor="?colorOnPrimary"
+                                android:textSize="15dp"
+                                android:textAlignment="center"
+                                android:padding="8dp"
+                                android:background="@drawable/background_direction_panel">
+                            </TextView>
+                        </FrameLayout>
+                        <FrameLayout
+                            android:id="@+id/changeToEn"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/enLangue"
+                                android:layout_width="55dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/en"
+                                android:textStyle="bold"
+                                android:textColor="?colorOnPrimary"
+                                android:textSize="15dp"
+                                android:textAlignment="center"
+                                android:padding="8dp"
+                                android:background="@drawable/background_direction_panel">
+                            </TextView>
+                        </FrameLayout>
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFeatureSettings="smcp"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        android:textColor="?colorOnSecondary"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/current_theme"></TextView>
+                    <TextView
+                        android:id="@+id/theme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFeatureSettings="smcp"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        android:textColor="?colorSecondary"></TextView>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_alignParentEnd="true"
+                    android:orientation="horizontal">
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/editName"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/ic_pencil"
+                        android:layout_marginEnd="10dp"
+                        ></androidx.appcompat.widget.AppCompatButton>
+                    <TextView
+                        android:id="@+id/playerName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLAYER NAME"
+                        android:textColor="?colorOnSecondary"
+                        android:textSize="50dp" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginTop="100dp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:gravity="end"
+                            android:paddingTop="4dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFeatureSettings="smcp"
+                                android:includeFontPadding="false"
+                                android:textColor="?colorOnSecondary"
+                                android:textSize="35dp"
+                                android:text="@string/lvl"></TextView>
+
+                            <TextView
+                                android:id="@+id/xpNeeded"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:includeFontPadding="false"
+                                android:fontFeatureSettings="smcp"
+                                android:textColor="?colorOnSecondary"
+                                android:textStyle="italic"
+                                android:text="@string/xp_needed_till_next_level_00" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/level"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="65dp"
+                            android:includeFontPadding="false"
+                            android:fontFeatureSettings="smcp"
+                            android:layout_gravity="right"
+                            android:textColor="?colorOnSecondary"
+                            android:text="42"></TextView>
+
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/levelProgress"
+                        android:layout_width="320dp"
+                        android:layout_height="wrap_content"
+                        app:trackThickness="10dp"
+                        android:max="500"
+                        android:progress="100"
+                        app:indicatorColor="@color/DarkForestGreen"
+                        android:background="?colorSecondary"
+                        android:layout_alignParentEnd="true">
+
+                    </com.google.android.material.progressindicator.LinearProgressIndicator>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFeatureSettings="smcp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="175dp"
+                    android:layout_marginEnd="520dp"
+                    android:textSize="25dp"
+                    android:textStyle="bold"
+                    android:textColor="?colorSecondary"
+                    android:text="game log"></TextView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="35dp"
+                android:divider="@drawable/letters_hand_divider"
+                android:showDividers="middle"
+                android:background="@drawable/background_direction_panel"
+                android:backgroundTint="?colorSecondary"
+                android:orientation="horizontal"
+                android:padding="5dp">
+                <LinearLayout
+                    android:layout_width="300dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:background="@drawable/background_direction_panel"
+                    android:backgroundTint="?backgroundProfile">
+                    <androidx.core.widget.NestedScrollView
+                        android:id="@+id/gameLogScroll"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:id="@+id/gameLog"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:orientation="vertical"></LinearLayout>
+                    </androidx.core.widget.NestedScrollView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="300dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:showDividers="middle"
+                    android:divider="@drawable/letters_hand_divider"
+                    >
+                    <LinearLayout
+                        android:id="@+id/statsLog"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:background="@drawable/background_direction_panel"
+                        android:backgroundTint="?backgroundProfile"
+                        android:orientation="vertical"
+                        android:paddingTop="10dp"
+                        >
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:background="@drawable/background_direction_panel"
+                        android:backgroundTint="?backgroundProfile"
+                        android:orientation="vertical"
+                        >
+                        <androidx.core.widget.NestedScrollView
+                            android:id="@+id/connectionScroll"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp">
+                            <LinearLayout
+                                android:id="@+id/connectionLog"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="10dp"
+                                android:orientation="vertical"></LinearLayout>
+                        </androidx.core.widget.NestedScrollView>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            </RelativeLayout>
+        </FrameLayout>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button2"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/ic_back"
+            android:backgroundTint="?colorSecondary"
+            android:layout_gravity="bottom"/>
+    </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="80dp"
-        android:layout_marginRight="10dp"
+        android:showDividers="middle"
+        android:divider="@drawable/letters_hand_divider"
+        android:layout_gravity="center|start"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="120dp"
         android:gravity="top">
         <FrameLayout
             android:id="@+id/lightTheme"
@@ -20,12 +329,12 @@
             android:padding="5dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/background_chat_input"
-            android:backgroundTint="?colorPrimary">
+            android:backgroundTint="?colorSecondary">
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_sun"
-                android:tint="?colorOnPrimary">
+                android:tint="?colorOnSecondary">
             </androidx.appcompat.widget.AppCompatImageView>
         </FrameLayout>
 
@@ -36,43 +345,57 @@
             android:padding="5dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/background_chat_input"
-            android:backgroundTint="?colorPrimary">
+            android:backgroundTint="?colorSecondary">
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_night"
-                android:tint="?colorOnPrimary">
+                android:tint="?colorOnSecondary">
             </androidx.appcompat.widget.AppCompatImageView>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/astro"
+            android:id="@+id/pink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/background_chat_input"
-            android:backgroundTint="?colorPrimary">
+            android:backgroundTint="?colorSecondary">
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_pink"
-                android:tint="?colorOnPrimary">
+                android:tint="?colorOnSecondary">
             </androidx.appcompat.widget.AppCompatImageView>
         </FrameLayout>
-
+        <FrameLayout
+            android:id="@+id/green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_chat_input"
+            android:backgroundTint="?colorSecondary">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_green"
+                android:tint="?colorOnSecondary">
+            </androidx.appcompat.widget.AppCompatImageView>
+        </FrameLayout>
         <FrameLayout
             android:id="@+id/blizzard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:background="@drawable/background_chat_input"
-            android:backgroundTint="?colorPrimary">
+            android:backgroundTint="?colorSecondary">
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_snow"
-                android:tint="?colorOnPrimary">
+                android:tint="?colorOnSecondary">
             </androidx.appcompat.widget.AppCompatImageView>
         </FrameLayout>
 
@@ -80,93 +403,79 @@
 
 
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="100dp"
-        android:orientation="horizontal">
-        <FrameLayout
-            android:id="@+id/changeToFr"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="55dp"
-                android:layout_height="wrap_content"
-                android:text="@string/fr"
-                android:textStyle="bold"
-                android:textColor="?colorOnPrimary"
-                android:textSize="15dp"
-                android:textAlignment="center"
-                android:padding="10dp"
-                android:background="@drawable/background_letter_rack">
-            </TextView>
-        </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/changeToEn"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="55dp"
-                android:layout_height="wrap_content"
-                android:text="@string/en"
-                android:textStyle="bold"
-                android:textColor="?colorOnPrimary"
-                android:textSize="15dp"
-                android:textAlignment="center"
-                android:padding="10dp"
-                android:background="@drawable/background_letter_rack">
-            </TextView>
-        </FrameLayout>
+
+<!--    <TextView-->
+<!--        android:layout_marginTop="120dp"-->
+<!--        android:layout_gravity="center"-->
+
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Theme:" />-->
+
+<!--    <TextView-->
+<!--        android:layout_marginTop="40dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:id="@+id/language"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Language:" />-->
+    <LinearLayout
+        android:id="@+id/gameLogText"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_marginEnd="45dp"
+        android:visibility="gone"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFeatureSettings="smcp"
+            android:layout_gravity="center"
+            android:layout_alignParentEnd="true"
+            android:textSize="25dp"
+            android:textStyle="bold|italic"
+            android:textAlignment="center"
+            android:textColor="?colorSecondary"
+            android:text="c'est vide ici..."></TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_alignParentEnd="true"
+            android:textSize="15dp"
+            android:textAlignment="center"
+            android:textColor="?colorSecondary"
+            android:text="Revenez quand vous aurez fait des parties!"></TextView>
     </LinearLayout>
 
     <TextView
-        android:layout_marginTop="120dp"
-        android:layout_gravity="center"
-        android:id="@+id/theme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Theme:" />
-
-    <TextView
-        android:layout_marginTop="40dp"
-        android:layout_gravity="center"
-        android:id="@+id/language"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Language:" />
-
-    <TextView
         android:layout_marginTop="60dp"
-        android:layout_gravity="center"
+        android:layout_gravity="center|top"
         android:id="@+id/avatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Avatar:" />
 
-    <TextView
-        android:layout_marginTop="80dp"
-        android:layout_gravity="center"
-        android:id="@+id/level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Level :" />
+<!--    <TextView-->
+<!--        android:id="@+id/level"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_marginTop="80dp"-->
+<!--        android:text="Level :" />-->
 
-    <TextView
-        android:layout_marginTop="100dp"
-        android:layout_gravity="center"
-        android:id="@+id/friendcode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FriendCode:" />
+<!--    <TextView-->
+<!--        android:layout_marginTop="100dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:id="@+id/friendcode"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="FriendCode:" />-->
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Retour"
-        android:layout_gravity="bottom"/>
+
 
 
 </FrameLayout>

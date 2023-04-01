@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
@@ -21,6 +22,7 @@ import com.example.testchatbox.R
 import com.example.testchatbox.chat.ChatModel
 import com.example.testchatbox.databinding.FragmentRegisterBinding
 import com.example.testchatbox.login.model.LoggedInUser
+import com.google.android.material.imageview.ShapeableImageView
 import java.util.*
 
 
@@ -118,6 +120,30 @@ class RegisterFragment : Fragment() {
                     answerEditText.text.toString()
                 )
             }
+        }
+        binding.playerInGameAvatar.setOnClickListener {
+            val builder = context?.let { it -> AlertDialog.Builder(it,R.style.CustomAlertDialog).create() }
+            val alertView = layoutInflater.inflate(R.layout.alert_choose_avatar, null)
+            val avatar1 = alertView.findViewById<ShapeableImageView>(R.id.avatar1)
+            val avatar2 = alertView.findViewById<ShapeableImageView>(R.id.avatar2)
+            val avatar3 = alertView.findViewById<ShapeableImageView>(R.id.avatar3)
+            builder?.setView(alertView)
+            avatar1.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.cat)
+                //socket
+                builder?.dismiss()
+            }
+            avatar2.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.dog)
+                //socket
+                builder?.dismiss()
+            }
+            avatar3.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.flower)
+                //socket
+                builder?.dismiss()
+            }
+            builder?.show()
         }
         usernameEditText.addTextChangedListener(afterTextChangedListener)
         emailEditText.addTextChangedListener(afterTextChangedListener)
