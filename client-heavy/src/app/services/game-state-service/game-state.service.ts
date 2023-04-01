@@ -36,6 +36,7 @@ export class GameStateService {
 
     private observerIndex: number;
     private tournamentGame: boolean;
+    private coop: boolean;
 
     constructor(private socketManagerService: SocketManagerService) {
         this.gameStateObservable = new Observable((observer: Observer<GameState>) => {
@@ -88,6 +89,14 @@ export class GameStateService {
 
     setObserver(observerindex: number) {
         this.observerIndex = observerindex;
+    }
+
+    setCoop(isCoop: boolean){
+        this.coop = isCoop;
+    }
+
+    isCoop(): boolean{
+        return this.coop;
     }
 
     isTournamentGame(): boolean {

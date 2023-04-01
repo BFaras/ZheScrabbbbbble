@@ -114,7 +114,9 @@
         "PUBLIC": "Public",
         "PRIVATE": "Privé",
         "PROTECTED": "Protégé",
-        "CREATE": "Créer une partie"
+        "CREATE": "Créer une partie",
+        "COOP": "Coop",
+        "CLASSIC": "Classique"
     },
     "WAITING-ROOM": {
         "MESSAGE": "Joueurs dans la salle de jeu",
@@ -136,7 +138,11 @@
         "JOIN": "Joindre",
         "OBSERVE": "Observer",
         "BEGAN": "En cours",
-        "WAIT": "En attente"
+        "WAIT": "En attente",
+        "OBSERVERS": "Nombre d'observateurs",
+        "GAME-TYPE": "Type de partie",
+        "COOP": "Coop",
+        "CLASSIC": "Classique"
     },
     "PENDING-ROOM": {
         "PENDING": "En attente d'une réponse de l'hôte",

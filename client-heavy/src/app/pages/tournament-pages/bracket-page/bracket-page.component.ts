@@ -104,7 +104,8 @@ export class BracketPageComponent implements OnDestroy {
         }, TIMER_VALUES.timeJump);
     }
 
-    goToGame() {
+    goToGame(isCoop: boolean) {
+        this.gameStateService.setCoop(isCoop);
         this.gameStateService.setObserver(-1);
         this.gameStateService.setTournamentGame(true);
         this.router.navigate(['/game']).then(() => {

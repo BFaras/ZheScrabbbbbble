@@ -98,6 +98,10 @@ export class GameRoom {
         return count;
     }
 
+    getObserverCount(): number{
+        return this.observers.length;
+    }
+
     getName(): string {
         return this.name;
     }

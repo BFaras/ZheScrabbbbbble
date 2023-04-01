@@ -1,9 +1,10 @@
+import { CoopGameRoom } from '@app/classes/coop-game-room';
 import { GameRoom } from '@app/classes/game-room';
 import { Player } from '@app/classes/player';
 import { GameStatus } from '@app/classes/tournament';
-//import { VirtualPlayerEasy } from '@app/classes/virtual-player-easy';
-//import { VirtualPlayerHard } from '@app/classes/virtual-player-hard';
-import { /*MAX_NUMBER_OF_PLAYERS,*/ RoomVisibility, TOURNAMENT_SIZE } from '@app/constants/basic-constants';
+import { VirtualPlayerEasy } from '@app/classes/virtual-player-easy';
+import { VirtualPlayerHard } from '@app/classes/virtual-player-hard';
+import { /*MAX_NUMBER_OF_PLAYERS,*/ GameType, MAX_NUMBER_OF_PLAYERS, RoomVisibility, TOURNAMENT_SIZE } from '@app/constants/basic-constants';
 import { JOIN_REQUEST_REFUSED, NO_ERROR, ROOM_IS_FULL, ROOM_NAME_TAKEN, ROOM_PASSWORD_INCORRECT } from '@app/constants/error-code-constants';
 import { DISCONNECT_MESSAGE, END_GAME_MESSAGE, OUT_OF_TIME_MESSAGE, REPLACED_MESSAGE, ROUND_OVER_MESSAGE, ROUND_TIME_LEFT_MESSAGE } from '@app/constants/game-state-constants';
 import { CommandController, CommandResult, PlayerMessage } from '@app/controllers/command.controller';
@@ -74,7 +75,7 @@ export class SocketManager {
                 socket.to(currentRoom.getID()).emit('Remove Selected Tile Response', activeSquare);
             });
 
-            socket.on('Create Game Room', async (name: string, visibility: RoomVisibility, password?: string) => {
+            socket.on('Create Game Room', async (name: string, visibility: RoomVisibility, password?: string, gameType: GameType = GameType.Classic) => {
                 if (visibility === RoomVisibility.Tournament) return;
                 console.log(new Date().toLocaleTimeString() + ' | Room creation request received');
                 if (this.roomManager.verifyIfRoomExists(name)) {
@@ -82,7 +83,7 @@ export class SocketManager {
                     socket.emit('Room Creation Response', ROOM_NAME_TAKEN);
                     return;
                 }
-                const roomId = this.roomManager.createRoom(name, visibility, password);
+                const roomId = this.roomManager.createRoom(name, visibility, gameType, password);
                 const newUser = new Player(socket.id, this.accountInfoService.getUserId(socket), this.accountInfoService.getUsername(socket));
                 this.usersStatusService.addUserToInGameList(this.accountInfoService.getUserId(socket));
                 this.roomManager.addPlayer(roomId, newUser);
@@ -166,7 +167,7 @@ export class SocketManager {
             socket.on('Is Game Started', () => {
                 const room = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!room) return;
-                socket.emit('Is Game Started Response', room.isGameStarted());
+                socket.emit('Is Game Started Response', room.isGameStarted(), room instanceof CoopGameRoom);
             })
 
             socket.on('Leave Game Room', () => {
@@ -189,31 +190,16 @@ export class SocketManager {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
                 if (currentRoom.getHostPlayer().getName() !== this.accountInfoService.getUsername(socket)) return;
-                //const playerCount = currentRoom.getPlayerCount()
-                //if (playerCount < 2) return;
+                if (currentRoom.getPlayerCount() < 2) return;
                 if (currentRoom.isGameStarted()) return;
-                /*
-                for (let i = 0; i < MAX_NUMBER_OF_PLAYERS - playerCount; i++) {
-                    let name;
-                    let index;
-                    do {
-                        index = Math.floor(Math.random() * VIRTUAL_PLAYER_NAMES.length);
-                        name = VIRTUAL_PLAYER_NAMES[index];
-                    } while (currentRoom.getPlayerNames().includes(name) || currentRoom.getPlayerNames().includes(name + ' (V)'))
-                    let virtualPlayer;
-                    if (index === 0) {
-                        virtualPlayer = new VirtualPlayerHard(name + ' (V)', currentRoom)
-                    } else {
-                        virtualPlayer = new VirtualPlayerEasy(name + ' (V)', currentRoom)
-                    }
-                    currentRoom.addPlayer(virtualPlayer);
+                if (!(currentRoom instanceof CoopGameRoom)) {
+                    this.fillRoomWithVP(currentRoom);
                 }
-                */
                 currentRoom.startGame(this.timerCallback.bind(this));
                 console.log(new Date().toLocaleTimeString() + ' | New game started');
                 socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
-                socket.to(currentRoom.getID()).emit('Game Started');
-                socket.emit('Game Started');
+                socket.to(currentRoom.getID()).emit('Game Started', currentRoom instanceof CoopGameRoom);
+                socket.emit('Game Started', currentRoom instanceof CoopGameRoom);
                 this.playVirtualTurns(currentRoom);
             });
 
@@ -425,7 +411,7 @@ export class SocketManager {
         if (room1.getPlayerCount() === 2) {
             room1.startGame(this.timerCallback.bind(this));
             this.roomManager.updateTournamentGameStatus(tid, rooms[0], GameStatus.IN_PROGRESS);
-            this.sio.in(rooms[0]).emit('Game Started');
+            this.sio.in(rooms[0]).emit('Game Started', false);
         } else if (room1.getPlayerCount() === 1) {
             const player = room1.getPlayerFromIndex(0);
             const tournament = this.roomManager.findTournamentFromId(tid);
@@ -441,7 +427,7 @@ export class SocketManager {
         if (room2.getPlayerCount() === 2) {
             room2.startGame(this.timerCallback.bind(this));
             this.roomManager.updateTournamentGameStatus(tid, rooms[1], GameStatus.IN_PROGRESS);
-            this.sio.in(rooms[1]).emit('Game Started');
+            this.sio.in(rooms[1]).emit('Game Started', false);
         } else if (room2.getPlayerCount() === 1) {
             const player = room2.getPlayerFromIndex(0);
             const tournament = this.roomManager.findTournamentFromId(tid);
@@ -458,7 +444,7 @@ export class SocketManager {
     }
 
     private createTournamentRound(tid: string, users: (io.Socket | null)[], round: number): string[] {
-        const rooms = [this.roomManager.createRoom(tid + ('-' + round + '-1'), RoomVisibility.Tournament), this.roomManager.createRoom(tid + ('-' + round + '-2'), RoomVisibility.Tournament)];
+        const rooms = [this.roomManager.createRoom(tid + ('-' + round + '-1'), RoomVisibility.Tournament, GameType.Classic), this.roomManager.createRoom(tid + ('-' + round + '-2'), RoomVisibility.Tournament, GameType.Classic)];
         for (let i = 0; i < users.length; i++) {
             const user = users[i];
             if (!user) continue;
@@ -485,5 +471,23 @@ export class SocketManager {
 
     private timerMessage(tid: string, timeLeft: string) {
         this.sio.in(tid).emit('Message Action History', { messageType: ROUND_TIME_LEFT_MESSAGE, values: [timeLeft] });
+    }
+
+    private fillRoomWithVP(currentRoom: GameRoom) {
+        for (let i = 0; i < MAX_NUMBER_OF_PLAYERS - currentRoom.getPlayerCount(); i++) {
+            let name;
+            let index;
+            do {
+                index = Math.floor(Math.random() * VIRTUAL_PLAYER_NAMES.length);
+                name = VIRTUAL_PLAYER_NAMES[index];
+            } while (currentRoom.getPlayerNames().includes(name) || currentRoom.getPlayerNames().includes(name + ' (V)'))
+            let virtualPlayer;
+            if (index === 0) {
+                virtualPlayer = new VirtualPlayerHard(name + ' (V)', currentRoom)
+            } else {
+                virtualPlayer = new VirtualPlayerEasy(name + ' (V)', currentRoom)
+            }
+            currentRoom.addPlayer(virtualPlayer);
+        }
     }
 }

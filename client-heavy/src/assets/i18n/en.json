@@ -114,7 +114,9 @@
         "PUBLIC": "Public",
         "PRIVATE": "Private",
         "PROTECTED": "Protected",
-        "CREATE": "Create the game"
+        "CREATE": "Create the game",
+        "COOP": "Coop",
+        "CLASSIC": "Classic"
     },
     "WAITING-ROOM": {
         "MESSAGE": "Players in the Game Room",
@@ -136,7 +138,11 @@
         "JOIN": "Join",
         "OBSERVE": "Observe",
         "BEGAN": "In progress",
-        "WAIT": "Pending"
+        "WAIT": "Pending",
+        "OBSERVERS": "Number of observers",
+        "GAME-TYPE": "Game type",
+        "COOP": "Coop",
+        "CLASSIC": "Classic"
     },
     "PENDING-ROOM": {
         "PENDING": "Waiting for the host's approval",

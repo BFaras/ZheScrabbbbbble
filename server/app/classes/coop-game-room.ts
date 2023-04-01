@@ -5,7 +5,7 @@ import { GameRoom } from "./game-room";
 import { Player } from "./player";
 
 export class CoopGameRoom extends GameRoom {
-    coopPlayers : CoopPlayer[];
+    coopPlayers : CoopPlayer[] = [];
 
     constructor(id: string, name: string, visibility: RoomVisibility, password?: string) {
         super(id, name, visibility, password);

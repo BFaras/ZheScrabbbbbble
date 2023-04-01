@@ -40,7 +40,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
             this.actionHistory.push(message);
         }));
         if(this.gameStateService.isTournamentGame()){
-            this.waitingRoomManagerService.getStartGameObservable().subscribe(() => {
+            this.waitingRoomManagerService.getStartGameObservable().subscribe((isCoop: boolean) => {
+                this.gameStateService.setCoop(isCoop);
                 this.gameStateService.setObserver(-1);
                 this.gameStateService.sendAbandonRequest();
                 this.letterAdderService.resetMappedBoard();
