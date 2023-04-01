@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Account } from '@app/classes/account';
-import { AccountCreationService } from '@app/services/account-creation-service/account-creation.service';
-import { VISIBILITY_CONSTANTS } from '@app/constants/visibility-constants';
-import { Subscription } from 'rxjs';
-import {  Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { Account } from '@app/classes/account';
+import { VISIBILITY_CONSTANTS } from '@app/constants/visibility-constants';
+import { AccountCreationService } from '@app/services/account-creation-service/account-creation.service';
+import { AccountService } from '@app/services/account-service/account.service';
+import { Subscription } from 'rxjs';
 import { SignUpAvatarPopUpComponent } from '../sign-up-avatar-pop-up/sign-up-avatar-pop-up.component';
 
 @Component({
@@ -14,20 +15,20 @@ import { SignUpAvatarPopUpComponent } from '../sign-up-avatar-pop-up/sign-up-ava
 })
 export class SignUpAreaComponent implements OnInit {
   newAccount: Account = {
-    username : "",
-    email : "",
-    password : "",
-    avatar:"",
-    securityQuestion: {question: "" , answer : ""},
+    username: "",
+    email: "",
+    password: "",
+    avatar: "",
+    securityQuestion: { question: "", answer: "" },
   }
-  subscription:Subscription
-  hide:boolean = true;
+  subscription: Subscription
+  hide: boolean = true;
   isFormFinished: boolean = false;
-  avatarSrc:string;
+  avatarSrc: string;
 
-  constructor(private accountCreationService:AccountCreationService, public dialogAvatar: MatDialog,private router:Router) {
+  constructor(private accountCreationService: AccountCreationService, public dialogAvatar: MatDialog, private router: Router, private accountService: AccountService) {
     this.accountCreationService.setUpSocket()
-   }
+  }
 
   ngOnInit(): void {
   }
@@ -39,57 +40,60 @@ export class SignUpAreaComponent implements OnInit {
       data: { accountService: this.accountCreationService }
     });
     dialogReference.afterClosed().subscribe(result => {
+      console.log(result);
+      console.log(result.avatar)
       if (result.avatar) {
-        console.log(result.avatar)
         this.newAccount.avatar = result.avatar;
       }
     });
 
   }
-  
-  changePasswordVisibility(): string{
+
+  changePasswordVisibility(): string {
     return this.hide ? VISIBILITY_CONSTANTS.passwordHidden : VISIBILITY_CONSTANTS.passwordShown;
-    
+
   }
 
-  changeIconVisibility(): string{
+  changeIconVisibility(): string {
     return this.hide ? VISIBILITY_CONSTANTS.IconHiddenMode : VISIBILITY_CONSTANTS.IconShownMode;
   }
 
-  verifyIfFirstPageFormFinished(): boolean{
-    if (this.newAccount.username === "" || this.newAccount.password === "" || this.newAccount.email === "" || this.newAccount.avatar === ""){
+  verifyIfFirstPageFormFinished(): boolean {
+    console.log(this.newAccount.avatar)
+    if (this.newAccount.username === "" || this.newAccount.password === "" || this.newAccount.email === "" || this.newAccount.avatar === "") {
       return true
     }
-    else{
+    else {
       return false
     }
   }
 
-  verifyIfSecondPageFormFinished(): boolean{
-    if (this.newAccount.securityQuestion.question === "" || this.newAccount.securityQuestion.answer === ""){
+  verifyIfSecondPageFormFinished(): boolean {
+    if (this.newAccount.securityQuestion.question === "" || this.newAccount.securityQuestion.answer === "") {
       return true
     }
-    else{
+    else {
       return false
     }
   }
 
-  createNewAccount():void{
+  createNewAccount(): void {
     this.accountCreationService.sendNewAccountInformation(this.newAccount)
     this.subscription = this.accountCreationService.getStatusOfAccountCreation().subscribe(
-      (status: boolean) => this.showStatus(status) 
+      (status: string) => this.showStatus(status)
     )
   }
 
-  showStatus(status:boolean){
-    if (status == true){
+  showStatus(status: string) {
+    if (status == "0") {
+      this.accountService.setUsername(this.newAccount.username);
       this.router.navigate(['home'])
-    }else{
+    } else {
       alert('Échec de la Création de compte')
     }
   }
 
-  goToCreateQuestion():void{
+  goToCreateQuestion(): void {
     this.isFormFinished = !this.isFormFinished
   }
 

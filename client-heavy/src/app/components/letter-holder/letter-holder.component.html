@@ -19,7 +19,7 @@
             (click)="clickInside($event,indexOfelement)"
             (click)="isReceiver()"
             (contextmenu)="isReceiver()"
-            (keypress)="onKeyDown($event)" [cdkDragDisabled]="isDraggingMode() || tile === 'blank' " 
+            (keypress)="onKeyDown($event)" [cdkDragDisabled]="isDraggingMode() || isObserver()" 
             [cdkDragData]="tile" *ngFor="let tile of playerHand;let indexOfelement=index"
                         
             [ngClass]="{'red': listTileSelected[indexOfelement+1],'green':listTileManipulated[indexOfelement+1]}"class="tile" >

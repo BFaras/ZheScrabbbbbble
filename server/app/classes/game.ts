@@ -18,6 +18,7 @@ import { INVALID_WORD_MESSAGE, PASS_MESSAGE, SWAP_MESSAGE } from '@app/constants
 import { CommandResult } from '@app/controllers/command.controller';
 import { CommandFormattingService } from '@app/services/command-formatting.service';
 import { PossibleWordFinder, PossibleWords } from '@app/services/possible-word-finder.service';
+import { StatisticService } from '@app/services/statistics.service';
 import { WordValidation } from '@app/services/word-validation.service';
 import Container from 'typedi';
 import { CommandDetails, VirtualPlayer } from './virtual-player';
@@ -27,6 +28,7 @@ export class Game {
     private passCounter: number;
     private board: Board;
     private wordValidationService: WordValidation;
+    private statisticsService: StatisticService;
     private players: Player[];
     private reserve: Reserve;
     private gameOver: boolean;
@@ -42,6 +44,7 @@ export class Game {
         this.gameOver = false;
         this.players = players;
         this.wordValidationService = Container.get(WordValidation);
+        this.statisticsService = Container.get(StatisticService);
     }
 
     startGame(timerCallback: (username: string, result: CommandResult) => void) {
@@ -104,12 +107,17 @@ export class Game {
         return { playerMessage: { messageType: PASS_MESSAGE, values: [name] } };
     }
 
-    endGame(): string {
+    endGame(gaveUp?: string): string {
         clearTimeout(this.timer);
         this.gameOver = true;
         this.scorePlayers();
         let endMessage: string = '';
+        let winner = this.getWinner(gaveUp);
+        const timeElapsed = Math.round((Date.now() - this.startDate.getTime()) / 1000);
         for (const player of this.players) {
+            if (player.getDatabaseId()) {
+                this.statisticsService.addGameStats(player.getDatabaseId(), winner === player.getName(), player.getScore(), timeElapsed);
+            }
             endMessage += '\n' + player.getName() + ' : ' + player.getHand().getLettersToString();
         }
         return endMessage;
@@ -187,12 +195,16 @@ export class Game {
         }, MILLISECOND_IN_MINUTES);
     }
 
-    getWinner(): string {
+    getWinner(gaveUp?: string): string {
         if (!this.gameOver) return '';
         let highestScore = -Infinity;
         let playerIndex = -1;
         for (let i = 0; i < this.players.length; i++) {
-            if (this.players[i].getScore() > highestScore) playerIndex = i
+            if (this.players[i].getUUID() === gaveUp) continue;
+            if (this.players[i].getScore() > highestScore) {
+                highestScore = this.players[i].getScore();
+                playerIndex = i;
+            }
         }
         return this.players[playerIndex].getName();
     }

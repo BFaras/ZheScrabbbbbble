@@ -1,0 +1,52 @@
+*{
+    font-family: 'Courrier New';
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.title{
+    font-size: 17px;
+    font-weight: bold;
+}
+.button {
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    padding: 10px;
+    background-color: var(--button-primary);
+    border-radius: 7px;
+    box-shadow: var(--box-shadow);
+    font-size: 17px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: var(--button-text-default);
+    transition: color 0.5s linear;
+    -webkit-transition: color 0.2s linear;
+}
+input {
+    color: var(--text-default);
+    font-size: 18px;
+    position: relative;
+    bottom:30px
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px var(--input-highlight) inset !important;
+    -webkit-text-fill-color: var(--text-default);
+}
+
+button:hover {
+    color: var(--button-text-hover);
+    cursor: pointer;
+    background: var(--button-primary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}

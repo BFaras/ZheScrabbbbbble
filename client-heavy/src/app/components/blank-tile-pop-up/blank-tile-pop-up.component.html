@@ -1,0 +1,5 @@
+<div class="container">
+<p class="title"> Choisissez une lettre</p>
+<input placeholder="Entrer la lettre" [(ngModel)]="letterChosen" pattern="[a-zA-Z ]*">
+<button mat-raised-button class="button" [mat-dialog-close]="letterChosen" [disabled]="checkEmptyInput()" (click) = "closeDialog()">Confirmer </button>
+</div>
