@@ -31,6 +31,7 @@ import com.example.testchatbox.Coordinates.rowsPos
 import com.example.testchatbox.LetterPoints.letterPoints
 import com.example.testchatbox.databinding.FragmentFullscreenBinding
 import com.example.testchatbox.login.model.LoggedInUser
+import org.json.JSONArray
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -349,6 +350,17 @@ class GamePageFragment : Fragment() {
 
             backInHand.setOnClickListener {
                 clearTurn()
+            }
+
+
+            SocketHandler.getSocket().on("Message Action History"){args->
+                val messageJSON = args[0] as JSONObject
+                val messageArray = messageJSON.get("values") as JSONArray
+                val messages = arrayListOf<String>()
+                for (i in 0 until messageArray.length()) {
+                    messages.add(messageArray.get(i) as String)
+                }
+                updateMoveInfo(PlayerMessage(messageJSON.get("messageType") as String, messages))
             }
 
 //            directionToggle.setOnCheckedChangeListener { _, isChecked ->
