@@ -27,7 +27,6 @@ class BracketFragment : Fragment(), Observer {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        update();
         binding.quitBtn.setOnClickListener {
              leaveTournament()
         }
@@ -47,6 +46,7 @@ class BracketFragment : Fragment(), Observer {
             if(TournamentModel.gamesData[3].status==GameStatus.IN_PROGRESS)
                 observeGame(TournamentModel.gamesData[3].roomCode)
         }
+        SocketHandler.getSocket().emit("Get Tournament Data")
     }
 
     private fun leaveTournament(){
@@ -79,11 +79,13 @@ class BracketFragment : Fragment(), Observer {
     }
 
     override fun update() {
-        if(GameRoomModel.gameRoom!=null && GameRoomModel.gameRoom!!.hasStarted)
-            findNavController().navigate(R.id.action_bracketFragment_to_fullscreenFragment);
-        if(TournamentModel.tournamentTimer.phase==2)
-            findNavController().navigate(R.id.action_bracketFragment_to_rankingFragment)
-        //TODO : Update UI
+        activity?.runOnUiThread(Runnable {
+            if(GameRoomModel.gameRoom!=null && GameRoomModel.gameRoom!!.hasStarted)
+                findNavController().navigate(R.id.action_bracketFragment_to_fullscreenFragment);
+            if(TournamentModel.tournamentTimer.phase==2)
+                findNavController().navigate(R.id.action_bracketFragment_to_rankingFragment)
+            //TODO : Update UI
+        });
     }
 
     override fun onStart() {

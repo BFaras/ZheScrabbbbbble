@@ -148,6 +148,10 @@ class GamePageFragment : Fragment() {
                 isYourTurn = false
                 clearTurn()
             }
+            else if(gameOver){
+                gameOver = false
+                binding.abandonButton.text = getString(R.string.abandonner)
+            }
             for (player in gameState.players) {
                 if (player.username == LoggedInUser.getName()) playerHand = player.hand
             }
@@ -289,6 +293,8 @@ class GamePageFragment : Fragment() {
             abandonButton.setOnClickListener {
                 GameRoomModel.leaveRoom()
                 SocketHandler.getSocket().emit("Abandon")
+                if(TournamentModel.inTournament)
+                    findNavController().navigate(R.id.action_fullscreenFragment_to_bracketFragment2)
                 findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
             }
 
@@ -763,6 +769,7 @@ class GamePageFragment : Fragment() {
                 playerPoints.setTextColor(isYouColor.data)
             }
             if (!gameOver) {
+                binding.gameWinnerHolder.visibility = GONE
                 if (playersList.indexOf(player) == isPlaying) {
                     playerTurn.setBackgroundResource(R.drawable.player_turn_border)
                 }

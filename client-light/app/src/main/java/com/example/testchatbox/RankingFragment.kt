@@ -29,10 +29,26 @@ class RankingFragment : Fragment() {
             TournamentModel.exitTournament()
             findNavController().navigate(R.id.action_rankingFragment_to_MainMenuFragment)
         }
-        binding.Rank1.text=TournamentModel.gamesData[3].players[TournamentModel.gamesData[3].winnerIndex]
-        binding.Rank2.text=TournamentModel.gamesData[3].players[if(TournamentModel.gamesData[3].winnerIndex==1)0 else 1]
-        binding.Rank3.text=TournamentModel.gamesData[4].players[TournamentModel.gamesData[4].winnerIndex]
-        binding.Rank4.text=TournamentModel.gamesData[4].players[if(TournamentModel.gamesData[4].winnerIndex==1)0 else 1]
+        val player = getRank()
+        binding.Rank1.text=player[0]
+        binding.Rank2.text=player[1]
+        binding.Rank3.text=player[2]
+        binding.Rank4.text=player[3]
+    }
+
+    fun getRank():Array<String>{
+        val players = arrayOf<String>("","","","")
+        for(game in TournamentModel.gamesData){
+            if(game.type=="Final1"){
+                players[0]= game.players[game.winnerIndex]
+                players[1]=game.players[if(game.winnerIndex==1)0 else 1]
+            }
+            else if(game.type=="Final2"){
+                players[2]= game.players[game.winnerIndex]
+                players[3]=game.players[if(game.winnerIndex==1)0 else 1]
+            }
+        }
+        return players
     }
 
 

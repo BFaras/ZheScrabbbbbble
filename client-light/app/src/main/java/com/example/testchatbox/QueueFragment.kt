@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.chat.ChatModel
@@ -40,7 +41,9 @@ class QueueFragment : Fragment(), Observer {
     }
 
     override fun update() {
-        findNavController().navigate(R.id.action_queueFragment_to_bracketFragment)
+        activity?.runOnUiThread(Runnable {
+            findNavController().navigate(R.id.action_queueFragment_to_bracketFragment)
+        });
     }
 
     override fun onStart() {

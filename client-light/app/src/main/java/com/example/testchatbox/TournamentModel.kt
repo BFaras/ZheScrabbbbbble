@@ -27,16 +27,16 @@ object TournamentModel :Observable{
     private var inQueue=false;
     override var observers: ArrayList<Observer> = arrayListOf()
     var gamesData : ArrayList<GameData> = arrayListOf()
-    var countDownTimer = setTime(0)
     var tournamentTimer:TournamentTimer = TournamentTimer(0, 0)
+    var inTournament =false;
 
 
     fun exitTournament(){
         SocketHandler.getSocket().emit("Exit Tournament");
         gamesData= arrayListOf();
         inQueue=false;
+        inTournament=false;
         observers= arrayListOf();
-        countDownTimer.cancel();
         tournamentTimer = TournamentTimer(0, 0)
         SocketHandler.getSocket().off("Tournament Data Response")
         SocketHandler.getSocket().off("Tournament Found")
@@ -49,7 +49,8 @@ object TournamentModel :Observable{
         }
         SocketHandler.getSocket().once("Tournament Found"){
             inQueue=false;
-            SocketHandler.getSocket().emit("Get Tournament Data")
+            inTournament=true;
+            notifyObserver();
         }
 
         SocketHandler.getSocket().on("Tournament Data Response"){args->
@@ -64,13 +65,7 @@ object TournamentModel :Observable{
                 gamesData.add(GameData(gameJSON.get("type") as String, GameStatus.fromInt(gameJSON.get("status") as Int), players, gameJSON.get("winnerIndex") as Int, gameJSON.get("roomCode") as String))
             }
             val timerJSON = args[1] as JSONObject;
-            tournamentTimer.phase=timerJSON.get("phase") as Int;
-            countDownTimer= setTime(timerJSON.get("time") as Long);
-            if(tournamentTimer.phase==2)
-                countDownTimer.cancel();
-            else
-                countDownTimer.start();
-
+            tournamentTimer= TournamentTimer(timerJSON.get("time") as Int,timerJSON.get("phase") as Int);
             notifyObserver();
         }
 
@@ -82,14 +77,6 @@ object TournamentModel :Observable{
     }
 
 
-    private fun setTime(timeInMillie: Long): CountDownTimer{
-        return object :CountDownTimer(timeInMillie,1000){
-            override fun onTick(millisUntilFinished: Long) {
-                tournamentTimer.timeRemaning= millisUntilFinished.floorDiv(1000).toInt();
-            }
-            override fun onFinish() {}
-        }
-    }
 
     fun populateGameRoomModel(gameId:String, observer: Boolean){
         GameRoomModel.leaveRoom()
