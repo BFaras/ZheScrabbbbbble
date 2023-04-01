@@ -23,6 +23,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   subscriptionChangeAvatar: Subscription;
   subscriptionUsername: Subscription;
   progressionBarValue: number
+  avatarCircle: string;
   connectionHistory: connectionHistory = {
     connections: [],
     disconnections: [],
@@ -61,7 +62,9 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     });
     dialogReference.afterClosed().subscribe(result => {
       if (result.avatar) {
+        ('test3');
         this.accountProfile.avatar = result.avatar;
+        this.avatarCircle = "assets/avatar/" + result.avatar;
       }
     });
 
@@ -92,6 +95,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     })
     this.getUserName();
     this.accountProfile = this.accountService.getProfile();
+    this.avatarCircle = "assets/avatar/" + this.accountProfile.avatar;
     this.progressionBarValue = (this.accountProfile.levelInfo.xp / this.accountProfile.levelInfo.nextLevelXp) * 100
   }
 

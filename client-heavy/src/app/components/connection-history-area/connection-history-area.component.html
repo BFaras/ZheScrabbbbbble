@@ -9,6 +9,7 @@
     <div *ngIf="connectionMode === true">
     <mat-card-content *ngFor = "let connection of connectionHistory.connections" class="connection-content">
         <p  >Date : {{connection.date}}  Heure : {{connection.time}}</p>
+        <hr>
     </mat-card-content>
     </div>
     <div *ngIf="connectionMode === false">

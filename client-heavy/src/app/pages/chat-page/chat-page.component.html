@@ -20,8 +20,9 @@
         <div id="chat-box">
             <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
                 <div class="message-bubble" *ngFor="let message of chatLog.get(selectedChat)">
-                    <div id="name-time">
-                       <span class="message username" *ngIf="message.username !== username" style="color: var(--playarea-coords)">{{ message.username }}</span>
+                    <div id="name-time-avatar">
+                        <img src="assets/avatar/{{message.avatar}}" height = "30" width= "30" alt="image" class="message image">
+                        <span class="message username" *ngIf="message.username !== username" style="color: var(--playarea-coords)">{{ message.username }}</span>
                        <span class="message username" *ngIf="message.username === username">{{ message.username }}</span>
                        <span class="message timestamp">{{ message.timestamp }}</span> 
                     </div>

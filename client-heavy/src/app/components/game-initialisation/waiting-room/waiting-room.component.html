@@ -4,7 +4,9 @@
     <h1 class="header-item text">{{ 'WAITING-ROOM.MESSAGE' | translate }}</h1>
     <div class="loading-container">
         <mat-list>
-            <mat-list-item *ngFor="let player of playersInRoom; let last=last; let first=first" class="text players">{{player}}
+            <mat-list-item *ngFor="let player of playersInRoom; let index=index; let last=last; let first=first" class="text players">
+                <img class="image"  src="assets/avatar/{{avatarOfPlayers[index]}}" width="30" height="30">
+                <p class="player">{{player}}</p>
                 <img *ngIf="first" src="assets/crown.png" width="20" height="20">
                 <mat-divider *ngIf="!last"></mat-divider>
             </mat-list-item>
