@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AccountService } from '@app/services/account-service/account.service';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
 import { GameStateService, PlayerMessage } from '@app/services/game-state-service/game-state.service';
 import { GridService } from '@app/services/grid-service/grid.service';
@@ -21,6 +22,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
     chatDisplay: boolean = false;
     actionHistory: PlayerMessage[] = [];
 
+    hasPendingAction: boolean;
+
     constructor(
         private readonly gameStateService: GameStateService,
         private readonly letterHolderService: LetterHolderService,
@@ -28,15 +31,28 @@ export class GamePageComponent implements OnInit, OnDestroy {
         private readonly router: Router,
         private readonly fontSize: FontSizeService,
         private readonly waitingRoomManagerService: WaitingRoomManagerService,
-        private readonly letterAdderService: LetterAdderService
+        private readonly letterAdderService: LetterAdderService,
+        private readonly accountService : AccountService
     ) {}
 
     ngOnInit() {
+        this.hasPendingAction = false;
+        this.gameStateService.setPendingAction(false);
         this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => {
             if (gameState.message) this.actionHistory.push(gameState.message);
             this.endGame = gameState.gameOver;
         }));
         this.subscriptions.push(this.gameStateService.getActionMessageObservable().subscribe((message) => {
+            if(message.messageType === 'MSG-13'){
+                this.gameStateService.setPendingAction(true);
+            }
+            if(message.messageType === 'MSG-12' || message.messageType === 'MSG-14'){
+                this.gameStateService.setPendingAction(false);
+                this.hasPendingAction = false;
+            }
+            if(message.messageType === 'MSG-13' && this.gameStateService.getObserverIndex() === -1 && message.values[0] !== this.accountService.getUsername()){
+                this.hasPendingAction = true;
+            }
             this.actionHistory.push(message);
         }));
         if(this.gameStateService.isTournamentGame()){
@@ -98,6 +114,22 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
     isObserver(): boolean {
         return this.gameStateService.getObserverIndex() >= 0;
+    }
+
+    answerPendingAction(answer : boolean){
+        if(!this.hasPendingAction) return;
+        this.hasPendingAction = false;
+        this.gameStateService.respondCoopAction(answer);
+    }
+
+    isLatestProposedAction(index: number){
+        if(this.actionHistory[index].messageType !== 'MSG-13') return false;
+        for(let i = this.actionHistory.length - 1; i >= 0; i--){
+            if(this.actionHistory[i].messageType === 'MSG-13'){
+                return i === index;
+            }
+        }
+        return false;
     }
 
     formatActionInList(message: string, values: string[]): string {

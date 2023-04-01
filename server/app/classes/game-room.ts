@@ -17,7 +17,7 @@ export class GameRoom {
     protected observers: string[] = [];
 
 
-    constructor(id: string, name: string, visibility: RoomVisibility, password?: string) {
+    constructor(id: string, name: string, visibility: RoomVisibility, password?: string, timerEnabled: boolean = true) {
         this.id = id;
         this.name = name;
         this.players = [];
@@ -29,7 +29,7 @@ export class GameRoom {
                 this.password = password;
             } 
         }
-        this.game = new Game(this.players);
+        this.game = new Game(this.players, timerEnabled);
         this.gameStarted = false;
     }
 

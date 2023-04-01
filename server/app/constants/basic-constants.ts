@@ -64,6 +64,6 @@ export enum RoomVisibility {
 }
 
 export enum GameType {
-    Classic,
-    Coop
+    Classic = 'Classic',
+    Coop = 'Coop'
 }

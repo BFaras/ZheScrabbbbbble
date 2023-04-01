@@ -10,7 +10,7 @@ export class CoopGameRoom extends GameRoom {
     acceptedList : number[] = [];
 
     constructor(id: string, name: string, visibility: RoomVisibility, password?: string) {
-        super(id, name, visibility, password);
+        super(id, name, visibility, password, false);
     }
 
     addPlayer(player: Player): void {
@@ -88,6 +88,7 @@ export class CoopGameRoom extends GameRoom {
     }
 
     resetPendingAction() {
+        this.acceptedList = [];
         this.pendingAction = null;
     }
 

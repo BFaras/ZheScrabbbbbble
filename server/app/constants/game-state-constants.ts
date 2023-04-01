@@ -11,3 +11,4 @@ export const DISCONNECT_MESSAGE = 'MSG-10';
 export const COOP_ACTION_ACCEPTED = 'MSG-11';
 export const COOP_ACTION_REFUSED = 'MSG-12';
 export const COOP_ACTION_PROPOSED = 'MSG-13';
+export const COOP_ACTION_UNANIMOUS = 'MSG-14';

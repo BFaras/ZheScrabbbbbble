@@ -46,7 +46,8 @@
         "LETTERSINHAND": "Nombre de lettres sur le chevalet: ",
         "TIMER": "Temps restant: ",
         "TURN": ", c'est à votre tour!",
-        "WIN": ", vous avez gagné!"
+        "WIN": ", vous avez gagné!",
+        "COOP-TEAM": "Équipe"
     },
     "CHATBOX": {
         "CHATBOX": "BOÎTE DE CHAT",
@@ -172,7 +173,11 @@
         "MSG-7": "Fin de partie - lettres restantes $0",
         "MSG-8": "La ronde est terminée. La prochaine partie va commencer dans 20 secondes",
         "MSG-9": "$0 minute(s) avant la fin de la ronde",
-        "MSG-10": "$0 s'est déconnecté"
+        "MSG-10": "$0 s'est déconnecté",
+        "MSG-11": "$0 a accepté l'action proposée",
+        "MSG-12": "$0 a refusé l'action proposée",
+        "MSG-13": "$0 a proposé l'action suivante : $1",
+        "MSG-14": "Tout le monde a accpté l'action proposée"
     },
     "FRIENDS-PAGE": {
         "MESSAGE": "Vous pouvez gérer vos amis ici!",

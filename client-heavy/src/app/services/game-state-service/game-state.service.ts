@@ -32,11 +32,12 @@ export class GameStateService {
     private gameStateObservable: Observable<GameState>;
     private gameStateObservers: Observer<GameState>[] = [];
     private actionMessageObservable: Observable<PlayerMessage>;
-    private actionMessageObserver: Observer<PlayerMessage>; 
-
+    private actionMessageObserver: Observer<PlayerMessage>;
+    
     private observerIndex: number;
     private tournamentGame: boolean;
     private coop: boolean;
+    private pendingAction : boolean = false;
 
     constructor(private socketManagerService: SocketManagerService) {
         this.gameStateObservable = new Observable((observer: Observer<GameState>) => {
@@ -79,8 +80,8 @@ export class GameStateService {
         this.socket.emit('Abandon');
     }
 
-    reconnect(id: string) {
-        this.socket.emit('reconnect', id);
+    respondCoopAction(response: boolean){
+        this.socket.emit('Respond Coop Action', response);
     }
 
     getObserverIndex(): number {
@@ -105,5 +106,13 @@ export class GameStateService {
 
     setTournamentGame(tournamentGame: boolean) {
         this.tournamentGame = tournamentGame;
+    }
+
+    setPendingAction(pendingAction : boolean){
+        this.pendingAction = pendingAction;
+    }
+
+    hasPendingAction(): boolean {
+        return this.pendingAction;
     }
 }
