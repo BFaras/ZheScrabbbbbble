@@ -40,8 +40,9 @@ export class SignUpAreaComponent implements OnInit {
       data: { accountService: this.accountCreationService }
     });
     dialogReference.afterClosed().subscribe(result => {
+      console.log(result);
+      console.log(result.avatar)
       if (result.avatar) {
-        console.log(result.avatar)
         this.newAccount.avatar = result.avatar;
       }
     });
@@ -58,6 +59,7 @@ export class SignUpAreaComponent implements OnInit {
   }
 
   verifyIfFirstPageFormFinished(): boolean {
+    console.log(this.newAccount.avatar)
     if (this.newAccount.username === "" || this.newAccount.password === "" || this.newAccount.email === "" || this.newAccount.avatar === "") {
       return true
     }

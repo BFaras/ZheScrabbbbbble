@@ -3,13 +3,17 @@
         <header id="title" class="centered-title">{{'INFOBOARD.INFOBOARD' | translate}}</header>
         <div id="info">
             <div *ngFor="let player of playersInfo" class="player-container" [class.player-selected]="isPlayerUser(player)">
+                <div class="imageContainer">
                 <img src="assets/avatar/{{player.avatar}}" alt="image" height ="40" width ="40" class="image">
-                <span class="data"><strong>{{ player.name }}</strong></span>
-                <span class="status" *ngIf="player.active">{{'INFOBOARD.TURN' | translate}}</span>
-                <span class="status" *ngIf="player.winner">{{'INFOBOARD.WIN' | translate}}</span>
-                <br /><br />
-                <p class="data">{{'INFOBOARD.SCORE' | translate}}{{ player.currentScore }}</p>
-                <p class="data" *ngIf="player.letterCount < 7">{{'INFOBOARD.LETTERSINHAND' | translate}}{{ player.letterCount }}</p>
+                </div>
+                <div class="playerInfo">
+                    <span class="data"><strong>{{ player.name }}</strong></span>
+                    <span class="status" *ngIf="player.active">{{'INFOBOARD.TURN' | translate}}</span>
+                    <span class="status" *ngIf="player.winner">{{'INFOBOARD.WIN' | translate}}</span>
+                    <br /><br />
+                    <p class="data">{{'INFOBOARD.SCORE' | translate}}{{ player.currentScore }}</p>
+                    <p class="data" *ngIf="player.letterCount < 7">{{'INFOBOARD.LETTERSINHAND' | translate}}{{ player.letterCount }}</p>
+                </div>
             </div>
             <p class="data reserve-letters">{{'INFOBOARD.LETTERSLEFT' | translate}}{{ roundInfo[0].lettersRemaining }}</p>
         </div>
