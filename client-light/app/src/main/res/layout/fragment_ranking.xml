@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RankingFragment">
+
+    <TextView
+        android:id="@+id/Rank1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="150dp"
+        android:text=""
+        android:textSize="25dp" />
+
+    <TextView
+        android:id="@+id/Rank2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="100dp"
+        android:text=""
+        android:textSize="25dp" />
+
+    <TextView
+        android:id="@+id/Rank3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="50dp"
+        android:text=""
+        android:textSize="25dp" />
+
+    <TextView
+        android:id="@+id/Rank4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text=""
+        android:textSize="25dp" />
+
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/quitBtn"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:text="@string/quit"
+        android:textColor="?colorOnPrimary"
+        android:background="@drawable/background_chat_input"
+        android:backgroundTint="?colorPrimary"
+        android:layout_marginBottom="100dp"
+        android:layout_gravity="center|bottom"
+        android:textSize="18dp"/>
+
+</FrameLayout>

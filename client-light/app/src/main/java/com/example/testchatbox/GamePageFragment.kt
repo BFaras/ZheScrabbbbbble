@@ -31,6 +31,7 @@ import com.example.testchatbox.Coordinates.rowsPos
 import com.example.testchatbox.LetterPoints.letterPoints
 import com.example.testchatbox.databinding.FragmentFullscreenBinding
 import com.example.testchatbox.login.model.LoggedInUser
+import org.json.JSONArray
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -146,6 +147,10 @@ class GamePageFragment : Fragment() {
                 binding.abandonButton.text = getString(R.string.quit)
                 isYourTurn = false
                 clearTurn()
+            }
+            else if(gameOver){
+                gameOver = false
+                binding.abandonButton.text = getString(R.string.abandonner)
             }
             for (player in gameState.players) {
                 if (player.username == LoggedInUser.getName()) playerHand = player.hand
@@ -288,6 +293,8 @@ class GamePageFragment : Fragment() {
             abandonButton.setOnClickListener {
                 GameRoomModel.leaveRoom()
                 SocketHandler.getSocket().emit("Abandon")
+                if(TournamentModel.inTournament)
+                    findNavController().navigate(R.id.action_fullscreenFragment_to_bracketFragment2)
                 findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
             }
 
@@ -349,6 +356,17 @@ class GamePageFragment : Fragment() {
 
             backInHand.setOnClickListener {
                 clearTurn()
+            }
+
+
+            SocketHandler.getSocket().on("Message Action History"){args->
+                val messageJSON = args[0] as JSONObject
+                val messageArray = messageJSON.get("values") as JSONArray
+                val messages = arrayListOf<String>()
+                for (i in 0 until messageArray.length()) {
+                    messages.add(messageArray.get(i) as String)
+                }
+                updateMoveInfo(PlayerMessage(messageJSON.get("messageType") as String, messages))
             }
 
 //            directionToggle.setOnCheckedChangeListener { _, isChecked ->
@@ -751,6 +769,7 @@ class GamePageFragment : Fragment() {
                 playerPoints.setTextColor(isYouColor.data)
             }
             if (!gameOver) {
+                binding.gameWinnerHolder.visibility = GONE
                 if (playersList.indexOf(player) == isPlaying) {
                     playerTurn.setBackgroundResource(R.drawable.player_turn_border)
                 }
