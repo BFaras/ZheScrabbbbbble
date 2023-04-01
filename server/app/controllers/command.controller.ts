@@ -9,6 +9,7 @@ export interface Command {
     commandType: string;
     args: string;
     playerID: string;
+    isCoop?: boolean;
 }
 
 export interface CommandResult {
@@ -42,7 +43,8 @@ export class CommandController {
         if (!game) {
             return { errorType: NOT_IN_GAME };
         }
-        if (!game.isPlayerTurn(command.playerID) && CommandTypes[command.commandType] !== CommandTypes.Reserve) {
+        const isPlayerTurn = command.isCoop ? true : game.isPlayerTurn(command.playerID);
+        if (!isPlayerTurn && CommandTypes[command.commandType] !== CommandTypes.Reserve) {
             return { errorType: NOT_YOUR_TURN };
         }
         switch (CommandTypes[command.commandType]) {

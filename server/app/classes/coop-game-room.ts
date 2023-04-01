@@ -6,6 +6,8 @@ import { Player } from "./player";
 
 export class CoopGameRoom extends GameRoom {
     coopPlayers : CoopPlayer[] = [];
+    pendingAction : {command: string, argument: string} | null = null;
+    acceptedList : number[] = [];
 
     constructor(id: string, name: string, visibility: RoomVisibility, password?: string) {
         super(id, name, visibility, password);
@@ -71,6 +73,48 @@ export class CoopGameRoom extends GameRoom {
         if(this.gameStarted) return;
         this.players.push(new Player());
         super.startGame(timerCallback);
+    }
+
+    hasPendingAction(): boolean {
+        return this.pendingAction !== null;
+    }
+
+    setPendingAction(action : {command: string, argument: string}){
+        this.pendingAction = action;
+    }
+
+    getPendingAction(): {command: string, argument: string} | null {
+        return this.pendingAction;
+    }
+
+    resetPendingAction() {
+        this.pendingAction = null;
+    }
+
+    acceptAction(playerID: string): boolean{
+        for(let i = 0; i < this.coopPlayers.length; i++){
+            if(this.coopPlayers[i].getUUID() === playerID){
+                if(!this.acceptedList.includes(i)){
+                    this.acceptedList.push(i);
+                }
+                return this.acceptedList.length === this.coopPlayers.length;
+            }
+        }
+        return false;
+    }
+
+    refuseAction(playerID: string): boolean{
+        for(let i = 0; i < this.coopPlayers.length; i++){
+            if(this.coopPlayers[i].getUUID() === playerID){
+                if(!this.acceptedList.includes(i)){
+                    this.acceptedList = [];
+                    this.pendingAction = null;
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
     }
 
     private getCoopPlayer(playerID: string): CoopPlayer | null{
