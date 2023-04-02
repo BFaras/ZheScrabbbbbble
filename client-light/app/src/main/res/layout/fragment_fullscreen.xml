@@ -300,6 +300,12 @@
             android:backgroundTint="?colorSecondary"
             android:layout_gravity="center|end">
             <ImageButton
+                android:id="@+id/friends"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/ic_groups"
+                android:layout_gravity="center_vertical" />
+            <ImageButton
                 android:id="@+id/buttonchat"
                 android:layout_width="40dp"
                 android:layout_height="40dp"

@@ -34,6 +34,7 @@
                     android:layout_height="wrap_content"
                     android:text="room name"
                     android:textStyle="bold"
+                    android:textColor="?colorOnPrimary"
                     android:fontFeatureSettings="smcp"
                     android:textSize="16dp">
                 </TextView>
@@ -43,36 +44,64 @@
                     android:layout_height="wrap_content"
                     android:text="visibility"
                     android:textStyle="bold"
+                    android:textColor="?colorOnPrimary"
+                    android:fontFeatureSettings="smcp"
+                    android:textSize="16dp">
+                </TextView>
+                <ImageView
+                    android:layout_width="2dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/background_chat_input">
+                </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/host"
+                    android:textStyle="bold"
+                    android:textColor="?colorOnPrimary"
+                    android:fontFeatureSettings="smcp"
+                    android:textSize="16dp">
+                </TextView>
+                <TextView
+                    android:id="@+id/hostName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="name"
+                    android:textStyle="bold"
+                    android:textColor="?colorOnPrimary"
                     android:fontFeatureSettings="smcp"
                     android:textSize="16dp">
                 </TextView>
             </LinearLayout>
-            <TextView
-                android:id="@+id/roomStatus"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="room status"
-                android:textStyle="bold"
-                android:fontFeatureSettings="smcp"
-                android:layout_alignParentEnd="true"
-                android:textSize="16dp">
-            </TextView>
+                android:orientation="horizontal"
+                android:divider="@drawable/letters_hand_divider"
+                android:showDividers="middle"
+                android:layout_alignParentEnd="true">
+                <TextView
+                    android:id="@+id/numberPlayers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/numberPlayers"
+                    android:textStyle="bold"
+                    android:fontFeatureSettings="smcp"
+                    android:textColor="?colorOnPrimary"
+                    android:textSize="16dp">
+                </TextView>
+                <TextView
+                    android:id="@+id/roomStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="room status"
+                    android:textStyle="bold"
+                    android:fontFeatureSettings="smcp"
+                    android:textColor="?colorOnPrimary"
+                    android:textSize="16dp">
+                </TextView>
+            </LinearLayout>
         </RelativeLayout>
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@drawable/background_chat_input">
-        </ImageView>
-        <LinearLayout
-            android:id="@+id/roomPlayersNames"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:padding="10dp"
-            android:showDividers="middle"
-            android:divider="@drawable/letters_hand_divider"
-            android:orientation="vertical">
-        </LinearLayout>
-
     </LinearLayout>
 </androidx.cardview.widget.CardView>
