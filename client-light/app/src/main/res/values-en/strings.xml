@@ -11,7 +11,7 @@
     <string name="accepter">Accept</string>
     <string name="refuser">Reject</string>
     <string name="ajouter">Add</string>
-    <string name="FriendCode">Enter your friend\'s code to add him </string>
+    <string name="FriendCode">"Enter your friend's code to add them "</string>
 
 
     <!-- Strings used for fragments for navigation -->
@@ -119,4 +119,6 @@
     <string name="current_theme">current theme</string>
     <string name="vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil">You can change it again in your profil page.</string>
     <string name="choisissez_votre_avatar">choose your profile picture</string>
+    <string name="revenez_quand_vous_aurez_fait_des_parties">Come back when you\'ve played some games!</string>
+    <string name="c_est_vide_ici">it\'s empty here...</string>
 </resources>

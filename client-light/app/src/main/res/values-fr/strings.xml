@@ -20,6 +20,8 @@
     <string name="rejoindre"><![CDATA[%1$s veut rejoindre votre partie.]]></string>
     <string name="accepter">Accepter</string>
     <string name="refuser">Refuser</string>
+    <string name="ajouter">Ajouter</string>
+    <string name="FriendCode">"Entrez le code se trouvant sur le profil de votre ami pour l'ajouter "</string>
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="swap">Échanger</string>
     <string name="reserveText">LETTRES RESTANTES DANS LA RÉSERVE</string>
@@ -37,6 +39,7 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Courriel</string>
+    <string name="prompt_friendcode">Code d\'ami</string>
     <string name="prompt_username">Nom d\'utilisateur</string>
     <string name="prompt_password">Mot de passe</string>
     <string name="action_sign_in">Se Connecter</string>
@@ -114,7 +117,7 @@
     <string name="move_mode">mode placer</string>
     <string name="swap_mode">mode échanger</string>
     <string name="indice">indice</string>
-    <string name="xp_needed_till_next_level_00"><![CDATA[xp needed till next level - %1$s]]></string>
+    <string name="xp_needed_till_next_level_00"><![CDATA[xp nécessaire pour le prochain niveau - %1$s]]></string>
     <string name="lvl">niv</string>
     <string name="iswinner">gagné</string>
     <string name="isloser">perdu</string>
@@ -123,4 +126,6 @@
     <string name="current_theme">thème actuel</string>
     <string name="vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil">Vous pourrez le changer à nouveau dans votre page de profil.</string>
     <string name="choisissez_votre_avatar">choisissez votre avatar</string>
+    <string name="revenez_quand_vous_aurez_fait_des_parties">Revenez quand vous aurez fait des parties!</string>
+    <string name="c_est_vide_ici">c\'est vide ici...</string>
 </resources>

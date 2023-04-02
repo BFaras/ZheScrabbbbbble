@@ -129,5 +129,9 @@
     <string name="current_theme">current theme</string>
     <string name="vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil">Vous pourrez le changer à nouveau dans votre page de profil.</string>
     <string name="choisissez_votre_avatar">choisissez votre avatar</string>
+    <string name="revenez_quand_vous_aurez_fait_des_parties">Revenez quand vous aurez fait des parties!</string>
+    <string name="c_est_vide_ici">c\'est vide ici...</string>
+    <string name="host">host</string>
+    <string name="numberPlayers"><![CDATA[%1$s / 4]]></string>
 
 </resources>

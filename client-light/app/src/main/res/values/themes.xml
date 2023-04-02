@@ -7,7 +7,7 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowBackground">@color/beige</item>
         <item name="backgroundColor">@color/beige</item>
-        <item name="android:textColorHighlight">@color/corail</item>
+        <item name="android:textColorHighlight">@color/beige</item>
         <item name="android:textColor">@color/darkForestGreen</item>
         <item name="colorPrimary">@color/corail</item>
         <item name="colorPrimaryVariant">@color/darkCorail</item>
@@ -40,6 +40,7 @@
 
     <style name="PinkTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="backgroundColor">#f7dfed</item>
+        <item name="android:textColorHighlight">#e0cddc</item>
         <item name="android:textColor">@color/black</item>
         <item name="colorPrimary">#fffbfb</item>
         <item name="colorPrimaryVariant">#e0cddc</item>
@@ -48,7 +49,7 @@
         <item name="colorSecondaryVariant">@color/MediumVioletRed</item>
         <item name="android:statusBarColor">#cb4f7f</item>
         <item name="playerSelection">@color/BlueViolet</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/DarkSunset</item>
         <item name="doubleWord">@color/lightCorail</item>
         <item name="tripleWord">@color/IndianRed</item>
         <item name="doubleLetter">@color/RosyBrown</item>
@@ -124,7 +125,6 @@
         <item name="colorSecondary">#89b034</item>
         <item name="colorSecondaryVariant">#89b034</item>
         <item name="colorOnSecondary">@color/DarkForestGreen</item>
-
         <item name="doubleWord">@color/DarkOliveGreen</item>
         <item name="tripleWord">@color/Olive</item>
         <item name="doubleLetter">@color/DarkOliveGreen</item>
@@ -133,8 +133,8 @@
         <item name="boardBackground">@color/DarkForestGreen</item>
         <item name="playerSelection">@color/Gold</item>
         <item name="lettersOnBoard">@color/DarkGreen</item>
-        <item name="lettersInHand">@color/DarkSlateGray</item>
-        <item name="chatBox">@color/Platinium</item>
+        <item name="lettersInHand">@color/SpringGreen</item>
+        <item name="chatBox">@color/DarkGreen</item>
         <item name="activeTile">@color/Gold</item>
         <item name="backgroundProfile">@color/MintCream</item>
     </style>
