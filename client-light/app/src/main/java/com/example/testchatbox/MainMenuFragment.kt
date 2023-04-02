@@ -11,6 +11,7 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.findNavController
+import com.example.testchatbox.chat.ChatModel
 import com.example.testchatbox.databinding.FragmentMainMenuBinding
 import com.example.testchatbox.login.model.LoggedInUser
 
@@ -54,6 +55,10 @@ private var _binding: FragmentMainMenuBinding? = null
             findNavController().navigate(R.id.action_MainMenuFragment_to_friendsFragment)
         }
 
+        binding.modeTournoi.setOnClickListener {
+            findNavController().navigate(R.id.action_MainMenuFragment_to_queueFragment)
+        }
+
         binding.modeClassique.setOnClickListener {
             findNavController().navigate(R.id.action_MainMenuFragment_to_gameListFragment)
         }
@@ -61,6 +66,7 @@ private var _binding: FragmentMainMenuBinding? = null
         binding.buttonDisconnect.setOnClickListener {
             SocketHandler.closeConnection();
             LoggedInUser.disconnectUser();
+            ChatModel.resetChat()
             SocketHandler.establishConnection();
             findNavController().navigate(R.id.action_MainMenuFragment_to_loginActivity2)
         }

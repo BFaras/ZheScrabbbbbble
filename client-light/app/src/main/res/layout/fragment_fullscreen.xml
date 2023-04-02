@@ -17,9 +17,6 @@
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
-
-
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -267,6 +264,7 @@
                     </FrameLayout>
                 </LinearLayout>
 
+
             </LinearLayout>
         </LinearLayout>
 
@@ -411,7 +409,6 @@
                 </TextView>
             </LinearLayout>
         </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/toggle_swap_holder"

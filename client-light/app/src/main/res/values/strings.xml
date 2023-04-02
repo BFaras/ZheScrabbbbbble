@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">SCRABBLE</string>
 
     <string name="action_settings">Paramètres</string>
-    <string name="tapez_quelque_chose">Tapez quelque chose...</string>
+    <string name="tapez_quelque_chose">Tapez quelque chose…</string>
     <string name="game">Jeu</string>
     <string name="tournois">TOURNOIS</string>
     <string name="classique">CLASSIQUE</string>
@@ -19,7 +19,9 @@
     <string name="rejoindre"><![CDATA[%1$s veut rejoindre votre partie.]]></string>
     <string name="accepter">Accepter</string>
     <string name="refuser">Refuser</string>
+    <string name="annuler">Annuler</string>
     <string name="ajouter">Ajouter</string>
+    <string name="queueMessage">À la recherche d\'un tournoi</string>
     <string name="FriendCode">Entrez le code se trouvant sur le profil de votre ami pour l\'ajouter </string>
 
 
@@ -130,8 +132,8 @@
     <string name="vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil">Vous pourrez le changer à nouveau dans votre page de profil.</string>
     <string name="choisissez_votre_avatar">choisissez votre avatar</string>
     <string name="revenez_quand_vous_aurez_fait_des_parties">Revenez quand vous aurez fait des parties!</string>
-    <string name="c_est_vide_ici">c\'est vide ici...</string>
-    <string name="host">host</string>
-    <string name="numberPlayers"><![CDATA[%1$s / 4]]></string>
+    <string name="c_est_vide_ici">c\'est vide ici…</string>
+    <string name="host" translatable="false">host</string>
+    <string name="numberPlayers" translatable="false"><![CDATA[%1$s / 4]]></string>
 
 </resources>

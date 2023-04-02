@@ -19,15 +19,17 @@
     <string name="abandonner">Abandonner</string>
     <string name="rejoindre"><![CDATA[%1$s veut rejoindre votre partie.]]></string>
     <string name="accepter">Accepter</string>
+    <string name="annuler">Annuler</string>
     <string name="refuser">Refuser</string>
     <string name="ajouter">Ajouter</string>
-    <string name="FriendCode">"Entrez le code se trouvant sur le profil de votre ami pour l'ajouter "</string>
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="swap">Échanger</string>
     <string name="reserveText">LETTRES RESTANTES DANS LA RÉSERVE</string>
     <string name="pass">Passer</string>
     <string name="tillNextRound">JUSQU\'AU PROCHAIN TOUR</string>
     <string name="play">Jouer</string>
+    <string name="queueMessage">À la recherche d\'un tournoi</string>
+    <string name="FriendCode">Entrez le code se trouvant sur le profil de votre ami pour l\'ajouter </string>
 
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Menu principal</string>
@@ -127,5 +129,5 @@
     <string name="vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil">Vous pourrez le changer à nouveau dans votre page de profil.</string>
     <string name="choisissez_votre_avatar">choisissez votre avatar</string>
     <string name="revenez_quand_vous_aurez_fait_des_parties">Revenez quand vous aurez fait des parties!</string>
-    <string name="c_est_vide_ici">c\'est vide ici...</string>
+    <string name="c_est_vide_ici">c\'est vide ici…</string>
 </resources>

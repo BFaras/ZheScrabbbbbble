@@ -34,6 +34,7 @@ import com.example.testchatbox.Coordinates.rowsPos
 import com.example.testchatbox.LetterPoints.letterPoints
 import com.example.testchatbox.databinding.FragmentFullscreenBinding
 import com.example.testchatbox.login.model.LoggedInUser
+import org.json.JSONArray
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -307,12 +308,18 @@ class GamePageFragment : Fragment() {
                 yesButton.setOnClickListener {
                     GameRoomModel.leaveRoom()
                     SocketHandler.getSocket().emit("Abandon")
+                    if(TournamentModel.inTournament)
+                        findNavController().navigate(R.id.action_fullscreenFragment_to_bracketFragment2)
                     findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
                     builder?.dismiss()
                 }
                 noButton.setOnClickListener {
                     builder?.dismiss()
                 }
+                //GameRoomModel.leaveRoom()
+                //SocketHandler.getSocket().emit("Abandon")
+
+
 
 //                builder!!.setTitle(getString(R.string.confirmAbandon))
 //                builder.setMessage(getString(R.string.confirmButtonText))
@@ -372,8 +379,21 @@ class GamePageFragment : Fragment() {
                     clearTurn()
                 }
             }
+
+
             backInHand.setOnClickListener {
                 clearTurn()
+            }
+
+
+            SocketHandler.getSocket().on("Message Action History"){ args->
+                val messageJSON = args[0] as JSONObject
+                val messageArray = messageJSON.get("values") as JSONArray
+                val messages = arrayListOf<String>()
+                for (i in 0 until messageArray.length()) {
+                    messages.add(messageArray.get(i) as String)
+                }
+                updateMoveInfo(PlayerMessage(messageJSON.get("messageType") as String, messages))
             }
         }
 
@@ -623,7 +643,6 @@ class GamePageFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
     @SuppressLint("ClickableViewAccessibility")
     private fun updateRack(playerHand: ArrayList<String>) {
