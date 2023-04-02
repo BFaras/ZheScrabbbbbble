@@ -7,6 +7,7 @@ import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -32,7 +33,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
         private readonly fontSize: FontSizeService,
         private readonly waitingRoomManagerService: WaitingRoomManagerService,
         private readonly letterAdderService: LetterAdderService,
-        private readonly accountService : AccountService
+        private readonly accountService : AccountService,
+        private readonly translate: TranslateService
     ) {}
 
     ngOnInit() {
@@ -132,8 +134,29 @@ export class GamePageComponent implements OnInit, OnDestroy {
         return false;
     }
 
-    formatActionInList(message: string, values: string[]): string {
+    formatActionInList(message: string, values: string[], messageType: string): string {
         for (let i = 0; i < values.length; i++) {
+            if(i === 0){
+                if(!values[i]){
+                    message = message.replace('$' + i, this.translate.instant('INFOBOARD.COOP-TEAM'));
+                    continue;
+                }
+                const messageArray = values[i].split(' : ');
+                if(messageArray[0] === '\n'){
+                    message = message.replace('$' + i, '\n' + this.translate.instant('INFOBOARD.COOP-TEAM') + ' : ' + messageArray[1]);
+                    continue;
+                }
+            }
+            if(i === 1 && messageType === 'MSG-13'){
+                const messageArray = values[i].split(' ');
+                messageArray[0] = this.translate.instant('ACTION-HISTORY.' + messageArray[0].toUpperCase());
+                let combinedMessage = '';
+                for(const msg of messageArray){
+                    combinedMessage += msg + ' '
+                }
+                message = message.replace('$' + i, combinedMessage);
+                continue;
+            }
             message = message.replace('$' + i, values[i])
         }
         return message;

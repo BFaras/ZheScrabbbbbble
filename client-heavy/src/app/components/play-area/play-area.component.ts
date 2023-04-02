@@ -135,7 +135,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
 
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
-            if (this.gameStateService.getObserverIndex() >= 0) return;
+            if (this.gameStateService.getObserverIndex() >= 0 || this.gameStateService.hasPendingAction()) return;
             this.setReceiver('playarea');
             const coordinateClick: Vec2 = { x: event.offsetX, y: event.offsetY };
             this.letterAdderService.onLeftClick(coordinateClick);

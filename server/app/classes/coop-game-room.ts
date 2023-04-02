@@ -5,9 +5,9 @@ import { GameRoom } from "./game-room";
 import { Player } from "./player";
 
 export class CoopGameRoom extends GameRoom {
-    coopPlayers : CoopPlayer[] = [];
-    pendingAction : {command: string, argument: string} | null = null;
-    acceptedList : number[] = [];
+    coopPlayers: CoopPlayer[] = [];
+    pendingAction: { command: string, argument: string } | null = null;
+    acceptedList: number[] = [];
 
     constructor(id: string, name: string, visibility: RoomVisibility, password?: string) {
         super(id, name, visibility, password, false);
@@ -21,8 +21,8 @@ export class CoopGameRoom extends GameRoom {
 
     removePlayer(playerID: string): boolean {
         let index = -1;
-        for(let i= 0; i < this.coopPlayers.length; i++){
-            if(this.coopPlayers[i].getUUID() === playerID){
+        for (let i = 0; i < this.coopPlayers.length; i++) {
+            if (this.coopPlayers[i].getUUID() === playerID) {
                 index = i;
                 break;
             }
@@ -32,7 +32,7 @@ export class CoopGameRoom extends GameRoom {
             return true;
         }
         index = this.observers.indexOf(playerID);
-        if(index < 0) return false;
+        if (index < 0) return false;
         this.observers.splice(index, 1);
         return false;
     }
@@ -49,7 +49,7 @@ export class CoopGameRoom extends GameRoom {
 
     getRealPlayerCount(includeObservers: boolean): number {
         let count = this.coopPlayers.length;
-        if(includeObservers) count += this.observers.length;
+        if (includeObservers) count += this.observers.length;
         return count;
     }
 
@@ -69,8 +69,8 @@ export class CoopGameRoom extends GameRoom {
         return names;
     }
 
-    startGame(timerCallback : (room : GameRoom, username: string, result : CommandResult) => void) {
-        if(this.gameStarted) return;
+    startGame(timerCallback: (room: GameRoom, username: string, result: CommandResult) => void) {
+        if (this.gameStarted) return;
         this.players.push(new Player());
         super.startGame(timerCallback);
     }
@@ -79,11 +79,11 @@ export class CoopGameRoom extends GameRoom {
         return this.pendingAction !== null;
     }
 
-    setPendingAction(action : {command: string, argument: string}){
+    setPendingAction(action: { command: string, argument: string }) {
         this.pendingAction = action;
     }
 
-    getPendingAction(): {command: string, argument: string} | null {
+    getPendingAction(): { command: string, argument: string } | null {
         return this.pendingAction;
     }
 
@@ -92,22 +92,26 @@ export class CoopGameRoom extends GameRoom {
         this.pendingAction = null;
     }
 
-    acceptAction(playerID: string): boolean{
-        for(let i = 0; i < this.coopPlayers.length; i++){
-            if(this.coopPlayers[i].getUUID() === playerID){
-                if(!this.acceptedList.includes(i)){
+    missingNumberApprovals(): number {
+        return this.coopPlayers.length - this.acceptedList.length;
+    }
+
+    acceptAction(playerID: string): boolean {
+        for (let i = 0; i < this.coopPlayers.length; i++) {
+            if (this.coopPlayers[i].getUUID() === playerID) {
+                if (!this.acceptedList.includes(i)) {
                     this.acceptedList.push(i);
                 }
-                return this.acceptedList.length === this.coopPlayers.length;
+                return this.missingNumberApprovals() === 0;
             }
         }
         return false;
     }
 
-    refuseAction(playerID: string): boolean{
-        for(let i = 0; i < this.coopPlayers.length; i++){
-            if(this.coopPlayers[i].getUUID() === playerID){
-                if(!this.acceptedList.includes(i)){
+    refuseAction(playerID: string): boolean {
+        for (let i = 0; i < this.coopPlayers.length; i++) {
+            if (this.coopPlayers[i].getUUID() === playerID) {
+                if (!this.acceptedList.includes(i)) {
                     this.acceptedList = [];
                     this.pendingAction = null;
                     return true;
@@ -118,9 +122,9 @@ export class CoopGameRoom extends GameRoom {
         return false;
     }
 
-    private getCoopPlayer(playerID: string): CoopPlayer | null{
-        for(const player of this.coopPlayers){
-            if(player.getUUID() === playerID) return player;
+    private getCoopPlayer(playerID: string): CoopPlayer | null {
+        for (const player of this.coopPlayers) {
+            if (player.getUUID() === playerID) return player;
         }
         return null;
     }

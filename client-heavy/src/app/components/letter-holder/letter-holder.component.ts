@@ -80,7 +80,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     clickInside(e: MouseEvent, indexOfElement: number) {
         if (this.isObserver())
             return;
-        if (e.button === MouseButton.Right) {
+        if (e.button === MouseButton.Right && !this.isDisabled()) {
             this.manipulationRack.cancelManipulation();
             this.manipulationRack.selectLetterOnRack(indexOfElement + 1);
             this.makingSelection = Object.values(isSelected).some((selection) => selection === true);

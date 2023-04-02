@@ -4,8 +4,8 @@
         <div id="info">
             <div *ngFor="let player of playersInfo" class="player-container" [class.player-selected]="isCoop() || isPlayerUser(player)">
                 <span class="data"><strong>{{ isCoop() ? ('INFOBOARD.COOP-TEAM' | translate) : player.name  }}</strong></span>
-                <span class="status" *ngIf="player.active && !isCoop">{{'INFOBOARD.TURN' | translate}}</span>
-                <span class="status" *ngIf="player.winner && !isCoop">{{'INFOBOARD.WIN' | translate}}</span>
+                <span class="status" *ngIf="player.active && !isCoop()">{{'INFOBOARD.TURN' | translate}}</span>
+                <span class="status" *ngIf="player.winner && !isCoop()">{{'INFOBOARD.WIN' | translate}}</span>
                 <br /><br />
                 <p class="data">{{'INFOBOARD.SCORE' | translate}}{{ player.currentScore }}</p>
                 <p class="data" *ngIf="player.letterCount < 7">{{'INFOBOARD.LETTERSINHAND' | translate}}{{ player.letterCount }}</p>

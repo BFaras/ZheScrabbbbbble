@@ -79,6 +79,7 @@ export class WaitingRoomManagerService {
             this.joinRoomResponseObserver.next({ errorCode, playerNames })
         });
         this.socket.on('Game Started', (isCoop: boolean) => {
+            console.log('IS COOP : ' + isCoop);
             this.gameStartObserver.next(isCoop);
         });
         this.socket.on('Room Player Update', (playerNames) => {

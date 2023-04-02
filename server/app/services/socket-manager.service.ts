@@ -214,14 +214,14 @@ export class SocketManager {
             socket.on('Play Turn', async (command: string, argument: string) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom || currentRoom.getGame.isGameOver()) return;
-                if(currentRoom instanceof CoopGameRoom){
-                    if(currentRoom.hasPendingAction()) return;
-                    currentRoom.setPendingAction({command, argument});
+                if (currentRoom instanceof CoopGameRoom && currentRoom.getRealPlayerCount(false) > 1) {
+                    if (currentRoom.hasPendingAction()) return;
+                    currentRoom.setPendingAction({ command, argument });
                     currentRoom.acceptAction(socket.id);
                     this.sio.in(currentRoom.getID()).emit('Message Action History', { messageType: COOP_ACTION_PROPOSED, values: [this.accountInfoService.getUsername(socket), `${command} ${argument}`] });
                     return;
                 }
-                let returnValue = this.commandController.executeCommand({ commandType: command, args: argument, playerID: socket.id });
+                let returnValue = this.commandController.executeCommand({ commandType: command, args: argument, playerID: socket.id, isCoop: currentRoom instanceof CoopGameRoom });
                 this.sendGameState(currentRoom, returnValue.playerMessage);
                 if (returnValue.endGameMessage) {
                     this.sendGameState(currentRoom, { messageType: END_GAME_MESSAGE, values: [returnValue.endGameMessage] });
@@ -235,18 +235,16 @@ export class SocketManager {
                 this.playVirtualTurns(currentRoom);
             });
 
-            socket.on('Respond Coop Action', (response : boolean) => {
+            socket.on('Respond Coop Action', (response: boolean) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom || currentRoom.getGame.isGameOver() || !(currentRoom instanceof CoopGameRoom)) return;
                 const pendingAction = currentRoom.getPendingAction();
-                if(!pendingAction) return;
+                if (!pendingAction) return;
                 console.log(new Date().toLocaleTimeString() + ' | Coop Action Response Received : ' + response);
-                if(response){
-                    if(!currentRoom.acceptAction(socket.id)){
-                        this.sio.in(currentRoom.getID()).emit('Message Action History', { messageType: COOP_ACTION_ACCEPTED, values: [this.accountInfoService.getUsername(socket)] });
-                        return;
-                    }
-                    let returnValue = this.commandController.executeCommand({commandType: pendingAction.command, args: pendingAction.argument, playerID: socket.id, isCoop: true});
+                if (response) {
+                    this.sio.in(currentRoom.getID()).emit('Message Action History', { messageType: COOP_ACTION_ACCEPTED, values: [this.accountInfoService.getUsername(socket)] });
+                    if (!currentRoom.acceptAction(socket.id)) return;
+                    let returnValue = this.commandController.executeCommand({ commandType: pendingAction.command, args: pendingAction.argument, playerID: socket.id, isCoop: true });
                     currentRoom.resetPendingAction();
                     this.sio.in(currentRoom.getID()).emit('Message Action History', { messageType: COOP_ACTION_UNANIMOUS, values: [] });
                     this.sendGameState(currentRoom, returnValue.playerMessage);
@@ -255,7 +253,7 @@ export class SocketManager {
                     }
                     return;
                 }
-                if(!currentRoom.refuseAction(socket.id)) return;
+                if (!currentRoom.refuseAction(socket.id)) return;
                 this.sio.in(currentRoom.getID()).emit('Message Action History', { messageType: COOP_ACTION_REFUSED, values: [this.accountInfoService.getUsername(socket)] });
             });
 
@@ -284,10 +282,25 @@ export class SocketManager {
                     }
                     return;
                 }
-                currentRoom.replacePlayer(socket.id);
+                if (currentRoom instanceof CoopGameRoom) {
+                    this.sendGameState(currentRoom, { messageType: DISCONNECT_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
+                    const pendingAction = currentRoom.getPendingAction();
+                    if (pendingAction && currentRoom.missingNumberApprovals() === 1) {
+                        let returnValue = this.commandController.executeCommand({ commandType: pendingAction.command, args: pendingAction.argument, playerID: socket.id, isCoop: true });
+                        currentRoom.resetPendingAction();
+                        this.sio.in(currentRoom.getID()).emit('Message Action History', { messageType: COOP_ACTION_UNANIMOUS, values: [] });
+                        this.sendGameState(currentRoom, returnValue.playerMessage);
+                        if (returnValue.endGameMessage) {
+                            this.sendGameState(currentRoom, { messageType: END_GAME_MESSAGE, values: [returnValue.endGameMessage] });
+                        }
+                    }
+                    currentRoom.removePlayer(socket.id);
+                } else {
+                    currentRoom.replacePlayer(socket.id);
+                }
                 if (currentRoom.getRealPlayerCount(false) === 0) {
                     const message = currentRoom.getGame.endGame(socket.id);
-                    this.sendGameState(currentRoom, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
+                    if(!(currentRoom instanceof CoopGameRoom)) this.sendGameState(currentRoom, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
                     this.sendGameState(currentRoom, { messageType: END_GAME_MESSAGE, values: [message] });
                     if (currentRoom.getRealPlayerCount(true) === 0) {
                         this.roomManager.deleteRoom(currentRoom.getID());
@@ -295,7 +308,7 @@ export class SocketManager {
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
-                this.sendGameState(currentRoom, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
+                if(!(currentRoom instanceof CoopGameRoom)) this.sendGameState(currentRoom, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
                 this.playVirtualTurns(currentRoom);
             });
 
@@ -355,9 +368,10 @@ export class SocketManager {
                 }
                 const username = this.accountInfoService.getUsername(socket);
                 const tournament = this.roomManager.findTournamentFromPlayer(username);
-                if (!tournament) return;
-                socket.leave(tournament.getID());
-                tournament.removePlayer(username);
+                if (tournament) {
+                    socket.leave(tournament.getID());
+                    tournament.removePlayer(username);
+                }
                 const room = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!room) return;
                 let isObserver;
@@ -378,7 +392,22 @@ export class SocketManager {
                     return;
                 }
                 if (room.isGameStarted()) {
-                    room.replacePlayer(socket.id);
+                    if (room instanceof CoopGameRoom) {
+                        this.sendGameState(room, { messageType: DISCONNECT_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
+                        const pendingAction = room.getPendingAction();
+                        if (pendingAction && room.missingNumberApprovals() === 1) {
+                            let returnValue = this.commandController.executeCommand({ commandType: pendingAction.command, args: pendingAction.argument, playerID: socket.id, isCoop: true });
+                            room.resetPendingAction();
+                            this.sio.in(room.getID()).emit('Message Action History', { messageType: COOP_ACTION_UNANIMOUS, values: [] });
+                            this.sendGameState(room, returnValue.playerMessage);
+                            if (returnValue.endGameMessage) {
+                                this.sendGameState(room, { messageType: END_GAME_MESSAGE, values: [returnValue.endGameMessage] });
+                            }
+                        }
+                        room.removePlayer(socket.id);
+                    } else {
+                        room.replacePlayer(socket.id);
+                    }
                 } else {
                     isObserver = !room.removePlayer(socket.id);
                 }
@@ -392,7 +421,7 @@ export class SocketManager {
                 }
                 if (room.getRealPlayerCount(false) === 0) {
                     const message = room.getGame.endGame(socket.id);
-                    this.sendGameState(room, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
+                    if(!(room instanceof CoopGameRoom)) this.sendGameState(room, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
                     this.sendGameState(room, { messageType: END_GAME_MESSAGE, values: [message] });
                     if (room.getRealPlayerCount(true) === 0) {
                         this.roomManager.deleteRoom(room.getID());
@@ -400,7 +429,7 @@ export class SocketManager {
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
-                this.sendGameState(room, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
+                if(!(room instanceof CoopGameRoom)) this.sendGameState(room, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
                 this.playVirtualTurns(room);
             });
         });
@@ -505,7 +534,8 @@ export class SocketManager {
     }
 
     private fillRoomWithVP(currentRoom: GameRoom) {
-        for (let i = 0; i < MAX_NUMBER_OF_PLAYERS - currentRoom.getPlayerCount(); i++) {
+        const nbVirtualPlayers = MAX_NUMBER_OF_PLAYERS - currentRoom.getPlayerCount();
+        for (let i = 0; i < nbVirtualPlayers; i++) {
             let name;
             let index;
             do {

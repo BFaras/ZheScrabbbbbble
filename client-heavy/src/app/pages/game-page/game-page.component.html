@@ -26,7 +26,7 @@
                 <div id="history-container">
                     <div *ngFor="let action of actionHistory; let i = index" #scrollMe [scrollTop]="scrollMe.scrollHeight">
                         <ul class="action">
-                            <div>{{formatActionInList((('ACTION-HISTORY.' + action.messageType) | translate), action.values)}}</div>
+                            <div>{{formatActionInList((('ACTION-HISTORY.' + action.messageType) | translate), action.values, action.messageType)}}</div>
                             <div *ngIf="hasPendingAction && isLatestProposedAction(i)" id="action-button-container">
                                 <button  class="button action-btn" (click)="answerPendingAction(true)">Accept</button>
                                 <button  class="button action-btn" (click)="answerPendingAction(false)">Refuse</button>

@@ -8,7 +8,7 @@
             id="swapButton"
             [style.visibility]="makingSelection ? 'visible' : 'hidden'"
             (click)="swapLetters()"
-            [disabled]="isDisabled || notEnoughLettersLeft"
+            [disabled]="isDisabled() || notEnoughLettersLeft"
         >
             {{'LETTERHOLDER.REPLACE' | translate}}
         </button>
@@ -19,7 +19,7 @@
             (click)="clickInside($event,indexOfelement)"
             (click)="isReceiver()"
             (contextmenu)="isReceiver()"
-            (keypress)="onKeyDown($event)" [cdkDragDisabled]="isDraggingMode() || isObserver()" 
+            (keypress)="onKeyDown($event)" [cdkDragDisabled]="isDraggingMode() || isObserver() || isDisabled()" 
             [cdkDragData]="tile" *ngFor="let tile of playerHand;let indexOfelement=index"
                         
             [ngClass]="{'red': listTileSelected[indexOfelement+1],'green':listTileManipulated[indexOfelement+1]}"class="tile" >
@@ -27,8 +27,8 @@
                 <h1 id="point">{{getPointIfNotBlank(playerHandPoints[indexOfelement])}}</h1>
             </div>
         </div>
-        <button *ngIf="!isObserver()" id="playButton" class="button" [disabled]="isDisabled" (click)="sendWord()">{{'LETTERHOLDER.PLAY' | translate}}</button>
-        <button *ngIf="!isObserver()" class="button" id="skipButton" (click)="skipTurn()" [disabled]="isDisabled">{{'LETTERHOLDER.PASS' | translate}}</button>
+        <button *ngIf="!isObserver()" id="playButton" class="button" [disabled]="isDisabled()" (click)="sendWord()">{{'LETTERHOLDER.PLAY' | translate}}</button>
+        <button *ngIf="!isObserver()" class="button" id="skipButton" (click)="skipTurn()" [disabled]="isDisabled()">{{'LETTERHOLDER.PASS' | translate}}</button>
         <button *ngIf="isObserver()" class="button" id="swapPlayerButton" (click)="switchObserverView()">{{'LETTERHOLDER.SWITCH' | translate}}</button>
     </div>
 </div>

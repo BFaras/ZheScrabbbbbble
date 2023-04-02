@@ -164,6 +164,9 @@
     },
     "ACTION-HISTORY": {
         "TITLE": "HISTORIQUE D'ACTIONS",
+        "PLACE": "PLACER",
+        "PASS": "PASSER",
+        "SWAP": "ÉCHANGER",
         "MSG-1": "$0 a placé $1 pour $2 point(s)",
         "MSG-2": "$0 a tenté de placer un mot invalide",
         "MSG-3": "$0 a échangé $1 lettres",
@@ -176,8 +179,8 @@
         "MSG-10": "$0 s'est déconnecté",
         "MSG-11": "$0 a accepté l'action proposée",
         "MSG-12": "$0 a refusé l'action proposée",
-        "MSG-13": "$0 a proposé l'action suivante : $1",
-        "MSG-14": "Tout le monde a accpté l'action proposée"
+        "MSG-13": "$0 a proposé l'action suivante pour l'équipe : $1",
+        "MSG-14": "Tout le monde a accepté l'action proposée"
     },
     "FRIENDS-PAGE": {
         "MESSAGE": "Vous pouvez gérer vos amis ici!",
