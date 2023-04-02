@@ -31,6 +31,7 @@
         <item name="chatBox">@color/lightBeige</item>
         <item name="activeTile">@color/purple_700</item>
         <item name="backgroundProfile">@color/lightBeige</item>
+        <item name="chatIconNotif">#38683A</item>
     </style>
 
     <style name="Theme.TestChatBox.NoActionBar">
@@ -61,6 +62,7 @@
         <item name="chatBox">@color/white</item>
         <item name="activeTile">@color/purple_700</item>
         <item name="backgroundProfile">@color/LightBabyPink</item>
+        <item name="chatIconNotif">#f7dfed</item>
     </style>
 
     <style name="EclipseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -85,6 +87,7 @@
         <item name="chatBox">@color/Platinium</item>
         <item name="activeTile">@color/Gold</item>
         <item name="backgroundProfile">@color/LightCadet</item>
+        <item name="chatIconNotif">@color/clearSea</item>
     </style>
 
     <style name="BlizzardTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -111,6 +114,7 @@
         <item name="chatBox">@color/grayWhite</item>
         <item name="activeTile">@color/purple_700</item>
         <item name="backgroundProfile">@color/WhiteSmoke</item>
+        <item name="chatIconNotif">#D8BDBB</item>
     </style>
 
     <style name="GreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -137,6 +141,7 @@
         <item name="chatBox">@color/DarkGreen</item>
         <item name="activeTile">@color/Gold</item>
         <item name="backgroundProfile">@color/MintCream</item>
+        <item name="chatIconNotif">#D8BDBB</item>
     </style>
 
 
