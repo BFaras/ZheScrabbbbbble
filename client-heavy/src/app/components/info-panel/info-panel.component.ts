@@ -1,5 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { AccountService } from '@app/services/account-service/account.service';
+import { AvatarInRoomsService } from '@app/services/avatar-in-rooms.service';
 import { GameState, GameStateService } from '@app/services/game-state-service/game-state.service';
 import { Subscription } from 'rxjs';
 import { Player } from './players-info';
@@ -18,7 +19,8 @@ export class InfoPanelComponent implements OnDestroy {
     roundInfo: Round[] = roundInfo;
     subscriptions: Subscription[] = [];
 
-    constructor(private readonly gameStateService: GameStateService, private readonly accountService: AccountService) {
+    constructor(private readonly gameStateService: GameStateService, private readonly accountService: AccountService,
+        private readonly avatarInRoomsService: AvatarInRoomsService) {
         this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => {
             this.updateTurnDisplay(gameState);
         }));
@@ -30,9 +32,9 @@ export class InfoPanelComponent implements OnDestroy {
         }
     }
 
-    isPlayerUser(player : Player){
+    isPlayerUser(player: Player) {
         const index = this.gameStateService.getObserverIndex();
-        if(index < 0){
+        if (index < 0) {
             return player.name === this.accountService.getUsername();
         }
         return player.name === this.playersInfo[index].name;
@@ -67,6 +69,7 @@ export class InfoPanelComponent implements OnDestroy {
                 letterCount: 0,
                 active: false,
                 winner: false,
+                avatar: ""
             });
         }
         this.roundInfo[0].lettersRemaining = gameState.reserveLength;
@@ -75,11 +78,18 @@ export class InfoPanelComponent implements OnDestroy {
             return;
         }
         for (let i = 0; i < gameState.players.length; i++) {
+            console.log(this.playersInfo[i].name)
             this.playersInfo[i].winner = false;
             this.playersInfo[i].currentScore = gameState.players[i].score;
             this.playersInfo[i].active = gameState.playerTurnIndex === i;
             this.playersInfo[i].letterCount = gameState.players[i].hand.length;
             this.playersInfo[i].name = gameState.players[i].username;
+            if (!(this.playersInfo[i].name.substring(this.playersInfo[i].name.length - 3) === "(V)")) {
+                this.playersInfo[i].avatar = this.avatarInRoomsService.getAvatarUserMap(this.playersInfo[i].name)!;
+            }
+            else {
+                this.playersInfo[i].avatar = 'virtual.png'
+            }
         }
     }
 }

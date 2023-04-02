@@ -3,6 +3,9 @@
         <header id="title" class="centered-title">{{'INFOBOARD.INFOBOARD' | translate}}</header>
         <div id="info">
             <div *ngFor="let player of playersInfo" class="player-container" [class.player-selected]="isCoop() || isPlayerUser(player)">
+                <div class="imageContainer" *ngIf="!isCoop()">
+                    <img src="assets/avatar/{{player.avatar}}" alt="image" height ="40" width ="40" class="image">
+                </div>
                 <span class="data"><strong>{{ isCoop() ? ('INFOBOARD.COOP-TEAM' | translate) : player.name  }}</strong></span>
                 <span class="status" *ngIf="player.active && !isCoop()">{{'INFOBOARD.TURN' | translate}}</span>
                 <span class="status" *ngIf="player.winner && !isCoop()">{{'INFOBOARD.WIN' | translate}}</span>

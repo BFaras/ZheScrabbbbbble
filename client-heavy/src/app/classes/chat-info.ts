@@ -25,6 +25,7 @@ export interface ChatCreationResponse {
 
 export interface ChatMessage {
     message: string;
+    avatar: string;
     username: string;
     timestamp: string;
 }

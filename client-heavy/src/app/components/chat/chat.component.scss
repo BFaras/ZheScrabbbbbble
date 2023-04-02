@@ -10,6 +10,14 @@ ul {
     justify-content: space-between;
 }
 
+ul{
+    display: flex;
+    flex-direction: row;
+    gap:5px
+}
+.avatar{
+    border-radius: 50%;
+}
 input {
     border-radius: 5px;
     padding: 2%;

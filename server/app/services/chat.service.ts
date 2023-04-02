@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
-import { ChatCreationResponse, ChatInfo, ChatInfoDB, ChatType, CHAT_ROOM_BEGINNING, PRIVATE_CHAT_IDS_SEPARATOR } from '@app/interfaces/chat-info';
+import { CHAT_ROOM_BEGINNING, ChatCreationResponse, ChatInfo, ChatInfoDB, ChatType, PRIVATE_CHAT_IDS_SEPARATOR } from '@app/interfaces/chat-info';
 import { ChatMessage, ChatMessageDB, ChatUserInfo } from '@app/interfaces/chat-message';
 import { Container, Service } from 'typedi';
 import { ChatGameHistoryService } from './chat-game-history.service';
@@ -64,7 +64,9 @@ export class ChatService {
 
     async joinChat(userId: string, chatId: string): Promise<string> {
         let errorCode = NO_ERROR;
-        if (!(await this.dbService.joinChatCanal(userId, chatId))) {
+        if (userId === null || userId === '' || userId === undefined) {
+            errorCode = DATABASE_UNAVAILABLE;
+        } else if (!(await this.dbService.joinChatCanal(userId, chatId))) {
             errorCode = DATABASE_UNAVAILABLE;
         } else {
             this.userSocketService.userSocketJoinRoom(userId, this.getChatRoomName(chatId));
@@ -75,7 +77,9 @@ export class ChatService {
     async leaveChat(userId: string, chatId: string): Promise<string> {
         let errorCode = NO_ERROR;
 
-        if (!(await this.dbService.leaveChatCanal(userId, chatId))) {
+        if (userId === null || userId === '' || userId === undefined) {
+            errorCode = DATABASE_UNAVAILABLE;
+        } else if (!(await this.dbService.leaveChatCanal(userId, chatId))) {
             errorCode = DATABASE_UNAVAILABLE;
         } else {
             this.userSocketService.userSocketLeaveRoom(userId, this.getChatRoomName(chatId));

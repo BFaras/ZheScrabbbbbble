@@ -43,25 +43,26 @@
             android:id="@+id/gameWinnerHolder"
             android:layout_width="450dp"
             android:layout_height="60dp"
-            android:orientation="vertical"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="10dp"
-            app:cardBackgroundColor="?colorSecondary"
-            android:background="@drawable/background_direction_panel"
             android:layout_gravity="center|top"
             android:layout_marginTop="160dp"
+            android:background="@drawable/background_direction_panel"
+            android:gravity="center"
+            android:orientation="vertical"
             android:visibility="gone"
-            android:gravity="center">
+            app:cardBackgroundColor="?colorSecondary"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="10dp">
+
             <TextView
                 android:id="@+id/gameWinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="25dp"
                 android:layout_gravity="center"
                 android:fontFeatureSettings="smcp"
+                android:text="@string/winnerName"
                 android:textAlignment="center"
-                android:text="@string/winnerName"></TextView>
+                android:textSize="25dp"
+                android:textStyle="bold"></TextView>
         </androidx.cardview.widget.CardView>
 
         <TextView
