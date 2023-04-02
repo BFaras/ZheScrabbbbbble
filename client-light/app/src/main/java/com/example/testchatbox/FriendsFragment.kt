@@ -1,12 +1,15 @@
 package com.example.testchatbox
 
 import SocketHandler
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -47,6 +50,11 @@ class FriendsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateFriendList()
+        binding.friendCode.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
+        }
         binding.add.setOnClickListener {
             if(binding.friendCode.text.isNotBlank())
                 addFriend()
@@ -71,6 +79,7 @@ class FriendsFragment : Fragment() {
                     if(errorMessage == R.string.NO_ERROR ){
                         updateFriendList()
                         binding.friendCode.setText("")
+                        binding.friendCode.clearFocus()
                     }else{
                         val appContext = context?.applicationContext
                         Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
@@ -100,14 +109,22 @@ class FriendsFragment : Fragment() {
         SocketHandler.getSocket().emit("Get Friend List")
     }
 
+    @SuppressLint("MissingInflatedId")
     private fun updateView(){
         val friendListView = binding.friendList;
         friendListView.removeAllViews()
         for(friend in friendList){
-            val friendText = TextView((activity as MainActivity?)!!)
-            friendText.text = friend.username  +" | " +friend.connectionStatus;
-            friendText.textSize= 18F;
-            friendListView.addView(friendText)
+            val friendLayout = layoutInflater.inflate(R.layout.friend_layout, friendListView, false)
+            val friendName = friendLayout.findViewById<TextView>(R.id.friendName)
+            val friendStatus = friendName.findViewById<TextView>(R.id.friendStatus)
+
+            friendName.text = friend.username
+            friendStatus.text = friend.connectionStatus.toString()
+
+//            val friendText = TextView((activity as MainActivity?)!!)
+//            friendText.text = friend.username  +" | " +friend.connectionStatus;
+//            friendText.textSize= 18F;
+            friendListView.addView(friendLayout)
         }
     }
     private fun updateStatus(username: String, status: ConnectionStatus){
@@ -120,5 +137,9 @@ class FriendsFragment : Fragment() {
         activity?.runOnUiThread(Runnable {
             updateView()
         });
+    }
+    private fun hideKeyboard() {
+        val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
     }
 }

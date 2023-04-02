@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_fullscreenFragment_to_MainMenuFragment"
             app:destination="@id/MainMenuFragment" />
+        <action
+            android:id="@+id/action_fullscreenFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameListFragment"
@@ -74,6 +77,9 @@
         <action
             android:id="@+id/action_gameListFragment_to_ChatFragment"
             app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_gameListFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameRoomFragment"
@@ -89,6 +95,9 @@
         <action
             android:id="@+id/action_gameRoomFragment_to_fullscreenFragment"
             app:destination="@id/fullscreenFragment" />
+        <action
+            android:id="@+id/action_gameRoomFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
     </fragment>
 
     <fragment

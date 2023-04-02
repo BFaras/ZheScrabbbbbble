@@ -57,6 +57,9 @@ class GameRoomFragment : Fragment(), Observer {
         binding.buttonchat.setOnClickListener {
             findNavController().navigate(R.id.action_gameRoomFragment_to_ChatFragment)
         }
+        binding.buttonfriends.setOnClickListener {
+            findNavController().navigate(R.id.action_gameRoomFragment_to_friendsFragment)
+        }
     }
 
     override fun onStart() {

@@ -195,6 +195,9 @@ class GamePageFragment : Fragment() {
             buttonchat.setOnClickListener {
                 findNavController().navigate(R.id.action_fullscreenFragment_to_ChatFragment)
             }
+            friends.setOnClickListener {
+                findNavController().navigate(R.id.action_fullscreenFragment_to_friendsFragment)
+            }
             buttonPass.setOnClickListener {
                 SocketHandler.getSocket().emit("Play Turn", "Pass", "")
                 clearTurn()
