@@ -19,6 +19,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.text.HtmlCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentMainMenuBinding
 import com.example.testchatbox.databinding.FragmentProfilBinding
@@ -26,6 +28,7 @@ import com.example.testchatbox.login.model.LoggedInUser
 import com.google.android.material.imageview.ShapeableImageView
 import org.json.JSONArray
 import org.json.JSONObject
+import java.math.RoundingMode
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -73,6 +76,13 @@ class ProfilFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
+            // Hide both the status bar and the navigation bar
+            hide(WindowInsetsCompat.Type.systemBars())
+            hide(WindowInsetsCompat.Type.statusBars())
+            // Behavior of system bars
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
         getProfile(LoggedInUser.getName())
 
         binding.playerInGameAvatar.setOnClickListener {
@@ -84,17 +94,17 @@ class ProfilFragment : Fragment() {
             builder?.setView(alertView)
             avatar1.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-                //socket
+                changeAvatar("cat")
                 builder?.dismiss()
             }
             avatar2.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.dog)
-                //socket
+                changeAvatar("dog")
                 builder?.dismiss()
             }
             avatar3.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.flower)
-                //socket
+                changeAvatar("flower")
                 builder?.dismiss()
             }
             builder?.show()
@@ -102,8 +112,10 @@ class ProfilFragment : Fragment() {
 
         binding.darkTheme.setOnClickListener {
             binding.theme.text = "inverted"
-            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "inverted") };
+            LoggedInUser.setTheme("inverted")
             changeTheme("inverted")
+            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "inverted") };
+
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
@@ -111,12 +123,14 @@ class ProfilFragment : Fragment() {
                 )
             };
             activity?.let { it1 -> ActivityCompat.recreate(it1) }
+
         }
 
         binding.blizzard.setOnClickListener {
             binding.theme.text = "blizzard"
-            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "blizzard") };
+            LoggedInUser.setTheme("blizzard")
             changeTheme("blizzard")
+            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "blizzard") };
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
@@ -124,17 +138,20 @@ class ProfilFragment : Fragment() {
                 )
             };
             activity?.let { it1 -> ActivityCompat.recreate(it1) }
+
         }
 
         binding.lightTheme.setOnClickListener {
             binding.theme.text = "classic"
+            LoggedInUser.setTheme("classic")
+            changeTheme("classic")
             activity?.applicationContext?.let { it1 ->
                 ThemeStorage.setThemeColor(
                     it1,
                     "classic"
                 )
             };
-            changeTheme("classic")
+
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
@@ -142,17 +159,20 @@ class ProfilFragment : Fragment() {
                 )
             };
             activity?.let { it1 -> ActivityCompat.recreate(it1) }
+
         }
 
         binding.pink.setOnClickListener {
             binding.theme.text = "pink"
+            LoggedInUser.setTheme("pink")
+            changeTheme("pink")
             activity?.applicationContext?.let { it1 ->
                 ThemeStorage.setThemeColor(
                     it1,
                     "pink"
                 )
             };
-            changeTheme("pink")
+
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
@@ -164,13 +184,15 @@ class ProfilFragment : Fragment() {
 
         binding.green.setOnClickListener {
             binding.theme.text = "green"
+            LoggedInUser.setTheme("green")
+            changeTheme("green")
             activity?.applicationContext?.let { it1 ->
                 ThemeStorage.setThemeColor(
                     it1,
                     "green"
                 )
             };
-            changeTheme("green")
+
             activity?.let { it1 ->
                 ThemeManager.setCustomizedThemes(
                     it1.applicationContext,
@@ -188,7 +210,6 @@ class ProfilFragment : Fragment() {
         }
     }
 
-
     private  fun getProfile(username:String){
         SocketHandler.getSocket().once("User Profile Response"){args->
             if(args[0]!=null) {
@@ -203,13 +224,16 @@ class ProfilFragment : Fragment() {
                 )
                 val profileJSON = args[0] as JSONObject
                 profileTemp.avatar= profileJSON.get("avatar") as String;
+                Log.d("AVATAR ", profileTemp.avatar)
                 val levelJSON= profileJSON.get("levelInfo") as JSONObject;
                 profileTemp.level= LevelInfo(levelJSON.get("level") as Int,levelJSON.get("xp") as Int,levelJSON.get("nextLevelXp") as Int)
                 profileTemp.userCode= profileJSON.get("userCode") as String;
+                Log.d("FRIEND CODE ", profileTemp.userCode)
                 val tournamentWins = profileJSON.get("tournamentWins") as JSONArray
                 for(i in 0 until tournamentWins.length()){
                     profileTemp.tournamentWins.add(tournamentWins.get(i) as Int)
                 }
+                Log.d("GAME tournamentWins", profileTemp.tournamentWins.toString())
                 val stats = profileJSON.get("stats") as JSONArray
                 for(i in 0 until stats.length()){
                     val stat= stats.get(i) as JSONObject
@@ -246,14 +270,13 @@ class ProfilFragment : Fragment() {
                 }
                 activity?.runOnUiThread(Runnable {
                     if(errorMessage == R.string.NO_ERROR ){
-                        binding.avatar.text=newAvatar;
-                        profile.avatar= "Avatar : $newAvatar";
-//                        when (newAvatar) {
-//                            "" -> binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-//                            "" -> binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-//                            "" -> binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-//                            else -> {}
-//                        }
+                        profile.avatar= newAvatar;
+                        when (newAvatar) {
+                            "cat" -> binding.playerInGameAvatar.setImageResource(R.drawable.cat)
+                            "dog" -> binding.playerInGameAvatar.setImageResource(R.drawable.dog)
+                            "flower" -> binding.playerInGameAvatar.setImageResource(R.drawable.flower)
+                            else -> {}
+                        }
                     }else{
                         val appContext = context?.applicationContext
                         Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
@@ -274,7 +297,6 @@ class ProfilFragment : Fragment() {
                 }
                 activity?.runOnUiThread(Runnable {
                     if(errorMessage == R.string.NO_ERROR ){
-                        binding.theme.text= newTheme.lowercase()
                         Log.d("THEME ", newTheme)
                         LoggedInUser.setTheme(newTheme)
                         binding.theme.text= newTheme.lowercase()
@@ -327,7 +349,12 @@ class ProfilFragment : Fragment() {
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorPrimary, notSelectedColor, true)
 
         binding.playerName.text = LoggedInUser.getName()
-
+        when (profile.avatar) {
+            "cat" -> binding.playerInGameAvatar.setImageResource(R.drawable.cat)
+            "dog" -> binding.playerInGameAvatar.setImageResource(R.drawable.dog)
+            "flower" -> binding.playerInGameAvatar.setImageResource(R.drawable.flower)
+            else -> {}
+        }
         if (LoggedInUser.getLang() == "fr") {
             binding.frLangue.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
             binding.enLangue.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
@@ -335,9 +362,13 @@ class ProfilFragment : Fragment() {
             binding.frLangue.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
             binding.enLangue.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
         }
-        binding.theme.text= LoggedInUser.getTheme().lowercase()
-        binding.avatar.text= "Avatar : ${profile.avatar}";
+        binding.theme.text= LoggedInUser.getTheme()
+        Log.d("USER THEME ", LoggedInUser.getTheme())
         binding.level.text= "${profile.level.level}"
+
+        binding.tournamentFirst.text = profile.tournamentWins[0].toString()
+        binding.tournamentSecond.text = profile.tournamentWins[1].toString()
+        binding.tournamentThird.text = profile.tournamentWins[2].toString()
 
         val neededXP = (profile.level.nextLevelXp - profile.level.xp).toString()
         binding.xpNeeded.setText(activity?.let { HtmlCompat.fromHtml(it.getString(R.string.xp_needed_till_next_level_00, neededXP), HtmlCompat.FROM_HTML_MODE_LEGACY) }, TextView.BufferType.SPANNABLE)
@@ -372,12 +403,16 @@ class ProfilFragment : Fragment() {
                 when (stat.name) {
                     "Wins" -> statName.text = "victoires"
                     "Games played" -> statName.text = "parties jouées"
-                    "Points Average" -> statName.text = "points gagnés en moyenne"
+                    "Points Average" -> statName.text = "moyenne points gagnés"
                     "Average Game Time" -> statName.text = "temps de jeu moyen"
                     else -> {}
                 }
             }
-            statValue.text = stat.statAmount.toString()
+            when (stat.name) {
+                "Points Average" -> statValue.text = stat.statAmount.toFloat().toBigDecimal().setScale(1, RoundingMode.UP).toDouble().toString()
+                "Average Game Time" -> statValue.text = stat.statAmount.toFloat().toBigDecimal().setScale(1, RoundingMode.UP).toDouble().toString()
+                else -> statValue.text = stat.statAmount.toString()
+            }
             binding.statsLog.addView(statsHolder)
         }
         Log.i("GAME stats", profile.stats.toString())

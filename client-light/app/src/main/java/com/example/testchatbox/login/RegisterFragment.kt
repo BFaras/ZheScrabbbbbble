@@ -1,5 +1,6 @@
 package com.example.testchatbox.login
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
@@ -30,6 +32,7 @@ class RegisterFragment : Fragment() {
 
     private lateinit var registerViewModel: RegisterViewModel
     private var _binding: FragmentRegisterBinding? = null
+    private var choosenAvatar = ""
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -65,6 +68,32 @@ class RegisterFragment : Fragment() {
             hide(WindowInsetsCompat.Type.statusBars())
             // Behavior of system bars
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+
+        usernameEditText.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
+        }
+        emailEditText.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
+        }
+        passwordEditText.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
+        }
+        questionEditText.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
+        }
+        answerEditText.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
         }
 
         registerViewModel.RegisterFormState.observe(viewLifecycleOwner,
@@ -130,17 +159,17 @@ class RegisterFragment : Fragment() {
             builder?.setView(alertView)
             avatar1.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-                //socket
+                choosenAvatar = "cat"
                 builder?.dismiss()
             }
             avatar2.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.dog)
-                //socket
+                choosenAvatar = "dog"
                 builder?.dismiss()
             }
             avatar3.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.flower)
-                //socket
+                choosenAvatar = "flower"
                 builder?.dismiss()
             }
             builder?.show()
@@ -155,6 +184,7 @@ class RegisterFragment : Fragment() {
                 registerViewModel.register(
                     usernameEditText.text.toString(),
                     emailEditText.text.toString(),
+                    choosenAvatar,
                     passwordEditText.text.toString(),
                     questionEditText.text.toString(),
                     answerEditText.text.toString()
@@ -162,12 +192,12 @@ class RegisterFragment : Fragment() {
             }
             false
         }
-
         registerButton.setOnClickListener {
             loadingProgressBar.visibility = View.VISIBLE
             registerViewModel.register(
                 usernameEditText.text.toString(),
                 emailEditText.text.toString(),
+                choosenAvatar,
                 passwordEditText.text.toString(),
                 questionEditText.text.toString(),
                 answerEditText.text.toString()
@@ -189,5 +219,10 @@ class RegisterFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun hideKeyboard() {
+        val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
     }
 }
