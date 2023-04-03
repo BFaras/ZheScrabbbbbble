@@ -13,7 +13,7 @@
             {{'LETTERHOLDER.REPLACE' | translate}}
         </button>
 
-        <div cdkDropList [cdkDropListData]="playerHand"id="rack" >
+        <div cdkDropList [cdkDropListData]="playerHand"id="rack"  >
             <div cdkDrag (cdkDragStarted) = "cancelManipulationAndSelection($event)"
             (contextmenu)="clickInside($event,indexOfelement)"
             (click)="clickInside($event,indexOfelement)"

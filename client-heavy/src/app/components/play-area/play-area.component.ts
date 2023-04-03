@@ -1,8 +1,8 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Vec2 } from '@app/classes/vec2';
-import { GRID_CONSTANTS } from '@app/constants/grid-constants';
+import { COLUMNS, GRID_CONSTANTS, ROWS } from '@app/constants/grid-constants';
 import { MouseButton } from '@app/constants/mouse-buttons';
 import { AccountService } from '@app/services/account-service/account.service';
 import { GameState, GameStateService } from '@app/services/game-state-service/game-state.service';
@@ -25,6 +25,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     viewLoaded: boolean = false;
     formerAdderMode: string = "";
     blankLetterOnDrop: string;
+    fields: any[] = []
     private gameState: GameState;
     private canvasSize = { x: GRID_CONSTANTS.defaultWidth, y: GRID_CONSTANTS.defaultHeight };
 
@@ -43,31 +44,98 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         });
     }
 
-    slideLetterToCanvas(letter: CdkDragDrop<string[]>) {
-        const leftBoard = document.getElementById("canvas")?.getBoundingClientRect().left as number;
-        const topBorad = document.getElementById("canvas")?.getBoundingClientRect().top as number;
-        this.setReceiver('playarea');
-        const coordinateClick: Vec2 = { x: letter.dropPoint.x - leftBoard, y: letter.dropPoint.y - topBorad };
-        if (letter.item.data === 'blank') {
-            if (this.letterAdderService.canDrop(coordinateClick)) {
-                this.formerAdderMode = this.letterAdderService.letterAdderMode;
-                this.letterAdderService.setAdderMode('dragAndDrop');
-                this.openBlankTileDialog(letter, coordinateClick)
-                return;
-            }
-            this.blankLetterOnDrop = "";
-            letter.item._dragRef.reset()
-            return;
-        }
-        if (this.letterAdderService.onDropLetterSpot(coordinateClick)) {
-            this.letterAdderService.addLettersOnDrop(letter.item.data)
-        }
-        this.mouseIsIn = true;
-
-
+    test() {
+    }
+    addField(tile: any, index: number) {
+        this.fields.splice(index, 0, tile);
     }
 
-    openBlankTileDialog(letter: CdkDragDrop<string[]>, coord: Vec2) {
+    fakeDroppedOnCanvas(event: CdkDragDrop<string[]>, coordinateClick: Vec2) {
+
+        let tile = {
+            top: ROWS[this.letterAdderService.activeSquare.x] + 'px',
+            left: COLUMNS[this.letterAdderService.activeSquare.y] + 'px',
+            text: event.item.data
+        }
+        this.addField({ ...tile }, event.currentIndex);
+    }
+
+    changePosition(event: CdkDragDrop<any>, field: { top: string; left: string; text: string }) {
+        console.log('change position');
+        this.setReceiver('playarea');
+        const leftBoard = document.getElementById("canvas")?.getBoundingClientRect().left as number;
+        const topBorad = document.getElementById("canvas")?.getBoundingClientRect().top as number;
+        const top = event.dropPoint.y - topBorad
+        const left = event.dropPoint.x - leftBoard
+        const coordinateClick: Vec2 = { x: left, y: top };
+        const out =
+            top < 0 ||
+            left < 0 ||
+            top > 800 ||
+            left > 800
+        if (!out) {
+            console.log("infield")
+            console.log(coordinateClick)
+            if (this.letterAdderService.onDropLetterSpot(coordinateClick)) {
+                console.log("letter  in apporprite drop spot")
+                /**il y a un bug etrange j ai le bon active square mais je peux pas le mettre sur le bon square */
+                console.log(ROWS[this.letterAdderService.activeSquare.x])
+                console.log(COLUMNS[this.letterAdderService.activeSquare.y])
+                //const positionLeft = COLUMNS[this.letterAdderService.activeSquare.y] + 'px';
+                //const positionTop = COLUMNS[this.letterAdderService.activeSquare.y] + 'px';
+                field.left = left.toString() + "px"
+                field.top = top.toString() + "px";
+                console.log(field)
+                console.log('change position')
+                this.letterAdderService.removeDrawingBeforeDragWithinCanvas()
+                this.letterAdderService.moveLetterInBoard(field.text)
+            } else {
+                /**logique doit etre modifier pour que ca remet dans sport  */
+                this.fields = this.fields.filter((x) => x != field);
+                console.log("letter not in apporprite drop spot , so it s has been removed")
+                this.letterAdderService.removeLetters()
+                event.item._dragRef.dispose();
+            }
+        } else {
+            this.fields = this.fields.filter((x) => x != field);
+            console.log("letter not in apporprite drop spot , so it s has been removed")
+            /**le remove letter est a modifier pour que ca prenne moins de temops */
+            this.letterAdderService.removeLetters()
+            event.item._dragRef.dispose();
+        }
+
+    }
+    slideLetterToCanvas(letter: CdkDragDrop<string[]>) {
+        if (letter.previousContainer === letter.container) {
+            moveItemInArray(this.fields, letter.previousIndex, letter.currentIndex);
+            console.log('in the sliding and same container')
+        } else {
+            console.log('in the sliding and not the same container')
+            const leftBoard = document.getElementById("canvas")?.getBoundingClientRect().left as number;
+            const topBorad = document.getElementById("canvas")?.getBoundingClientRect().top as number;
+            this.setReceiver('playarea');
+            const coordinateClick: Vec2 = { x: letter.dropPoint.x - leftBoard, y: letter.dropPoint.y - topBorad };
+            if (letter.item.data === 'blank') {
+                if (this.letterAdderService.canDrop(coordinateClick)) {
+                    this.formerAdderMode = this.letterAdderService.letterAdderMode;
+                    this.letterAdderService.setAdderMode('dragAndDrop');
+                    this.openBlankTileDialog(letter, coordinateClick)
+                    return;
+                }
+                this.blankLetterOnDrop = "";
+                letter.item._dragRef.reset()
+                return;
+            }
+            if (this.letterAdderService.onDropLetterSpot(coordinateClick)) {
+                this.fakeDroppedOnCanvas(letter, coordinateClick);
+                this.letterAdderService.addLettersOnDrop(letter.item.data)
+            }
+            this.mouseIsIn = true;
+
+        }
+    }
+
+    openBlankTileDialog(letter: CdkDragDrop<any[]>, coord: Vec2) {
         const dialogReference = this.dialogBlankTile.open(BlankTilePopUpComponent, {
             width: '250px',
             height: '250px',

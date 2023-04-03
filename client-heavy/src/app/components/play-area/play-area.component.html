@@ -1,1 +1,6 @@
-<canvas id="canvas" (cdkDropListDropped)="slideLetterToCanvas($event)" cdkDropList (click)="mouseHitDetect($event)" #gridCanvas [attr.width]="width" [attr.height]="height"></canvas>
+<div id="container"  (cdkDropListDropped)="slideLetterToCanvas($event)" cdkDropListSortingDisabled="true" cdkDropList> 
+    <canvas id="canvas" (click)="mouseHitDetect($event)" #gridCanvas [attr.width]="width" [attr.height]="height"></canvas>
+    <div class="tile" *ngFor="let field of fields; let i = index" cdkDrag
+    (cdkDragDropped)="changePosition($event,field)"
+    style="position:absolute" [style.top] = "field.top" [style.left] = "field.left"></div>
+</div>

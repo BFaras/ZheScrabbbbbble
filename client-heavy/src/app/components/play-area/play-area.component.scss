@@ -1,0 +1,16 @@
+canvas{
+    position: absolute;
+}
+
+.tile{
+    height:50px;
+    width:50px;
+    border:1px solid red;
+    position:absolute
+}
+
+#container{
+    height: 800px;
+    width: 800px;
+    position: absolute;
+}

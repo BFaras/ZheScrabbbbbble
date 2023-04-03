@@ -14,6 +14,7 @@ export class LetterAdderService {
     arrowDirection: boolean = true;
     activeSquare: { x: string; y: number } = { x: 'P', y: 0 };
     prevActiveSquare: { x: string; y: number } = { x: 'P', y: 0 };
+    pervForDrag: { x: string; y: number } = { x: 'P', y: 0 };
     addedLettersLog = new Map<string, string>();
     orderedAddedLetterLog = new Map<string, string>();
     playerHand: string[];
@@ -41,8 +42,11 @@ export class LetterAdderService {
     }
 
     onDropLetterSpot(coords: Vec2) {
+        console.log("prepare to verify if can be dropped here")
         if (this.canDrop(coords)) {
+            console.log("it can be dropped here")
             this.gridService.deleteAndRedraw();
+            this.pervForDrag = this.prevActiveSquare;
             this.prevActiveSquare = this.activeSquare;
             return true
         } else return false
@@ -132,8 +136,6 @@ export class LetterAdderService {
             if (!this.isPositionTaken()) {
                 this.addToHand(false);
                 /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty ecrie lettre*/
-                console.log(this.playerHand)
-                console.log(this.activeSquare)
                 if (this.playerHand.length === 6) {
                     console.log('sent first Tile')
                     this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
@@ -147,6 +149,28 @@ export class LetterAdderService {
                 this.changeActivePosition(1);
             }
             this.addArrowSquare();
+        }
+    }
+    /**crrer double poujr quand on deplace une piuece dans le board */
+    moveLetterInBoard(key: string) {
+        console.log(0)
+        this.key = this.isLetterBlank(key) ? this.isLetterBlank(key) : this.simplifyLetter(key);
+        console.log(1)
+        if (this.isInBounds()) {
+            console.log(2)
+            if (!this.isPositionTaken()) {
+                console.log(3)
+                this.updateDragLetterLog()
+                //this.addToHand(false);
+                /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty poser lettre*/
+                if (this.playerHand.length === 6) {
+                    console.log('sent first Tile')
+                    this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
+                }
+                this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
+                this.gridService.deleteAndRedraw(this.addedLettersLog);
+                this.letterAdderMode = 'dragAndDrop';
+            }
         }
     }
 
@@ -177,6 +201,10 @@ export class LetterAdderService {
         }
     }
 
+    removeDrawingBeforeDragWithinCanvas() {
+        this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
+        this.gridService.deleteAndRedraw(this.addedLettersLog);
+    }
     removeLetters() {
         const decrement = -1;
         if (this.addedLettersLog.size === 1) {
@@ -217,6 +245,13 @@ export class LetterAdderService {
         this.gridService.deleteAndRedraw();
     }
 
+    updateDragLetterLog() {
+        if (!this.key) return;
+        let key = this.key;
+        this.addedLettersLog.set(this.activeSquare.x + this.activeSquare.y, key);
+        if (this.key.length > 1) key = this.key.slice(0, GRID_CONSTANTS.lastLetter);
+    }
+
     addToHand(addOrDel: boolean) {
         if (!this.key) return;
         let key = this.key;
@@ -227,7 +262,6 @@ export class LetterAdderService {
             if (lastAddedLetter[1].length === 1) this.playerHand.push(lastAddedLetter[1]);
             else this.playerHand.push(lastAddedLetter[1].slice(0, GRID_CONSTANTS.lastLetter));
         } else {
-            console.log(this.activeSquare.x + this.activeSquare.y);
             this.addedLettersLog.set(this.activeSquare.x + this.activeSquare.y, key);
             if (this.key.length > 1) key = this.key.slice(0, GRID_CONSTANTS.lastLetter);
             const letterIndex = this.playerHand.indexOf(key);
@@ -303,7 +337,6 @@ export class LetterAdderService {
 
     makeMove() {
         if (this.addedLettersLog.size) {
-            console.log(this.formatAddedLetters())
             this.chatService.sendCommand(this.formatAddedLetters(), 'Place');
             this.removeAll();
         }
@@ -326,10 +359,8 @@ export class LetterAdderService {
             const value = this.orderedAddedLetterLog.get(key);
             if (value && value?.length > 1) this.orderedAddedLetterLog.set(key, value?.substring(value.length - 1).toUpperCase() as string);
         });
-        console.log(keys);
-        console.log(Array.from(this.orderedAddedLetterLog.values()))
+
         const letters = Array.from(this.orderedAddedLetterLog.values()).join('');
-        console.log(keys[0].toLowerCase() + this.formatDirection() + ' ' + letters);
         return keys[0].toLowerCase() + this.formatDirection() + ' ' + letters;
     }
 

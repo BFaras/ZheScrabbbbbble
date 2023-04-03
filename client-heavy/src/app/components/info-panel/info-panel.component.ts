@@ -74,7 +74,6 @@ export class InfoPanelComponent implements OnDestroy {
             return;
         }
         for (let i = 0; i < gameState.players.length; i++) {
-            console.log(this.playersInfo[i].name)
             this.playersInfo[i].winner = false;
             this.playersInfo[i].currentScore = gameState.players[i].score;
             this.playersInfo[i].active = gameState.playerTurnIndex === i;

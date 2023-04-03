@@ -81,8 +81,6 @@ export class GridService implements OnDestroy {
 
     /**monter la position firstTile */
     showActivePlayerFirstTile(activeSquare: { x: string, y: number }) {
-        console.log('received add preview: ')
-        console.log(activeSquare);
         this.gridContext.strokeStyle = 'orange';
         this.gridContext.lineWidth = 3;
         this.gridContext.strokeRect(COLUMNS[activeSquare.y], ROWS[activeSquare.x], GRID_CONSTANTS.defaultSide, GRID_CONSTANTS.defaultSide);
@@ -194,8 +192,6 @@ export class GridService implements OnDestroy {
                 COLUMNS[column] + GRID_CONSTANTS.defaultSide / GRID_OFFSETS.letterOffsetH,
                 ROWS[checkedRow] + GRID_CONSTANTS.defaultSide / GRID_OFFSETS.letterOffsetV,
             );
-            console.log(COLUMNS[column])
-            console.log(ROWS[checkedRow])
 
 
             this.gridContext.textBaseline = 'top';
