@@ -4,6 +4,7 @@ import { ChatMessage } from '@app/interfaces/chat-message';
 import * as io from 'socket.io';
 import Container, { Service } from 'typedi';
 import { AccountInfoService } from './account-info.service';
+import { AuthSocketService } from './auth-socket.service';
 import { ChatService } from './chat.service';
 import { DatabaseService } from './database.service';
 import { TimeFormatterService } from './time-formatter.service';
@@ -14,12 +15,14 @@ export class ChatSocketService {
     private readonly accountInfoService: AccountInfoService;
     private readonly timeFormatterService: TimeFormatterService;
     private readonly dbService: DatabaseService;
+    private readonly authSocketService: AuthSocketService;
 
     constructor() {
         this.chatService = Container.get(ChatService);
         this.accountInfoService = Container.get(AccountInfoService);
         this.timeFormatterService = Container.get(TimeFormatterService);
         this.dbService = Container.get(DatabaseService);
+        this.authSocketService = Container.get(AuthSocketService);
     }
 
     handleChatSockets(socket: io.Socket) {
@@ -67,6 +70,10 @@ export class ChatSocketService {
 
         socket.on('Get Chat History', async (chatId: string) => {
             socket.emit('Chat History Response', await this.chatService.getChatHistory(chatId));
+        });
+
+        socket.on('Link Socket Username', async (username: string) => {
+            this.authSocketService.setupUser(socket, username, true);
         });
     }
 }
