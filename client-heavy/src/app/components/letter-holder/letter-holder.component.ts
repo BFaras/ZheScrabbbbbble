@@ -22,7 +22,7 @@ const OFFSET_POSITION = 1;
 export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     @Output() receiver = new EventEmitter();
     switch: boolean = false;
-    isDisabled: boolean = false;
+    disabled: boolean = false;
     notEnoughLettersLeft: boolean = false;
     mouseIsIn: boolean = false;
     makingSelection: boolean = false;
@@ -78,8 +78,9 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
 
     @HostListener('click', ['$event'])
     clickInside(e: MouseEvent, indexOfElement: number) {
-        if (e.button === MouseButton.Right) {
-            if (this.isObserver()) return;
+        if (this.isObserver())
+            return;
+        if (e.button === MouseButton.Right && !this.isDisabled()) {
             this.manipulationRack.cancelManipulation();
             this.manipulationRack.selectLetterOnRack(indexOfElement + 1);
             this.makingSelection = Object.values(isSelected).some((selection) => selection === true);
@@ -97,7 +98,6 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     @HostListener('window:keypress', ['$event'])
     onKeyDown(e: KeyboardEvent) {
         if (!this.mouseIsIn) return;
-
         let letter = e.key.toLowerCase();
         letter = letter === '*' ? 'blank' : letter;
         this.makingSelection = false;
@@ -140,7 +140,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     @HostListener('window:wheel', ['$event'])
     onWheel(e: WheelEvent) {
         e.stopPropagation();
-        if (!this.mouseIsIn || this.makingSelection) return;
+        if (!this.mouseIsIn || this.makingSelection || this.isObserver()) return;
         if (e.deltaY > 0) {
             this.manipulationRack.moveLetter('right', this.initialPosition, this.playerHand);
             this.initialPosition++;
@@ -197,18 +197,22 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     updateHolder(gameState: GameState) {
         let playerIndex = this.gameStateService.getObserverIndex();
         if (playerIndex < 0) {
-            for (playerIndex = 0; playerIndex < gameState.players.length; playerIndex++) {
-                console.log(this.accountService.getUsername())
-                if (gameState.players[playerIndex].username === this.accountService.getUsername()) break;
+            if(this.gameStateService.isCoop()){
+                playerIndex = 0;
+            }else{
+                for (playerIndex = 0; playerIndex < gameState.players.length; playerIndex++) {
+                    console.log(this.accountService.getUsername())
+                    if (gameState.players[playerIndex].username === this.accountService.getUsername()) break;
+                }
             }
         }
         this.letterHolderService.setHolderState(this.formatHandState([...gameState.players[playerIndex].hand]));
         this.letterHolderService.addLetters();
-        this.isDisabled = !(playerIndex === gameState.playerTurnIndex);
+        this.disabled = !(playerIndex === gameState.playerTurnIndex);
         this.playerHand = this.letterHolderService.holderState;
         this.playerHandPoints = this.letterHolderService.holderStatePoints;
         this.letterAdderService.setPlayerHand(this.playerHand);
-        this.letterAdderService.setCanPlay(this.isDisabled);
+        this.letterAdderService.setCanPlay(this.disabled);
         if (gameState.reserveLength < LIMIT_LETTERS_IN_RESERVE) this.notEnoughLettersLeft = true;
         this.cancelSelection();
     }
@@ -232,6 +236,10 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         }
         while (letters.length < LIMIT_LETTERS_IN_RESERVE) letters.push('');
         return letters;
+    }
+
+    requestClue(){
+        this.gameStateService.requestClue();
     }
 
     sendWord() {
@@ -301,6 +309,10 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
 
     isObserver(): boolean {
         return this.gameStateService.getObserverIndex() >= 0;
+    }
+
+    isDisabled(): boolean { 
+        return this.gameStateService.hasPendingAction() || this.disabled;
     }
 
     get height(): number {

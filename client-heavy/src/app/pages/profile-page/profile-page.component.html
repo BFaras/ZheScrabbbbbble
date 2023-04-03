@@ -10,25 +10,43 @@
     </div>
     <button class="theme-button" (click)="goToFriends()">{{ 'PROFILE-PAGE.FRIENDS' | translate }}</button>
     
- <!---  ma partie-->
-    <div class="profileAvatarNameLevel">
+
+    <mat-card class="profileAvatarNameLevel">
         <div class="avatarSection">
-            <img class="avatarSquare" [src] ="accountProfile.avatar">
+            <img class="avatarSquare" [src] ="avatarCircle">
+            <mat-progress-bar mode="determinate" [value]="progressionBarValue" class = "xp"></mat-progress-bar>
             <button class="button" (click)="openDialogChangeColor()">Modifier l'avatar
             </button>
         </div>
-        <div class="nameLevel">
-        <h1 class = "name">Nom: {{accountUsername}}</h1>
-        <h1 class = "level"> Niveau : {{accountProfile.level}} </h1>
+        <div id="nameLevel">
+            <div id="nameContainer">
+                <p class = "name">Nom: {{accountUsername}}</p>
+                <button (click) = "openDialogChangeName()" id="changeName">C</button>
+            </div>
+        <p class = "name">Code d'utilisateur: {{accountProfile.userCode}}</p>
+        <p class = "level"> Niveau : {{accountProfile.levelInfo.level}} </p>
         </div>
-    </div>
-    <!---  pas encore implementer
-    <h1 >{{accountProfile.level}}</h1>
-    <h1>{{accountProfile.userCode}}</h1>
-    <h1>{{accountProfile.stats}}</h1>
-    <h1>{{accountProfile.tournamentWins}}</h1>
-    <h1>{{accountProfile.connectionHistory}}</h1>
-    <h1>{{accountProfile.gameHistory}}</h1>
-                    -->
-     <!---  ma partie-->
+        <div id="tournamentMedals" >
+            <div class ="medals" *ngFor = "let medal of accountProfile.tournamentWins">
+                <i class="fab fa-medal"></i>
+                <p class="numberOfMedals">{{medal}}</p>
+            </div>
+        </div>
+    </mat-card>
+    <div id = "account-other-info">
+        <div id="stats-and-former-actions">
+            <mat-card id="stats">
+                <mat-card-header>
+                    Statistiques du compte
+                </mat-card-header>
+                <mat-card-content id="stats-list">
+                    <p class="specific-stat">Nombre de victoires: {{accountProfile.stats[0].statAmount}}</p>
+                    <p class="specific-stat"> Nombre de parties jouée: {{accountProfile.stats[1].statAmount}}</p>
+                    <p class="specific-stat">La moyenne de points par partie: {{accountProfile.stats[2].statAmount}}</p>
+                    <p class="specific-stat">La moyenne de temps par partie: {{accountProfile.stats[3].statAmount}}</p>
+                </mat-card-content>
+            </mat-card>
+            <app-former-action-history-area></app-former-action-history-area>
+        </div>
+    <app-connection-history-area [connectionInformation] = "accountProfile.connectionHistory"></app-connection-history-area>
 </div>

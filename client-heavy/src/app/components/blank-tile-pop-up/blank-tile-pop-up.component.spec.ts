@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MainComponent } from './main.component';
+import { BlankTilePopUpComponent } from './blank-tile-pop-up.component';
 
-describe('MainComponent', () => {
-  let component: MainComponent;
-  let fixture: ComponentFixture<MainComponent>;
+describe('BlankTilePopUpComponent', () => {
+  let component: BlankTilePopUpComponent;
+  let fixture: ComponentFixture<BlankTilePopUpComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MainComponent ]
+      declarations: [ BlankTilePopUpComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MainComponent);
+    fixture = TestBed.createComponent(BlankTilePopUpComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

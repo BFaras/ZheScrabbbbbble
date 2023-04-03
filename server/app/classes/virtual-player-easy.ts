@@ -44,7 +44,7 @@ export class VirtualPlayerEasy extends VirtualPlayer {
             case CommandTypes.Place:
                 details = await this.place();
                 if (details.result.errorType !== undefined) details = this.pass();
-                if (details.command.split(' ')[0] === '!placer')
+                if (details.command.split(' ')[0] === 'Place')
                     details.result.playerMessage = {messageType: PLACE_MESSAGE, values: [this.getName(), details.command.split(' ')[2], details.result.playerMessage!.messageType] };
                 break;
             case CommandTypes.Swap:

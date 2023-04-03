@@ -30,7 +30,6 @@ const isCoordinateOf = (colourCoords: number[][], coord: number[]): boolean => {
 @Injectable({
     providedIn: 'root',
 })
-
 export class GridService implements OnDestroy {
     gridContext: CanvasRenderingContext2D;
     horizontalArrow = '🢚';
@@ -195,6 +194,9 @@ export class GridService implements OnDestroy {
                 COLUMNS[column] + GRID_CONSTANTS.defaultSide / GRID_OFFSETS.letterOffsetH,
                 ROWS[checkedRow] + GRID_CONSTANTS.defaultSide / GRID_OFFSETS.letterOffsetV,
             );
+            console.log(COLUMNS[column])
+            console.log(ROWS[checkedRow])
+
 
             this.gridContext.textBaseline = 'top';
             this.gridContext.font = `bold ${this.size.getFontSize().get('gridPointSize')}px Courier`;

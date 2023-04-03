@@ -2,9 +2,11 @@ import { Component, OnDestroy } from "@angular/core";
 import { Router } from '@angular/router';
 import { MAX_SECOND_VALUE, Timer } from "@app/classes/timer";
 import { TIMER_VALUES } from "@app/constants/timer-constants";
+import { AvatarInRoomsService } from "@app/services/avatar-in-rooms.service";
 import { GameStateService } from "@app/services/game-state-service/game-state.service";
 import { GameData, GameStatus, TournamentService } from "@app/services/tournament-service/tournament.service";
 import { WaitingRoomManagerService } from "@app/services/waiting-room-manager-service/waiting-room-manager.service";
+import { Subscription } from "rxjs";
 import { first } from "rxjs/operators";
 
 @Component({
@@ -23,8 +25,26 @@ export class BracketPageComponent implements OnDestroy {
     final1: GameData;
     final2: GameData;
     private games: GameData[] = [];
+    s1: boolean;
+    s2: boolean;
+    f1: boolean;
+    f2: boolean;
 
-    constructor(private tournamentService: TournamentService, private waitingRoomManagerService: WaitingRoomManagerService, private gameStateService: GameStateService, private router: Router) {
+    users: string[] = []
+    avatars: Map<string, string> = new Map<string, string>();
+
+    subscriptionAvatar: Subscription
+    constructor(private tournamentService: TournamentService,
+        private waitingRoomManagerService: WaitingRoomManagerService,
+        private gameStateService: GameStateService,
+        private router: Router,
+        private avatarInRoomService: AvatarInRoomsService) {
+        /**debut pour avatar */
+        this.avatarInRoomService.setUpSocket()
+        this.subscriptionAvatar = this.avatarInRoomService.getUsersInRoomAvatarObservable().subscribe(() => {
+
+        })
+        /**fin pour avatar */
         this.initTimer();
         this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this));
         this.tournamentService.getGameDataObservable().subscribe((data: { games: GameData[], timeData: { time: number, phase: number } }) => {
@@ -36,43 +56,61 @@ export class BracketPageComponent implements OnDestroy {
         this.tournamentService.getGameData();
     }
 
+    setUpAvatarSemi(username: string) {
+        console.log(username);
+        if (this.avatarInRoomService.getAvatarUserMap(username)) {
+            return this.avatarInRoomService.getAvatarUserMap(username);
+        } else {
+            return "virtual.png"
+        }
+
+    }
+
     setupGames() {
-        let s1 = false;
-        let s2 = false;
-        let f1 = false;
-        let f2 = false;
+        this.s1 = false;
+        this.s2 = false;
+        this.f1 = false;
+        this.f2 = false;
         for (let game of this.games) {
             switch (game.type) {
                 case 'Semi1':
-                    s1 = true;
+                    this.s1 = true;
                     this.semi1 = game;
+                    this.users = this.users.concat(this.semi1.players);
                     if (this.semi1.players.length === 1) this.semi1.players.push('');
                     break;
                 case 'Semi2':
-                    s2 = true;
+                    this.s2 = true;
                     this.semi2 = game;
+                    this.users = this.users.concat(this.semi2.players)
                     if (this.semi2.players.length === 1) this.semi2.players.push('');
                     break;
                 case 'Final1':
-                    f1 = true;
+                    this.f1 = true;
                     this.final1 = game;
+                    this.users = this.users.concat(this.final1.players);
                     if (this.final1.players.length === 1) this.final1.players.push('');
                     break;
                 case 'Final2':
-                    f2 = true;
+                    this.f2 = true;
                     this.final2 = game;
+                    this.users = this.users.concat(this.final2.players);
                     if (this.final2.players.length === 1) this.final2.players.push('');
                     break;
             }
         }
-        if (!s1) this.semi1 = { type: 'Semi1', status: GameStatus.PENDING, winnerIndex: 0, players: ['', ''], roomCode: '' };
-        if (!s2) this.semi2 = { type: 'Semi2', status: GameStatus.PENDING, winnerIndex: 0, players: ['', ''], roomCode: '' };
-        if (!f1) this.final1 = { type: 'Final1', status: GameStatus.PENDING, winnerIndex: 0, players: ['', ''], roomCode: '' };
-        if (!f2) this.final2 = { type: 'Final2', status: GameStatus.PENDING, winnerIndex: 0, players: ['', ''], roomCode: '' };
+        console.log(this.users)
+        this.avatarInRoomService.setUsersInRoom(this.users)
+        this.avatarInRoomService.askAllUsersAvatar()
+        if (!this.s1) this.semi1 = { type: 'Semi1', status: GameStatus.PENDING, winnerIndex: 0, players: ['', ''], roomCode: '' };
+        if (!this.s2) this.semi2 = { type: 'Semi2', status: GameStatus.PENDING, winnerIndex: 0, players: ['', ''], roomCode: '' };
+        if (!this.f1) this.final1 = { type: 'Final1', status: GameStatus.PENDING, winnerIndex: 0, players: ['', ''], roomCode: '' };
+        if (!this.f2) this.final2 = { type: 'Final2', status: GameStatus.PENDING, winnerIndex: 0, players: ['', ''], roomCode: '' };
     }
 
     ngOnDestroy() {
         clearTimeout(this.timer);
+        this.subscriptionAvatar.unsubscribe()
     }
 
     resetTimer(time: Timer) {
@@ -104,7 +142,8 @@ export class BracketPageComponent implements OnDestroy {
         }, TIMER_VALUES.timeJump);
     }
 
-    goToGame() {
+    goToGame(isCoop: boolean) {
+        this.gameStateService.setCoop(isCoop);
         this.gameStateService.setObserver(-1);
         this.gameStateService.setTournamentGame(true);
         this.router.navigate(['/game']).then(() => {

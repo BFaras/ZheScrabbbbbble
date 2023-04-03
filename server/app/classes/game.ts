@@ -18,6 +18,7 @@ import { INVALID_WORD_MESSAGE, PASS_MESSAGE, SWAP_MESSAGE } from '@app/constants
 import { CommandResult } from '@app/controllers/command.controller';
 import { CommandFormattingService } from '@app/services/command-formatting.service';
 import { PossibleWordFinder, PossibleWords } from '@app/services/possible-word-finder.service';
+import { StatisticService } from '@app/services/statistics.service';
 import { WordValidation } from '@app/services/word-validation.service';
 import Container from 'typedi';
 import { CommandDetails, VirtualPlayer } from './virtual-player';
@@ -27,25 +28,29 @@ export class Game {
     private passCounter: number;
     private board: Board;
     private wordValidationService: WordValidation;
+    private statisticsService: StatisticService;
     private players: Player[];
     private reserve: Reserve;
     private gameOver: boolean;
     private startDate: Date;
     private playerTurnIndex: number;
     private timer: NodeJS.Timeout;
+    private timerEnabled : boolean
     private timerCallback: (username: string, result: CommandResult) => void;
 
-    constructor(players: Player[]) {
+    constructor(players: Player[], timerEnabled : boolean) {
         this.passCounter = 0;
         this.reserve = new Reserve();
         this.board = new Board();
         this.gameOver = false;
         this.players = players;
+        this.timerEnabled = timerEnabled;
         this.wordValidationService = Container.get(WordValidation);
+        this.statisticsService = Container.get(StatisticService);
     }
 
     startGame(timerCallback: (username: string, result: CommandResult) => void) {
-        if (this.players.length < 2) return;
+        //if (this.players.length < 2) return;
         this.playerTurnIndex = Math.floor(Math.random() * this.players.length);
         for (const player of this.players) {
             player.getHand().addLetters(this.reserve.drawLetters(HAND_SIZE));
@@ -104,12 +109,17 @@ export class Game {
         return { playerMessage: { messageType: PASS_MESSAGE, values: [name] } };
     }
 
-    endGame(): string {
+    endGame(gaveUp?: string): string {
         clearTimeout(this.timer);
         this.gameOver = true;
         this.scorePlayers();
         let endMessage: string = '';
+        let winner = this.getWinner(gaveUp);
+        const timeElapsed = Math.round((Date.now() - this.startDate.getTime()) / 1000);
         for (const player of this.players) {
+            if (player.getDatabaseId()) {
+                this.statisticsService.addGameStats(player.getDatabaseId(), winner === player.getName(), player.getScore(), timeElapsed);
+            }
             endMessage += '\n' + player.getName() + ' : ' + player.getHand().getLettersToString();
         }
         return endMessage;
@@ -179,20 +189,26 @@ export class Game {
     }
 
     resetTimer() {
-        clearTimeout(this.timer);
-        this.timer = setTimeout(() => {
-            const username = this.players[this.playerTurnIndex].getName();
-            const result = this.passTurn();
-            this.timerCallback(username, result);
-        }, MILLISECOND_IN_MINUTES);
+        if(this.timerEnabled){
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                const username = this.players[this.playerTurnIndex].getName();
+                const result = this.passTurn();
+                this.timerCallback(username, result);
+            }, MILLISECOND_IN_MINUTES);
+        }
     }
 
-    getWinner(): string {
+    getWinner(gaveUp?: string): string {
         if (!this.gameOver) return '';
         let highestScore = -Infinity;
         let playerIndex = -1;
         for (let i = 0; i < this.players.length; i++) {
-            if (this.players[i].getScore() > highestScore) playerIndex = i
+            if (this.players[i].getUUID() === gaveUp) continue;
+            if (this.players[i].getScore() > highestScore) {
+                highestScore = this.players[i].getScore();
+                playerIndex = i;
+            }
         }
         return this.players[playerIndex].getName();
     }

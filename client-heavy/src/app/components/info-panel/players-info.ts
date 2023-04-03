@@ -4,4 +4,5 @@ export interface Player {
     letterCount: number;
     active: boolean;
     winner: boolean;
+    avatar: string;
 }

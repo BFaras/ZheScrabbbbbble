@@ -24,10 +24,9 @@ export class MainPageComponent {
         private profile: ProfilePageComponent,
         private language: LanguageComponent) {
         this.accountService.setUpSocket()
-        this.subscriptions.push(this.accountService.getUserProfileInformation().
-            subscribe((userProfile) => {
-                this.accountService.setUpProfile(userProfile);
-            }));
+        this.subscriptions.push(this.accountService.getUserProfileInformation().subscribe((userProfile) => {
+            this.accountService.setUpProfile(userProfile);
+        }));
         this.subscriptions.push(this.accountService.getThemeAndLanguage().subscribe((profile: ProfileSettings) => {
             console.log(profile);
             this.profile.changeThemeTo(profile.theme);

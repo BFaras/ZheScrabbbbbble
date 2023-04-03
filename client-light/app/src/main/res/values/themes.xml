@@ -29,6 +29,7 @@
         <item name="lettersInHand">@color/AntiqueWhite</item>
         <item name="chatBox">@color/lightBeige</item>
         <item name="activeTile">@color/purple_700</item>
+        <item name="chatIconNotif">#38683A</item>
     </style>
 
     <style name="Theme.TestChatBox.NoActionBar">
@@ -57,6 +58,7 @@
         <item name="lettersInHand">@color/AntiqueWhite</item>
         <item name="chatBox">@color/white</item>
         <item name="activeTile">@color/purple_700</item>
+        <item name="chatIconNotif">#f7dfed</item>
     </style>
 
     <style name="EclipseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -80,6 +82,7 @@
         <item name="lettersInHand">@color/AntiqueWhite</item>
         <item name="chatBox">@color/Platinium</item>
         <item name="activeTile">@color/Gold</item>
+        <item name="chatIconNotif">@color/clearSea</item>
     </style>
 
     <style name="BlizzardTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -104,6 +107,7 @@
         <item name="lettersOnBoard">@color/grayWhite</item>
         <item name="lettersInHand">@color/SlateWhite</item>
         <item name="activeTile">@color/purple_700</item>
+        <item name="chatIconNotif">#D8BDBB</item>
     </style>
 
 

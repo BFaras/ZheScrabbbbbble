@@ -22,7 +22,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         body: '',
         color: '',
     };
-    gameRoomName:string;
+    gameRoomName: string;
 
     messageHistory: ChatMessage[] = [];
 
@@ -32,13 +32,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     constructor(private chatService: ChatService, private messageParserService: MessageParserService) {
         this.gameRoomName = this.chatService.getChatInGameRoom();
         console.log(this.gameRoomName);
-        this.subscriptionMessage = this.chatService.getMessagesInGame().subscribe((response: {chatCode:string,message:ChatMessage}) => {
-            this.updateMessageHistory(response.message)});
+        this.subscriptionMessage = this.chatService.getMessagesInGame().subscribe((response: { chatCode: string, message: ChatMessage }) => {
+            this.updateMessageHistory(response.message)
+        });
     }
 
     ngOnInit() {
-        const history = sessionStorage.getItem('chat');
-        if (history) this.messageHistory = JSON.parse(history);
     }
 
     updateMessageHistory(chatMessage: ChatMessage) {
@@ -46,7 +45,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         sessionStorage.setItem('chat', JSON.stringify(this.messageHistory));
     }
 
-    
+
     sendMessage() {
         if (this.message.body.length >= LIMIT_OF_CHARACTERS) {
             //this.chatService.sendMessage(this.messageInvalidArgument);
@@ -55,7 +54,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         }
         const messageType: MessageType = this.messageParserService.parseCommand(this.message);
         this.sendMessageByType(messageType);
-    } 
+    }
     isReceiver() {
         this.switch = !this.switch;
         this.receiver.emit('chatbox' + this.switch);
@@ -64,13 +63,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.subscriptionMessage.unsubscribe();
     }
-    
+
     private sendMessageByType(messageType: MessageType) {
         switch (messageType) {
             case MessageType.Empty:
                 break;
             case MessageType.Normal:
-                this.chatService.sendMessage(this.message.body,this.gameRoomName);
+                this.chatService.sendMessage(this.message.body, this.gameRoomName);
                 this.message.body = '';
                 break;
         }

@@ -43,7 +43,8 @@
     transition-duration: 0.2s;
 }
 
-#radio-btn {
+mat-radio-group.radio-btn {
+    justify-content: space-evenly;
     width: 72%;
 }
 
@@ -51,8 +52,8 @@
     stroke: var(--accent-default);
 }
 
-mat-radio-button {
-    margin-right: 12%;
+#coop-group {
+    width: 50%;
 }
 
 .logo {
