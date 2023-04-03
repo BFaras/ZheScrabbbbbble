@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/MainMenuFragment">
+
+    <fragment
+        android:id="@+id/MainMenuFragment"
+        android:name="com.example.testchatbox.MainMenuFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_main_menu" >
+
+        <action
+            android:id="@+id/action_MainMenuFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_MainMenuFragment_to_gameListFragment"
+            app:destination="@id/gameListFragment" />
+        <action
+            android:id="@+id/action_MainMenuFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
+        <action
+            android:id="@+id/action_MainMenuFragment_to_profileActivity"
+            app:destination="@id/profileActivity" />
+        <action
+            android:id="@+id/action_MainMenuFragment_to_loginActivity2"
+            app:destination="@id/loginActivity2" />
+    </fragment>
+    <fragment
+        android:id="@+id/ChatFragment"
+        android:name="com.example.testchatbox.chat.ChatFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_chat" >
+
+        <action
+            android:id="@+id/action_ChatFragment_to_MainMenuFragment"
+            app:destination="@id/MainMenuFragment" />
+        <action
+            android:id="@+id/action_ChatFragment_to_manageChatFragment"
+            app:destination="@id/manageChatFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/manageChatFragment"
+        android:name="com.example.testchatbox.chat.ManageChatFragment"
+        android:label="fragment_manage_chat"
+        tools:layout="@layout/fragment_manage_chat" />
+    <fragment
+        android:id="@+id/fullscreenFragment"
+        android:name="com.example.testchatbox.GamePageFragment"
+        android:label="fragment_fullscreen"
+        tools:layout="@layout/fragment_fullscreen" >
+        <action
+            android:id="@+id/action_fullscreenFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_fullscreenFragment_to_MainMenuFragment"
+            app:destination="@id/MainMenuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameListFragment"
+        android:name="com.example.testchatbox.GameListFragment"
+        android:label="fragment_game_list"
+        tools:layout="@layout/fragment_game_list" >
+        <action
+            android:id="@+id/action_gameListFragment_to_gameRoomFragment"
+            app:destination="@id/gameRoomFragment" >
+            <argument
+                android:name="id"
+                app:argType="integer"
+                android:defaultValue="0" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/gameRoomFragment"
+        android:name="com.example.testchatbox.GameRoomFragment"
+        android:label="fragment_game_room"
+        tools:layout="@layout/fragment_game_room" >
+        <action
+            android:id="@+id/action_gameRoomFragment_to_MainMenuFragment"
+            app:destination="@id/MainMenuFragment" />
+        <action
+            android:id="@+id/action_gameRoomFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_gameRoomFragment_to_fullscreenFragment"
+            app:destination="@id/fullscreenFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.example.testchatbox.FriendsFragment"
+        android:label="fragment_friends"
+        tools:layout="@layout/fragment_friends" />
+    <activity
+        android:id="@+id/profileActivity"
+        android:name="com.example.testchatbox.ProfileActivity"
+        android:label="activity_profile"
+        tools:layout="@layout/activity_profile" />
+    <activity
+        android:id="@+id/loginActivity2"
+        android:name="com.example.testchatbox.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
+
+</navigation>

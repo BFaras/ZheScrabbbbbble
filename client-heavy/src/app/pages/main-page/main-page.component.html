@@ -3,10 +3,9 @@
     <div class="logo">Scrabble</div>
     <div id="button-container">
         <section id="game-modes" class="justified">
-            
             <p class="paragraph">{{'HOMEPAGE.MESSAGE' | translate}}</p>
             <button class="button" routerLink="/solo-multi">{{ 'HOMEPAGE.CLASSIC' | translate }}</button>
-            <button class="button" routerLink="/solo-multi">{{ 'HOMEPAGE.TOURNAMENT' | translate }} (LOG2990)</button>
+            <button class="button" routerLink="/tournament-queue">{{ 'HOMEPAGE.TOURNAMENT' | translate }}</button>
             <button class="button" (click)="openScores()">{{ 'HOMEPAGE.COLLABORATIVE' | translate }} (scores)</button>
         </section>
     </div>

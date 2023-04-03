@@ -1,31 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="?backgroundColor"
     android:layout_height="match_parent"
-    android:background="@color/DarkGray"
+    android:focusable="true"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     tools:context=".chat.ChatFragment">
-
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
+        android:background="?backgroundColor"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="25dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="300dp"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/ManageChats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/background_chat_input"
+                android:textSize="15dp"
+                android:text="@string/manage_chats"/>
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="600dp"
                 android:padding="30dp"
                 android:paddingBottom="50dp"
-                android:layout_marginTop="50dp"
+                android:scrollbars="none"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +50,7 @@
                 <LinearLayout
                     android:id="@+id/chatList"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:overScrollMode="never"
                     android:scrollbars="vertical"
@@ -42,20 +58,9 @@
                     tools:layout_editor_absoluteY="25dp"/>
             </ScrollView>
 
-            <Button
-                android:id="@+id/ManageChats"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:textSize="18dp"
-                android:text="Manage Chats"
-                android:layout_marginTop="600dp"
-                android:layout_marginHorizontal="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,16 +68,57 @@
             android:layout_height="match_parent">
 
 
+
             <View
                 android:id="@+id/viewBackground"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginBottom="16dp"
+                android:layout_marginEnd="15dp"
                 android:background="@drawable/background_content_top"
+                android:backgroundTint="?chatBox"
                 app:layout_constraintBottom_toTopOf="@id/send"
                 app:layout_constraintEnd_toStartOf="@+id/textview_second"
                 app:layout_constraintStart_toStartOf="@+id/textview_second"
                 app:layout_constraintTop_toTopOf="parent" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/scrollView"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/talkingIntext"
+                    android:textAllCaps="true"
+                    android:textSize="20dp">
+                </TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="•"
+                    android:textSize="20dp">
+
+                </TextView>
+
+                <TextView
+                    android:id="@+id/chat_room_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:text="GLOBAL CHAT"
+                    android:textSize="20dp">
+                </TextView>
+            </LinearLayout>
 
             <FrameLayout
                 android:id="@+id/send"
@@ -82,6 +128,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
@@ -107,11 +154,12 @@
                 android:id="@+id/inputText"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginTop="65dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorPrimary"
                 android:ems="10"
                 android:hint="@string/tapez_quelque_chose"
                 android:imeOptions="actionDone"
@@ -120,8 +168,8 @@
                 android:inputType="textShortMessage"
                 android:padding="10dp"
                 android:paddingStart="20dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:textColor="?colorOnPrimary"
+                android:textColorHint="?colorOnPrimary"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/send"
@@ -134,29 +182,25 @@
                 android:layout_height="0dp"
                 android:padding="30dp"
                 android:paddingBottom="10dp"
+                android:layout_marginEnd="15dp"
                 android:layout_marginTop="50dp"
                 app:layout_constraintBottom_toBottomOf="@id/viewBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/viewBackground">
 
-                <TextView
+                <LinearLayout
                     android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:orientation="vertical"
-                    android:overScrollMode="never"
-                    android:scrollbars="vertical"
-                    android:textSize="30dp"
                     android:paddingBottom="55dp"
                     app:layout_constraintBottom_toBottomOf="@id/viewBackground"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/viewBackground" />
-
+                    app:layout_constraintTop_toTopOf="@id/viewBackground">
+                </LinearLayout>
             </ScrollView>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
@@ -173,4 +217,4 @@
     <!--        app:layout_constraintTop_toTopOf="@+id/inputText"-->
     <!--        tools:layout_editor_absoluteX="1065dp" />-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

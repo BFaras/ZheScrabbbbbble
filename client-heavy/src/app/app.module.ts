@@ -29,6 +29,7 @@ import { LanguageComponent } from './components/language/language.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { LetterHolderComponent } from './components/letter-holder/letter-holder.component';
 import { LoginAreaComponent } from './components/login-area/login-area.component';
+import { MainComponent } from './components/main/main.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { PasswordLostAreaComponent } from './components/password-lost-area/password-lost-area.component';
 import { AvatarPopUpComponent } from './components/profil-pop-up/avatar-pop-up/avatar-pop-up.component';
@@ -43,9 +44,10 @@ import { PasswordLostPageComponent } from './pages/password-lost-page/password-l
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { PublicChatsComponent } from './pages/public-chats/public-chats.component';
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
+import { BracketPageComponent } from './pages/tournament-pages/bracket-page/bracket-page.component';
+import { QueuePageComponent } from './pages/tournament-pages/queue-page/queue-page.component';
+import { ResultPageComponent } from './pages/tournament-pages/result-page/result-page.component';
 import { ChatService } from './services/chat-service/chat.service';
-import { MainComponent } from './components/main/main.component';
-import { ChatPopUpComponent } from './pages/chat-pop-up/chat-pop-up.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -95,9 +97,11 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         NavigationBarComponent,
         FriendsPageComponent,
         PublicChatsComponent,
+        QueuePageComponent,
+        BracketPageComponent,
+        ResultPageComponent,
         SignUpAvatarPopUpComponent,
         MainComponent,
-        ChatPopUpComponent,
     ],
     imports: [
         AppMaterialModule,

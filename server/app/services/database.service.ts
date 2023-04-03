@@ -13,6 +13,7 @@ import {
 } from '@app/constants/database-interfaces';
 import { DATABASE_UNAVAILABLE, NO_ERROR, USERNAME_TAKEN } from '@app/constants/error-code-constants';
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
+import { ChatMessageDB } from '@app/interfaces/chat-message';
 import { FriendsDB } from '@app/interfaces/friend-info';
 import { ProfileInfo, ProfileInfoDB, ProfileSettings } from '@app/interfaces/profile-info';
 import { Question } from '@app/interfaces/question';
@@ -91,7 +92,7 @@ export class DatabaseService {
         await this.getCollection(CollectionType.PROFILEINFO)?.deleteOne({ _id: new ObjectId(userId) });
     }
 
-    async getUserId(username: string) {
+    async getUserId(username: string): Promise<string> {
         const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<Document>)?.findOne({
             username,
         });
@@ -103,7 +104,7 @@ export class DatabaseService {
         return userId;
     }
 
-    async getUsernameFromId(userId: string) {
+    async getUsernameFromId(userId: string): Promise<string> {
         const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<AccountInfo>)?.findOne({
             _id: new ObjectId(userId),
         });
@@ -190,6 +191,18 @@ export class DatabaseService {
         return profileInfo;
     }
 
+    async getUserAvatar(userId: string): Promise<string> {
+        let userAvatar = '';
+        const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
+            _id: new ObjectId(userId),
+        });
+
+        if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
+            userAvatar = userProfileInfoDoc.profileInfo.avatar;
+        }
+        return userAvatar;
+    }
+
     async getUserProfileSettings(userId: string): Promise<ProfileSettings> {
         let profileSettings: ProfileSettings = Container.get(ProfileService).getDefaultProfileSettings();
         const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
@@ -261,6 +274,17 @@ export class DatabaseService {
         return errorCode;
     }
 
+    async removeFriend(userId: string, friendUserId: string): Promise<string> {
+        let errorCode: string = NO_ERROR;
+        await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)
+            ?.updateOne({ _id: new ObjectId(userId) }, { $pull: { friendsId: friendUserId } })
+            .catch(() => {
+                errorCode = DATABASE_UNAVAILABLE;
+            });
+
+        return errorCode;
+    }
+
     async getUserFriendList(userId: string): Promise<string[]> {
         let friendsList: string[] = [];
         const userFriendsDoc = await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)?.findOne({
@@ -322,7 +346,21 @@ export class DatabaseService {
         return wasUserAddedToChat;
     }
 
-    async leaveChatCanal(userId: string, chatId: string) {
+    async addMessageToHistory(chatId: string, chatMessage: ChatMessageDB): Promise<string> {
+        let error = DATABASE_UNAVAILABLE;
+        if (await this.isUserInChat(chatMessage.userId, chatId)) {
+            error = NO_ERROR;
+            await this.getCollection(CollectionType.CHATCANALS)
+                ?.updateOne({ _id: new ObjectId(chatId) }, { $push: { chatHistory: chatMessage } })
+                .catch(() => {
+                    error = DATABASE_UNAVAILABLE;
+                });
+        }
+
+        return error;
+    }
+
+    async leaveChatCanal(userId: string, chatId: string): Promise<boolean> {
         let wasUserRemovedFromChat = false;
         if (await this.isUserInChat(userId, chatId)) {
             wasUserRemovedFromChat = true;
@@ -338,6 +376,18 @@ export class DatabaseService {
         }
 
         return wasUserRemovedFromChat;
+    }
+
+    async getChatHistory(chatId: string): Promise<ChatMessageDB[]> {
+        const chatDoc = await ((await this.getCollection(CollectionType.CHATCANALS)) as Collection<ChatInfoDB>)?.findOne({
+            _id: new ObjectId(chatId),
+        });
+        let chatHistory: ChatMessageDB[] = [];
+
+        if (chatDoc !== undefined && chatDoc !== null) {
+            chatHistory = chatDoc.chatHistory;
+        }
+        return chatHistory;
     }
 
     async getChatCanalsUserCanJoin(userId: string): Promise<ChatInfo[]> {
@@ -376,6 +426,11 @@ export class DatabaseService {
         return Promise.resolve(!(thisChatWithUserInIt === undefined || thisChatWithUserInIt === null));
     }
 
+    async isChatExistant(chatId: string): Promise<boolean> {
+        const chatDoc = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: new ObjectId(chatId) });
+        return Promise.resolve(!(chatDoc === undefined || chatDoc === null));
+    }
+
     async isGlobalChatExistant(): Promise<boolean> {
         const globalChatDoc = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ chatType: ChatType.GLOBAL });
         return Promise.resolve(!(globalChatDoc === undefined || globalChatDoc === null));
@@ -389,8 +444,28 @@ export class DatabaseService {
         let chatId = '';
 
         if (globalChatDoc !== undefined && globalChatDoc !== null) {
-            chatId = (globalChatDoc as unknown as ChatInfo)._id;
+            chatId = (globalChatDoc as unknown as ChatInfo)._id.toString();
         }
+        return chatId;
+    }
+
+    async getFriendChatId(possibleChatName1: string, possibleChatName2: string): Promise<string> {
+        const possibleChatDoc1 = await this.getCollection(CollectionType.CHATCANALS)?.findOne(
+            { chatType: ChatType.PRIVATE, chatName: possibleChatName1 },
+            { projection: { chatType: 1, chatName: 1 } },
+        );
+        const possibleChatDoc2 = await this.getCollection(CollectionType.CHATCANALS)?.findOne(
+            { chatType: ChatType.PRIVATE, chatName: possibleChatName2 },
+            { projection: { chatType: 1, chatName: 1 } },
+        );
+        let chatId = '';
+
+        if (possibleChatDoc1 !== undefined && possibleChatDoc1 !== null) {
+            chatId = (possibleChatDoc1 as unknown as ChatInfo)._id.toString();
+        } else if (possibleChatDoc2 !== undefined && possibleChatDoc2 !== null) {
+            chatId = (possibleChatDoc2 as unknown as ChatInfo)._id.toString();
+        }
+
         return chatId;
     }
 

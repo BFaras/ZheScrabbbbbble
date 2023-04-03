@@ -1,10 +1,10 @@
-import { MAX_ASCII_SYMBOL, MIN_ASCII_SYMBOL } from '@app/constants/authentification-constants';
-import { DATABASE_UNAVAILABLE, WRONG_FRIEND_CODE } from '@app/constants/error-code-constants';
-import { FRIEND_CODE_LENGTH, FRIEND_ROOM_BASE_NAME } from '@app/constants/profile-constants';
+import { DATABASE_UNAVAILABLE, NO_ERROR, WRONG_FRIEND_CODE } from '@app/constants/error-code-constants';
+import { FRIEND_CODE_LENGTH, FRIEND_ROOM_BASE_NAME, MAX_ASCII_LETTER, MIN_ASCII_LETTER } from '@app/constants/profile-constants';
 import { ConnectivityStatus, Friend } from '@app/interfaces/friend-info';
 import { Container, Service } from 'typedi';
 import { ChatService } from './chat.service';
 import { DatabaseService } from './database.service';
+import { UserSocketService } from './user-socket.service';
 import { UsersStatusService } from './users-status.service';
 
 @Service()
@@ -12,11 +12,13 @@ export class FriendService {
     private readonly dbService: DatabaseService;
     private readonly usersStatusService: UsersStatusService;
     private readonly chatService: ChatService;
+    private userSocketService: UserSocketService;
 
     constructor() {
         this.dbService = Container.get(DatabaseService);
         this.usersStatusService = Container.get(UsersStatusService);
         this.chatService = Container.get(ChatService);
+        this.userSocketService = Container.get(UserSocketService);
     }
 
     async generateUniqueFriendCode(): Promise<string> {
@@ -51,7 +53,26 @@ export class FriendService {
             if (friendUserId !== '') {
                 errorCode = await this.dbService.addFriend(userId, friendUserId);
                 errorCode = await this.dbService.addFriend(friendUserId, userId);
-                errorCode = await this.chatService.createFriendsChat(userId, friendUserId);
+                if (errorCode === NO_ERROR) {
+                    errorCode = await this.chatService.createFriendsChat(userId, friendUserId);
+                    this.userSocketService.userSocketJoinRoom(userId, this.getFriendRoomName(friendUserId));
+                    this.userSocketService.userSocketJoinRoom(friendUserId, this.getFriendRoomName(userId));
+                }
+            }
+        }
+        return errorCode;
+    }
+
+    async removeFriend(userId: string, friendUserId: string): Promise<string> {
+        let errorCode: string = DATABASE_UNAVAILABLE;
+
+        if (friendUserId !== '') {
+            errorCode = await this.dbService.removeFriend(userId, friendUserId);
+            errorCode = await this.dbService.removeFriend(friendUserId, userId);
+            if (errorCode === NO_ERROR) {
+                errorCode = await this.chatService.removeFriendsChat(userId, friendUserId);
+                this.userSocketService.userSocketLeaveRoom(userId, this.getFriendRoomName(friendUserId));
+                this.userSocketService.userSocketLeaveRoom(friendUserId, this.getFriendRoomName(userId));
             }
         }
         return errorCode;
@@ -69,7 +90,10 @@ export class FriendService {
         let generatedFriendCode = 'Friend';
 
         for (let i = 0; i < FRIEND_CODE_LENGTH; i++) {
-            const randomCharCode = Math.floor(Math.random() * (MAX_ASCII_SYMBOL + 1)) + MIN_ASCII_SYMBOL;
+            let randomCharCode = Math.floor(Math.random() * MAX_ASCII_LETTER);
+            if (randomCharCode < MIN_ASCII_LETTER) {
+                randomCharCode += MIN_ASCII_LETTER;
+            }
             generatedFriendCode += String.fromCharCode(randomCharCode);
         }
 
