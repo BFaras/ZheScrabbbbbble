@@ -32,6 +32,14 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
     friend: Friend = { username: 'cat', status: ConnectivityStatus.ONLINE };
     redirect: boolean = false;
     angular: any;
+    descendants: boolean;
+    emitDistinctChangesOnly: boolean;
+    first: boolean;
+    read: any;
+    isViewQuery: boolean;
+    selector: any;
+    static?: boolean | undefined;
+    isPopup: boolean = false;
     //chatButton: HTMLElement;
 
     constructor(private changeDetector: ChangeDetectorRef,
@@ -40,17 +48,11 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
         private router: Router,
         /*private friendsPage: FriendsPageComponent*/) {
         this.username = this.account.getUsername();
-        console.log(this.chatService.getActive());
-        this.active = this.chatService.getActive();
+        if(!this.username){
+            this.isPopup = true;
+            this.importMainWindowsData();
+        }
     }
-    descendants: boolean;
-    emitDistinctChangesOnly: boolean;
-    first: boolean;
-    read: any;
-    isViewQuery: boolean;
-    selector: any;
-    static?: boolean | undefined;
-    active: string = "chat";
 
     ngOnInit() {
         this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
@@ -94,6 +96,13 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
         */
     }
 
+    importMainWindowsData(){
+        const accountInfo = localStorage.getItem('account');
+        if(!accountInfo) return;
+        this.account.setFullAccountInfo(JSON.parse(accountInfo));
+        this.username = this.account.getUsername();
+        this.chatService.linkSocketToUsername(this.username);
+    }
 
     ngAfterContentChecked(): void {
         this.changeDetector.detectChanges();
@@ -163,9 +172,5 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
 
     goToChats() {
         this.router.navigate(['/public-chats']);
-    }
-
-    getActiveChatMode() {
-        this.active = this.chatService.getActive();
     }
 }

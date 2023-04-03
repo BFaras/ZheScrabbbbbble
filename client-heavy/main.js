@@ -59,8 +59,6 @@ ipcMain.on('asynchronous-message', (event, arg) => {
 })
 
 const createWindow = (args) => {
-    console.log("arg");
-    console.log(args);
     const win = new BrowserWindow({
         width: 1400,
         height: 810,
@@ -68,25 +66,7 @@ const createWindow = (args) => {
 
     const path = `file://${__dirname}/dist/client/index.html#/chat`;
     win.loadURL(path);
-    win.webContents.executeJavaScript("document.querySelector('body').setAttribute('needsRestore', 'true')");
-    win.webContents.executeJavaScript(`document.querySelector('body').setAttribute('socketID', '${args[0]}')`);
-    win.webContents.executeJavaScript(`document.querySelector('body').setAttribute('currentChannel', '${args[1]}')`);
-    win.webContents.executeJavaScript(`document.querySelector('body').classList = '${args[2]}'`);
-    win.webContents.executeJavaScript("document.getElementById('restoreMessages').dispatchEvent(new Event('click'));")
     win.on('closed', function() {
         appWindow.webContents.send('reactivate-chatbox', '');
     })
-
-    win.on('close', function() { //   <---- Catch close event
-        
-    });
 }
-
-// app.whenReady().then(() => {
-//     createWindow();
-
-//     app.on('activate', () => {
-//         if (BrowserWindow.getAllWindows().length === 0) createWindow();
-//     })
-// })
-

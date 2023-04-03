@@ -6,6 +6,7 @@ import { SocketManagerService } from '../socket-manager-service/socket-manager.s
 @Injectable({
   providedIn: 'root'
 })
+
 export class AccountService {
   private username: string;
   private socket: Socket;
@@ -44,6 +45,15 @@ export class AccountService {
     return this.profile;
   }
 
+  getFullAccountInfo(): {username: string, profile : ProfileInfo, usercode : string}{
+    return {username : this.username, profile : this.profile, usercode:  this.usercode};
+  }
+
+  setFullAccountInfo(accountInfo : {username: string, profile : ProfileInfo, usercode : string}) {
+    this.username = accountInfo.username;
+    this.profile = accountInfo.profile;
+    this.usercode = accountInfo.usercode;
+  }
 
   getUserProfileInformation(): Observable<ProfileInfo> {
     this.socket.emit("Get Profile Information", this.getUsername());
@@ -108,7 +118,6 @@ export class AccountService {
         observer.next(this.MakeAllAvatarBase64(AllAvatars));
       });
     });
-
   }
 
 

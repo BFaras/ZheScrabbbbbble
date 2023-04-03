@@ -13,7 +13,6 @@ export class ChatService {
     chatList: ChatInfo[] = [];
     chatInGameRoom: string;
     chatMessageObserver: Observer<Map<string, ChatMessage[]>>;
-    active: string = 'chat';
 
     constructor(private socketManagerService: SocketManagerService) {
         this.updateSocket();
@@ -27,6 +26,10 @@ export class ChatService {
                 this.updateChatList(chatList);
             });
         });
+    }
+
+    linkSocketToUsername(username: string) {
+        this.socketManagerService.getSocket().emit('Link Socket Username', username);
     }
 
     updateChatList(chatList: ChatInfo[]) {
@@ -120,13 +123,5 @@ export class ChatService {
                 observer.next(errorCode);
             });
         });
-    }
-
-    setActive(mode: string) {
-        this.active = mode;
-    }
-
-    getActive() {
-        return this.active;
     }
 }

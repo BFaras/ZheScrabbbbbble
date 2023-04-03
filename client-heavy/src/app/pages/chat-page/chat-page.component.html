@@ -1,4 +1,4 @@
-<app-navigation-bar *ngIf="active === 'chat'"></app-navigation-bar>
+<app-navigation-bar *ngIf="!isPopup"></app-navigation-bar>
 <div id="container">
     <div id="chat-list">
         <div id="tabs-container">
@@ -16,7 +16,7 @@
                 </button>
             </ng-container>
         </div>
-        <button class="join" (click)="goToChats()">{{ 'CHATBOX.JOIN' | translate }}</button>
+        <button *ngIf="!isPopup" class="join" (click)="goToChats()">{{ 'CHATBOX.JOIN' | translate }}</button>
     </div>
     <div id="chat-messages">
         <div id="chat-box">
