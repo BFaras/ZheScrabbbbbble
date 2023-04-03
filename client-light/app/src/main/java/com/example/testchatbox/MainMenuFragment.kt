@@ -1,7 +1,9 @@
 package com.example.testchatbox
 
+import NotificationInfoHolder
 import SocketHandler
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,12 +18,13 @@ import com.example.testchatbox.databinding.FragmentMainMenuBinding
 import com.example.testchatbox.login.model.LoggedInUser
 
 
-class MainMenuFragment : Fragment(), ObserverChat {
+class MainMenuFragment : Fragment() {
 
 private var _binding: FragmentMainMenuBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private var isChatIconChanged = false;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +37,7 @@ private var _binding: FragmentMainMenuBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupChatNotifs()
 
         binding.textviewFirst.setText(HtmlCompat.fromHtml(getString(R.string.hello_message, LoggedInUser.getName()), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
 
@@ -66,29 +70,26 @@ private var _binding: FragmentMainMenuBinding? = null
         }
     }
 
-override fun onDestroyView() {
+    override fun onDestroyView() {
         super.onDestroyView()
+        NotificationInfoHolder.setFunctionOnMessageReceived(null);
         _binding = null
     }
 
-    override fun onStart() {
-        super.onStart()
-        ChatModel.addObserver(this);
+    fun setupChatNotifs() {
+        isChatIconChanged = false;
+        NotificationInfoHolder.startObserverChat();
+        NotificationInfoHolder.setFunctionOnMessageReceived(::changeToNotifChatIcon);
+
+        if(NotificationInfoHolder.areChatsUnread())
+            changeToNotifChatIcon();
     }
 
-    override fun onStop() {
-        super.onStop()
-        ChatModel.removeObserver(this);
-    }
-
-    override fun updateChannels() {
-    }
-
-    override fun updatePublicChannels() {
-    }
-
-    override fun updateMessage(chatCode: String, message: Message) {
-        //Log.i("TAG","New message");
-        //binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+    fun changeToNotifChatIcon() {
+        if (!isChatIconChanged)
+        {
+            binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+            isChatIconChanged = true;
+        }
     }
 }

@@ -1,3 +1,4 @@
+import android.util.Log
 import android.widget.ImageButton
 import com.example.testchatbox.R
 import com.example.testchatbox.chat.ChatModel
@@ -7,24 +8,42 @@ import com.example.testchatbox.chat.ObserverChat
 object NotificationInfoHolder: ObserverChat {
     private val chatsUnread : MutableSet<String> = mutableSetOf();
     private var selectedChatCode: String = "";
+    private var isStarted = false;
+    private var functionOnMessageReceived: (() -> Unit)? = null;
 
     fun startObserverChat() {
-        ChatModel.addObserver(this);
+        if (!isStarted) {
+            ChatModel.addObserver(this);
+            isStarted = true;
+        }
     }
 
     fun stopObserverChat() {
-        ChatModel.removeObserver(this);
+        if (isStarted) {
+            ChatModel.removeObserver(this);
+            isStarted = false;
+        }
     }
 
-    fun changeSelectedChatCode(newVal: String)
-    {
+    fun setFunctionOnMessageReceived(function : (() -> Unit)?){
+        functionOnMessageReceived = function;
+    }
+
+    fun changeSelectedChatCode(newVal: String) {
         selectedChatCode = newVal;
-        if (chatsUnread.contains(selectedChatCode))
-        {
+        if (chatsUnread.contains(selectedChatCode)) {
             chatsUnread.remove(selectedChatCode);
         }
     }
 
+    fun isChatUnread(chatCode: String): Boolean {
+        return chatsUnread.contains(chatCode);
+    }
+
+    fun areChatsUnread(): Boolean {
+        return !chatsUnread.isEmpty();
+    }
+
     override fun updateChannels() {
     }
 
@@ -32,37 +51,10 @@ object NotificationInfoHolder: ObserverChat {
     }
 
     override fun updateMessage(chatCode: String, message: Message) {
+        Log.i("CHAT", selectedChatCode);
         if (chatCode != "" && chatCode != selectedChatCode && !chatsUnread.contains(chatCode))
         {
-            chatsUnread.add(chatCode);
-        }
-    }
-}
-
-class ChatNotifier: ObserverChat {
-    private lateinit var chatButton: ImageButton;
-
-    public fun setChatButton(button: ImageButton) {
-        this.chatButton = button;
-    }
-
-    fun startObserverChat() {
-        ChatModel.addObserver(this);
-    }
-
-    fun stopObserverChat() {
-        ChatModel.removeObserver(this);
-    }
-
-    override fun updateChannels() {
-    }
-
-    override fun updatePublicChannels() {
-    }
-
-    override fun updateMessage(chatCode: String, message: Message) {
-        if (this.chatButton != null) {
-            this.chatButton.setBackgroundResource(R.drawable.ic_chat_notif);
+            functionOnMessageReceived?.invoke();
         }
     }
 }
