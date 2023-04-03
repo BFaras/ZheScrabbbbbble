@@ -1,13 +1,14 @@
+import { CoopGameRoom } from '@app/classes/coop-game-room';
 import { GameRoom } from '@app/classes/game-room';
 import { Player } from '@app/classes/player';
 import { GameData, GameStatus, Tournament } from '@app/classes/tournament';
-import { MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
+import { GameType, MAX_NUMBER_OF_PLAYERS, RoomVisibility } from '@app/constants/basic-constants';
 import { GameRoomInfo } from '@app/constants/basic-interface';
 import { ROOM_ID_BEGINNING } from '@app/constants/room-constants';
+import * as io from 'socket.io';
 import { Container, Service } from 'typedi';
 import { ChatGameHistoryService } from './chat-game-history.service';
 import crypto = require('crypto');
-import * as io from 'socket.io';
 
 @Service()
 export class RoomManagerService {
@@ -21,9 +22,10 @@ export class RoomManagerService {
         this.chatGameHistoryService = Container.get(ChatGameHistoryService);
     }
 
-    createRoom(roomName: string, visibility: RoomVisibility, password?: string): string {
+    createRoom(roomName: string, visibility: RoomVisibility, gameType: GameType, password?: string,): string {
         const id = ROOM_ID_BEGINNING + roomName + '-' + crypto.randomBytes(10).toString('hex');
-        this.activeRooms[id] = new GameRoom(id, roomName, visibility, password);
+        const room = gameType === GameType.Classic ? new GameRoom(id, roomName, visibility, password) : new CoopGameRoom(id, roomName, visibility, password);
+        this.activeRooms[id] = room
         return id;
     }
 
@@ -56,6 +58,8 @@ export class RoomManagerService {
                     visibility: room.getVisibility(),
                     players: room.getPlayerNames(),
                     isStarted: room.isGameStarted(),
+                    nbObservers: room.getObserverCount(),
+                    isCoop: room instanceof CoopGameRoom
                 });
             }
         }
@@ -87,7 +91,7 @@ export class RoomManagerService {
         return null;
     }
 
-    getRoom(id: string): GameRoom{
+    getRoom(id: string): GameRoom {
         return this.activeRooms[id];
     }
 
@@ -96,38 +100,38 @@ export class RoomManagerService {
         this.chatGameHistoryService.removeGameChatHistory(id);
     }
 
-    createTournament(players: {socket : io.Socket, username: string}[]): string{
+    createTournament(players: { socket: io.Socket, username: string }[]): string {
         const tournament = new Tournament(players);
         const id = tournament.getID();
         this.tournaments[id] = tournament;
         return id;
     }
 
-    registerTournamentGames(tid: string, id1 : string, id2: string){
+    registerTournamentGames(tid: string, id1: string, id2: string) {
         const tournament = this.tournaments[tid];
-        const game1 = {type : 'Semi1', status : GameStatus.PENDING, players : this.activeRooms[id1].getPlayerNames(), winnerIndex: 0, roomCode : id1};
-        const game2 = {type : 'Semi2', status : GameStatus.PENDING, players : this.activeRooms[id2].getPlayerNames(), winnerIndex: 0, roomCode : id2};
+        const game1 = { type: 'Semi1', status: GameStatus.PENDING, players: this.activeRooms[id1].getPlayerNames(), winnerIndex: 0, roomCode: id1 };
+        const game2 = { type: 'Semi2', status: GameStatus.PENDING, players: this.activeRooms[id2].getPlayerNames(), winnerIndex: 0, roomCode: id2 };
         tournament.registerGame(game1);
         tournament.registerGame(game2);
     }
 
-    updateTournamentGameRoomCode(tid: string, rooms: string[]){
+    updateTournamentGameRoomCode(tid: string, rooms: string[]) {
         this.tournaments[tid].updateGameRoomCodes(rooms);
     }
 
-    updateTournamentGameStatus(tid: string, id: string, status: GameStatus){
+    updateTournamentGameStatus(tid: string, id: string, status: GameStatus) {
         this.tournaments[tid].updateGameStatus(id, status);
     }
 
-    getTournamentGameData(tid: string): GameData[]{
+    getTournamentGameData(tid: string): GameData[] {
         return this.tournaments[tid].getGameData();
     }
 
-    getTournamentTimeData(tid: string): {time: number, phase: number}{
+    getTournamentTimeData(tid: string): { time: number, phase: number } {
         return this.tournaments[tid].getTimePhase();
     }
 
-    startTournament(tid: string, gameCreationCallback : (tid : string, users: io.Socket[], round: number) => string[], gameStartCallback : (tid : string, rooms: string[]) => void, gameEndCallback : (tid : string) => void, timerMessageCallback: (tid : string, timeLeft : string) => void){
+    startTournament(tid: string, gameCreationCallback: (tid: string, users: io.Socket[], round: number) => string[], gameStartCallback: (tid: string, rooms: string[]) => void, gameEndCallback: (tid: string) => void, timerMessageCallback: (tid: string, timeLeft: string) => void) {
         this.tournaments[tid].startTournament(gameCreationCallback, gameStartCallback, gameEndCallback, timerMessageCallback);
     }
 
@@ -140,19 +144,19 @@ export class RoomManagerService {
         return null;
     }
 
-    findTournamentFromId(tid: string): Tournament{
+    findTournamentFromId(tid: string): Tournament {
         return this.tournaments[tid];
     }
 
-    endTournamentGames(tid: string) : {room: GameRoom, endMessage: string}[]{
+    endTournamentGames(tid: string): { room: GameRoom, endMessage: string }[] {
         const tournament = this.tournaments[tid]
         const rooms = tournament.getGameRooms();
-        const endGameMessages : {room: GameRoom, endMessage: string}[] = [];
-        for(let room of rooms){
+        const endGameMessages: { room: GameRoom, endMessage: string }[] = [];
+        for (let room of rooms) {
             const gameRoom = this.activeRooms[room];
-            if(!gameRoom) continue;
-            if(gameRoom.getGame.isGameOver()) continue;
-            endGameMessages.push({room: gameRoom, endMessage: gameRoom.getGame.endGame()});
+            if (!gameRoom) continue;
+            if (gameRoom.getGame.isGameOver()) continue;
+            endGameMessages.push({ room: gameRoom, endMessage: gameRoom.getGame.endGame() });
             tournament.setGameWinner(room, gameRoom.getGame.getWinner());
         }
         return endGameMessages;
