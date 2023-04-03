@@ -6,22 +6,21 @@ import { VirtualPlayer } from './virtual-player';
 import { VirtualPlayerEasy } from './virtual-player-easy';
 
 export class GameRoom {
-    private players: Player[];
     private id: string;
     private name: string;
-    private connectedPlayers: number;
     private game: Game;
     private visibility: RoomVisibility;
     private password: string;
-    private gameStarted: boolean;
-    private observers: string[] = [];
+    
+    protected gameStarted: boolean;
+    protected players: Player[];
+    protected observers: string[] = [];
 
 
-    constructor(id: string, name: string, visibility: RoomVisibility, password?: string) {
+    constructor(id: string, name: string, visibility: RoomVisibility, password?: string, timerEnabled: boolean = true) {
         this.id = id;
         this.name = name;
         this.players = [];
-        this.connectedPlayers = 0;
         this.visibility = visibility;
         if (visibility === RoomVisibility.Protected) {
             if(!password){
@@ -30,7 +29,7 @@ export class GameRoom {
                 this.password = password;
             } 
         }
-        this.game = new Game(this.players);
+        this.game = new Game(this.players, timerEnabled);
         this.gameStarted = false;
     }
 
@@ -99,17 +98,12 @@ export class GameRoom {
         return count;
     }
 
-    getName(): string {
-        return this.name;
+    getObserverCount(): number{
+        return this.observers.length;
     }
 
-    getPlayer(playerID: string): Player | null {
-        for (const player of this.players) {
-            if (player.getUUID() === playerID) {
-                return player;
-            }
-        }
-        return null;
+    getName(): string {
+        return this.name;
     }
 
     getHostPlayer(): Player {
@@ -118,11 +112,6 @@ export class GameRoom {
 
     getPlayerFromIndex(playerIndex: number): Player {
         return this.players[playerIndex];
-    }
-
-    incrementConnectedPlayers(): boolean {
-        this.connectedPlayers++;
-        return this.connectedPlayers >= MAX_NUMBER_OF_PLAYERS;
     }
 
     getID(): string {
@@ -160,5 +149,14 @@ export class GameRoom {
 
     get getGame(): Game {
         return this.game;
+    }
+
+    private getPlayer(playerID: string): Player | null {
+        for (const player of this.players) {
+            if (player.getUUID() === playerID) {
+                return player;
+            }
+        }
+        return null;
     }
 }

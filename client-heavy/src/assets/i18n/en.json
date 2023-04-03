@@ -46,7 +46,8 @@
         "LETTERSINHAND": "Number of letters in hand: ",
         "TIMER": "Time left: ",
         "TURN": ", it's your turn!",
-        "WIN": ", you won!"
+        "WIN": ", you won!",
+        "COOP-TEAM": "Team"
     },
     "CHATBOX": {
         "CHATBOX": "CHAT BOX",
@@ -114,7 +115,9 @@
         "PUBLIC": "Public",
         "PRIVATE": "Private",
         "PROTECTED": "Protected",
-        "CREATE": "Create the game"
+        "CREATE": "Create the game",
+        "COOP": "Coop",
+        "CLASSIC": "Classic"
     },
     "WAITING-ROOM": {
         "MESSAGE": "Players in the Game Room",
@@ -136,7 +139,11 @@
         "JOIN": "Join",
         "OBSERVE": "Observe",
         "BEGAN": "In progress",
-        "WAIT": "Pending"
+        "WAIT": "Pending",
+        "OBSERVERS": "Number of observers",
+        "GAME-TYPE": "Game type",
+        "COOP": "Coop",
+        "CLASSIC": "Classic"
     },
     "PENDING-ROOM": {
         "PENDING": "Waiting for the host's approval",
@@ -157,6 +164,9 @@
     },
     "ACTION-HISTORY": {
         "TITLE": "ACTION HISTORY",
+        "PLACE": "PLACE",
+        "PASS": "PASS",
+        "SWAP": "SWAP",
         "MSG-1": "$0 placed $1 for $2 point(s)",
         "MSG-2": "$0 tried to place an invalid word",
         "MSG-3": "$0 swapped $1 letters",
@@ -166,7 +176,11 @@
         "MSG-7": "Game over - letters left $0",
         "MSG-8": "Round is over. The next game will start in 20 seconds",
         "MSG-9": "$0 minute(s) left until the end of the round",
-        "MSG-10": "$0 disconnected"
+        "MSG-10": "$0 disconnected",
+        "MSG-11": "$0 accepted the proposed action",
+        "MSG-12": "$0 refused the proposed action",
+        "MSG-13": "$0 proposed the following action for the team : $1",
+        "MSG-14": "Everyone accepted the proposed action"
     },
     "FRIENDS-PAGE": {
         "MESSAGE": "You can manage your friends here!",

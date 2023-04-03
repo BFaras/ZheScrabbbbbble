@@ -18,6 +18,7 @@ export class CreateGameComponent {
     visibility: RoomVisibility = RoomVisibility.PUBLIC;
     IsProtectedRoom: boolean = false;
     passwordRoom: string = "";
+    gameType : string = 'Classic'
 
     constructor(
         private waitingRoomManagerService: WaitingRoomManagerService,
@@ -30,9 +31,13 @@ export class CreateGameComponent {
     }
 
 
-    getRadioButtonValue(event: MatRadioChange) {
+    getVisibilityButtonValue(event: MatRadioChange) {
         this.visibility = event.value;
         this.verifyIsRoomProtected()
+    }
+
+    getTypeButtonValue(event: MatRadioChange) {
+        this.gameType = event.value;
     }
 
     verifyIsRoomProtected() {
@@ -60,8 +65,8 @@ export class CreateGameComponent {
         }
 
         sessionStorage.clear();
-        this.waitingRoomManagerService.createRoomResponse().subscribe((response) => this.redirectPlayer(response));
-        this.waitingRoomManagerService.createMultiRoom(roomNameValue, this.visibility, this.passwordRoom);
+        this.waitingRoomManagerService.createRoomResponse().subscribe((response)=> this.redirectPlayer(response));
+        this.waitingRoomManagerService.createMultiRoom(roomNameValue, this.visibility, this.passwordRoom, this.gameType);
     }
 
     alertFalseInput() {

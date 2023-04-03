@@ -62,3 +62,8 @@ export enum RoomVisibility {
     Protected = 'Protected',
     Tournament = 'Tournament'
 }
+
+export enum GameType {
+    Classic = 'Classic',
+    Coop = 'Coop'
+}

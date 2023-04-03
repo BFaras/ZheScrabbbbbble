@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AccountService } from '@app/services/account-service/account.service';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
 import { GameStateService, PlayerMessage } from '@app/services/game-state-service/game-state.service';
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -21,6 +23,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
     chatDisplay: boolean = false;
     actionHistory: PlayerMessage[] = [];
 
+    hasPendingAction: boolean;
+
     constructor(
         private readonly gameStateService: GameStateService,
         private readonly letterHolderService: LetterHolderService,
@@ -28,19 +32,35 @@ export class GamePageComponent implements OnInit, OnDestroy {
         private readonly router: Router,
         private readonly fontSize: FontSizeService,
         private readonly waitingRoomManagerService: WaitingRoomManagerService,
-        private readonly letterAdderService: LetterAdderService
+        private readonly letterAdderService: LetterAdderService,
+        private readonly accountService : AccountService,
+        private readonly translate: TranslateService
     ) {}
 
     ngOnInit() {
+        this.hasPendingAction = false;
+        this.gameStateService.setPendingAction(false);
         this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => {
             if (gameState.message) this.actionHistory.push(gameState.message);
             this.endGame = gameState.gameOver;
         }));
         this.subscriptions.push(this.gameStateService.getActionMessageObservable().subscribe((message) => {
+            if(message.messageType === 'MSG-13'){
+                this.letterAdderService.removeAll();
+                this.gameStateService.setPendingAction(true);
+            }
+            if(message.messageType === 'MSG-12' || message.messageType === 'MSG-14'){
+                this.gameStateService.setPendingAction(false);
+                this.hasPendingAction = false;
+            }
+            if(message.messageType === 'MSG-13' && this.gameStateService.getObserverIndex() === -1 && message.values[0] !== this.accountService.getUsername()){
+                this.hasPendingAction = true;
+            }
             this.actionHistory.push(message);
         }));
         if(this.gameStateService.isTournamentGame()){
-            this.waitingRoomManagerService.getStartGameObservable().subscribe(() => {
+            this.waitingRoomManagerService.getStartGameObservable().subscribe((isCoop: boolean) => {
+                this.gameStateService.setCoop(isCoop);
                 this.gameStateService.setObserver(-1);
                 this.gameStateService.sendAbandonRequest();
                 this.letterAdderService.resetMappedBoard();
@@ -99,8 +119,45 @@ export class GamePageComponent implements OnInit, OnDestroy {
         return this.gameStateService.getObserverIndex() >= 0;
     }
 
-    formatActionInList(message: string, values: string[]): string {
+    answerPendingAction(answer : boolean){
+        if(!this.hasPendingAction) return;
+        this.hasPendingAction = false;
+        this.gameStateService.respondCoopAction(answer);
+    }
+
+    isLatestProposedAction(index: number){
+        if(this.actionHistory[index].messageType !== 'MSG-13') return false;
+        for(let i = this.actionHistory.length - 1; i >= 0; i--){
+            if(this.actionHistory[i].messageType === 'MSG-13'){
+                return i === index;
+            }
+        }
+        return false;
+    }
+
+    formatActionInList(message: string, values: string[], messageType: string): string {
         for (let i = 0; i < values.length; i++) {
+            if(i === 0){
+                if(!values[i]){
+                    message = message.replace('$' + i, this.translate.instant('INFOBOARD.COOP-TEAM'));
+                    continue;
+                }
+                const messageArray = values[i].split(' : ');
+                if(messageArray[0] === '\n'){
+                    message = message.replace('$' + i, '\n' + this.translate.instant('INFOBOARD.COOP-TEAM') + ' : ' + messageArray[1]);
+                    continue;
+                }
+            }
+            if(i === 1 && messageType === 'MSG-13'){
+                const messageArray = values[i].split(' ');
+                messageArray[0] = this.translate.instant('ACTION-HISTORY.' + messageArray[0].toUpperCase());
+                let combinedMessage = '';
+                for(const msg of messageArray){
+                    combinedMessage += msg + ' '
+                }
+                message = message.replace('$' + i, combinedMessage);
+                continue;
+            }
             message = message.replace('$' + i, values[i])
         }
         return message;

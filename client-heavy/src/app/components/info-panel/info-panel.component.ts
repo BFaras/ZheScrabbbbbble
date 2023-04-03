@@ -40,6 +40,10 @@ export class InfoPanelComponent implements OnDestroy {
         return player.name === this.playersInfo[index].name;
     }
 
+    isCoop(): boolean{
+        return this.gameStateService.isCoop();
+    }
+
     private endGame(gameState: GameState) {
         let highestScore = -Infinity;
         for (const player of gameState.players) {

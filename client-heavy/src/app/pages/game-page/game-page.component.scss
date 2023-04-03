@@ -125,6 +125,18 @@ select {
     transition-duration: 0.2s;
 }
 
+button.action-btn.button {
+    margin: 5px;
+    padding: 7px;
+    font-size: 12px;
+    width: 140px;
+}
+
+#action-button-container {
+    display: flex;
+    justify-content: space-evenly;
+}
+
 #letter-holder {
     margin-top: 0.6%;
     margin-bottom: 0.6%;
