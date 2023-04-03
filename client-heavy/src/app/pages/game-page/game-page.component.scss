@@ -99,6 +99,17 @@ select {
     margin-bottom: 8%;
 }
 
+a.hint {
+    color: var(--button-tertiary);
+    margin-left: 12px;
+}
+
+a.hint:hover{
+    color: var(--button-tertiary-hover);
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 .button {
     text-decoration: none;
     margin-top: 10%;

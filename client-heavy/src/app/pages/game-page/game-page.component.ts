@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountService } from '@app/services/account-service/account.service';
+import { ChatService } from '@app/services/chat-service/chat.service';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
 import { GameStateService, PlayerMessage } from '@app/services/game-state-service/game-state.service';
 import { GridService } from '@app/services/grid-service/grid.service';
@@ -34,7 +35,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
         private readonly waitingRoomManagerService: WaitingRoomManagerService,
         private readonly letterAdderService: LetterAdderService,
         private readonly accountService : AccountService,
-        private readonly translate: TranslateService
+        private readonly translate: TranslateService,
+        private readonly chatService: ChatService
     ) {}
 
     ngOnInit() {
@@ -42,6 +44,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
         this.gameStateService.setPendingAction(false);
         this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => {
             if (gameState.message) this.actionHistory.push(gameState.message);
+            this.clearHints();
             this.endGame = gameState.gameOver;
         }));
         this.subscriptions.push(this.gameStateService.getActionMessageObservable().subscribe((message) => {
@@ -58,6 +61,9 @@ export class GamePageComponent implements OnInit, OnDestroy {
             }
             this.actionHistory.push(message);
         }));
+        this.subscriptions.push(this.gameStateService.getClueObservable().subscribe((clues: string[]) => {
+            this.actionHistory.push({messageType: 'MSG-CLUE', values : clues});
+        }))
         if(this.gameStateService.isTournamentGame()){
             this.waitingRoomManagerService.getStartGameObservable().subscribe((isCoop: boolean) => {
                 this.gameStateService.setCoop(isCoop);
@@ -161,5 +167,19 @@ export class GamePageComponent implements OnInit, OnDestroy {
             message = message.replace('$' + i, values[i])
         }
         return message;
+    }
+
+    playHint(command : string){
+        this.clearHints();
+        this.chatService.sendCommand(command.substring(command.indexOf(' ')+1), command.split(' ')[0]);
+    }
+
+    clearHints(){
+        for(let i = 0; i < this.actionHistory.length; i++){
+            if(this.actionHistory[i].messageType === 'MSG-CLUE'){
+                this.actionHistory.splice(i, 1);
+                ReadableStreamDefaultController;
+            }
+        }
     }
 }

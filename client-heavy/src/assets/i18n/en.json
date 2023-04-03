@@ -72,7 +72,8 @@
         "PLAY": "Play",
         "REPLACE": "Replace",
         "CANCEL": "Cancel",
-        "SWITCH": "Switch player"
+        "SWITCH": "Switch player",
+        "HINT": "Hint"
     },
     "BOARD": {
         "MOT": "WORD",
@@ -167,6 +168,8 @@
         "PLACE": "PLACE",
         "PASS": "PASS",
         "SWAP": "SWAP",
+        "MSG-CLUE" : "Here are the hints found : ",
+        "MSG-NO-CLUE" : "No hints were found",
         "MSG-1": "$0 placed $1 for $2 point(s)",
         "MSG-2": "$0 tried to place an invalid word",
         "MSG-3": "$0 swapped $1 letters",

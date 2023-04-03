@@ -72,7 +72,8 @@
         "PLAY": "Jouer",
         "REPLACE": "Échanger",
         "CANCEL": "Annuler",
-        "SWITCH": "Échanger de joueur"
+        "SWITCH": "Échanger de joueur",
+        "HINT": "Indice"
     },
     "BOARD": {
         "MOT": "MOT",
@@ -167,6 +168,8 @@
         "PLACE": "PLACER",
         "PASS": "PASSER",
         "SWAP": "ÉCHANGER",
+        "MSG-CLUE" : "Voici les indices trouvés : ",
+        "MSG-NO-CLUE" : "Aucun indice a été trouvé",
         "MSG-1": "$0 a placé $1 pour $2 point(s)",
         "MSG-2": "$0 a tenté de placer un mot invalide",
         "MSG-3": "$0 a échangé $1 lettres",
