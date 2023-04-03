@@ -36,6 +36,14 @@ object NotificationInfoHolder: ObserverChat {
         }
     }
 
+    fun resetChatNotifs() {
+        functionOnMessageReceived = null;
+        stopObserverChat();
+        for (chatCode in chatsUnread) {
+            chatsUnread.remove(chatCode);
+        }
+    }
+
     fun isChatUnread(chatCode: String): Boolean {
         return chatsUnread.contains(chatCode);
     }
@@ -51,9 +59,9 @@ object NotificationInfoHolder: ObserverChat {
     }
 
     override fun updateMessage(chatCode: String, message: Message) {
-        Log.i("CHAT", selectedChatCode);
         if (chatCode != "" && chatCode != selectedChatCode && !chatsUnread.contains(chatCode))
         {
+            chatsUnread.add(chatCode);
             functionOnMessageReceived?.invoke();
         }
     }

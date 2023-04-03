@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -25,6 +26,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.w3c.dom.Text
 import java.util.*
+import kotlin.collections.LinkedHashMap
 
 
 /**
@@ -39,6 +41,7 @@ class ChatFragment : Fragment(), ObserverChat {
     private val binding get() = _binding!!
     private var selectedChatIndex : Int = 0;
     private var chatsList = ChatModel.getList();
+    private var chatRoomsNotifBubble: LinkedHashMap<String, ImageView> = LinkedHashMap<String, ImageView>();
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -140,17 +143,25 @@ class ChatFragment : Fragment(), ObserverChat {
         for((i, chat) in chatsList.withIndex()){
             val btn = layoutInflater.inflate(R.layout.chat_rooms_button, chatListView, false)
             val btnText: TextView = btn.findViewById(R.id.roomName)
+            val notifIcon : ImageView = btn.findViewById(R.id.chatNotifBubble);
             btnText.text = chat.chatName
             btn.id = i
+
+            if (selectedChatIndex!=btn.id && NotificationInfoHolder.isChatUnread(chat._id))
+                notifIcon.visibility = View.VISIBLE;
+
             btn.setOnClickListener{
                 if(selectedChatIndex!=btn.id){
                     selectedChatIndex=btn.id;
                     NotificationInfoHolder.changeSelectedChatCode(chatsList[selectedChatIndex]._id);
+                    notifIcon.visibility = View.INVISIBLE;
                     binding.chatRoomName.text = btnText.text
                     loadChatMessages();
                 }
             }
             chatListView.addView(btn)
+            chatRoomsNotifBubble.remove(chat._id);
+            chatRoomsNotifBubble.set(chat._id, notifIcon);
         }
     }
     private fun addMessage(message:Message){
@@ -181,7 +192,14 @@ class ChatFragment : Fragment(), ObserverChat {
 
     override fun updateMessage(chatCode: String, message: Message) {
         if(chatsList[selectedChatIndex]._id == chatCode)
+        {
             addMessage(message);
+        }
+        else {
+            activity?.runOnUiThread(Runnable {
+                chatRoomsNotifBubble.get(chatCode)?.visibility = View.VISIBLE;
+            })
+        }
     }
 
     override fun updateChannels() {

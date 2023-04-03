@@ -64,6 +64,7 @@ private var _binding: FragmentMainMenuBinding? = null
         binding.buttonDisconnect.setOnClickListener {
             SocketHandler.closeConnection();
             LoggedInUser.disconnectUser();
+            NotificationInfoHolder.resetChatNotifs();
             ChatModel.resetChat()
             SocketHandler.establishConnection();
             findNavController().navigate(R.id.action_MainMenuFragment_to_loginActivity2)
