@@ -45,6 +45,7 @@ import { PublicChatsComponent } from './pages/public-chats/public-chats.componen
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
 import { ChatService } from './services/chat-service/chat.service';
 import { MainComponent } from './components/main/main.component';
+import { ChatPopUpComponent } from './pages/chat-pop-up/chat-pop-up.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -96,6 +97,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         PublicChatsComponent,
         SignUpAvatarPopUpComponent,
         MainComponent,
+        ChatPopUpComponent,
     ],
     imports: [
         AppMaterialModule,

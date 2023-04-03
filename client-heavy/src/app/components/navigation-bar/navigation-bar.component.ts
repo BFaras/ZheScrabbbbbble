@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { ChatService } from '@app/services/chat-service/chat.service';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 
 @Component({
@@ -7,10 +8,9 @@ import { SocketManagerService } from '@app/services/socket-manager-service/socke
   styleUrls: ['./navigation-bar.component.scss']
 })
 export class NavigationBarComponent {
-
+  active: string = "chat";
   @Output("navLogic") navLogic: EventEmitter<void> = new EventEmitter();
-  active: boolean = true;
-  constructor(private socketManager: SocketManagerService) {}
+  constructor(private socketManager: SocketManagerService, private chatService: ChatService) {}
 
   disconnectUser() {
     this.socketManager.getSocket().disconnect();
@@ -21,11 +21,13 @@ export class NavigationBarComponent {
     this.navLogic.emit();
   }
 
-  openChat() {
-    (window as any).openChat();
+  openChat(mode: string) {
+    (window as any).openChat("hellooooooooo");
   }
 
-  setActive(chat: boolean) {
-    this.active = chat;
+  setActive(mode: string) {
+    this.active = mode;
+    this.chatService.setActive(mode);
   }
+
 }

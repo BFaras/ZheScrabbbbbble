@@ -13,6 +13,7 @@ export class ChatService {
     chatList: ChatInfo[] = [];
     chatInGameRoom: string;
     chatMessageObserver: Observer<Map<string, ChatMessage[]>>;
+    active: string = 'chat';
 
     constructor(private socketManagerService: SocketManagerService) {
         this.updateSocket();
@@ -119,5 +120,13 @@ export class ChatService {
                 observer.next(errorCode);
             });
         });
+    }
+
+    setActive(mode: string) {
+        this.active = mode;
+    }
+
+    getActive() {
+        return this.active;
     }
 }

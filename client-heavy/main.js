@@ -55,15 +55,15 @@ app.on('activate', function () {
 //ipc
 const { ipcMain } = require('electron')
 ipcMain.on('asynchronous-message', (event, arg) => {
-  console.log("HOT DOG");
-  createWindow(arg);
+    createWindow(arg);
 })
 
 const createWindow = (args) => {
-    console.log("TEST 1");
+    console.log("arg");
+    console.log(args);
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1400,
+        height: 810,
     });
 
     const path = `file://${__dirname}/dist/client/index.html#/chat`;
@@ -76,6 +76,10 @@ const createWindow = (args) => {
     win.on('closed', function() {
         appWindow.webContents.send('reactivate-chatbox', '');
     })
+
+    win.on('close', function() { //   <---- Catch close event
+        
+    });
 }
 
 // app.whenReady().then(() => {
@@ -86,6 +90,3 @@ const createWindow = (args) => {
 //     })
 // })
 
-// app.on('window-all-closed', () => {
-//     if (process.platform !== 'darwin') app.quit();
-// })
