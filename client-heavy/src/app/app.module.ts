@@ -18,7 +18,11 @@ import { MaterialPageComponent } from '@app/pages/material-page/material-page.co
 import { SoloMultiPageComponent } from '@app/pages/solo-multi-page/solo-multi-page.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { BlankTilePopUpComponent } from './components/blank-tile-pop-up/blank-tile-pop-up.component';
+import { ChangeNamePopUpComponent } from './components/change-name-pop-up/change-name-pop-up.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { ConnectionHistoryAreaComponent } from './components/connection-history-area/connection-history-area.component';
+import { FormerActionHistoryAreaComponent } from './components/former-action-history-area/former-action-history-area.component';
 import { CreateGameComponent } from './components/game-initialisation/create-game/create-game.component';
 import { JoinGameComponent } from './components/game-initialisation/join-game/join-game.component';
 import { ObserverRoomComponent } from './components/game-initialisation/observer-room/observer-room.component';
@@ -29,7 +33,6 @@ import { LanguageComponent } from './components/language/language.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { LetterHolderComponent } from './components/letter-holder/letter-holder.component';
 import { LoginAreaComponent } from './components/login-area/login-area.component';
-import { MainComponent } from './components/main/main.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { PasswordLostAreaComponent } from './components/password-lost-area/password-lost-area.component';
 import { AvatarPopUpComponent } from './components/profil-pop-up/avatar-pop-up/avatar-pop-up.component';
@@ -101,7 +104,10 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         BracketPageComponent,
         ResultPageComponent,
         SignUpAvatarPopUpComponent,
-        MainComponent,
+        BlankTilePopUpComponent,
+        ConnectionHistoryAreaComponent,
+        FormerActionHistoryAreaComponent,
+        ChangeNamePopUpComponent,
     ],
     imports: [
         AppMaterialModule,

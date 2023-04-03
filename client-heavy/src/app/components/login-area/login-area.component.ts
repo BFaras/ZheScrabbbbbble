@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Account } from '@app/classes/account';
 import { VISIBILITY_CONSTANTS } from '@app/constants/visibility-constants';
@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './login-area.component.html',
   styleUrls: ['./login-area.component.scss']
 })
-export class LoginAreaComponent implements OnInit {
+export class LoginAreaComponent {
   userAccount: Account = {
     username: "",
     email: "",
@@ -23,10 +23,7 @@ export class LoginAreaComponent implements OnInit {
   isConnected: boolean = false;
 
   constructor(private accountAuthenticationService: AccountAuthenticationService, private router: Router, private account: AccountService) {
-    this.accountAuthenticationService.setUpSocket();
-  }
-
-  ngOnInit(): void {
+    this.accountAuthenticationService.setUpSocket()
   }
 
   changePasswordVisibility(): string {
@@ -40,14 +37,16 @@ export class LoginAreaComponent implements OnInit {
 
   loginToAccount() {
     this.accountAuthenticationService.LoginToAccount(this.userAccount);
-    this.subscription = this.accountAuthenticationService.getStatusOfAuthentication().subscribe(
-      (status: boolean) => this.showStatus(status));
+    this.subscription = this.accountAuthenticationService.getStatusOfAuthentication().subscribe((status: boolean) => {
+      this.showStatus(status);
+    });
   }
 
   showStatus(status: boolean) {
     if (status == true) {
+      console.log('Manuel Test');
       this.account.setUsername(this.userAccount.username);
-      this.router.navigate(['home']);
+      this.router.navigate(['/home']);
     } else {
       alert("Échec de l'authentification");
     }
@@ -56,6 +55,4 @@ export class LoginAreaComponent implements OnInit {
   moveToPassword() {
     this.router.navigate(['password-lost']);
   }
-
-
 }

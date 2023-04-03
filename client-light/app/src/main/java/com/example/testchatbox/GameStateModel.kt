@@ -102,6 +102,7 @@ class GameStateModel: ViewModel() {
 
         getGameState()
 
+
         SocketHandler.getSocket().on("Get First Tile") { args ->
             Log.i("args  ", args.toString())
             val firstTileJSON = args[0] as JSONObject

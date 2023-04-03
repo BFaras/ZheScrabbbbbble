@@ -2,10 +2,13 @@
     <div class="inner-container">
         <header id="title" class="centered-title">{{'INFOBOARD.INFOBOARD' | translate}}</header>
         <div id="info">
-            <div *ngFor="let player of playersInfo" class="player-container" [class.player-selected]="isPlayerUser(player)">
-                <span class="data"><strong>{{ player.name }}</strong></span>
-                <span class="status" *ngIf="player.active">{{'INFOBOARD.TURN' | translate}}</span>
-                <span class="status" *ngIf="player.winner">{{'INFOBOARD.WIN' | translate}}</span>
+            <div *ngFor="let player of playersInfo" class="player-container" [class.player-selected]="isCoop() || isPlayerUser(player)">
+                <div class="imageContainer" *ngIf="!isCoop()">
+                    <img src="assets/avatar/{{player.avatar}}" alt="image" height ="40" width ="40" class="image">
+                </div>
+                <span class="data"><strong>{{ isCoop() ? ('INFOBOARD.COOP-TEAM' | translate) : player.name  }}</strong></span>
+                <span class="status" *ngIf="player.active && !isCoop()">{{'INFOBOARD.TURN' | translate}}</span>
+                <span class="status" *ngIf="player.winner && !isCoop()">{{'INFOBOARD.WIN' | translate}}</span>
                 <br /><br />
                 <p class="data">{{'INFOBOARD.SCORE' | translate}}{{ player.currentScore }}</p>
                 <p class="data" *ngIf="player.letterCount < 7">{{'INFOBOARD.LETTERSINHAND' | translate}}{{ player.letterCount }}</p>
@@ -13,6 +16,6 @@
             <p class="data reserve-letters">{{'INFOBOARD.LETTERSLEFT' | translate}}{{ roundInfo[0].lettersRemaining }}</p>
         </div>
         <br />
-        <app-timer></app-timer>
+        <app-timer *ngIf="!isCoop()"></app-timer>
     </div>
 </div>

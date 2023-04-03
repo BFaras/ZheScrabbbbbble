@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BracketFragment">
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="100dp"
+        android:text="TIME"
+        android:textSize="25dp" />
+
+    <Button
+        android:id="@+id/Semi1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="100dp"
+        android:layout_marginLeft="-150dp"
+        android:text="Semi1"
+        android:textSize="25dp" />
+
+    <Button
+        android:id="@+id/Semi2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="-150dp"
+        android:text="Semi2"
+        android:textSize="25dp" />
+
+    <Button
+        android:id="@+id/Final1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="100dp"
+        android:layout_marginLeft="150dp"
+        android:text="Final1"
+        android:textSize="25dp" />
+
+    <Button
+        android:id="@+id/Final2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="150dp"
+        android:text="Final2"
+        android:textSize="25dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/quitBtn"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:text="@string/quit"
+        android:textColor="?colorOnPrimary"
+        android:background="@drawable/background_chat_input"
+        android:backgroundTint="?colorPrimary"
+        android:layout_marginBottom="100dp"
+        android:layout_gravity="center|bottom"
+        android:textSize="18dp"/>
+
+</FrameLayout>

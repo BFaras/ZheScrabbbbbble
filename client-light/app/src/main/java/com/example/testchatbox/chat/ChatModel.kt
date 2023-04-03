@@ -61,9 +61,9 @@ interface ObservableChat{
 }
 
 object ChatModel : ObservableChat {
-    private val chatList = LinkedHashMap<String,Chat>();
-    private val publicChatList = LinkedHashMap<String,Chat> ();
-    override val observers: ArrayList<ObserverChat> = arrayListOf();
+    private var chatList = LinkedHashMap<String,Chat>();
+    private var publicChatList = LinkedHashMap<String,Chat> ();
+    override var observers: ArrayList<ObserverChat> = arrayListOf();
 
     fun updateList(){
         SocketHandler.getSocket().once("User Chat List Response") { args ->
@@ -100,7 +100,7 @@ object ChatModel : ObservableChat {
                 if(changed) notifyNewPublicChanel();
             }
         }
-        SocketHandler.getSocket().emit("Public Chat List Response")
+        SocketHandler.getSocket().emit("Get Public Chat List")
     }
 
     fun getList() : ArrayList<Chat> {
@@ -161,6 +161,13 @@ object ChatModel : ObservableChat {
             }
         }
         SocketHandler.getSocket().emit("Leave Public Chat", _id)
+    }
+
+    fun resetChat(){
+        chatList = LinkedHashMap<String,Chat>();
+        publicChatList = LinkedHashMap<String,Chat> ();
+        observers = arrayListOf();
+        SocketHandler.getSocket().off("New Chat Message")
     }
 
     fun initialiseChat(){

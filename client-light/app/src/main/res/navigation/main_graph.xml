@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_MainMenuFragment_to_loginActivity2"
             app:destination="@id/loginActivity2" />
+        <action
+            android:id="@+id/action_MainMenuFragment_to_queueFragment"
+            app:destination="@id/queueFragment" />
     </fragment>
     <fragment
         android:id="@+id/ChatFragment"
@@ -57,6 +60,9 @@
         <action
             android:id="@+id/action_fullscreenFragment_to_MainMenuFragment"
             app:destination="@id/MainMenuFragment" />
+        <action
+            android:id="@+id/action_fullscreenFragment_to_bracketFragment2"
+            app:destination="@id/bracketFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameListFragment"
@@ -103,5 +109,41 @@
         android:name="com.example.testchatbox.LoginActivity"
         android:label="activity_login"
         tools:layout="@layout/activity_login" />
+    <fragment
+        android:id="@+id/queueFragment"
+        android:name="com.example.testchatbox.QueueFragment"
+        android:label="fragment_queue"
+        tools:layout="@layout/fragment_queue" >
+        <action
+            android:id="@+id/action_queueFragment_to_bracketFragment"
+            app:destination="@id/bracketFragment" />
+        <action
+            android:id="@+id/action_queueFragment_to_MainMenuFragment"
+            app:destination="@id/MainMenuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bracketFragment"
+        android:name="com.example.testchatbox.BracketFragment"
+        android:label="fragment_bracket"
+        tools:layout="@layout/fragment_bracket" >
+        <action
+            android:id="@+id/action_bracketFragment_to_fullscreenFragment"
+            app:destination="@id/fullscreenFragment" />
+        <action
+            android:id="@+id/action_bracketFragment_to_MainMenuFragment"
+            app:destination="@id/MainMenuFragment" />
+        <action
+            android:id="@+id/action_bracketFragment_to_rankingFragment"
+            app:destination="@id/rankingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/rankingFragment"
+        android:name="com.example.testchatbox.RankingFragment"
+        android:label="fragment_ranking"
+        tools:layout="@layout/fragment_ranking" >
+        <action
+            android:id="@+id/action_rankingFragment_to_MainMenuFragment"
+            app:destination="@id/MainMenuFragment" />
+    </fragment>
 
 </navigation>

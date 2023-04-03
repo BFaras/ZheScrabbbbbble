@@ -5,62 +5,63 @@
     align-items: center;
 }
 
-#rack{
+#rack {
     padding: 10px;
     margin: 5px 50px 15px 50px;
     border-radius: 10px;
     background-color: #faf5f1;
     box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
-    width:480px;
+    width:430px;
     height:60px;
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap:10px
+    gap: 10px;
 }
 
-.tile:hover{
-    cursor:pointer
-    
+.tile:hover {
+    cursor: pointer;
 }
-.green{
+.green {
     background-color: green;
 }
 
-#letter{
-    font-size:27px;
-    margin:0px;
+#letter {
+    font-size: 27px;
+    margin: 0px;
     text-align: center;
     font-family: 'Courrier New';
 }
 
 #point{
-    font-size:17px;
+    font-size:22px;
     margin:0px;
     position: relative;
-    text-align: end;
     font-family: 'Courrier New';
+    font-weight: bold;
 }
 
-
-.tile{
+.tile {
     position: relative;
-    width:60px;
-    height:60px;
+    width:50px;
+    height:50px;
     background-color: #ECE7DD;
     display:grid;
     text-align: center;
     gap: 0px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 32px;
     
     
     
 }
 
-.red{
+.red {
     background-color: rgba(255, 0, 0, 0.3);
 }
 
-.green{
+.green {
     background-color: rgba(75, 186, 52, 0.3);
 }
 #holder-buttons-container {
@@ -113,6 +114,10 @@
 #swapPlayerButton {
     width: 250px;
     margin-right: 80px;
+}
+
+#clueButton{
+    margin-left: 180px;
 }
 
 .button:hover:enabled {

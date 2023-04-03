@@ -8,3 +8,7 @@ export const END_GAME_MESSAGE = 'MSG-7';
 export const ROUND_OVER_MESSAGE = 'MSG-8';
 export const ROUND_TIME_LEFT_MESSAGE = 'MSG-9';
 export const DISCONNECT_MESSAGE = 'MSG-10';
+export const COOP_ACTION_ACCEPTED = 'MSG-11';
+export const COOP_ACTION_REFUSED = 'MSG-12';
+export const COOP_ACTION_PROPOSED = 'MSG-13';
+export const COOP_ACTION_UNANIMOUS = 'MSG-14';
