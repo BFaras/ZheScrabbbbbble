@@ -59,7 +59,7 @@ export class CommandVerificationService {
     static recreateCommand(commandInfo: PlaceLetterCommandInfo): string {
         const directionChar = commandInfo.direction === Direction.Horizontal ? 'h' : 'v';
         return (
-            '!placer ' +
+            'Place ' +
             String.fromCharCode(commandInfo.letterCoord + CHAR_CODE_LETTER_A) +
             (commandInfo.numberCoord + 1) +
             directionChar +

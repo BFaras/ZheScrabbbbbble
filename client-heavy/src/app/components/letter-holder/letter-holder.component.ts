@@ -238,6 +238,10 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         return letters;
     }
 
+    requestClue(){
+        this.gameStateService.requestClue();
+    }
+
     sendWord() {
         this.letterAdderService.makeMove();
     }

@@ -26,10 +26,17 @@
                 <div id="history-container">
                     <div *ngFor="let action of actionHistory; let i = index" #scrollMe [scrollTop]="scrollMe.scrollHeight">
                         <ul class="action">
-                            <div>{{formatActionInList((('ACTION-HISTORY.' + action.messageType) | translate), action.values, action.messageType)}}</div>
+                            <div *ngIf="action.messageType !== 'MSG-CLUE'">{{formatActionInList((('ACTION-HISTORY.' + action.messageType) | translate), action.values, action.messageType)}}</div>
                             <div *ngIf="hasPendingAction && isLatestProposedAction(i)" id="action-button-container">
                                 <button  class="button action-btn" (click)="answerPendingAction(true)">Accept</button>
                                 <button  class="button action-btn" (click)="answerPendingAction(false)">Refuse</button>
+                            </div>
+                            <div *ngIf="action.messageType === 'MSG-CLUE'">
+                                <div *ngIf="action.values.length > 0">{{'ACTION-HISTORY.MSG-CLUE' | translate}}</div>
+                                <div *ngIf="action.values.length === 0">{{'ACTION-HISTORY.MSG-CLUE' | translate}}</div>
+                                <div *ngFor="let hint of action.values" (click)="playHint(hint)">
+                                    <a class="hint">{{hint.substring(hint.indexOf(' ')+1)}}<br/></a>
+                                </div>
                             </div>
                         </ul>
                     </div>

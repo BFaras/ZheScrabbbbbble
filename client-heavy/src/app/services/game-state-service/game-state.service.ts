@@ -33,6 +33,8 @@ export class GameStateService {
     private gameStateObservers: Observer<GameState>[] = [];
     private actionMessageObservable: Observable<PlayerMessage>;
     private actionMessageObserver: Observer<PlayerMessage>;
+    private clueObservable: Observable<string[]>;
+    private clueObserver: Observer<string[]>;
     
     private observerIndex: number;
     private tournamentGame: boolean;
@@ -48,6 +50,10 @@ export class GameStateService {
             if (!this.socket.active) this.refreshSocket();
             this.actionMessageObserver = observer;
         });
+        this.clueObservable = new Observable((observer: Observer<string[]>) => {
+            if (!this.socket.active) this.refreshSocket();
+            this.clueObserver = observer;
+        });
         this.refreshSocket();
     }
 
@@ -62,8 +68,19 @@ export class GameStateService {
         this.socket.on('Message Action History', (msg: PlayerMessage) => {
             this.actionMessageObserver.next(msg);
         });
+        this.socket.on('Clue Response', (clues : string[]) =>{
+            this.clueObserver.next(clues);
+        });
     }
 
+    requestClue() {
+        this.socketManagerService.getSocket().emit('Request Clue');
+    }
+
+    getClueObservable(): Observable<string[]> {
+        return this.clueObservable;
+    }
+    
     getGameStateObservable(): Observable<GameState> {
         return this.gameStateObservable;
     }
@@ -73,15 +90,15 @@ export class GameStateService {
     }
 
     requestGameState() {
-        this.socket.emit('Request Game State');
+        this.socketManagerService.getSocket().emit('Request Game State');
     }
 
     sendAbandonRequest() {
-        this.socket.emit('Abandon');
+        this.socketManagerService.getSocket().emit('Abandon');
     }
 
     respondCoopAction(response: boolean){
-        this.socket.emit('Respond Coop Action', response);
+        this.socketManagerService.getSocket().emit('Respond Coop Action', response);
     }
 
     getObserverIndex(): number {

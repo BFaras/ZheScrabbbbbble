@@ -1,18 +1,18 @@
 <div id="zoom-holder">
     <div id="holder-buttons-container" (click)="$event.stopPropagation()">
-        <button class="button" id="cancelButton" [style.visibility]="makingSelection ? 'visible' : 'hidden'" (click)="cancelSelection()">
+        <button class="button" id="cancelButton" *ngIf="makingSelection" (click)="cancelSelection()">
             {{'LETTERHOLDER.CANCEL' | translate}}
         </button>
         <button
             class="button"
             id="swapButton"
-            [style.visibility]="makingSelection ? 'visible' : 'hidden'"
+            *ngIf="makingSelection"
             (click)="swapLetters()"
             [disabled]="isDisabled() || notEnoughLettersLeft"
         >
             {{'LETTERHOLDER.REPLACE' | translate}}
         </button>
-
+        <button *ngIf="!isObserver() && !makingSelection" class="button" id="clueButton" (click)="requestClue()" [disabled]="isDisabled()">{{'LETTERHOLDER.HINT' | translate}}</button>
         <div cdkDropList [cdkDropListData]="playerHand"id="rack" >
             <div cdkDrag (cdkDragStarted) = "cancelManipulationAndSelection($event)"
             (contextmenu)="clickInside($event,indexOfelement)"

@@ -235,6 +235,13 @@ export class SocketManager {
                 this.playVirtualTurns(currentRoom);
             });
 
+            socket.on('Request Clue', async () => {
+                const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
+                if (!currentRoom || currentRoom.getGame.isGameOver()) return;
+                const clues = await this.commandController.hintCommand(currentRoom.getGame);
+                socket.emit('Clue Response', clues);
+            });
+
             socket.on('Respond Coop Action', (response: boolean) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom || currentRoom.getGame.isGameOver() || !(currentRoom instanceof CoopGameRoom)) return;
