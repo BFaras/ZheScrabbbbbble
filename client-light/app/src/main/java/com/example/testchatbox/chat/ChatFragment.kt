@@ -1,5 +1,6 @@
 package com.example.testchatbox.chat
 
+import NotificationInfoHolder
 import SocketHandler
 import android.content.Context
 import android.graphics.Color
@@ -87,11 +88,13 @@ class ChatFragment : Fragment(), ObserverChat {
     override fun onStart() {
         super.onStart()
         ChatModel.addObserver(this);
+        NotificationInfoHolder.changeSelectedChatCode(chatsList[selectedChatIndex]._id);
     }
 
     override fun onStop() {
         super.onStop()
         ChatModel.removeObserver(this);
+        NotificationInfoHolder.changeSelectedChatCode("");
     }
 
     private fun loadChatMessages(){
@@ -142,6 +145,7 @@ class ChatFragment : Fragment(), ObserverChat {
             btn.setOnClickListener{
                 if(selectedChatIndex!=btn.id){
                     selectedChatIndex=btn.id;
+                    NotificationInfoHolder.changeSelectedChatCode(chatsList[selectedChatIndex]._id);
                     binding.chatRoomName.text = btnText.text
                     loadChatMessages();
                 }
