@@ -46,6 +46,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
         }));
         this.subscriptions.push(this.gameStateService.getActionMessageObservable().subscribe((message) => {
             if(message.messageType === 'MSG-13'){
+                this.letterAdderService.removeAll();
                 this.gameStateService.setPendingAction(true);
             }
             if(message.messageType === 'MSG-12' || message.messageType === 'MSG-14'){
