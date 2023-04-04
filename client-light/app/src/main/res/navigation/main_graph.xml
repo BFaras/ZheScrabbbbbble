@@ -98,7 +98,11 @@
         android:id="@+id/friendsFragment"
         android:name="com.example.testchatbox.FriendsFragment"
         android:label="fragment_friends"
-        tools:layout="@layout/fragment_friends" />
+        tools:layout="@layout/fragment_friends" >
+        <action
+            android:id="@+id/action_friendsFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+    </fragment>
     <activity
         android:id="@+id/profileActivity"
         android:name="com.example.testchatbox.ProfileActivity"

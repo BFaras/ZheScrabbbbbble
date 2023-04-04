@@ -50,7 +50,7 @@ class ChatFragment : Fragment(), ObserverChat {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState);
         loadList();
-        selectedChatIndex=0;
+        selectedChatIndex = if(arguments?.getString("username")!=null){ findIndexByUsername(arguments?.getString("username")!!) } else 0;
         binding.inputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 sendMessage()
@@ -190,6 +190,14 @@ class ChatFragment : Fragment(), ObserverChat {
     private fun hideKeyboard() {
         val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+    }
+
+    private fun findIndexByUsername(username:String):Int{
+        for((i,chat) in chatsList.withIndex()){
+            if(chat.chatName==username)
+                return i;
+        }
+        return 0;
     }
 
 }
