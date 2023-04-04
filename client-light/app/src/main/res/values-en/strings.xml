@@ -15,6 +15,14 @@
     <string name="FriendCode">Enter your friend\'s code to add him </string>
     <string name="queueMessage">In search of a tournament</string>
 
+    <string name="friendModified"> replaced is username with </string>
+    <string name="friendRemoved"> removed you from his friend list</string>
+    <string name="friendChat">Chat</string>
+    <string name="friendProfile">Profile</string>
+    <string name="friendJoin">Invite to a game</string>
+    <string name="friendRemove">Remove from friend list</string>
+
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Main menu</string>
     <string name="second_fragment_label">Chatbox</string>

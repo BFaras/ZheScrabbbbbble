@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentFriendsBinding
 import com.example.testchatbox.databinding.FragmentProfilBinding
@@ -26,12 +27,12 @@ enum class  ConnectionStatus{
     }
 }
 
-data class Friend(val username:String, var connectionStatus: ConnectionStatus)
+data class Friend(var username:String, var connectionStatus: ConnectionStatus)
 
 
-class FriendsFragment : Fragment() {
+class FriendsFragment : Fragment(), ObserverFriend {
 
-    private var friendList = arrayListOf<Friend>()
+    private val friendList get() = FriendModel.friendList
 
     private var _binding: FragmentFriendsBinding? = null
     private val binding get() = _binding!!
@@ -46,16 +47,37 @@ class FriendsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        updateFriendList()
+        FriendModel.updateFriendList()
         binding.add.setOnClickListener {
             if(binding.friendCode.text.isNotBlank())
                 addFriend()
         }
-        SocketHandler.getSocket().on("Update friend status"){args->
-            if(args[0] != null && args[1] !=null){
-                updateStatus(args[1] as String, ConnectionStatus.fromInt(args[0] as Int))
+
+    }
+
+    private fun updateView(){
+        val friendListView = binding.friendList;
+        friendListView.removeAllViews()
+        for(friend in friendList){
+            val friendText = Button((activity as MainActivity?)!!)
+            friendText.text = friend.username  +" | " +friend.connectionStatus;
+            friendText.textSize= 18F;
+            friendText.setOnClickListener {
+                showActionMenu(friend.username);
             }
+            friendListView.addView(friendText)
+
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        FriendModel.addObserver(this);
+    }
+
+    override fun onStop() {
+        super.onStop()
+        FriendModel.removeObserver(this);
     }
 
     private fun addFriend() {
@@ -69,7 +91,7 @@ class FriendsFragment : Fragment() {
                 }
                 activity?.runOnUiThread(Runnable {
                     if(errorMessage == R.string.NO_ERROR ){
-                        updateFriendList()
+                        FriendModel.updateFriendList()
                         binding.friendCode.setText("")
                     }else{
                         val appContext = context?.applicationContext
@@ -81,43 +103,96 @@ class FriendsFragment : Fragment() {
         SocketHandler.getSocket().emit("Send Friend Request", binding.friendCode.text.toString().trim())
     }
 
-    private fun updateFriendList(){
-        SocketHandler.getSocket().once("Friend List Response"){args->
-            try{
-                friendList = arrayListOf()
-                Log.i("friend", args[0].toString())
-                val friends = args[0] as JSONArray
-                for (i in 0 until friends.length()){
-                    val friend = friends.get(i) as JSONObject
-                    friendList.add(Friend(friend.get("username") as String, ConnectionStatus.fromInt(friend.get("status") as Int)))
+    private fun checkProfile(username: String){
+        //TODO
+    }
+
+    private fun checkChat(username: String){
+        val bundle = bundleOf("username" to username)
+        findNavController().navigate(R.id.action_friendsFragment_to_ChatFragment, bundle)
+    }
+
+    private fun removeFriend(username: String){
+        SocketHandler.getSocket().once("Remove Friend Response"){args ->
+            if(args[0] != null){
+                val errorMessage = when(args[0] as String){
+                    "0" -> R.string.NO_ERROR
+                    "5" -> R.string.DATABASE_UNAVAILABLE
+                    else -> R.string.ERROR
                 }
-            }catch(e:Exception){
                 activity?.runOnUiThread(Runnable {
-                    updateView()
+                    if(errorMessage == R.string.NO_ERROR ){
+                        FriendModel.removeFriend(username);
+                        hideActionMenu();
+                    }else{
+                        val appContext = context?.applicationContext
+                        Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
+                    }
                 });
             }
         }
-        SocketHandler.getSocket().emit("Get Friend List")
+        SocketHandler.getSocket().emit("Remove Friend", username)
     }
 
-    private fun updateView(){
-        val friendListView = binding.friendList;
-        friendListView.removeAllViews()
-        for(friend in friendList){
-            val friendText = TextView((activity as MainActivity?)!!)
-            friendText.text = friend.username  +" | " +friend.connectionStatus;
-            friendText.textSize= 18F;
-            friendListView.addView(friendText)
+    private fun inviteToGame(username: String){
+        //TODO
+    }
+
+    private fun showActionMenu(username: String){
+        binding.actionMenuUsername.text=username;
+        binding.actionMenu.visibility=View.VISIBLE;
+        binding.closeBtn.setOnClickListener{
+            hideActionMenu();
+        }
+        binding.joinBtn.setOnClickListener {
+            val appContext = context?.applicationContext;
+            Toast.makeText(appContext, "NOT IMPLEMENTED", Toast.LENGTH_LONG).show();
+            hideActionMenu();
+        }
+        binding.removeBtn.setOnClickListener {
+            removeFriend(username);
+        }
+        binding.chatBtn.setOnClickListener {
+            checkChat(username);
+        }
+        binding.profileBtn.setOnClickListener {
+            val appContext = context?.applicationContext;
+            Toast.makeText(appContext, "NOT IMPLEMENTED", Toast.LENGTH_LONG).show();
+            hideActionMenu();
         }
     }
-    private fun updateStatus(username: String, status: ConnectionStatus){
-        for(friend in friendList){
-            if(friend.username==username){
-                friend.connectionStatus=status;
-                break;
-            }
-        }
+
+    private  fun hideActionMenu(){
+        binding.actionMenu.visibility=View.GONE;
+        binding.removeBtn.setOnClickListener(null);
+        binding.joinBtn.setOnClickListener(null);
+        binding.chatBtn.setOnClickListener(null);
+        binding.profileBtn.setOnClickListener (null);
+        binding.closeBtn.setOnClickListener(null);
+    }
+
+    override fun update() {
         activity?.runOnUiThread(Runnable {
+            updateView()
+        });
+    }
+
+    override fun onModified(username: String, newUsername: String?) {
+        activity?.runOnUiThread(Runnable {
+            if(newUsername==null){
+                val appContext = context?.applicationContext;
+                Toast.makeText(appContext, username+getString(R.string.friendRemoved), Toast.LENGTH_LONG).show();
+                if(binding.actionMenu.visibility==View.VISIBLE && binding.actionMenuUsername.text==username){
+                    hideActionMenu();
+                }
+            }
+            else{
+                val appContext = context?.applicationContext;
+                Toast.makeText(appContext, username+getString(R.string.friendModified)+newUsername, Toast.LENGTH_LONG).show();
+                if(binding.actionMenu.visibility==View.VISIBLE && binding.actionMenuUsername.text==username){
+                    binding.actionMenuUsername.text==newUsername
+                }
+            }
             updateView()
         });
     }
