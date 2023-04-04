@@ -4,22 +4,34 @@
 }
 
 ::-webkit-scrollbar {
-    width: 4px;
-    overflow-y: scroll;
-    background: grey;
-    box-shadow: inset 0 0 4px #707070;
+    width: 1em;
 }
 
-::-webkit-scrollbar-thumb {
-    background: green;
-    border-radius: 10px;
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background: var(--scroll-background);
 }
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background: var(--scroll-default);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scroll-hover);
+}
+
 .connection-history{
-    height:40vh;
+    height:41vh;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    
+    background: var(--background-tertiary);
+    box-shadow: var(--box-shadow);
+    border-radius: 10px;
 }
 
 .connection-content{

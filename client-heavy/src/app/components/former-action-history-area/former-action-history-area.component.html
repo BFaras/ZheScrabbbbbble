@@ -1,11 +1,10 @@
 <mat-card id="former-actions">
-<mat-card-header>
-    Historique des parties antérieurs
-</mat-card-header>
-<mat-card-content *ngFor = "action of formerActionsHistory;let indexAction = index" >
-    <p>
-        Date: {{formerActionsHistory[indexAction].date}}  Heure: {{formerActionsHistory[indexAction].time}} État du match: {{checkStatus(indexAction)}}
-    </p>
-
-</mat-card-content>
+    <mat-card-header>
+        Historique des parties antérieurs
+    </mat-card-header>
+    <mat-card-content *ngFor = "action of formerActionsHistory;let indexAction = index" >
+        <p>
+            Date: {{formerActionsHistory[indexAction].date}}  Heure: {{formerActionsHistory[indexAction].time}} État du match: {{checkStatus(indexAction)}}
+        </p>
+    </mat-card-content>
 </mat-card>

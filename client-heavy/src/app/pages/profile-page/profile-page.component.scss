@@ -2,13 +2,13 @@
     font-family: 'Courier New', Courier, monospace;
     font-size: 17px;
 }
-//ma partie
-.avatarSquare{
-    width:120px;
-    height: 120px;
-    position: relative;
-    bottom: 1vh;
+
+.box {
+    background: var(--background-tertiary);
+    box-shadow: var(--box-shadow);
+    border-radius: 10px;
 }
+//ma partie
 .profileAvatarNameLevel{
     position: relative;
     font-family: 'Courier New', Courier, monospace;
@@ -16,10 +16,16 @@
     font-weight: bold;
     display: flex;
     position: relative;
-    width: 79%;
     height: 25%;
     padding: 10px;
     justify-content: space-around;
+}
+
+.avatarSquare{
+    width:120px;
+    height: 120px;
+    position: relative;
+    bottom: 1vh;
 }
 
 .avatarSection{
@@ -112,25 +118,26 @@ app-connection-history-area{
 }
 
 .button:hover {
-    color: black;
+    color: var(--button-text-hover);
     cursor: pointer;
-    background: rgb(186, 204, 122);
+    background: var(--button-primary-hover);
     transition-property: background-color;
     transition-duration: 0.2s;
 }
+
 .button {
     text-decoration: none;
     margin-top: 20px;
     text-align: center;
     border: none;
     padding: 10px;
-    background-color: rgb(204, 224, 183);
+    background-color: var(--button-primary);
     border-radius: 7px;
-    box-shadow: 0 1.8px 1.2px rgba(0, 0, 0, 0.096), 0 5.7px 4.3px rgba(0, 0, 0, 0.103), 0 8.5px 7px rgba(0, 0, 0, 0.11);
+    box-shadow: var(--box-shadow);
     font-size: 17px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
-    color: rgb(94, 94, 94);
+    color: var(--button-text-default);
     transition: color 0.5s linear;
     -webkit-transition: color 0.2s linear;
 }

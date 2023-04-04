@@ -1,6 +1,7 @@
 <div class="container">
+    <p>Pick an avatar!</p>
     <div class="listAvatars">
-        <img   (click)="changeAvatar(avatarSrc)"*ngFor="let avatarSrc of allAvatars" class='avatar' alt="image" src= "assets/avatar/{{avatarSrc}}" /> 
+        <img (click)="changeAvatar(avatarSrc)"*ngFor="let avatarSrc of allAvatars" class='avatar' alt="image" src= "assets/avatar/{{avatarSrc}}"/> 
     </div>
     <button class="button" [mat-dialog-close]="colorChosen" (click) = "closeDialog()">Confirmer l'avatar choisi</button>
 </div>

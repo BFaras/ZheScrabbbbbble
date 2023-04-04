@@ -4,20 +4,19 @@
 }
 mat-card-header{
     align-self: center;
-    margin-bottom: 25px
-    
+    margin-bottom: 25px;
 }
 #former-actions{
     display: flex;
     height: 100%;
     flex-direction: column;
-    
+    background: var(--background-tertiary);
+    box-shadow: var(--box-shadow);
+    border-radius: 10px;
 }
 
 mat-card-content{
     display: flex;
     flex-direction: column;
     align-items:center;
-    border-style: groove;
-
 }

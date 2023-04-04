@@ -1,4 +1,11 @@
 .container{
+    height: 510px;
+    padding: 5% 2%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--background-tertiary);
     display:flex;
 }
 
@@ -6,13 +13,82 @@
     width:160px;
     height:160px;
     border-style: double;
-    
+    cursor: pointer;
+    border: none;
 }
 
 .listAvatars{
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    column-gap: 80px;
+    row-gap: 20px;
+    overflow: auto;
+    padding: 3%;
+    background-color: var(--button-tertiary);
+    white-space: pre;
     justify-content: center;
     align-items: center;
+    width: 800px;
+    height: 327px;
+    border-radius: 10px;
+}
+
+::ng-deep mat-dialog-container {
+    padding: 0% !important;
+    border-radius: 20px !important;
+    background: none;
+}
+
+p {
+    padding-bottom: 20px;
+    font-size: 25px;
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--text-secondary);
+    font-weight: bold;
+}
+
+.button:hover {
+    color: var(--button-text-hover);
+    cursor: pointer;
+    background: var(--button-primary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+.button {
+    text-decoration: none;
+    margin-top: 40px;
+    text-align: center;
+    border: none;
+    padding: 10px;
+    background-color: var(--button-primary);
+    border-radius: 7px;
+    box-shadow: var(--box-shadow);
+    font-size: 17px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: var(--button-text-default);
+    transition: color 0.5s linear;
+    -webkit-transition: color 0.2s linear;
+}
+
+.listAvatars::-webkit-scrollbar {
+    width: 1em;
+}
+
+/* Track */
+.listAvatars::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background: var(--scroll-background);
+}
+
+/* Handle */
+.listAvatars::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background: var(--scroll-hover);
+}
+
+/* Handle on hover */
+.listAvatars::-webkit-scrollbar-thumb:hover {
+    background: var(--scroll-default);
 }

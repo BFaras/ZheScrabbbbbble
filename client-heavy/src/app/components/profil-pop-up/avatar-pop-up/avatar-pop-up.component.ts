@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AccountService } from '@app/services/account-service/account.service';
 import { Subscription } from 'rxjs';
 @Component({
@@ -9,7 +9,9 @@ import { Subscription } from 'rxjs';
 })
 export class AvatarPopUpComponent implements OnInit, OnDestroy {
   colorChosen: string = "";
-  allAvatars: string[] = ["cat.jpg", 'dog.jpg', 'flower.jpg'];
+  allAvatars: string[] = ['Daria.PNG', 'Arnaud.PNG', 'Imane.PNG', 'Mohamed.PNG', 'Manuel.PNG', 'Raphaël.PNG', 'cow.png', 'mouse.png', 'giraffe.png',
+    'shark.png', 'owl.png', 'monkey.png', 'robot.png', 'cat.png', 'dog.png', 'alien.png', 'fox.png', 'pig.png', 'panda.png',
+    'bunny.png', 'rooster.png', 'unicorn.png', 'lion.png', 'skeleton.png', 'bear.png', 'tiger.png', 'koala.png', 'ghost.png'];
   subscription: Subscription;
   constructor(private dialogRef: MatDialogRef<AvatarPopUpComponent>, @Inject(MAT_DIALOG_DATA) public account: { accountService: AccountService }) {
 

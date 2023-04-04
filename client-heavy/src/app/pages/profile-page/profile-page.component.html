@@ -1,6 +1,6 @@
 <app-navigation-bar></app-navigation-bar>
 <div class="container justified">
-    <div id="themes">
+    <div id="themes" class="box">
         {{'CHANGETHEME.MESSAGE' | translate}} : 
         <button class="theme-button" id="classic" (click)="changeThemeTo('classic')" (click)="setActive($event)">{{ 'CHANGETHEME.CLASSIC' | translate }}</button> 
         <button class="theme-button" id="inverted" (click)="changeThemeTo('inverted')" (click)="setActive($event)">{{ 'CHANGETHEME.INVERTED' | translate }}</button> 
@@ -11,7 +11,7 @@
     <button class="theme-button" (click)="goToFriends()">{{ 'PROFILE-PAGE.FRIENDS' | translate }}</button>
     
 
-    <mat-card class="profileAvatarNameLevel">
+    <mat-card class="profileAvatarNameLevel box">
         <div class="avatarSection">
             <img class="avatarSquare" [src] ="avatarCircle">
             <mat-progress-bar mode="determinate" [value]="progressionBarValue" class = "xp"></mat-progress-bar>
@@ -35,7 +35,7 @@
     </mat-card>
     <div id = "account-other-info">
         <div id="stats-and-former-actions">
-            <mat-card id="stats">
+            <mat-card id="stats" class="box">
                 <mat-card-header>
                     Statistiques du compte
                 </mat-card-header>
