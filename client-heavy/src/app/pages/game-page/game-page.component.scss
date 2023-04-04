@@ -99,6 +99,17 @@ select {
     margin-bottom: 8%;
 }
 
+a.hint {
+    color: var(--button-tertiary);
+    margin-left: 12px;
+}
+
+a.hint:hover{
+    color: var(--button-tertiary-hover);
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 .button {
     text-decoration: none;
     margin-top: 10%;
@@ -123,6 +134,18 @@ select {
     background: var(--button-secondary-hover);
     transition-property: background-color;
     transition-duration: 0.2s;
+}
+
+button.action-btn.button {
+    margin: 5px;
+    padding: 7px;
+    font-size: 12px;
+    width: 140px;
+}
+
+#action-button-container {
+    display: flex;
+    justify-content: space-evenly;
 }
 
 #letter-holder {

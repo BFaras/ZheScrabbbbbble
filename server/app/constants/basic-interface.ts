@@ -43,4 +43,6 @@ export interface GameRoomInfo {
     visibility: RoomVisibility;
     players: string[];
     isStarted: boolean;
+    isCoop: boolean;
+    nbObservers: number;
 }

@@ -35,20 +35,22 @@ export class Game {
     private startDate: Date;
     private playerTurnIndex: number;
     private timer: NodeJS.Timeout;
+    private timerEnabled : boolean
     private timerCallback: (username: string, result: CommandResult) => void;
 
-    constructor(players: Player[]) {
+    constructor(players: Player[], timerEnabled : boolean) {
         this.passCounter = 0;
         this.reserve = new Reserve();
         this.board = new Board();
         this.gameOver = false;
         this.players = players;
+        this.timerEnabled = timerEnabled;
         this.wordValidationService = Container.get(WordValidation);
         this.statisticsService = Container.get(StatisticService);
     }
 
     startGame(timerCallback: (username: string, result: CommandResult) => void) {
-        if (this.players.length < 2) return;
+        //if (this.players.length < 2) return;
         this.playerTurnIndex = Math.floor(Math.random() * this.players.length);
         for (const player of this.players) {
             player.getHand().addLetters(this.reserve.drawLetters(HAND_SIZE));
@@ -187,12 +189,14 @@ export class Game {
     }
 
     resetTimer() {
-        clearTimeout(this.timer);
-        this.timer = setTimeout(() => {
-            const username = this.players[this.playerTurnIndex].getName();
-            const result = this.passTurn();
-            this.timerCallback(username, result);
-        }, MILLISECOND_IN_MINUTES);
+        if(this.timerEnabled){
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                const username = this.players[this.playerTurnIndex].getName();
+                const result = this.passTurn();
+                this.timerCallback(username, result);
+            }, MILLISECOND_IN_MINUTES);
+        }
     }
 
     getWinner(gaveUp?: string): string {
