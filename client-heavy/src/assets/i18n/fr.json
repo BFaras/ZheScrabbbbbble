@@ -199,6 +199,7 @@
     "PROFILE-PAGE": {
         "FRIENDS": "Gérer ses amis",
         "AVATAR": "Choisir un avatar!",
+        "CONFIRM": "Confirmer l'avatar",
         "LOGIN": "Connexions",
         "LOGOUT": "Déconnexions",
         "WINS": "Victoires",

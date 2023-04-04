@@ -199,6 +199,7 @@
     "PROFILE-PAGE": {
         "FRIENDS": "Manage friends",
         "AVATAR": "Pick an avatar!",
+        "CONFIRM": "Confirm new avatar",
         "LOGIN": "Log Ins",
         "LOGOUT": "Log Outs",
         "WINS": "Wins",
