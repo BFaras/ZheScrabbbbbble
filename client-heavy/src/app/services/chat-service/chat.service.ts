@@ -122,4 +122,13 @@ export class ChatService {
             });
         });
     }
+
+    getChatHistory(chatId: string): Observable<ChatMessage[]> {
+        this.socketManagerService.getSocket().emit('Get Chat History', chatId);
+        return new Observable((observer: Observer<ChatMessage[]>) => {
+            this.socketManagerService.getSocket().once('Chat History Response', (chatHistory: ChatMessage[]) => {
+                observer.next(chatHistory);
+            });
+        });
+    }
 }

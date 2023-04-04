@@ -27,12 +27,16 @@ export class ChatComponent implements OnInit, OnDestroy {
     messageHistory: ChatMessage[] = [];
 
     subscriptionMessage: Subscription;
-    subscriptionChatRoom: Subscription;
+    subscriptionHistoryMessage: Subscription;
 
     constructor(private chatService: ChatService, private messageParserService: MessageParserService) {
         this.gameRoomName = this.chatService.getChatInGameRoom();
         console.log(this.gameRoomName);
-        console.log(this.gameRoomName);
+        this.subscriptionHistoryMessage = this.chatService.getChatHistory(this.gameRoomName).subscribe((chatHistory: ChatMessage[]) => {
+            chatHistory.forEach((chatMessage) => {
+                this.updateMessageHistory(chatMessage)
+            })
+        });
         this.subscriptionMessage = this.chatService.getMessagesInGame().subscribe((response: { chatCode: string, message: ChatMessage }) => {
             console.log("reception d un message")
             console.log(response)
