@@ -67,7 +67,7 @@
 
     <style name="EclipseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="backgroundColor">@color/darkSea</item>
-        <item name="android:textColor">@color/forestGreen</item>
+        <item name="android:textColor">@color/LightSlateGray</item>
         <item name="colorPrimary">@color/clearSea</item>
         <item name="colorPrimaryVariant">@color/BackSea</item>
         <item name="colorOnPrimary">@color/Gainsboro</item>

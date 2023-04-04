@@ -132,6 +132,12 @@
         <action
             android:id="@+id/action_queueFragment_to_MainMenuFragment"
             app:destination="@id/MainMenuFragment" />
+        <action
+            android:id="@+id/action_queueFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_queueFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
     </fragment>
     <fragment
         android:id="@+id/bracketFragment"
@@ -147,6 +153,12 @@
         <action
             android:id="@+id/action_bracketFragment_to_rankingFragment"
             app:destination="@id/rankingFragment" />
+        <action
+            android:id="@+id/action_bracketFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_bracketFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
     </fragment>
     <fragment
         android:id="@+id/rankingFragment"
