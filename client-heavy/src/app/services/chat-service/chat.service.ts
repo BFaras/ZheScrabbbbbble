@@ -56,6 +56,7 @@ export class ChatService {
     }
 
     sendMessage(message: string, ChatId: string) {
+        console.log("Emission d un message")
         this.socketManagerService.getSocket().emit('New Chat Message', message, ChatId);
     }
 
@@ -73,6 +74,7 @@ export class ChatService {
     getMessagesInGame(): Observable<{ chatCode: string, message: ChatMessage }> {
         return new Observable((observer: Observer<{ chatCode: string, message: ChatMessage }>) => {
             this.socketManagerService.getSocket().on('New Chat Message', (chatCode: string, chatMessage: ChatMessage) => {
+                console.log("reception dans observable")
                 const response = {
                     chatCode: chatCode as string,
                     message: chatMessage as ChatMessage,
