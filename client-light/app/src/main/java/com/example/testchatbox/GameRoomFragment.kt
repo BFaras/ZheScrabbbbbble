@@ -28,6 +28,7 @@ class GameRoomFragment : Fragment(), Observer {
 
     private var _binding: FragmentGameRoomBinding? = null
     private val binding get() = _binding!!
+    private var isChatIconChanged = false;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +46,10 @@ class GameRoomFragment : Fragment(), Observer {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupChatNotifs()
         update();
+
+
         binding.leave.setOnClickListener {
             GameRoomModel.leaveRoom();
             SocketHandler.getSocket().emit("Leave Game Room")
@@ -66,6 +70,7 @@ class GameRoomFragment : Fragment(), Observer {
 
     override fun onStop() {
         super.onStop()
+        NotificationInfoHolder.setFunctionOnMessageReceived(null);
         GameRoomModel.removeObserver(this);
     }
 
@@ -134,5 +139,20 @@ class GameRoomFragment : Fragment(), Observer {
         if (GameRoomModel.joinRequest.isNotEmpty()) showJoinSection()
     }
 
+    fun setupChatNotifs() {
+        isChatIconChanged = false;
+        NotificationInfoHolder.startObserverChat();
+        NotificationInfoHolder.setFunctionOnMessageReceived(::changeToNotifChatIcon);
 
+        if(NotificationInfoHolder.areChatsUnread())
+            changeToNotifChatIcon();
+    }
+
+    fun changeToNotifChatIcon() {
+        if (!isChatIconChanged)
+        {
+            binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+            isChatIconChanged = true;
+        }
+    }
 }

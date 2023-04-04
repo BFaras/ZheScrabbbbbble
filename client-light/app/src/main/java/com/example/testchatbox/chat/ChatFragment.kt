@@ -4,6 +4,7 @@ import NotificationInfoHolder
 import SocketHandler
 import android.content.Context
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -42,6 +43,7 @@ class ChatFragment : Fragment(), ObserverChat {
     private var selectedChatIndex : Int = 0;
     private var chatsList = ChatModel.getList();
     private var chatRoomsNotifBubble: LinkedHashMap<String, ImageView> = LinkedHashMap<String, ImageView>();
+    private var notifSound: MediaPlayer? = null;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +56,7 @@ class ChatFragment : Fragment(), ObserverChat {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState);
+        notifSound = MediaPlayer.create(view.context, R.raw.ding)
         loadList();
         selectedChatIndex=0;
         binding.inputText.setOnEditorActionListener { _, actionId, _ ->
@@ -97,6 +100,7 @@ class ChatFragment : Fragment(), ObserverChat {
     override fun onStop() {
         super.onStop()
         ChatModel.removeObserver(this);
+        notifSound?.release()
         NotificationInfoHolder.changeSelectedChatCode("");
     }
 
@@ -140,6 +144,7 @@ class ChatFragment : Fragment(), ObserverChat {
         chatsList = ChatModel.getList();
         val chatListView = binding.chatList;
         chatListView.removeAllViews()
+        chatRoomsNotifBubble = LinkedHashMap<String, ImageView>()
         for((i, chat) in chatsList.withIndex()){
             val btn = layoutInflater.inflate(R.layout.chat_rooms_button, chatListView, false)
             val btnText: TextView = btn.findViewById(R.id.roomName)
@@ -160,7 +165,6 @@ class ChatFragment : Fragment(), ObserverChat {
                 }
             }
             chatListView.addView(btn)
-            chatRoomsNotifBubble.remove(chat._id);
             chatRoomsNotifBubble.set(chat._id, notifIcon);
         }
     }
@@ -191,6 +195,7 @@ class ChatFragment : Fragment(), ObserverChat {
 
 
     override fun updateMessage(chatCode: String, message: Message) {
+        notifSound?.start()
         if(chatsList[selectedChatIndex]._id == chatCode)
         {
             addMessage(message);
