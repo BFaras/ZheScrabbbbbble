@@ -19,6 +19,7 @@ import com.example.testchatbox.MainActivity
 import com.example.testchatbox.R
 import com.example.testchatbox.databinding.FragmentChatBinding
 import com.example.testchatbox.login.model.LoggedInUser
+import com.google.android.material.imageview.ShapeableImageView
 import org.json.JSONArray
 import org.json.JSONObject
 import org.w3c.dom.Text
@@ -37,6 +38,7 @@ class ChatFragment : Fragment(), ObserverChat {
     private val binding get() = _binding!!
     private var selectedChatIndex : Int = 0;
     private var chatsList = ChatModel.getList();
+    private var avatarProfil = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -103,6 +105,7 @@ class ChatFragment : Fragment(), ObserverChat {
             for(i in 0 until messageArray.length()){
                 val messageJSON = messageArray.get(i) as JSONObject
                 val message = Message(messageJSON.get("username") as String, messageJSON.get("timestamp") as String, messageJSON.get("message") as String, messageJSON.get("avatar") as String)
+
                 val messageContainer : View = if (message.username == LoggedInUser.getName()) {
                     layoutInflater.inflate(R.layout.sent_message, messagesBox, false)
                 } else {
@@ -112,10 +115,20 @@ class ChatFragment : Fragment(), ObserverChat {
                 val messageText: TextView = messageContainer.findViewById(R.id.textMessage)
                 val usernameMessage: TextView = messageContainer.findViewById(R.id.usernameMessage)
                 val timeStampMessage: TextView = messageContainer.findViewById(R.id.textDateTime)
+                val avatar = messageContainer.findViewById<ShapeableImageView>(R.id.avatarProfile)
 
                 messageText.text = message.message
                 usernameMessage.text = message.username
                 timeStampMessage.text = message.timestamp
+
+                when (message.avatar) {
+                    "dog.jpg" -> {
+                        avatar.setImageResource(R.drawable.dog)
+                    }
+                    "cat.jpg" -> avatar.setImageResource(R.drawable.cat)
+                    "flower.jpg" -> avatar.setImageResource(R.drawable.flower)
+                    else -> avatar.setImageResource(R.color.Aqua)
+                }
 
                 activity?.runOnUiThread(java.lang.Runnable {
                     messagesBox.addView(messageContainer)
@@ -156,14 +169,23 @@ class ChatFragment : Fragment(), ObserverChat {
         } else {
             layoutInflater.inflate(R.layout.received_message, messagesBox, false)
         }
-
         val messageText: TextView = messageContainer.findViewById(R.id.textMessage)
         val usernameMessage: TextView = messageContainer.findViewById(R.id.usernameMessage)
         val timeStampMessage: TextView = messageContainer.findViewById(R.id.textDateTime)
+        val avatar = messageContainer.findViewById<ShapeableImageView>(R.id.avatarProfile)
 
         messageText.text = message.message
         usernameMessage.text = message.username
         timeStampMessage.text = message.timestamp
+
+        when (avatarProfil) {
+            "dog.jpg" -> {
+                avatar.setImageResource(R.drawable.dog)
+            }
+            "cat.jpg" -> avatar.setImageResource(R.drawable.cat)
+            "flower.jpg" -> avatar.setImageResource(R.drawable.flower)
+            else -> avatar.setImageResource(R.color.Aqua)
+        }
 
         activity?.runOnUiThread(java.lang.Runnable {
             messagesBox.addView(messageContainer)
@@ -177,8 +199,17 @@ class ChatFragment : Fragment(), ObserverChat {
 
 
     override fun updateMessage(chatCode: String, message: Message) {
-        if(chatsList[selectedChatIndex]._id == chatCode)
-            addMessage(message);
+        if(chatsList[selectedChatIndex]._id == chatCode) {
+            SocketHandler.getSocket().emit("Get Avatar from Username", message.username)
+            SocketHandler.getSocket().once("Avatar from Username Response") { args ->
+                if (args[0] != null) {
+                    avatarProfil = args[0] as String
+                }
+                addMessage(message);
+            }
+        }
+
+
     }
 
     override fun updateChannels() {

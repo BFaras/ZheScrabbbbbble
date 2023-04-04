@@ -159,17 +159,17 @@ class RegisterFragment : Fragment() {
             builder?.setView(alertView)
             avatar1.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-                choosenAvatar = "cat"
+                choosenAvatar = "cat.jpg"
                 builder?.dismiss()
             }
             avatar2.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.dog)
-                choosenAvatar = "dog"
+                choosenAvatar = "dog.jpg"
                 builder?.dismiss()
             }
             avatar3.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.flower)
-                choosenAvatar = "flower"
+                choosenAvatar = "flower.jpg"
                 builder?.dismiss()
             }
             builder?.show()

@@ -4,7 +4,6 @@ import SocketHandler
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -34,10 +33,13 @@ import com.example.testchatbox.Coordinates.rowsPos
 import com.example.testchatbox.LetterPoints.letterPoints
 import com.example.testchatbox.databinding.FragmentFullscreenBinding
 import com.example.testchatbox.login.model.LoggedInUser
+import com.google.android.material.imageview.ShapeableImageView
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class GamePageFragment : Fragment() {
@@ -80,6 +82,9 @@ class GamePageFragment : Fragment() {
     private var chosenDirection = "h"
     private var gameOver = false
     private var toBeObserved = 0
+    private var avatarsList = mutableMapOf<String, String>()
+
+    private var isFirstRound = true
 
     private lateinit var playerHand: ArrayList<String>
     private lateinit var lettersOnBoard: Array<Array<String>>
@@ -106,6 +111,7 @@ class GamePageFragment : Fragment() {
     @SuppressLint("MissingInflatedId")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        gameModel.getAvatars()
         Coordinates.setCoordinates()
         timer = setTimer()
 
@@ -116,7 +122,11 @@ class GamePageFragment : Fragment() {
                 buttonHint.visibility = GONE
                 buttonPass.visibility = GONE
                 toggleSwapHolder.visibility = GONE
-                abandonButton.text = "Quitter"
+                when (LoggedInUser.getLang()) {
+                    "fr" -> abandonButton.text = "Quitter"
+                    "en" -> abandonButton.text = "Leave"
+                    else -> {}
+                }
             }
         }
 
@@ -141,7 +151,6 @@ class GamePageFragment : Fragment() {
             if (!GameRoomModel.isPlayer) {
                 playerHand = gameState.players[toBeObserved].hand
                 binding.nowObservingText.setText(HtmlCompat.fromHtml(getString(R.string.now_observing_player1, gameState.players[0].username), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
-
                 binding.observedPlayers.removeAllViews()
                 binding.observedHolder.visibility = VISIBLE
                 for (player in gameState.players) {
@@ -164,7 +173,22 @@ class GamePageFragment : Fragment() {
             lettersOnBoard = gameState.board
             moveInfo = gameState.message!!
             updateMoveInfo(moveInfo)
-            updatePlayersInfo(gameState.players)
+
+            SocketHandler.getSocket().on("Avatars from Usernames Response") { args ->
+                val avatarListJSON = args[0] as JSONObject
+                Log.d("AVATARS JSON", args[0].toString())
+
+                for (i in 0 until avatarListJSON.length()) {
+                    avatarsList[avatarListJSON.names()?.getString(i) as String] = (avatarListJSON.names()?.getString(i)?.let { avatarListJSON.get(it) }) as String
+                }
+                activity?.runOnUiThread {
+                    updatePlayersInfo(gameState.players, avatarsList)
+                    isFirstRound = false
+                }
+            }
+            if (!isFirstRound) {
+                updatePlayersInfo(gameState.players, avatarsList)
+            }
             clearTurn()
         }
         gameModel.gameState.observe(viewLifecycleOwner, gameObserver)
@@ -316,18 +340,6 @@ class GamePageFragment : Fragment() {
                 noButton.setOnClickListener {
                     builder?.dismiss()
                 }
-                //GameRoomModel.leaveRoom()
-                //SocketHandler.getSocket().emit("Abandon")
-
-
-
-//                builder!!.setTitle(getString(R.string.confirmAbandon))
-//                builder.setMessage(getString(R.string.confirmButtonText))
-//                builder.setPositiveButton(getString(R.string.yes)){ _, _ ->
-//
-//                }
-//                builder.setNegativeButton(getString(R.string.no),
-//                    DialogInterface.OnClickListener { dialog, _ -> dialog.cancel() })
                 builder?.show()
             }
             buttonExchange.setOnClickListener {
@@ -343,7 +355,6 @@ class GamePageFragment : Fragment() {
                     .emit("Play Turn", "Swap", lettersToSwap)
                 clearTurn()
             }
-
             buttonPlay.setOnClickListener {
                 var row = ""
                 var col = 0
@@ -379,12 +390,9 @@ class GamePageFragment : Fragment() {
                     clearTurn()
                 }
             }
-
-
             backInHand.setOnClickListener {
                 clearTurn()
             }
-
 
             SocketHandler.getSocket().on("Message Action History"){ args->
                 val messageJSON = args[0] as JSONObject
@@ -707,26 +715,12 @@ class GamePageFragment : Fragment() {
                     }
                     return false
                 }
-                override fun onLongPress(e: MotionEvent) {
-//                    if (!isSelected.contains(1)) {
-//                        val data = ClipData.newPlainText("", "")
-//                        val shadowBuilder = DragShadowBuilder(letterTile)
-//                        letterTile?.startDragAndDrop(
-//                            data,
-//                            shadowBuilder,
-//                            letterTile,
-//                            DRAG_FLAG_OPAQUE
-//                        )
-//                        letterTile?.visibility = INVISIBLE
-//                    } else false
-                    super.onLongPress(e)
-                }
             })
             if (GameRoomModel.isPlayer) { letterTile.setOnTouchListener { _, event -> gesture.onTouchEvent(event) } }
         }
     }
 
-    private fun updatePlayersInfo(playersList: ArrayList<PlayersState>) {
+    private fun updatePlayersInfo(playersList: ArrayList<PlayersState>, listOfAvatars: MutableMap<String, String>) {
         val isYouColor = TypedValue()
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, isYouColor, true)
         var isWinner: PlayersState? = null
@@ -746,6 +740,21 @@ class GamePageFragment : Fragment() {
             val playerName: TextView = playerInfo.findViewById(R.id.playerName)
             val playerPoints: TextView = playerInfo.findViewById(R.id.playerPoints)
             val playerTurn: RelativeLayout = playerInfo.findViewById(R.id.playerInfoHolder)
+            val playerAvatar = playerInfo.findViewById<ShapeableImageView>(R.id.playerInGameAvatar)
+            var currentAvatar = ""
+
+            for ((name, avatar) in listOfAvatars) {
+                if (name == player.username) currentAvatar = avatar
+            }
+
+            when (currentAvatar) {
+                "dog.jpg" -> {
+                    playerAvatar.setImageResource(R.drawable.dog)
+                }
+                "cat.jpg" -> playerAvatar.setImageResource(R.drawable.cat)
+                "flower.jpg" -> playerAvatar.setImageResource(R.drawable.flower)
+                else -> playerAvatar.setImageResource(R.color.Aqua)
+            }
 
             playerName.text = player.username
             playerPoints.text = player.score.toString()
@@ -766,6 +775,7 @@ class GamePageFragment : Fragment() {
                     binding.gameWinner.setText(HtmlCompat.fromHtml(getString(R.string.winnerName, player.username), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
                 }
             }
+            playerInfo.tag = player.username
             binding.playersInfoHolder.addView(playerInfo)
         }
     }

@@ -94,17 +94,17 @@ class ProfilFragment : Fragment() {
             builder?.setView(alertView)
             avatar1.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-                changeAvatar("cat")
+                changeAvatar("cat.jpg")
                 builder?.dismiss()
             }
             avatar2.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.dog)
-                changeAvatar("dog")
+                changeAvatar("dog.jpg")
                 builder?.dismiss()
             }
             avatar3.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.flower)
-                changeAvatar("flower")
+                changeAvatar("flower.jpg")
                 builder?.dismiss()
             }
             builder?.show()
@@ -272,9 +272,9 @@ class ProfilFragment : Fragment() {
                     if(errorMessage == R.string.NO_ERROR ){
                         profile.avatar= newAvatar;
                         when (newAvatar) {
-                            "cat" -> binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-                            "dog" -> binding.playerInGameAvatar.setImageResource(R.drawable.dog)
-                            "flower" -> binding.playerInGameAvatar.setImageResource(R.drawable.flower)
+                            "cat.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.cat)
+                            "dog.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.dog)
+                            "flower.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.flower)
                             else -> {}
                         }
                     }else{
@@ -350,9 +350,9 @@ class ProfilFragment : Fragment() {
 
         binding.playerName.text = LoggedInUser.getName()
         when (profile.avatar) {
-            "cat" -> binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-            "dog" -> binding.playerInGameAvatar.setImageResource(R.drawable.dog)
-            "flower" -> binding.playerInGameAvatar.setImageResource(R.drawable.flower)
+            "cat.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.cat)
+            "dog.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.dog)
+            "flower.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.flower)
             else -> {}
         }
         if (LoggedInUser.getLang() == "fr") {

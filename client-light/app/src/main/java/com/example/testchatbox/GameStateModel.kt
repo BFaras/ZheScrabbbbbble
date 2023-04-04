@@ -126,6 +126,10 @@ class GameStateModel: ViewModel() {
         SocketHandler.getSocket().emit("Request Game State")
     }
 
+    fun getAvatars() {
+        SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray((GameRoomModel.gameRoom?.players!!.filter { !it.contains("(V)") }).toTypedArray()))
+    }
+
     fun getTimer() {
         SocketHandler.getSocket().emit("sendTimer")
     }
