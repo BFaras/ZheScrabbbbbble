@@ -3,7 +3,6 @@ const pathLinker = require('path');
 let appWindow;
 
 function initWindow() {
-    console.log("TEST 0");
     console.log(pathLinker.join(__dirname, 'preload.js'));
     appWindow = new BrowserWindow({
         // fullscreen: true,
@@ -54,19 +53,22 @@ app.on('activate', function () {
 
 //ipc
 const { ipcMain } = require('electron')
-ipcMain.on('asynchronous-message', (event, arg) => {
-    createWindow(arg);
+ipcMain.on('open-chat', () => {
+    createWindow();
 })
 
-const createWindow = (args) => {
+const createWindow = () => {
     const win = new BrowserWindow({
         width: 1400,
         height: 810,
+        webPreferences: {
+            nodeIntegration: true
+        }
     });
 
     const path = `file://${__dirname}/dist/client/index.html#/chat`;
     win.loadURL(path);
     win.on('closed', function() {
-        appWindow.webContents.send('reactivate-chatbox', '');
+        appWindow.webContents.send('close-chat');
     })
 }
