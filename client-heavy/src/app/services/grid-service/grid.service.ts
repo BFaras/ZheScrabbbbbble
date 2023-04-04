@@ -179,20 +179,19 @@ export class GridService implements OnDestroy {
             const checkedRow: string = this.validRowColumn(column, row);
             const letterPoint: number = LETTER_POINTS[blankHandledLetter.points as keyof typeof LETTER_POINTS];
             this.gridContext.beginPath();
-
             this.gridContext.font = `bold ${this.size.getFontSize().get('gridLettersSize')}px Courier`;
             this.gridContext.textBaseline = 'bottom';
             this.gridContext.textAlign = 'center';
             this.gridContext.fillStyle = this.GRID_COLOURS.defaultBackground;
-            this.gridContext.fillRect(COLUMNS[column], ROWS[checkedRow], GRID_CONSTANTS.defaultSide - 1, GRID_CONSTANTS.defaultSide - 1);
 
+
+            this.gridContext.fillRect(COLUMNS[column], ROWS[checkedRow], GRID_CONSTANTS.defaultSide - 1, GRID_CONSTANTS.defaultSide - 1);
             this.gridContext.fillStyle = this.GRID_COLOURS.defaultBlack;
             this.gridContext.fillText(
                 blankHandledLetter.letter,
                 COLUMNS[column] + GRID_CONSTANTS.defaultSide / GRID_OFFSETS.letterOffsetH,
                 ROWS[checkedRow] + GRID_CONSTANTS.defaultSide / GRID_OFFSETS.letterOffsetV,
             );
-
 
             this.gridContext.textBaseline = 'top';
             this.gridContext.font = `bold ${this.size.getFontSize().get('gridPointSize')}px Courier`;

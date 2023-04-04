@@ -1,4 +1,4 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Vec2 } from '@app/classes/vec2';
@@ -34,7 +34,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         private readonly gridService: GridService,
         private readonly gameStateService: GameStateService,
         private readonly letterAdderService: LetterAdderService,
-        public readonly dialogBlankTile: MatDialog
+        public readonly dialogBlankTile: MatDialog,
     ) {
         this.subscription = this.gameStateService.getGameStateObservable().subscribe(async (gameState) => {
             if (this.viewLoaded) {
@@ -44,8 +44,6 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         });
     }
 
-    test() {
-    }
     addField(tile: any, index: number) {
         this.fields.splice(index, 0, tile);
     }
@@ -55,7 +53,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         let tile = {
             top: ROWS[this.letterAdderService.activeSquare.x] + 'px',
             left: COLUMNS[this.letterAdderService.activeSquare.y] + 'px',
-            text: event.item.data
+            text: event.item.data as string
         }
         this.addField({ ...tile }, event.currentIndex);
     }
@@ -78,16 +76,10 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
             console.log(coordinateClick)
             if (this.letterAdderService.onDropLetterSpot(coordinateClick)) {
                 console.log("letter  in apporprite drop spot")
-                /**il y a un bug etrange j ai le bon active square mais je peux pas le mettre sur le bon square */
-                console.log(ROWS[this.letterAdderService.activeSquare.x])
-                console.log(COLUMNS[this.letterAdderService.activeSquare.y])
-                //const positionLeft = COLUMNS[this.letterAdderService.activeSquare.y] + 'px';
-                //const positionTop = COLUMNS[this.letterAdderService.activeSquare.y] + 'px';
-                field.left = left.toString() + "px"
-                field.top = top.toString() + "px";
-                console.log(field)
                 console.log('change position')
                 this.letterAdderService.removeDrawingBeforeDragWithinCanvas()
+                field.left = left + "px"
+                field.top = top + "px";
                 this.letterAdderService.moveLetterInBoard(field.text)
             } else {
                 /**logique doit etre modifier pour que ca remet dans sport  */
@@ -107,7 +99,6 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     }
     slideLetterToCanvas(letter: CdkDragDrop<string[]>) {
         if (letter.previousContainer === letter.container) {
-            moveItemInArray(this.fields, letter.previousIndex, letter.currentIndex);
             console.log('in the sliding and same container')
         } else {
             console.log('in the sliding and not the same container')
@@ -128,6 +119,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
             }
             if (this.letterAdderService.onDropLetterSpot(coordinateClick)) {
                 this.fakeDroppedOnCanvas(letter, coordinateClick);
+                console.log(letter.item._dragRef.data.element.nativeElement)
                 this.letterAdderService.addLettersOnDrop(letter.item.data)
             }
             this.mouseIsIn = true;

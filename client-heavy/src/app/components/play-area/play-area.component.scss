@@ -3,14 +3,44 @@ canvas{
 }
 
 .tile{
-    height:50px;
-    width:50px;
-    border:1px solid red;
-    position:absolute
+    height:49px;
+    width:49px;
+    position:absolute;
+    text-align: center;
+    gap: 0px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 32px;
+    background-color: #cfcb9c;
+    opacity: 50%;
 }
 
 #container{
     height: 800px;
     width: 800px;
     position: absolute;
+}
+
+.letter {
+    font-size: 28px;
+    margin: 0px;
+    text-align: center;
+    font-weight: bold;
+    font-family: "Courier";
+    position: absolute;
+    top: 3.27px;
+    left: 13.24px;
+    vertical-align: text-bottom;
+}
+
+
+.point{
+    font-size: 18px;
+    margin: 0px;
+    position: absolute;
+    left: 30px;
+    font-family: "Courier";
+    font-weight: bold;
+    top: 19.8px;
+    vertical-align: text-top;;
 }
