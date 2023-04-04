@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.cardview.widget.CardView
 import androidx.core.text.HtmlCompat
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -72,6 +73,7 @@ class GamePageFragment : Fragment() {
     private var fullscreenContent: View? = null
     private var fullscreenContentControls: View? = null
     private var _binding: FragmentFullscreenBinding? = null
+
     private val binding get() = _binding!!
 
     private var isSelected = ArrayList<Int>() //a changer pour ArrayList<Pair>()
@@ -111,8 +113,8 @@ class GamePageFragment : Fragment() {
     @SuppressLint("MissingInflatedId")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        gameModel.getAvatars()
         Coordinates.setCoordinates()
+        gameModel.getAvatars()
         timer = setTimer()
 
         if (!GameRoomModel.isPlayer) {
@@ -122,11 +124,7 @@ class GamePageFragment : Fragment() {
                 buttonHint.visibility = GONE
                 buttonPass.visibility = GONE
                 toggleSwapHolder.visibility = GONE
-                when (LoggedInUser.getLang()) {
-                    "fr" -> abandonButton.text = "Quitter"
-                    "en" -> abandonButton.text = "Leave"
-                    else -> {}
-                }
+                abandonButton.text = getString(R.string.quit)
             }
         }
 
@@ -136,26 +134,27 @@ class GamePageFragment : Fragment() {
             isPlaying = gameState.playerTurnIndex
             isYourTurn = (gameState.players[isPlaying].username == LoggedInUser.getName())
 
-            binding.buttonPlay.isEnabled = isYourTurn && (isPlaced.size > 0)
-            binding.buttonPass.isEnabled = isYourTurn
-            binding.buttonHint.isEnabled = isYourTurn
-            binding.backInHand.visibility = GONE
-
             if (gameState.gameOver) {
                 gameOver = true
                 timer.cancel()
                 binding.abandonButton.text = getString(R.string.quit)
                 isYourTurn = false
-                clearTurn()
             }
+
+            binding.buttonPlay.isEnabled = isYourTurn && (isPlaced.size > 0)
+            binding.buttonPass.isEnabled = isYourTurn
+            binding.buttonHint.isEnabled = isYourTurn
+            binding.backInHand.visibility = GONE
+
             if (!GameRoomModel.isPlayer) {
                 playerHand = gameState.players[toBeObserved].hand
                 binding.nowObservingText.setText(HtmlCompat.fromHtml(getString(R.string.now_observing_player1, gameState.players[0].username), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
                 binding.observedPlayers.removeAllViews()
                 binding.observedHolder.visibility = VISIBLE
                 for (player in gameState.players) {
-                    val btnPlayer = Button(context)
-                    btnPlayer.text = player.username
+                    val btnPlayer = layoutInflater.inflate(R.layout.chat_rooms_button, binding.observedPlayers, false)
+                    val playerObservedName = btnPlayer.findViewById<TextView>(R.id.roomName)
+                    playerObservedName.text = player.username
                     btnPlayer.id = gameState.players.indexOf(player)
                     btnPlayer.setOnClickListener {
                         toBeObserved = btnPlayer.id
@@ -215,7 +214,6 @@ class GamePageFragment : Fragment() {
         }
         gameModel.deleteActiveTile.observe(viewLifecycleOwner, deleteActiveTileObserver)
 
-        //val hintList = arrayListOf("h6h acd", "v2a h", "h3c je", "h8h go", "v15e lo")
         binding.apply {
             buttonchat.setOnClickListener {
                 findNavController().navigate(R.id.action_fullscreenFragment_to_ChatFragment)
@@ -231,90 +229,167 @@ class GamePageFragment : Fragment() {
                 isSwap = !isSwap
                 clearTurn()
             }
-//            buttonHint.setOnClickListener {
-            //show progress
-            //emit socket ask for indice
-            //observer socket on {
-            // tout code du dessous
-            // }
-//                updateTurn()
-//                hintHolder.removeAllViews()
-//                hintPanel.visibility = VISIBLE
-//
-//                for (str in hintList) {
-//                    val hintButton = layoutInflater.inflate(R.layout.hint, hintHolder, false)
-//                    val hint: TextView = hintButton.findViewById(R.id.displayedHint)
-//                    hint.text = str.uppercase()
-//                    hintButton.setOnClickListener {
-//                        isPlaced.clear()
-//                        updateBoard(lettersOnBoard)
-//                        updateRack(playerHand)
-//
-//                        val direction = str[0].toString()
-//                        var col = Character.digit(str[1], 10)
-                        //if (str[2].isDigit()) col += str[2] col.toInt() var row = str[3] val m = 5
-//                        else {var row = str[2] val m = 4}
-//
-//                        Log.d("COL ", col.toString())
-//                        Log.d("ROW ", row.toString())
-//                        Log.d("DIRECTION ", direction)
-//
-//                        val columnCoordinates = columnsPos[col-1].first
-//                        val rowCoordinates = ROWS[row.toString().uppercase()]
-//
-//                        Log.d("COL COORD ", columnCoordinates.toString())
-//                        Log.d("ROW COORD ", rowCoordinates.toString())
-//                        var tileSize = 0
-//                        for (i in m until str.length) {
-//                            Log.d("LETTER TO DRAW ", str[i].toString())
-//                            val letterTile = layoutInflater.inflate(R.layout.letter_tile, binding.gameBoard, false)
-//                            val letter: TextView = letterTile.findViewById(R.id.letter)
-//                            val letterPoint: TextView = letterTile.findViewById(R.id.letterPoint)
-//
-//                            letter.text = str[i].uppercase()
-//                            letterPoint.text = letterPoints[letter.text].toString()
-//
-//                            val params = RelativeLayout.LayoutParams(
-//                                GridConstants.DEFAULT_SIDE.toInt(),
-//                                GridConstants.DEFAULT_SIDE.toInt()
-//                            )
-//
-//
-//                            when (direction) {
-//                                "h" -> {
-//                                    params.leftMargin = (columnCoordinates.toInt()+tileSize) //x
-//                                    params.topMargin = rowCoordinates?.toInt()!!
-//                                }
-//                                "v" -> {
-//                                    params.leftMargin = columnCoordinates.toInt() //x
-//                                    params.topMargin = (rowCoordinates?.toInt()!!+tileSize)
-//                                } else -> {}
-//                            }
-//
-//                            gameBoard.addView(letterTile, params)
-//
-//                            for (tile in letterRack.children) {
-//                                if (tile.findViewById<TextView>(R.id.letter).text == letter.text) {
-//                                    letterRack.removeView(tile)
-//                                }
-//                            }
-//
-//                            isPlaced.add(LetterInHand(col, params.leftMargin.toFloat(), row.toString().uppercase(), params.topMargin.toFloat(), str[i].toString(), 0))
-//
-//                            if(direction=="h") col++ else row++
-//                            Log.d("ARE PLACED ", isPlaced.toString())
-//
-//                            Log.d("TILE SIZE ", tileSize.toString())
-//                            tileSize+=GridConstants.DEFAULT_SIDE.toInt()
-//
-//                        }
-//                        isInside = true
-//                        buttonPlay.isEnabled = true
-//                    }
-//                    hintHolder.addView(hintButton)
-//                }
-//
-//            }
+
+            buttonHint.setOnClickListener {
+                cluesProgress.visibility = VISIBLE
+                buttonHint.isEnabled = false
+                isYourTurn = false
+                toggleSwap.isEnabled = false
+
+                val hintList = arrayListOf<String>()
+
+                SocketHandler.getSocket().emit("Request Clue", "")
+
+                SocketHandler.getSocket().once("Clue Response") {args ->
+
+                    Log.d("args", args[0].toString())
+                    if (args[0] != null) {
+                        val cluesListJSON = args[0] as JSONArray
+                        for (i in 0 until cluesListJSON.length()) {
+                            hintList.add(cluesListJSON.getString(i).drop(6))
+                        }
+                        Log.d("cluesListJSON", cluesListJSON.toString())
+                        Log.d("hintList", hintList.toString())
+                        activity?.runOnUiThread {
+                            clearTurn()
+                            toggleSwap.isEnabled = false
+                            hintHolder.removeAllViews()
+                            cluesProgress.visibility = GONE
+                            hintPanel.visibility = VISIBLE
+                            hintPanel.findViewById<FrameLayout>(R.id.noHelpHint).setOnClickListener {
+                                clearTurn()
+                                buttonHint.isEnabled = false
+                            }
+                            isYourTurn = true
+
+                            for (clue in hintList) {
+                                val hintButton = layoutInflater.inflate(R.layout.hint, hintHolder, false)
+                                val hint: TextView = hintButton.findViewById(R.id.displayedHint)
+                                hint.text = clue.uppercase()
+
+                                Log.d("HINT", clue)
+
+                                hintButton.setOnClickListener {
+                                    isPlaced.clear()
+                                    updateBoard(lettersOnBoard)
+                                    updateRack(playerHand)
+
+                                    val direction: String
+                                    val m: Int
+                                    var colInt: Int
+
+                                    var col = (clue[1]).toString()
+                                    var row = (clue[0])
+
+                                    if (clue[2].isDigit()) {
+                                        col += clue[2]
+                                        colInt = col.toInt()
+                                        direction = (clue[3]).toString()
+                                        m = 5
+                                    }
+                                    else {
+                                        colInt = col.toInt()
+                                        direction = (clue[2]).toString()
+                                        m = 4
+                                    }
+
+                                    Log.d("COL ", col)
+                                    Log.d("ROW ", row.toString())
+                                    Log.d("DIRECTION ", direction)
+
+                                    for (i in m until clue.length) {
+                                        Log.d("LETTER TO DRAW ", clue[i].toString())
+                                        val letterTile = layoutInflater.inflate(R.layout.letter_tile, binding.gameBoard, false)
+                                        val letter: TextView = letterTile.findViewById(R.id.letter)
+                                        val letterPoint: TextView = letterTile.findViewById(R.id.letterPoint)
+
+                                        letter.text = clue[i].uppercase()
+                                        letterPoint.text = letterPoints[letter.text].toString()
+
+                                        var columnCoordinates = columnsPos[colInt-1].first
+                                        var rowCoordinates = ROWS[row.toString().uppercase()]
+
+                                        Log.d("COL COORD ", columnCoordinates.toString())
+                                        Log.d("ROW COORD ", rowCoordinates.toString())
+
+                                        val params = RelativeLayout.LayoutParams(
+                                            GridConstants.DEFAULT_SIDE.toInt(),
+                                            GridConstants.DEFAULT_SIDE.toInt()
+                                        )
+
+                                        Log.d("LETTER ARLEARY ON  BOARD HINT", "$colInt${(row).uppercase()}")
+                                        Log.d("IS ON BOARD?", ((binding.gameBoard.findViewWithTag<View>("$colInt${(row).uppercase()}") != null).toString()))
+                                        when (direction) {
+                                            "h" -> {
+                                                if (binding.gameBoard.findViewWithTag<View>("$colInt${(row).uppercase()}") != null) {
+                                                    Log.d("LETTER ARLEARY ON  BOARD HINT 1", "$colInt$row")
+                                                    while (binding.gameBoard.findViewWithTag<View>("$colInt${(row).uppercase()}") != null) {
+                                                        Log.d("FINDING NEXT COL", colInt.toString())
+                                                        colInt++
+                                                        Log.d("LETTER ARLEARY ON  BOARD HINT AFTER COL", "$colInt${(row).uppercase()}")
+                                                    }
+                                                    columnCoordinates = columnsPos[colInt-1].first
+                                                    rowCoordinates = ROWS[row.toString().uppercase()]
+                                                    params.leftMargin = (columnCoordinates.toInt()) //x
+                                                    params.topMargin = rowCoordinates?.toInt()!!
+                                                    gameBoard.addView(letterTile, params)
+                                                    isPlaced.add(LetterInHand(colInt, params.leftMargin.toFloat(), row.toString().uppercase(), params.topMargin.toFloat(), clue[i].toString(), 0))
+                                                    colInt++
+
+                                                } else {
+                                                    params.leftMargin = (columnCoordinates.toInt()) //x
+                                                    params.topMargin = rowCoordinates?.toInt()!!
+                                                    gameBoard.addView(letterTile, params)
+                                                    isPlaced.add(LetterInHand(colInt, params.leftMargin.toFloat(), row.toString().uppercase(), params.topMargin.toFloat(), clue[i].toString(), 0))
+                                                    colInt++
+                                                }
+                                            }
+                                            "v" -> {
+                                                if (binding.gameBoard.findViewWithTag<View>("$colInt${(row).uppercase()}") != null) {
+                                                    Log.d("LETTER ARLEARY ON  BOARD HINT 1", "$colInt${(row).uppercase()}")
+                                                    while (binding.gameBoard.findViewWithTag<View>("$colInt${(row).uppercase()}") != null) {
+                                                        Log.d("FINDING NEXT ROW", row.toString())
+                                                        row++
+                                                        Log.d("LETTER ARLEARY ON  BOARD HINT AFTER ROW", "$colInt${(row).uppercase()}")
+                                                    }
+                                                    columnCoordinates = columnsPos[colInt-1].first
+                                                    rowCoordinates = ROWS[row.toString().uppercase()]
+                                                    params.leftMargin = columnCoordinates.toInt() //x
+                                                    params.topMargin = (rowCoordinates?.toInt()!!)
+                                                    gameBoard.addView(letterTile, params)
+                                                    isPlaced.add(LetterInHand(colInt, params.leftMargin.toFloat(), row.toString().uppercase(), params.topMargin.toFloat(), clue[i].toString(), 0))
+                                                    row++
+                                                } else {
+                                                    params.leftMargin = columnCoordinates.toInt() //x
+                                                    params.topMargin = (rowCoordinates?.toInt()!!)
+                                                    gameBoard.addView(letterTile, params)
+                                                    isPlaced.add(LetterInHand(colInt, params.leftMargin.toFloat(), row.toString().uppercase(), params.topMargin.toFloat(), clue[i].toString(), 0))
+                                                    row++
+                                                }
+                                            } else -> {}
+                                        }
+
+                                        for (tile in letterRack.children) { //effacer lettre du chevalet
+                                            if (tile.findViewById<TextView>(R.id.letter).text == letter.text) {
+                                                letterRack.removeView(tile)
+                                            }
+                                        }
+
+                                        firstLetterPlaced = isPlaced[0]
+                                        Log.d("ARE PLACED ", isPlaced.toString())
+                                    }
+                                    isInside = true
+                                    buttonPlay.isEnabled = true
+                                }
+                                hintHolder.addView(hintButton)
+                        }
+                    }
+                    }
+                }
+
+
+
+            }
             confirmLetter.setOnClickListener {
                 sendBlankLetter()
             }
@@ -330,11 +405,23 @@ class GamePageFragment : Fragment() {
                 val noButton = alertView.findViewById<AppCompatButton>(R.id.dialogNo)
                 builder?.setView(alertView)
                 yesButton.setOnClickListener {
-                    GameRoomModel.leaveRoom()
-                    SocketHandler.getSocket().emit("Abandon")
-                    if(TournamentModel.inTournament)
-                        findNavController().navigate(R.id.action_fullscreenFragment_to_bracketFragment2)
-                    findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
+                    if (!GameRoomModel.isPlayer) { // problème de redirection
+                        SocketHandler.getSocket().emit("Abandon")
+                        GameRoomModel.leaveRoom()
+                        if(TournamentModel.inTournament) {
+                            findNavController().navigate(R.id.action_fullscreenFragment_to_bracketFragment2)
+                        } else {
+                            findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
+                        }
+                    } else {
+                        SocketHandler.getSocket().emit("Abandon")
+                        GameRoomModel.leaveRoom()
+                        if(TournamentModel.inTournament) {
+                            findNavController().navigate(R.id.action_fullscreenFragment_to_bracketFragment2)
+                        } else {
+                            findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
+                        }
+                    }
                     builder?.dismiss()
                 }
                 noButton.setOnClickListener {
@@ -589,11 +676,6 @@ class GamePageFragment : Fragment() {
         timer.cancel()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        timer.cancel()
-    }
-
     private fun hide() {
         // Hide UI first
         fullscreenContentControls?.visibility = GONE
@@ -645,11 +727,6 @@ class GamePageFragment : Fragment() {
          * and a change of the status and navigation bar.
          */
         private const val UI_ANIMATION_DELAY = 300
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -725,12 +802,13 @@ class GamePageFragment : Fragment() {
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, isYouColor, true)
         var isWinner: PlayersState? = null
         binding.playersInfoHolder.removeAllViews()
+        var isHigher = playersList[0].score
+
         if (gameOver) {
-            var isHigher = playersList[0].score
             for (player in playersList) {
                 if (player.score > isHigher) {
                     isHigher = player.score
-                    isWinner = player
+                    Log.d("WINNER", player.toString())
                 }
             }
         }
@@ -769,6 +847,7 @@ class GamePageFragment : Fragment() {
                     playerTurn.setBackgroundResource(R.drawable.player_turn_border)
                 }
             } else {
+                if (player.score == isHigher) isWinner = player
                 if (player == isWinner) {
                     playerTurn.setBackgroundColor(isYouColor.data)
                     binding.gameWinnerHolder.visibility = VISIBLE
@@ -875,6 +954,7 @@ class GamePageFragment : Fragment() {
         binding.gameBoard.removeView(binding.gameBoard.findViewWithTag("activeTile"))
         if (isInside) SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("x" to oldPosRow, "y" to oldPosCol)))
         isPlaced.clear()
+        binding.toggleSwap.isEnabled = true
         binding.buttonPlay.isEnabled = false
         binding.backInHand.visibility = GONE
         binding.buttonExchange.isEnabled = false

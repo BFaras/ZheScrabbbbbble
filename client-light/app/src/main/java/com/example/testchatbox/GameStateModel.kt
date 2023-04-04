@@ -57,6 +57,7 @@ class GameStateModel: ViewModel() {
     private lateinit var gameMock: GameState
 
     init {
+        getAvatars()
         getGameState()
         SocketHandler.getSocket().on("Game State Update") { args ->
                 val gameJSON = args[0] as JSONObject
