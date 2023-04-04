@@ -213,7 +213,9 @@
         "DATE": "Date: ",
         "TIME": "Heure: ",
         "GAMESTATE": "État de la partie: ",
-        "NEWNAME": "Veuillez inscrire votre nouveau nom"
+        "NEWNAME": "Veuillez inscrire votre nouveau nom",
+        "LOSS": "Défaite",
+        "WIN": "Victoire"
     },
     "TOURNAMENT-QUEUE": {
         "TITLE": "En recherche de tournois",

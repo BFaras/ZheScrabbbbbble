@@ -12,7 +12,7 @@
             <tr *ngFor = "action of formerActionsHistory;let indexAction = index" >
                 <td>{{formerActionsHistory[indexAction].date}}</td>
                 <td>{{formerActionsHistory[indexAction].time}}</td>
-                <td>{{checkStatus(indexAction)}}</td>
+                <td>{{ checkStatus(indexAction) | translate}}</td>
             </tr>
         </table>
     </div>

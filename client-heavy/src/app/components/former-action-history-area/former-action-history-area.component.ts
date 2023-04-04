@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActionHistory, VICTORY_STATUS } from '@app/classes/action-history';
-const DEFEAT = "Défaite";
-const VICTORY = "Victoire";
+const DEFEAT = 'PROFILE-PAGE.LOSS';
+const VICTORY = 'PROFILE-PAGE.WIN';
 @Component({
   selector: 'app-former-action-history-area',
   templateUrl: './former-action-history-area.component.html',

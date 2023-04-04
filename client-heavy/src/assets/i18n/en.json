@@ -213,7 +213,9 @@
         "DATE": "Date: ",
         "TIME": "Time: ",
         "GAMESTATE": "Game state: ",
-        "NEWNAME": "Please enter your new username"
+        "NEWNAME": "Please enter your new username",
+        "LOSS": "Loss",
+        "WIN": "Win"
     },
     "TOURNAMENT-QUEUE": {
         "TITLE": "In search of a tournament",
