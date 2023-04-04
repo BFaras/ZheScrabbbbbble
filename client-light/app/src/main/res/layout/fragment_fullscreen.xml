@@ -126,6 +126,13 @@
                     ></TextView>
             </LinearLayout>
 
+            <ProgressBar
+                android:id="@+id/cluesProgress"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="20dp"
+                android:visibility="gone">
+            </ProgressBar>
             <LinearLayout
                 android:id="@+id/hintPanel"
                 android:layout_width="match_parent"
@@ -174,11 +181,12 @@
                     android:orientation="vertical">
                 </GridLayout>
                 <FrameLayout
+                    android:id="@+id/noHelpHint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/background_direction_panel"
-                    android:backgroundTint="?colorBackgroundFloating">
+                    android:backgroundTint="?colorSecondary">
                     <TextView
                         android:id="@+id/displayedHint"
                         android:layout_width="match_parent"
@@ -186,7 +194,8 @@
                         android:textSize="12dp"
                         android:textAlignment="center"
                         android:textStyle="bold"
-                        android:text="PAS BESOIN D'INDICES"
+                        android:textColor="?colorOnSecondary"
+                        android:text="@string/pas_besoin_d_indices"
                         android:layout_height="wrap_content"
                         android:justificationMode="inter_word" />
                 </FrameLayout>

@@ -96,6 +96,7 @@ class ChatFragment : Fragment(), ObserverChat {
     }
 
     private fun loadChatMessages(){
+        binding.chatProgress.visibility = View.VISIBLE
         SocketHandler.getSocket().once("Chat History Response"){args ->
             val messageArray= args[0] as JSONArray
             val messagesBox = binding.textView
@@ -131,6 +132,7 @@ class ChatFragment : Fragment(), ObserverChat {
                 }
 
                 activity?.runOnUiThread(java.lang.Runnable {
+                    binding.chatProgress.visibility = View.GONE
                     messagesBox.addView(messageContainer)
                     binding.scrollView.post { binding.scrollView.fullScroll(View.FOCUS_DOWN) }
                 })

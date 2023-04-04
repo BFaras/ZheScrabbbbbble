@@ -137,5 +137,6 @@
     <string name="numberPlayers" translatable="false"><![CDATA[%1$s / 4]]></string>
     <string name="congrats_to_all_players">congrats to all players!</string>
     <string name="tournament_ranking">tournament ranking</string>
+    <string name="pas_besoin_d_indices">PAS BESOIN D\'INDICES</string>
 
 </resources>
