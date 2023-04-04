@@ -8,6 +8,7 @@ import { AvatarPopUpComponent } from '@app/components/profil-pop-up/avatar-pop-u
 import { NO_ERROR, USERNAME_TAKEN } from '@app/constants/error-codes';
 import { Theme } from '@app/constants/themes';
 import { AccountService } from '@app/services/account-service/account.service';
+import { FriendsService } from '@app/services/friends.service';
 import { ThemesService } from '@app/services/themes-service/themes-service';
 import { Subscription } from 'rxjs';
 
@@ -17,7 +18,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./profile-page.component.scss']
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {
-  accountProfile: ProfileInfo
+  profileMode: boolean;
+  accountProfile: ProfileInfo;
   accountUsername: string;
   errorCodeUsername: string
   subscriptionChangeAvatar: Subscription;
@@ -32,7 +34,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   constructor(private accountService: AccountService,
     public dialog: MatDialog,
     private themeService: ThemesService,
-    private router: Router) {}
+    private router: Router,
+    private friends: FriendsService) { this.profileMode = this.friends.getMode(); console.log(this.profileMode) }
 
   ngOnDestroy() {
     this.subscriptionChangeAvatar.unsubscribe();
@@ -72,7 +75,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   }
 
   getUserName() {
-    this.accountUsername = this.accountService.getUsername();
+    if (this.profileMode) this.accountUsername = this.accountService.getUsername();
+    else this.accountUsername = this.friends.getUsername();
   }
 
   ngOnInit(): void {
@@ -95,7 +99,10 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       }
     })
     this.getUserName();
-    this.accountProfile = this.accountService.getProfile();
+
+    if (this.profileMode) this.accountProfile = this.accountService.getProfile();
+    else this.accountProfile = this.friends.getProfile();
+    console.log(this.accountProfile);
     this.avatarCircle = "assets/avatar/" + this.accountProfile.avatar;
     this.progressionBarValue = (this.accountProfile.levelInfo.xp / this.accountProfile.levelInfo.nextLevelXp) * 100
   }

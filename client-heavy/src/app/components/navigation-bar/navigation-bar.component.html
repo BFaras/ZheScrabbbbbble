@@ -2,7 +2,7 @@
     <app-language></app-language>
     <div id="buttons">
         <p class="tabs" routerLink="/home" (click)="callNavLogic()">{{ 'NAVBAR.HOME' | translate }}</p>
-        <p class="tabs" routerLink="/profile-page" (click)="callNavLogic()">{{ 'NAVBAR.PROFILE' | translate }}</p>
+        <p class="tabs" routerLink="/profile-page" (click)="callNavLogic()" (click)="setMode(true)">{{ 'NAVBAR.PROFILE' | translate }}</p>
         <p class="tabs" routerLink="/friends-page" (click)="callNavLogic()">{{ 'NAVBAR.FRIENDS' | translate }}</p>
         <p class="tabs" (click)="setActive('popup')" (click)="openChat('popup')" href="chat-page/chat-page.component.html" target="_blank" >Chat Pop Up</p>
         <p class="tabs" (click)="setActive('chat')" routerLink="/chat" (click)="callNavLogic()">Chat</p>

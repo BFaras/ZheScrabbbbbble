@@ -21,7 +21,8 @@
         "EMAIL": "Adresse Email",
         "SHOWPASS": "Montrer le mot de passe",
         "SIGNUP": "Inscription",
-        "NEXT": "Continuer"
+        "NEXT": "Continuer",
+        "AVATAR": "Choisir un avatar"
     },
     "SECURITYQ": {
         "QUESTION": "Question de sécurité: ",

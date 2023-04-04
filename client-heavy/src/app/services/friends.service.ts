@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Friend } from '@app/classes/friend-info';
+import { ProfileInfo } from '@app/classes/profileInfo';
 import { Observable, Observer } from 'rxjs';
 import { SocketManagerService } from './socket-manager-service/socket-manager.service';
 
@@ -7,7 +8,9 @@ import { SocketManagerService } from './socket-manager-service/socket-manager.se
   providedIn: 'root'
 })
 export class FriendsService {
-
+  friendProfile: ProfileInfo;
+  mode: boolean = true;
+  username: string;
   constructor(private socketManagerService: SocketManagerService) {}
 
   getFriendsListObservable(): Observable<Friend[]> {
@@ -31,5 +34,36 @@ export class FriendsService {
     });
   }
 
+  getFriendsProfile(username: string): Observable<ProfileInfo> {
+    this.socketManagerService.getSocket().emit("Get Profile Information", username);
+    return new Observable((observer: Observer<ProfileInfo>) => {
+      this.socketManagerService.getSocket().once('User Profile Response', (profileInfo: ProfileInfo) => {
+        observer.next(profileInfo);
+      });
+    });
+  }
 
+  setUpProfile(profileInfo: ProfileInfo) {
+    this.friendProfile = profileInfo;
+  }
+
+  getProfile() {
+    return this.friendProfile;
+  }
+
+  setMode(mode: boolean) {
+    this.mode = mode;
+  }
+
+  getMode() {
+    return this.mode;
+  }
+
+  setUsername(username: string) {
+    this.username = username;
+  }
+
+  getUsername() {
+    return this.username;
+  }
 }

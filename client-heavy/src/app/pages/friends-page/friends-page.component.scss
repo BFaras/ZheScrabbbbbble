@@ -132,3 +132,11 @@ h1 {
 .add {
     font-size: 20px;
 }
+
+.name {
+    cursor: pointer;
+}
+
+.name:hover {
+    color: var(--accent-default);
+}
