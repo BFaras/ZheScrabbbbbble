@@ -28,42 +28,50 @@
             android:layout_marginTop="10dp"
             android:textAlignment="center"
             android:text="@string/vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil"/>
+        <HorizontalScrollView
+            android:layout_width="470dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:scrollbars="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:divider="@drawable/letters_hand_divider"
+                android:showDividers="middle"
+                android:scrollbars="horizontal"
+                android:orientation="horizontal">
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/avatar1"
+                    android:layout_height="150dp"
+                    android:layout_width="150dp"
+                    app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                    app:srcCompat="@drawable/cat"
+                    android:scaleType="centerCrop"
+                    android:background="@color/BabyPink">
+                </com.google.android.material.imageview.ShapeableImageView>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/avatar2"
+                    android:layout_height="150dp"
+                    android:layout_width="150dp"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/dog"
+                    app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                    android:background="@color/BabyPink">
+                </com.google.android.material.imageview.ShapeableImageView>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/avatar3"
+                    android:layout_height="150dp"
+                    android:layout_width="150dp"
+                    app:srcCompat="@drawable/flower"
+                    android:scaleType="centerCrop"
+                    app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                    android:background="@color/BabyPink">
+                </com.google.android.material.imageview.ShapeableImageView>
+            </LinearLayout>
+        </HorizontalScrollView>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:divider="@drawable/letters_hand_divider"
-            android:showDividers="middle"
-            android:orientation="horizontal">
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/avatar1"
-                android:layout_height="150dp"
-                android:layout_width="150dp"
-                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                app:srcCompat="@drawable/cat"
-                android:scaleType="centerCrop"
-                android:background="@color/BabyPink">
-            </com.google.android.material.imageview.ShapeableImageView>
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/avatar2"
-                android:layout_height="150dp"
-                android:layout_width="150dp"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/dog"
-                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                android:background="@color/BabyPink">
-            </com.google.android.material.imageview.ShapeableImageView>
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/avatar3"
-                android:layout_height="150dp"
-                android:layout_width="150dp"
-                app:srcCompat="@drawable/flower"
-                android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                android:background="@color/BabyPink">
-            </com.google.android.material.imageview.ShapeableImageView>
-        </LinearLayout>
     </LinearLayout>
 </FrameLayout>
 
