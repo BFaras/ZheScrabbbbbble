@@ -3,31 +3,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?backgroundColor"
     tools:context=".QueueFragment">
-
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|top"
-        android:layout_marginTop="150dp"
-        android:text="@string/queueMessage"
-        android:textSize="25dp" />
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="@drawable/background_side_panel"
+        android:backgroundTint="?colorSecondary"
+        android:layout_gravity="center|end">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/annulerBtn"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:text="@string/annuler"
-        android:textColor="?colorOnPrimary"
-        android:background="@drawable/background_chat_input"
-        android:backgroundTint="?colorPrimary"
-        android:layout_marginTop="100dp"
+        <ImageButton
+            android:id="@+id/buttonfriends"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/ic_groups"
+            android:layout_gravity="center_vertical" />
+
+        <ImageButton
+            android:id="@+id/buttonchat"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_chat"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textSize="18dp"/>
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:fontFeatureSettings="smcp"
+            android:textStyle="bold"
+            android:layout_marginBottom="100dp"
+            android:text="@string/queueMessage"
+            android:textSize="25sp" />
+        <ProgressBar
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="95dp"
+            android:layout_gravity="center"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/annulerBtn"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:text="@string/annuler"
+            android:textColor="?colorOnPrimary"
+            android:background="@drawable/background_chat_input"
+            android:backgroundTint="?colorPrimary"
+            android:layout_gravity="center"
+            android:textSize="18dp"/>
+    </LinearLayout>
 
-    <ProgressBar
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"/>
 
 </FrameLayout>
