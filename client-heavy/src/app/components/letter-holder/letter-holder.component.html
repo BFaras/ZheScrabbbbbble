@@ -1,25 +1,25 @@
 <div id="zoom-holder">
     <div id="holder-buttons-container" (click)="$event.stopPropagation()">
-        <button class="button" id="cancelButton" [style.visibility]="makingSelection ? 'visible' : 'hidden'" (click)="cancelSelection()">
+        <button class="button" id="cancelButton" *ngIf="makingSelection" (click)="cancelSelection()">
             {{'LETTERHOLDER.CANCEL' | translate}}
         </button>
         <button
             class="button"
             id="swapButton"
-            [style.visibility]="makingSelection ? 'visible' : 'hidden'"
+            *ngIf="makingSelection"
             (click)="swapLetters()"
-            [disabled]="isDisabled || notEnoughLettersLeft"
+            [disabled]="isDisabled() || notEnoughLettersLeft"
         >
             {{'LETTERHOLDER.REPLACE' | translate}}
         </button>
-
-        <div cdkDropList [cdkDropListData]="playerHand"id="rack"  >
+        <button *ngIf="!isObserver() && !makingSelection" class="button" id="clueButton" (click)="requestClue()" [disabled]="isDisabled()">{{'LETTERHOLDER.HINT' | translate}}</button>
+        <div cdkDropList [cdkDropListData]="playerHand"id="rack" >
             <div cdkDrag (cdkDragStarted) = "cancelManipulationAndSelection($event)"
             (contextmenu)="clickInside($event,indexOfelement)"
             (click)="clickInside($event,indexOfelement)"
             (click)="isReceiver()"
             (contextmenu)="isReceiver()"
-            (keypress)="onKeyDown($event)" [cdkDragDisabled]="isDraggingMode() || isObserver()" 
+            (keypress)="onKeyDown($event)" [cdkDragDisabled]="isDraggingMode() || isObserver() || isDisabled()" 
             [cdkDragData]="tile" *ngFor="let tile of playerHand;let indexOfelement=index"
                         
             [ngClass]="{'red': listTileSelected[indexOfelement+1],'green':listTileManipulated[indexOfelement+1]}"class="tile" >
@@ -27,8 +27,8 @@
                 <h1 id="point">{{getPointIfNotBlank(playerHandPoints[indexOfelement])}}</h1>
             </div>
         </div>
-        <button *ngIf="!isObserver()" id="playButton" class="button" [disabled]="isDisabled" (click)="sendWord()">{{'LETTERHOLDER.PLAY' | translate}}</button>
-        <button *ngIf="!isObserver()" class="button" id="skipButton" (click)="skipTurn()" [disabled]="isDisabled">{{'LETTERHOLDER.PASS' | translate}}</button>
+        <button *ngIf="!isObserver()" id="playButton" class="button" [disabled]="isDisabled()" (click)="sendWord()">{{'LETTERHOLDER.PLAY' | translate}}</button>
+        <button *ngIf="!isObserver()" class="button" id="skipButton" (click)="skipTurn()" [disabled]="isDisabled()">{{'LETTERHOLDER.PASS' | translate}}</button>
         <button *ngIf="isObserver()" class="button" id="swapPlayerButton" (click)="switchObserverView()">{{'LETTERHOLDER.SWITCH' | translate}}</button>
     </div>
 </div>

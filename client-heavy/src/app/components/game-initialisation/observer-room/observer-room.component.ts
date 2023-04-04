@@ -24,7 +24,8 @@ export class ObserverRoomComponent {
         this.waitingRoomManagerService.leaveRoom();
     }
 
-    goToGame() {
+    goToGame(isCoop: boolean) {
+        this.gameStateService.setCoop(isCoop);
         this.gameStateService.setObserver(0);
         this.gameStateService.setTournamentGame(false);
         this.router.navigate(['/game']).then(() => {
@@ -32,7 +33,7 @@ export class ObserverRoomComponent {
         });
     }
 
-    gameStartVerif(gameStarted: boolean) {
-        if (gameStarted) this.goToGame();
+    gameStartVerif(gameStartInfo : {answer : boolean, isCoop : boolean}) {
+        if (gameStartInfo.answer)this.goToGame(gameStartInfo.isCoop);
     }
 }

@@ -1,4 +1,5 @@
 import { Hand } from '@app/classes/hand';
+import { CoopPlayer } from './coop-player';
 
 export class Player {
     private uuid: string;
@@ -7,7 +8,7 @@ export class Player {
     private name: string;
     private score: number;
 
-    constructor(uuid: string, databaseId: string, name: string) {
+    constructor(uuid: string = '', databaseId: string = '', name: string = '') {
         this.uuid = uuid;
         this.databaseId = databaseId;
         this.name = name;
@@ -46,5 +47,9 @@ export class Player {
 
     addScore(turnScore: number) {
         this.score += turnScore;
+    }
+
+    toCoopPlayer(): CoopPlayer{
+        return new CoopPlayer(this.uuid, this.databaseId, this.name);
     }
 }

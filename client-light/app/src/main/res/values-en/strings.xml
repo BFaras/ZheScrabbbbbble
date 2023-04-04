@@ -10,9 +10,10 @@
     <string name="rejoindre"><![CDATA[%1$s want to join your game.]]></string>
     <string name="accepter">Accept</string>
     <string name="refuser">Reject</string>
+    <string name="annuler">Cancel</string>
     <string name="ajouter">Add</string>
     <string name="FriendCode">Enter your friend\'s code to add him </string>
-
+    <string name="queueMessage">In search of a tournament</string>
 
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Main menu</string>

@@ -34,7 +34,7 @@ export class ChatSocketService {
             await this.chatService.addChatMessageToHistory(userId, chatCode, chatMessage);
 
             socket.emit('New Chat Message', chatCode, chatMessage);
-            socket.to(chatCode).emit('New Chat Message', chatCode, chatMessage);
+            socket.to(this.chatService.getChatRoomName(chatCode)).emit('New Chat Message', chatCode, chatMessage);
             // eslint-disable-next-line no-console
             console.log(new Date().toLocaleTimeString() + ' | New Message : ' + message);
         });

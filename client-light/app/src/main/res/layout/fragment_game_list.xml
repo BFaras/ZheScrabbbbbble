@@ -219,7 +219,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
             android:layout_gravity="top|end"
-            android:text="Cancel" />
+            android:text="@string/annuler" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
