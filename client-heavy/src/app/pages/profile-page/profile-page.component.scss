@@ -1,10 +1,11 @@
 *{
     font-family: 'Courier New', Courier, monospace;
     font-size: 17px;
+    color: var(--text-default);
 }
 
 .box {
-    background: var(--background-tertiary);
+    background: var(--playarea-letterx3);
     box-shadow: var(--box-shadow);
     border-radius: 10px;
 }
@@ -19,13 +20,14 @@
     height: 25%;
     padding: 10px;
     justify-content: space-around;
+    margin-top: 2.2%;
 }
 
 .avatarSquare{
-    width:120px;
-    height: 120px;
+    width: 180px;
+    height: 180px;
     position: relative;
-    bottom: 1vh;
+    bottom: 2vh;
 }
 
 .avatarSection{
@@ -35,20 +37,38 @@
     align-items: center;
     justify-content: center;
 }
+
+.medal {
+    height: 80px;
+    width: 80px;
+}
+
 #nameContainer{
     display:flex;
     flex-direction: row;
-    
 }
 
 #tournamentMedals{
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    column-gap: 30px;
+    row-gap: 30px;
     align-items: center;
-    position: relative;
-    justify-content: space-around;
-    width: 30%;
-    height: 100%;
+    justify-content: center;
+    height: 110px;
+    padding-top: 50px;
+}
+
+.numberOfMedals {
+    font-size: 27px;
+    color: var(--text-secondary);
+}
+
+.medals {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
 }
 
 #nameLevel{
@@ -59,12 +79,11 @@
     font-size: 32px;
     align-items: flex-start;
 }
+
 #id{
     display: flex;
 }
-img {
-    border-radius: 50%;
-  }
+
 #stats-and-former-actions{
     display: flex;
     flex-direction: column;
@@ -72,14 +91,12 @@ img {
     height: 100%;
     grid-gap: 30px;
     position: relative;
-
 }
+
 #stats{
     display: flex;
-    height: 11.5vh;
+    height: 14vh;
     flex-direction: column;
-    
-
 }
 
 .specific-stat{
@@ -91,8 +108,37 @@ img {
     height: 100%;
     align-items: center;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
+    background-color: var(--background-tertiary);
+    border-radius: 7px;
+    width: 100%;
+    padding: 10px 50px;
 }
+
+.title {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.stats {
+    margin-bottom: 10px;
+}
+
+#name {
+    font-size: 50px;
+    font-family: 'Shrikhand';
+    font-weight: lighter;
+    margin-bottom: 30px;
+}
+
+.data {
+    margin-bottom: 15px;
+}
+
+#id {
+    font-size: 30px;
+}
+
 mat-card-header{
     align-self: center;
 }
@@ -117,7 +163,7 @@ app-connection-history-area{
     margin-top: 30px;
 }
 
-.button:hover {
+button:hover {
     color: var(--button-text-hover);
     cursor: pointer;
     background: var(--button-primary-hover);
@@ -125,9 +171,10 @@ app-connection-history-area{
     transition-duration: 0.2s;
 }
 
-.button {
+button {
+    width: 185px;
     text-decoration: none;
-    margin-top: 20px;
+    margin-right: 20px;
     text-align: center;
     border: none;
     padding: 10px;
@@ -141,12 +188,14 @@ app-connection-history-area{
     transition: color 0.5s linear;
     -webkit-transition: color 0.2s linear;
 }
+
 .nameLevel{
     display:flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
 }
+
 .profileAvatarNameLevel{
     display:flex;
     position:relative;
@@ -155,45 +204,25 @@ app-connection-history-area{
     padding:10px;
 }
 
-// fin de ma partie
-
 #themes {
-    width: 40%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 77%;
+    padding: 10px 30px;
     font-family: 'Courier New', Courier, monospace;
     font-size: 20px;
     font-weight: bold;
-    margin-top: 5%;
+    margin: 28px 0px 0px;
     color: var(--text-default);
 }
 
-.theme-button {
-    text-decoration: none;
-    text-align: center;
-    border: none;
-    padding: 5px;
-    margin-right: 2%;
-    background-color: var(--button-quaternary);
-    border-radius: 7px;
-    width: max-content;
-    font-size: 15px;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-    box-shadow: var(--box-shadow);
-    color: var(--button-text-default);
-    transition: color 0.5s linear;
-    -webkit-transition: color 0.2s linear;
-}
-
-.theme-button:hover {
-    color: var(--button-text-hover);
-    cursor: pointer;
-    background: var(--button-quaternary-hover);
-    transition-property: background-color;
-    transition-duration: 0.2s;
+.theme {
+    padding: 5px 0px;
 }
 
 .active {
-    background-color: var(--button-quaternary-hover);
+    background-color: var(--button-primary-hover);
     color: var(--text-default);
 }
 

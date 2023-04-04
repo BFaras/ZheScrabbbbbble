@@ -36,8 +36,10 @@
         "NEWPASS": "New password: "
     },
     "USERDATA": {
-        "USERNAME": "Username",
-        "PASSWORD": "Password"
+        "USERNAME": "Username: ",
+        "PASSWORD": "Password: ",
+        "LEVEL": "Level: ",
+        "USERCODE": "Usercode: "
     },
     "INFOBOARD": {
         "INFOBOARD": "INFO BOARD",
@@ -195,7 +197,23 @@
         "UNFRIEND": "Unfriend"
     },
     "PROFILE-PAGE": {
-        "FRIENDS": "Manage friends"
+        "FRIENDS": "Manage friends",
+        "AVATAR": "Pick an avatar!",
+        "LOGIN": "Log Ins",
+        "LOGOUT": "Log Outs",
+        "WINS": "Wins",
+        "GAMES": "Games",
+        "POINTSAVG": "Game score average",
+        "TIMEAVG": "Game duration average",
+        "STATS": "Profile Stats",
+        "LLHISTORY": "Log In/Log Out history",
+        "GAMEHISTORY": "Game history",
+        "CHANGEAVATAR": "Change avatar",
+        "CHANGENAME": "Change username",
+        "DATE": "Date: ",
+        "TIME": "Time: ",
+        "GAMESTATE": "Game state: ",
+        "NEWNAME": "Please enter your new username"
     },
     "TOURNAMENT-QUEUE": {
         "TITLE": "In search of a tournament",

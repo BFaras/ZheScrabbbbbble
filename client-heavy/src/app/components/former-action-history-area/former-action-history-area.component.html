@@ -1,10 +1,19 @@
 <mat-card id="former-actions">
-    <mat-card-header>
-        Historique des parties antérieurs
+    <mat-card-header class="title">
+        {{ 'PROFILE-PAGE.GAMEHISTORY' | translate }}
     </mat-card-header>
-    <mat-card-content *ngFor = "action of formerActionsHistory;let indexAction = index" >
-        <p>
-            Date: {{formerActionsHistory[indexAction].date}}  Heure: {{formerActionsHistory[indexAction].time}} État du match: {{checkStatus(indexAction)}}
-        </p>
-    </mat-card-content>
+    <div id="table-container">
+        <table id="data-list">
+            <tr>
+                <th><span>{{ 'PROFILE-PAGE.DATE' | translate }}</span></th>
+                <th>{{ 'PROFILE-PAGE.TIME' | translate }}</th>
+                <th>{{ 'PROFILE-PAGE.GAMESTATE' | translate }}</th>
+            </tr>
+            <tr *ngFor = "action of formerActionsHistory;let indexAction = index" >
+                <td>{{formerActionsHistory[indexAction].date}}</td>
+                <td>{{formerActionsHistory[indexAction].time}}</td>
+                <td>{{checkStatus(indexAction)}}</td>
+            </tr>
+        </table>
+    </div>
 </mat-card>

@@ -36,8 +36,10 @@
         "NEWPASS": "Nouveau mot de passe: "
     },
     "USERDATA": {
-        "USERNAME": "Nom d'utilisateur",
-        "PASSWORD": "Mot de passe"
+        "USERNAME": "Nom d'utilisateur: ",
+        "PASSWORD": "Mot de passe: ",
+        "LEVEL": "Niveau: ",
+        "USERCODE": "Code d'utilisateur: "
     },
     "INFOBOARD": {
         "INFOBOARD": "PANNEAU INFORMATIF",
@@ -195,7 +197,23 @@
         "UNFRIEND": "Enlever"
     },
     "PROFILE-PAGE": {
-        "FRIENDS": "Gérer ses amis"
+        "FRIENDS": "Gérer ses amis",
+        "AVATAR": "Choisir un avatar!",
+        "LOGIN": "Connexions",
+        "LOGOUT": "Déconnexions",
+        "WINS": "Victoires",
+        "GAMES": "Parties jouées",
+        "POINTSAVG": "Points moyens par partie",
+        "TIMEAVG": "Durée moyenne d'une partie",
+        "STATS": "Statistiques du compte",
+        "LLHISTORY": "Historique des connexions",
+        "GAMEHISTORY": "Historique des parties",
+        "CHANGEAVATAR": "Changer d'avatar",
+        "CHANGENAME": "Changer son nom",
+        "DATE": "Date: ",
+        "TIME": "Heure: ",
+        "GAMESTATE": "État de la partie: ",
+        "NEWNAME": "Veuillez inscrire votre nouveau nom"
     },
     "TOURNAMENT-QUEUE": {
         "TITLE": "En recherche de tournois",

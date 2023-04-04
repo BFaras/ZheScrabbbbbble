@@ -1,16 +1,14 @@
 *{
     font-family: 'Courier New', Courier, monospace;
     font-size:17px;
+    color: var(--text-default);
 }
-mat-card-header{
-    align-self: center;
-    margin-bottom: 25px;
-}
+
 #former-actions{
     display: flex;
     height: 100%;
     flex-direction: column;
-    background: var(--background-tertiary);
+    background: var(--playarea-letterx3);
     box-shadow: var(--box-shadow);
     border-radius: 10px;
 }
@@ -19,4 +17,50 @@ mat-card-content{
     display: flex;
     flex-direction: column;
     align-items:center;
+}
+
+.title {
+    align-self: center;
+    font-weight: bolder;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+#data-list {
+    background-color: var(--background-tertiary);
+    border-radius: 7px;
+    padding: 10px 30px;
+    width: 100%;
+}
+
+#table-container {
+    height: 200px;
+    overflow: auto;
+    border-radius: 10px;
+}
+
+th, td {
+    text-align: center;
+    padding-bottom: 6px;
+}
+
+::-webkit-scrollbar {
+    width: 1em;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 8px;
+    background: var(--scroll-background);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: var(--scroll-default);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scroll-hover);
 }

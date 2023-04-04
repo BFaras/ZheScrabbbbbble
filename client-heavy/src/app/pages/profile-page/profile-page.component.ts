@@ -24,6 +24,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   subscriptionUsername: Subscription;
   progressionBarValue: number
   avatarCircle: string;
+  medals: string[] = ['1st-place.png', '2nd-place.png', '3rd-place.png'];
   connectionHistory: connectionHistory = {
     connections: [],
     disconnections: [],
@@ -40,8 +41,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
   openDialogChangeName(): void {
     const dialogRef = this.dialog.open(ChangeNamePopUpComponent, {
-      width: '250px',
-      height: '250px',
+      width: '450px',
+      height: '230px',
       data: { accountService: this.accountService }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -110,7 +111,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   }
 
   setActive(event: Event) {
-    let themes = document.getElementsByClassName("theme-button");
+    let themes = document.getElementsByClassName("theme");
     for (let i = 0; i < themes.length; i++) {
       themes[i].className = themes[i].className.replace(" active", "");
     }
