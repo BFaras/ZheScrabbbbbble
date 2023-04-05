@@ -49,6 +49,8 @@
     <string name="invalid_answer">Do not leave the answer field empty</string>
     <string name="login_failed">"Login failed"</string>
     <string name="register_failed">"Failed to register new account"</string>
+
+    <string name="changeUsername">Change your username </string>
     <!-- Strings related to errors -->
     <string name="NO_ERROR">No error</string>
     <string name="ERROR">Error</string>

@@ -39,6 +39,9 @@
     <string name="friendRemove">Retire de la liste d\'amis</string>
 
 
+    <string name="changeUsername">Changement de votre nom d\'utilisateur </string>
+
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Menu principal</string>
     <string name="second_fragment_label">Boîte de clavardage</string>
