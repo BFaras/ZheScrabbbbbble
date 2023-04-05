@@ -41,8 +41,8 @@ export class ObserverRoomComponent {
         this.waitingRoomManagerService.leaveRoom();
     }
 
-    goToGame(isCoop: boolean) {
-        this.gameStateService.setCoop(isCoop);
+    goToGame(info: { isCoop: boolean, roomCode?: string }) {
+        this.gameStateService.setCoop(info.isCoop);
         this.gameStateService.setObserver(0);
         this.gameStateService.setTournamentGame(false);
         this.router.navigate(['/game']).then(() => {
@@ -51,6 +51,6 @@ export class ObserverRoomComponent {
     }
 
     gameStartVerif(gameStartInfo: { answer: boolean, isCoop: boolean }) {
-        if (gameStartInfo.answer) this.goToGame(gameStartInfo.isCoop);
+        if (gameStartInfo.answer) this.goToGame({ isCoop: gameStartInfo.isCoop });
     }
 }

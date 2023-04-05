@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MAX_SECOND_VALUE, Timer } from "@app/classes/timer";
 import { TIMER_VALUES } from "@app/constants/timer-constants";
 import { AvatarInRoomsService } from "@app/services/avatar-in-rooms.service";
+import { ChatService } from "@app/services/chat-service/chat.service";
 import { GameStateService } from "@app/services/game-state-service/game-state.service";
 import { GameData, GameStatus, TournamentService } from "@app/services/tournament-service/tournament.service";
 import { WaitingRoomManagerService } from "@app/services/waiting-room-manager-service/waiting-room-manager.service";
@@ -38,7 +39,8 @@ export class BracketPageComponent implements OnDestroy {
         private waitingRoomManagerService: WaitingRoomManagerService,
         private gameStateService: GameStateService,
         private router: Router,
-        private avatarInRoomService: AvatarInRoomsService) {
+        private avatarInRoomService: AvatarInRoomsService,
+        private chatService: ChatService) {
         /**debut pour avatar */
         this.avatarInRoomService.setUpSocket()
         this.subscriptionAvatar = this.avatarInRoomService.getUsersInRoomAvatarObservable().subscribe(() => {
@@ -142,8 +144,9 @@ export class BracketPageComponent implements OnDestroy {
         }, TIMER_VALUES.timeJump);
     }
 
-    goToGame(isCoop: boolean) {
-        this.gameStateService.setCoop(isCoop);
+    goToGame(info: { isCoop: boolean, roomCode?: string }) {
+        if (info.roomCode) this.chatService.setChatInGameRoom(info.roomCode);
+        this.gameStateService.setCoop(info.isCoop);
         this.gameStateService.setObserver(-1);
         this.gameStateService.setTournamentGame(true);
         this.router.navigate(['/game']).then(() => {
