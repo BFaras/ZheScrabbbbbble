@@ -1,4 +1,4 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Vec2 } from '@app/classes/vec2';
@@ -39,16 +39,17 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         this.subscription = this.gameStateService.getGameStateObservable().subscribe(async (gameState) => {
             if (this.viewLoaded) {
                 this.updateBoardState(gameState)
+                this.fields = []
             }
             this.gameState = gameState;
         });
     }
 
     addField(tile: any, index: number) {
-        this.fields.splice(index, 0, tile);
+        this.fields.push(tile);
     }
 
-    fakeDroppedOnCanvas(event: CdkDragDrop<string[]>, coordinateClick: Vec2) {
+    fakeDroppedOnCanvas(event: CdkDragDrop<string>, coordinateClick: Vec2) {
 
         let tile = {
             top: ROWS[this.letterAdderService.activeSquare.x] + 'px',
@@ -58,7 +59,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         this.addField({ ...tile }, event.currentIndex);
     }
 
-    changePosition(event: CdkDragDrop<any>, field: { top: string; left: string; text: string }) {
+    changePosition(event: CdkDragDrop<string>, field: { top: string; left: string; text: string }) {
         console.log('change position');
         this.setReceiver('playarea');
         const leftBoard = document.getElementById("canvas")?.getBoundingClientRect().left as number;
@@ -85,25 +86,28 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
                 this.letterAdderService.removeDrawingBeforeDragWithinCanvas()
                 field.left = left + "px"
                 field.top = top + "px";
+                /**BOUGER LE TILE A ENLEVER VERS LA FIN */
+                this.changeTilePositionLastMovedTile(field)
                 this.letterAdderService.moveLetterInBoard(field.text)
             } else {
                 /**logique doit etre modifier pour que ca remet dans sport  */
                 this.fields = this.fields.filter((x) => x != field);
                 console.log("letter not in apporprite drop spot , so it s has been removed")
                 this.letterAdderService.removeLetters()
-                event.item._dragRef.dispose();
             }
         } else {
             this.fields = this.fields.filter((x) => x != field);
             console.log("letter not in apporprite drop spot , so it s has been removed")
             /**le remove letter est a modifier pour que ca prenne moins de temops */
             this.letterAdderService.removeLetters()
-            event.item._dragRef.dispose();
         }
 
     }
-    slideLetterToCanvas(letter: CdkDragDrop<string[]>) {
+    slideLetterToCanvas(letter: CdkDragDrop<string>) {
         if (letter.previousContainer === letter.container) {
+            moveItemInArray(this.fields, letter.previousIndex, letter.currentIndex);
+            console.log(letter.previousIndex);
+            console.log(letter.currentIndex);
             console.log('in the sliding and same container')
         } else {
             console.log('in the sliding and not the same container')
@@ -131,13 +135,12 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         }
     }
 
-    openBlankTileDialog(letter: CdkDragDrop<string[]>, coord: Vec2) {
+    openBlankTileDialog(letter: CdkDragDrop<string>, coord: Vec2) {
         const dialogReference = this.dialogBlankTile.open(BlankTilePopUpComponent, {
             width: '250px',
             height: '250px',
         });
         dialogReference.afterClosed().subscribe(result => {
-            this.letterAdderService.setAdderMode(this.formerAdderMode);
             if (result.letter) {
                 this.blankLetterOnDrop = result.letter;
 
@@ -146,6 +149,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
                     this.fakeDroppedOnCanvas(letter, coord);
                     this.letterAdderService.addLettersOnDrop(this.blankLetterOnDrop)
                 }
+            } else {
+                this.letterAdderService.setAdderMode(this.formerAdderMode);
             }
         });
     }
@@ -159,8 +164,22 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
             }
             this.buttonPressed = event.key;
             this.letterAdderService.onPressDown(this.buttonPressed);
+            this.removeTileDraggedIntoBoard(event);
         }
     }
+
+    changeTilePositionLastMovedTile(field: { top: string; left: string; text: string }) {
+
+        this.fields.push(this.fields.splice(this.fields.indexOf(field), 1)[0])
+        console.log(this.fields);
+    }
+
+    removeTileDraggedIntoBoard(event: KeyboardEvent) {
+        if (this.fields && event.key === "Backspace") {
+            this.fields.pop();
+        }
+    }
+
 
     ngOnInit(): void {
         this.letterAdderService.resetMappedBoard();
