@@ -11,7 +11,7 @@ export class GameRoom {
     private game: Game;
     private visibility: RoomVisibility;
     private password: string;
-    
+
     protected gameStarted: boolean;
     protected players: Player[];
     protected observers: string[] = [];
@@ -23,27 +23,27 @@ export class GameRoom {
         this.players = [];
         this.visibility = visibility;
         if (visibility === RoomVisibility.Protected) {
-            if(!password){
+            if (!password) {
                 this.visibility = RoomVisibility.Public
-            }else{
+            } else {
                 this.password = password;
-            } 
+            }
         }
         this.game = new Game(this.players, timerEnabled);
         this.gameStarted = false;
     }
 
-    isPlayerObserver(userId: string): boolean{
+    isPlayerObserver(userId: string): boolean {
         return this.observers.includes(userId);
     }
 
-    addObserver(userId: string){
+    addObserver(userId: string) {
         this.observers.push(userId);
     }
 
-    removeObserver(userId: string){
+    removeObserver(userId: string) {
         const index = this.observers.indexOf(userId);
-        if(index < 0) return;
+        if (index < 0) return;
         this.observers.splice(index, 1);
     }
 
@@ -61,7 +61,7 @@ export class GameRoom {
             return true;
         }
         const index = this.observers.indexOf(playerID);
-        if(index < 0) return false;
+        if (index < 0) return false;
         this.observers.splice(index, 1);
         return false;
     }
@@ -74,8 +74,8 @@ export class GameRoom {
                 break;
             }
         }
-        if(index === -1) return;
-        if(this.players[index] instanceof VirtualPlayer) return;
+        if (index === -1) return;
+        if (this.players[index] instanceof VirtualPlayer) return;
         const newVirtualPlayer = new VirtualPlayerEasy(this.players[index].getName() + " (V)", this);
         newVirtualPlayer.copyPlayerState(this.players[index]);
         this.players[index] = newVirtualPlayer;
@@ -90,15 +90,15 @@ export class GameRoom {
     }
 
     getRealPlayerCount(includeObservers: boolean): number {
-        let count = 0; 
-        for(const player of this.players){
-            if(!(player instanceof VirtualPlayer)) count++;
+        let count = 0;
+        for (const player of this.players) {
+            if (!(player instanceof VirtualPlayer)) count++;
         }
-        if(includeObservers) count += this.observers.length;
+        if (includeObservers) count += this.observers.length;
         return count;
     }
 
-    getObserverCount(): number{
+    getObserverCount(): number {
         return this.observers.length;
     }
 
@@ -131,19 +131,19 @@ export class GameRoom {
     }
 
     verifyPassword(password?: string): boolean {
-        if(!this.password) return true;
+        if (!this.password) return true;
         return this.password === password;
     }
 
-    startGame(timerCallback : (room : GameRoom, username: string, result : CommandResult) => void) {
-        if(this.gameStarted) return;
-        this.game.startGame((username : string, result: CommandResult) => {
+    startGame(timerCallback: (room: GameRoom, username: string, result: CommandResult) => void) {
+        if (this.gameStarted) return;
+        this.game.startGame((username: string, result: CommandResult) => {
             timerCallback(this, username, result);
         });
         this.gameStarted = true;
     }
 
-    isGameStarted(){
+    isGameStarted() {
         return this.gameStarted;
     }
 

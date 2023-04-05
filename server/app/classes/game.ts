@@ -35,10 +35,10 @@ export class Game {
     private startDate: Date;
     private playerTurnIndex: number;
     private timer: NodeJS.Timeout;
-    private timerEnabled : boolean
+    private timerEnabled: boolean
     private timerCallback: (username: string, result: CommandResult) => void;
 
-    constructor(players: Player[], timerEnabled : boolean) {
+    constructor(players: Player[], timerEnabled: boolean) {
         this.passCounter = 0;
         this.reserve = new Reserve();
         this.board = new Board();
@@ -50,7 +50,6 @@ export class Game {
     }
 
     startGame(timerCallback: (username: string, result: CommandResult) => void) {
-        //if (this.players.length < 2) return;
         this.playerTurnIndex = Math.floor(Math.random() * this.players.length);
         for (const player of this.players) {
             player.getHand().addLetters(this.reserve.drawLetters(HAND_SIZE));
@@ -122,6 +121,8 @@ export class Game {
             }
             endMessage += '\n' + player.getName() + ' : ' + player.getHand().getLettersToString();
         }
+        console.log('END GAME');
+        console.log(endMessage);
         return endMessage;
     }
 
@@ -189,7 +190,7 @@ export class Game {
     }
 
     resetTimer() {
-        if(this.timerEnabled){
+        if (this.timerEnabled) {
             clearTimeout(this.timer);
             this.timer = setTimeout(() => {
                 const username = this.players[this.playerTurnIndex].getName();
@@ -245,7 +246,6 @@ export class Game {
         let returnMessage = '';
         this.changeTurn();
         if (this.isGameFinished()) return this.endGame();
-
         return returnMessage;
     }
     private isGameFinished(): boolean {
