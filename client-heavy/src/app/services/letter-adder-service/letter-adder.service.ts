@@ -46,7 +46,6 @@ export class LetterAdderService {
         if (this.canDrop(coords)) {
             console.log("it can be dropped here")
             this.gridService.deleteAndRedraw();
-            this.pervForDrag = this.prevActiveSquare;
             this.prevActiveSquare = this.activeSquare;
             return true
         } else return false
@@ -202,7 +201,9 @@ export class LetterAdderService {
     }
 
     removeDrawingBeforeDragWithinCanvas() {
+        console.log(this.pervForDrag);
         this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
+        console.log(this.addedLettersLog);
         this.gridService.deleteAndRedraw(this.addedLettersLog);
     }
     removeLetters() {

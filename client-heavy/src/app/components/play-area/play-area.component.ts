@@ -74,6 +74,11 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         if (!out) {
             console.log("infield")
             console.log(coordinateClick)
+            console.log(field.top);
+            console.log(field.left)
+            const foundCoords = this.letterAdderService.findCoords(Number(field.left.replace('px', '')), Number(field.top.replace('px', '')));
+            this.letterAdderService.pervForDrag.x = foundCoords.row
+            this.letterAdderService.pervForDrag.y = foundCoords.column
             if (this.letterAdderService.onDropLetterSpot(coordinateClick)) {
                 console.log("letter  in apporprite drop spot")
                 console.log('change position')
@@ -146,10 +151,10 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     @HostListener('document:keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
         if (this.receiver === "playarea") {
-            if(this.gameStateService.isCoop()){
-                if(this.gameStateService.hasPendingAction() || this.gameStateService.getObserverIndex() !== -1) return;
-            }else{
-                if(this.gameState.players[this.gameState.playerTurnIndex].username !== this.accountService.getUsername()) return;
+            if (this.gameStateService.isCoop()) {
+                if (this.gameStateService.hasPendingAction() || this.gameStateService.getObserverIndex() !== -1) return;
+            } else {
+                if (this.gameState.players[this.gameState.playerTurnIndex].username !== this.accountService.getUsername()) return;
             }
             this.buttonPressed = event.key;
             this.letterAdderService.onPressDown(this.buttonPressed);
