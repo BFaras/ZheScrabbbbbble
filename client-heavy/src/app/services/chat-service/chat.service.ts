@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ChatInfo, ChatMessage, ChatType, MessageInfo } from '@app/classes/chat-info';
+import { NO_ERROR } from '@app/constants/error-codes';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { Observable, Observer } from 'rxjs';
 import { Socket } from 'socket.io-client';
@@ -99,6 +100,9 @@ export class ChatService {
         this.socketManagerService.getSocket().emit('Leave Public Chat', chat._id);
         return new Observable((observer: Observer<string>) => {
             this.socketManagerService.getSocket().once('Leave Chat Response', (errorCode: string) => {
+                if (errorCode === NO_ERROR) {
+                    this.messageLog.delete(chat._id);
+                }
                 observer.next(errorCode);
             });
         });
