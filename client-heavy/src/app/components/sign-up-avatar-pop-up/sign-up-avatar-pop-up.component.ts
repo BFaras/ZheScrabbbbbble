@@ -9,7 +9,7 @@ import { AccountCreationService } from '@app/services/account-creation-service/a
 })
 export class SignUpAvatarPopUpComponent implements OnInit {
   avatarChosen: string = "";
-  allAvatars: string[] = ['Daria.PNG', 'Arnaud.PNG', 'Imane.PNG', 'Raphaël.PNG', 'Manuel.PNG', 'Mohamed.PNG', 'cow.png', 'mouse.png', 'giraffe.png',
+  allAvatars: string[] = ['Daria.PNG', 'Arnaud.PNG', 'Imane.PNG', 'Raphael.PNG', 'Manuel.PNG', 'Mohamed.PNG', 'cow.png', 'mouse.png', 'giraffe.png',
     'shark.png', 'owl.png', 'monkey.png', 'robot.png', 'cat.png', 'dog.png', 'alien.png', 'fox.png', 'pig.png', 'panda.png',
     'bunny.png', 'rooster.png', 'unicorn.png', 'lion.png', 'skeleton.png', 'bear.png', 'tiger.png', 'koala.png', 'ghost.png'];
   constructor(private dialogRef: MatDialogRef<SignUpAvatarPopUpComponent>, @Inject(MAT_DIALOG_DATA) public account: { accountService: AccountCreationService }) {
