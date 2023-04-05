@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AccountCreationService } from '@app/services/account-creation-service/account-creation.service';
 
 @Component({
@@ -9,14 +9,17 @@ import { AccountCreationService } from '@app/services/account-creation-service/a
 })
 export class SignUpAvatarPopUpComponent implements OnInit {
   avatarChosen: string = "";
-  allAvatars: string[] = ["cat.jpg", 'dog.jpg', 'flower.jpg'];
+  allAvatars: string[] = ['Daria.PNG', 'Arnaud.PNG', 'Imane.PNG', 'Raphaël.PNG', 'Manuel.PNG', 'Mohamed.PNG', 'cow.png', 'mouse.png', 'giraffe.png',
+    'shark.png', 'owl.png', 'monkey.png', 'robot.png', 'cat.png', 'dog.png', 'alien.png', 'fox.png', 'pig.png', 'panda.png',
+    'bunny.png', 'rooster.png', 'unicorn.png', 'lion.png', 'skeleton.png', 'bear.png', 'tiger.png', 'koala.png', 'ghost.png'];
   constructor(private dialogRef: MatDialogRef<SignUpAvatarPopUpComponent>, @Inject(MAT_DIALOG_DATA) public account: { accountService: AccountCreationService }) {
   }
 
   ngOnInit(): void {
   }
 
-  changeAvatar(value: string) {
+  changeAvatar(event: Event, value: string) {
+    this.setActive(event);
     console.log(value)
     this.avatarChosen = value;
 
@@ -24,6 +27,14 @@ export class SignUpAvatarPopUpComponent implements OnInit {
   closeDialog() {
     console.log(this.avatarChosen);
     this.dialogRef.close({ avatar: this.avatarChosen })
+  }
+
+  setActive(event: Event) {
+    let themes = document.getElementsByClassName("avatar");
+    for (let i = 0; i < themes.length; i++) {
+      themes[i].className = themes[i].className.replace(" active", "");
+    }
+    (event.currentTarget! as HTMLTextAreaElement).className += " active";
   }
 
 
