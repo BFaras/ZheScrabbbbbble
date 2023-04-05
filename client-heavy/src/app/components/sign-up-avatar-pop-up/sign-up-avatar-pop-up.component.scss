@@ -1,13 +1,22 @@
+*{
+    font-family: 'Courier New', Courier, monospace;
+}
 .container{
     display:flex;
     flex-direction: column;
     height: 100%;
+}
+::ng-deep mat-dialog-container{
+    background-color: var(--background-tertiary) !important;
+    /* Other CSS Styles */
 }
 
 .title{
     color:var(--text-secondary);
     align-self: center;
     text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
 }
 .avatar{
     width:160px;

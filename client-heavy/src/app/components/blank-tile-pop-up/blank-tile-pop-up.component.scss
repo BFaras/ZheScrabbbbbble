@@ -2,7 +2,7 @@
     font-family: 'Courier New', Courier, monospace;
 }
 
-.container-blank-letter mat-dialog-container {
+::ng-deep  mat-dialog-container {
         background-color: var(--background-tertiary) !important;
         box-shadow: var(--box-shadow);
        }
