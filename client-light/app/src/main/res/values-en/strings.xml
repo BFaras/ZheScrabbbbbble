@@ -12,8 +12,16 @@
     <string name="refuser">Reject</string>
     <string name="annuler">Cancel</string>
     <string name="ajouter">Add</string>
-    <string name="FriendCode">Enter your friend\'s code to add him </string>
+    <string name="FriendCode">"Enter your friend's code to add them "</string>
     <string name="queueMessage">In search of a tournament</string>
+
+    <string name="friendModified"> replaced is username with </string>
+    <string name="friendRemoved"> removed you from his friend list</string>
+    <string name="friendChat">Chat</string>
+    <string name="friendProfile">Profile</string>
+    <string name="friendJoin">Invite to a game</string>
+    <string name="friendRemove">Remove from friend list</string>
+
 
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Main menu</string>
@@ -87,4 +95,39 @@
     <string name="register_new_passsword">Register New Passsword</string>
     <string name="times_up">TIME\'S UP!</string>
     <string name="talkingIntext">Now talking in</string>
+    <string name="manage_chats">Manage Chats</string>
+    <string name="hello_message"><![CDATA[Hello <b>%1$s</b>!]]></string>
+    <string name="privateRoom">Private</string>
+    <string name="publicRoom">Public</string>
+    <string name="protectedRoom">Protected</string>
+    <string name="join_game_text">Do you want to join the game as an observer?</string>
+    <string name="enter_the_room_password">enter the room password</string>
+    <string name="quit">Leave</string>
+    <string name="winnerName"><![CDATA[%1$s won the game!]]></string>
+    <string name="waitingRoomText">If the host decides to start the game and there are at least 2 players, the remaining places will be filled by Virtual Players.</string>
+    <string name="create_a_room">create a room</string>
+    <string name="enter_a_room_name"><i>Enter a room name</i></string>
+    <string name="enter_a_chat_name"><i>Enter a chat name</i></string>
+    <string name="needHelp">NEED HELP?</string>
+    <string name="voici_quelques_indices_pour_vous_aider">Here\'re some hints to help you.</string>
+    <string name="vous_pouvez_cliquer_sur_n_importe_lequel_pour_le_pr_visualiser_sur_le_plateau">You can click on any hint and previsualize it on the board.</string>
+    <string name="yes">yes, i quit</string>
+    <string name="no">no, i stay</string>
+    <string name="confirmAbandon">ARE YOU SUUUUURE?</string>
+    <string name="confirmButtonText">Are you sure you want to quit the current game? You can\'t come back once you quit.</string>
+    <string name="now_observing_player1"><![CDATA[now observing %1$s]]></string>
+    <string name="move_mode">move mode</string>
+    <string name="swap_mode">swap mode</string>
+    <string name="indice">hint</string>
+    <string name="xp_needed_till_next_level_00"><![CDATA[xp needed till next level - %1$s]]></string>
+    <string name="lvl">lvl</string>
+    <string name="iswinner">won</string>
+    <string name="isloser">lost</string>
+    <string name="your_friend_code_is">your friend code is</string>
+    <string name="language">language</string>
+    <string name="current_theme">current theme</string>
+    <string name="vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil">You can change it again in your profil page.</string>
+    <string name="choisissez_votre_avatar">choose your profile picture</string>
+    <string name="revenez_quand_vous_aurez_fait_des_parties">Come back when you\'ve played some games!</string>
+    <string name="c_est_vide_ici">it\'s empty here...</string>
 </resources>

@@ -11,4 +11,5 @@
     <attr name="lettersInHand" format="reference" ></attr>
     <attr name="chatBox" format="reference"></attr>
     <attr name="activeTile" format="reference"></attr>
+    <attr name="backgroundProfile" format="reference"></attr>
 </resources>

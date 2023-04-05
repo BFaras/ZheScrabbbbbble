@@ -14,7 +14,6 @@
         android:padding="3dp"
         android:textSize="20dp"
         android:textAlignment="center"
-        android:text="H 6B FAC"
         android:layout_height="wrap_content"
         android:justificationMode="inter_word" />
 </FrameLayout>

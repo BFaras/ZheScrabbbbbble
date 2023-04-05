@@ -29,11 +29,11 @@
         android:layout_gravity="center|end">
 
         <ImageButton
-            android:id="@+id/buttonprofil"
+            android:id="@+id/buttonfriends"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/ic_profil"
+            android:background="@drawable/ic_groups"
             android:layout_gravity="center_vertical" />
 
         <ImageButton
@@ -55,7 +55,7 @@
         >
         <LinearLayout
             android:id="@+id/gameListSection"
-            android:layout_width="wrap_content"
+            android:layout_width="700dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_marginRight="15dp"
@@ -75,7 +75,7 @@
 
             </TextView>
             <ScrollView
-                android:layout_width="400dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="none"
                 android:padding="10dp">
