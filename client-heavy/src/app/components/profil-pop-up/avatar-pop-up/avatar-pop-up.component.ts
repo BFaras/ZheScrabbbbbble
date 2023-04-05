@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 })
 export class AvatarPopUpComponent implements OnInit, OnDestroy {
   colorChosen: string = "";
-  allAvatars: string[] = ['Daria.PNG', 'Arnaud.PNG', 'Imane.PNG', 'Raphael.PNG', 'Manuel.PNG', 'Mohamed.PNG', 'cow.png', 'mouse.png', 'giraffe.png',
+  allAvatars: string[] = ['daria.PNG', 'arnaud.PNG', 'imane.PNG', 'raphael.PNG', 'manuel.PNG', 'mohamed.PNG', 'cow.png', 'mouse.png', 'giraffe.png',
     'shark.png', 'owl.png', 'monkey.png', 'robot.png', 'cat.png', 'dog.png', 'alien.png', 'fox.png', 'pig.png', 'panda.png',
     'bunny.png', 'rooster.png', 'unicorn.png', 'lion.png', 'skeleton.png', 'bear.png', 'tiger.png', 'koala.png', 'ghost.png'];
   subscription: Subscription;
