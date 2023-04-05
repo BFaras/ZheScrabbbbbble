@@ -25,9 +25,14 @@ export class FriendsPageComponent {
     this.usercode = this.account.getProfile().userCode;
   }
 
-  alert() {
+  alert(username: string) {
     const text = 'Êtes-vous sûr(e) de vouloir retirer cet ami?';
-    if (confirm(text)) {}
+    if (confirm(text)) {
+      this.friendsService.removeFriend(username).subscribe((errorCode: string) => {
+        this.updateFriendsList();
+        console.log(errorCode);
+      });
+    }
   }
 
   ngOnDestroy(): void {

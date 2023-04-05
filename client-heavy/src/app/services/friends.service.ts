@@ -34,6 +34,15 @@ export class FriendsService {
     });
   }
 
+  removeFriend(name: string): Observable<string> {
+    this.socketManagerService.getSocket().emit('Remove Friend', name);
+    return new Observable((observer: Observer<string>) => {
+      this.socketManagerService.getSocket().once('Remove Friend Response', (errorCode: string) => {
+        observer.next(errorCode);
+      });
+    });
+  }
+
   getFriendsProfile(username: string): Observable<ProfileInfo> {
     this.socketManagerService.getSocket().emit("Get Profile Information", username);
     return new Observable((observer: Observer<ProfileInfo>) => {
