@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { AccountService } from '@app/services/account-service/account.service';
+import { FriendsService } from '@app/services/friends.service';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 @Component({
   selector: 'app-navigation-bar',
@@ -9,7 +10,7 @@ import { SocketManagerService } from '@app/services/socket-manager-service/socke
 export class NavigationBarComponent {
   chatOpen: boolean = false;
   @Output("navLogic") navLogic: EventEmitter<void> = new EventEmitter();
-  constructor(private socketManager: SocketManagerService, private accountService : AccountService, private changeDetector: ChangeDetectorRef,) {
+  constructor(private socketManager: SocketManagerService, private accountService: AccountService, private changeDetector: ChangeDetectorRef, private friends: FriendsService) {
     (window as any).setChatStatusCallback(this.updateChatStatus.bind(this));
     this.chatOpen = (window as any).chatOpen;
   }
@@ -27,8 +28,12 @@ export class NavigationBarComponent {
     (window as any).openChat(this.accountService.getFullAccountInfo());
   }
 
-  updateChatStatus(){
+  updateChatStatus() {
     this.chatOpen = (window as any).chatOpen;
     this.changeDetector.detectChanges();
+  }
+
+  setMode(mode: boolean) {
+    this.friends.setMode(mode);
   }
 }

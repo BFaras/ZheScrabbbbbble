@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { ChatMessage } from '@app/classes/chat-info';
 import { Message } from '@app/classes/message';
 import { ChatService } from '@app/services/chat-service/chat.service';
@@ -13,7 +13,7 @@ const LIMIT_OF_CHARACTERS = 512;
     styleUrls: ['./chat.component.scss'],
 })
 
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatComponent implements OnDestroy {
     @Output() receiver = new EventEmitter();
     switch = false;
 
@@ -27,18 +27,23 @@ export class ChatComponent implements OnInit, OnDestroy {
     messageHistory: ChatMessage[] = [];
 
     subscriptionMessage: Subscription;
-    subscriptionChatRoom: Subscription;
+    subscriptionHistoryMessage: Subscription;
 
     constructor(private chatService: ChatService, private messageParserService: MessageParserService) {
         this.gameRoomName = this.chatService.getChatInGameRoom();
         console.log(this.gameRoomName);
+        this.subscriptionHistoryMessage = this.chatService.getChatHistory(this.gameRoomName).subscribe((chatHistory: ChatMessage[]) => {
+            chatHistory.forEach((chatMessage) => {
+                this.updateMessageHistory(chatMessage)
+            })
+        });
         this.subscriptionMessage = this.chatService.getMessagesInGame().subscribe((response: { chatCode: string, message: ChatMessage }) => {
+            console.log("reception d un message")
+            console.log(response)
             this.updateMessageHistory(response.message)
         });
     }
 
-    ngOnInit() {
-    }
 
     updateMessageHistory(chatMessage: ChatMessage) {
         this.messageHistory.push(chatMessage);

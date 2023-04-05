@@ -8,13 +8,15 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:layout_marginBottom="5dp"
-        android:background="@drawable/background_direction_panel"
+        android:background="@drawable/background_moveinfo"
         android:backgroundTint="?colorPrimaryVariant">
 
     <TextView
         android:id="@+id/displayedMoveMessage"
         android:layout_width="match_parent"
-        android:padding="3dp"
+        android:padding="2dp"
+        android:text="TEXT MESSAGE"
+        android:textColor="?colorOnPrimary"
         android:layout_height="wrap_content"
         android:justificationMode="inter_word" />
     </FrameLayout>

@@ -1,5 +1,5 @@
 <div id="container">
-    <p id="title"> Veuillez choisir un nouveau nom</p>
+    <h1>{{ 'PROFILE-PAGE.NEWNAME' | translate }}</h1>
     <input type="text" [(ngModel)] = "newUsername"/>
     <button (click) = closeDialog()> Confirmer </button>
 </div>

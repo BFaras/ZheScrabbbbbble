@@ -1,5 +1,5 @@
 import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { ChatInfo, ChatMessage, ChatType } from '@app/classes/chat-info';
+import { ChatInfo, ChatMessage, ChatType, MessageInfo } from '@app/classes/chat-info';
 import { AccountService } from '@app/services/account-service/account.service';
 //import { AccountService } from '@app/services/account-service/account.service';
 import { Router } from '@angular/router';
@@ -20,7 +20,7 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
     chatText: string = '';
     nextMessage: string = '';
     chatList: ChatInfo[];
-    chatLog: Map<string, ChatMessage[]> = new Map<string, ChatMessage[]>();
+    chatLog: ChatMessage[] = [];
     public: ChatType = ChatType.PUBLIC;
     private: ChatType = ChatType.PRIVATE;
     global: ChatType = ChatType.GLOBAL;
@@ -48,7 +48,7 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
         private router: Router,
         /*private friendsPage: FriendsPageComponent*/) {
         this.username = this.account.getUsername();
-        if(!this.username){
+        if (!this.username) {
             this.isPopup = true;
             this.importMainWindowsData();
         }
@@ -57,7 +57,9 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
     ngOnInit() {
         this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
             this.chatList = chatList;
-            this.chatLog = this.chatService.messageLog;
+            if (this.selectedChat) {
+                this.setChatHistory(this.selectedChat);
+            }
             /*
             this.setFriendRedirect();
             if (true) {
@@ -72,8 +74,10 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
             }
             */
         }));
-        this.subscriptions.push(this.chatService.getNewMessages().subscribe((messageLog: Map<string, ChatMessage[]>) => {
-            this.chatLog = messageLog;
+        this.subscriptions.push(this.chatService.getNewMessages().subscribe((messageInfo: MessageInfo) => {
+            if (messageInfo.id === this.selectedChat) {
+                this.chatLog.push(messageInfo.message);
+            }
         }));
     }
 
@@ -96,9 +100,9 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
         */
     }
 
-    importMainWindowsData(){
+    importMainWindowsData() {
         const accountInfo = localStorage.getItem('account');
-        if(!accountInfo) return;
+        if (!accountInfo) return;
         this.account.setFullAccountInfo(JSON.parse(accountInfo));
         this.username = this.account.getUsername();
         this.chatService.linkSocketToUsername(this.username);
@@ -156,6 +160,7 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
 
     selectChat(event: Event, id: string) {
         this.selectedChat = id;
+        this.setChatHistory(this.selectedChat);
         this.setDisabled();
         let chatButtons;
         chatButtons = document.getElementsByClassName("chat-button");
@@ -172,5 +177,11 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
 
     goToChats() {
         this.router.navigate(['/public-chats']);
+    }
+
+    setChatHistory(chatId: string) {
+        this.chatService.getChatHistory(chatId).subscribe((chatHistory: ChatMessage[]) => {
+            this.chatLog = chatHistory;
+        })
     }
 }

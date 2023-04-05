@@ -1,33 +1,24 @@
-<app-navigation-bar></app-navigation-bar>
-<div class="container justified">
-    <div id="themes">
-        {{'CHANGETHEME.MESSAGE' | translate}} : 
-        <button class="theme-button" id="classic" (click)="changeThemeTo('classic')" (click)="setActive($event)">{{ 'CHANGETHEME.CLASSIC' | translate }}</button> 
-        <button class="theme-button" id="inverted" (click)="changeThemeTo('inverted')" (click)="setActive($event)">{{ 'CHANGETHEME.INVERTED' | translate }}</button> 
-        <button class="theme-button" id="green" (click)="changeThemeTo('green')" (click)="setActive($event)">{{ 'CHANGETHEME.GREEN' | translate }}</button> 
-        <button class="theme-button" id="pink" (click)="changeThemeTo('pink')" (click)="setActive($event)">{{ 'CHANGETHEME.PINK' | translate }}</button> 
-        <button class="theme-button" id="pink" (click)="changeThemeTo('blizzard')" (click)="setActive($event)">Blizzard</button> 
-    </div>
-    <button class="theme-button" (click)="goToFriends()">{{ 'PROFILE-PAGE.FRIENDS' | translate }}</button>
-    
+<app-navigation-bar (navLogic)="selectProfile()"></app-navigation-bar>
 
-    <mat-card class="profileAvatarNameLevel">
+<div *ngIf="profileMode" class="container justified">
+    <mat-card class="profileAvatarNameLevel box">
         <div class="avatarSection">
             <img class="avatarSquare" [src] ="avatarCircle">
             <mat-progress-bar mode="determinate" [value]="progressionBarValue" class = "xp"></mat-progress-bar>
-            <button class="button" (click)="openDialogChangeColor()">Modifier l'avatar
-            </button>
         </div>
         <div id="nameLevel">
-            <div id="nameContainer">
-                <p class = "name">Nom: {{accountUsername}}</p>
-                <button (click) = "openDialogChangeName()" id="changeName">C</button>
+            <p id="name" class="data">{{accountUsername}}</p>
+            <p class="data">{{ 'USERDATA.USERCODE' | translate }}{{accountProfile.userCode}}</p>
+            <p class="data">{{ 'USERDATA.LEVEL' | translate }}{{accountProfile.levelInfo.level}}</p>
+            <div id="change-btns">
+                <button class="button" (click) = "openDialogChangeName()" id="changeName">{{ 'PROFILE-PAGE.CHANGENAME' | translate }}</button>
+                <button class="button" (click)="openDialogChangeColor()">{{ 'PROFILE-PAGE.CHANGEAVATAR' | translate }}</button>
+                <button class="button" (click)="goToFriends()">{{ 'PROFILE-PAGE.FRIENDS' | translate }}</button>
             </div>
-        <p class = "name">Code d'utilisateur: {{accountProfile.userCode}}</p>
-        <p class = "level"> Niveau : {{accountProfile.levelInfo.level}} </p>
         </div>
         <div id="tournamentMedals" >
-            <div class ="medals" *ngFor = "let medal of accountProfile.tournamentWins">
+            <img class="medal" *ngFor="let medal of medals" src= "assets/medals/{{medal}}"/>
+            <div class="medals" *ngFor = "let medal of accountProfile.tournamentWins">
                 <i class="fab fa-medal"></i>
                 <p class="numberOfMedals">{{medal}}</p>
             </div>
@@ -35,18 +26,83 @@
     </mat-card>
     <div id = "account-other-info">
         <div id="stats-and-former-actions">
-            <mat-card id="stats">
-                <mat-card-header>
-                    Statistiques du compte
+            <mat-card id="stats" class="box">
+                <mat-card-header class="title stats">
+                    {{ 'PROFILE-PAGE.STATS' | translate }}
                 </mat-card-header>
-                <mat-card-content id="stats-list">
-                    <p class="specific-stat">Nombre de victoires: {{accountProfile.stats[0].statAmount}}</p>
-                    <p class="specific-stat"> Nombre de parties jouée: {{accountProfile.stats[1].statAmount}}</p>
-                    <p class="specific-stat">La moyenne de points par partie: {{accountProfile.stats[2].statAmount}}</p>
-                    <p class="specific-stat">La moyenne de temps par partie: {{accountProfile.stats[3].statAmount}}</p>
-                </mat-card-content>
-            </mat-card>
+                <table id="stats-list">
+                    <tr>
+                        <p class="specific-stat">{{ 'PROFILE-PAGE.WINS' | translate }}</p>
+                        <p class="specific-stat">{{ 'PROFILE-PAGE.GAMES' | translate }}</p>
+                        <p class="specific-stat">{{ 'PROFILE-PAGE.POINTSAVG' | translate }}</p>
+                        <p class="specific-stat">{{ 'PROFILE-PAGE.TIMEAVG' | translate }}</p>
+                    </tr>
+                    <tr>
+                        <p class="specific-stat">{{accountProfile.stats[0].statAmount}}</p>
+                        <p class="specific-stat">{{accountProfile.stats[1].statAmount}}</p>
+                        <p class="specific-stat">{{accountProfile.stats[2].statAmount}}</p>
+                        <p class="specific-stat">{{accountProfile.stats[3].statAmount}}</p>
+                    </tr>
+                </table>
+            </mat-card> 
             <app-former-action-history-area></app-former-action-history-area>
         </div>
-    <app-connection-history-area [connectionInformation] = "accountProfile.connectionHistory"></app-connection-history-area>
+        <app-connection-history-area [connectionInformation] = "accountProfile.connectionHistory"></app-connection-history-area>
+    </div>
+    <div *ngIf="profileMode" id="themes" class="box">
+        <span class="title">{{'CHANGETHEME.MESSAGE' | translate}} </span>
+        <button class="theme" id="classic" (click)="changeThemeTo('classic')" (click)="setActive($event)">{{ 'CHANGETHEME.CLASSIC' | translate }}</button> 
+        <button class="theme" id="inverted" (click)="changeThemeTo('inverted')" (click)="setActive($event)">{{ 'CHANGETHEME.INVERTED' | translate }}</button> 
+        <button class="theme" id="green" (click)="changeThemeTo('green')" (click)="setActive($event)">{{ 'CHANGETHEME.GREEN' | translate }}</button> 
+        <button class="theme" id="pink" (click)="changeThemeTo('pink')" (click)="setActive($event)">{{ 'CHANGETHEME.PINK' | translate }}</button> 
+        <button class="theme" id="pink" (click)="changeThemeTo('blizzard')" (click)="setActive($event)">Blizzard</button> 
+    </div>
 </div>
+
+
+<div *ngIf="!profileMode" class="container justified">
+    <mat-card class="profileAvatarNameLevel box">
+        <div class="avatarSection">
+            <img class="avatarSquare" [src] ="avatarCircle">
+            <mat-progress-bar mode="determinate" [value]="progressionBarValue" class = "xp"></mat-progress-bar>
+        </div>
+        <div id="nameLevel">
+            <p id="name" class="data">{{accountUsername}}</p>
+            <p class="data">{{ 'USERDATA.USERCODE' | translate }}{{accountProfile.userCode}}</p>
+            <p class="data">{{ 'USERDATA.LEVEL' | translate }}{{accountProfile.levelInfo.level}}</p>
+        </div>
+        <div id="tournamentMedals" >
+            <img class="medal" *ngFor="let medal of medals" src= "assets/medals/{{medal}}"/>
+            <div class="medals" *ngFor = "let medal of accountProfile.tournamentWins">
+                <i class="fab fa-medal"></i>
+                <p class="numberOfMedals">{{medal}}</p>
+            </div>
+        </div>
+    </mat-card>
+    <div id = "account-other-info">
+        <div id="stats-and-former-actions">
+            <mat-card id="stats" class="box">
+                <mat-card-header class="title stats">
+                    {{ 'PROFILE-PAGE.STATS' | translate }}
+                </mat-card-header>
+                <table id="stats-list">
+                    <tr>
+                        <p class="specific-stat">{{ 'PROFILE-PAGE.WINS' | translate }}</p>
+                        <p class="specific-stat">{{ 'PROFILE-PAGE.GAMES' | translate }}</p>
+                        <p class="specific-stat">{{ 'PROFILE-PAGE.POINTSAVG' | translate }}</p>
+                        <p class="specific-stat">{{ 'PROFILE-PAGE.TIMEAVG' | translate }}</p>
+                    </tr>
+                    <tr>
+                        <p class="specific-stat">{{accountProfile.stats[0].statAmount}}</p>
+                        <p class="specific-stat">{{accountProfile.stats[1].statAmount}}</p>
+                        <p class="specific-stat">{{accountProfile.stats[2].statAmount}}</p>
+                        <p class="specific-stat">{{accountProfile.stats[3].statAmount}}</p>
+                    </tr>
+                </table>
+            </mat-card> 
+            <app-former-action-history-area></app-former-action-history-area>
+        </div>
+        <app-connection-history-area [connectionInformation] = "accountProfile.connectionHistory"></app-connection-history-area>
+    </div>
+</div>
+

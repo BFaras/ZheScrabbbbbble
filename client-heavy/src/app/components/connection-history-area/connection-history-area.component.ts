@@ -28,11 +28,22 @@ export class ConnectionHistoryAreaComponent implements OnInit {
     })
   }
 
-  changeToConnection() {
+  changeToConnection(event: Event) {
     this.connectionMode = true;
-  }
-  changeToDisconnection() {
-    this.connectionMode = false;
+    this.setActive(event);
   }
 
+  changeToDisconnection(event: Event) {
+    this.connectionMode = false;
+    this.setActive(event);
+  }
+
+  setActive(event: Event) {
+    let tabsLinks;
+    tabsLinks = document.getElementsByClassName("tabs");
+    for (let i = 0; i < tabsLinks.length; i++) {
+      tabsLinks[i].className = tabsLinks[i].className.replace(" active", "");
+    }
+    (event.currentTarget! as HTMLTextAreaElement).className += " active";
+  }
 }

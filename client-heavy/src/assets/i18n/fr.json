@@ -21,7 +21,8 @@
         "EMAIL": "Adresse Email",
         "SHOWPASS": "Montrer le mot de passe",
         "SIGNUP": "Inscription",
-        "NEXT": "Continuer"
+        "NEXT": "Continuer",
+        "AVATAR": "Choisir un avatar"
     },
     "SECURITYQ": {
         "QUESTION": "Question de sécurité: ",
@@ -36,8 +37,10 @@
         "NEWPASS": "Nouveau mot de passe: "
     },
     "USERDATA": {
-        "USERNAME": "Nom d'utilisateur",
-        "PASSWORD": "Mot de passe"
+        "USERNAME": "Nom d'utilisateur: ",
+        "PASSWORD": "Mot de passe: ",
+        "LEVEL": "Niveau: ",
+        "USERCODE": "Code d'utilisateur: "
     },
     "INFOBOARD": {
         "INFOBOARD": "PANNEAU INFORMATIF",
@@ -195,7 +198,26 @@
         "UNFRIEND": "Enlever"
     },
     "PROFILE-PAGE": {
-        "FRIENDS": "Gérer ses amis"
+        "FRIENDS": "Gérer ses amis",
+        "AVATAR": "Choisir un avatar!",
+        "CONFIRM": "Confirmer l'avatar",
+        "LOGIN": "Connexions",
+        "LOGOUT": "Déconnexions",
+        "WINS": "Victoires",
+        "GAMES": "Parties jouées",
+        "POINTSAVG": "Points moyens par partie",
+        "TIMEAVG": "Durée moyenne d'une partie",
+        "STATS": "Statistiques du compte",
+        "LLHISTORY": "Historique des connexions",
+        "GAMEHISTORY": "Historique des parties",
+        "CHANGEAVATAR": "Changer d'avatar",
+        "CHANGENAME": "Changer son nom",
+        "DATE": "Date: ",
+        "TIME": "Heure: ",
+        "GAMESTATE": "État de la partie: ",
+        "NEWNAME": "Veuillez inscrire votre nouveau nom",
+        "LOSS": "Défaite",
+        "WIN": "Victoire"
     },
     "TOURNAMENT-QUEUE": {
         "TITLE": "En recherche de tournois",

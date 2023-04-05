@@ -1,6 +1,7 @@
 package com.example.testchatbox
 
 import SocketHandler
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -11,9 +12,11 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentGameListBinding
+import com.example.testchatbox.login.model.LoggedInUser
 import org.json.JSONArray
 
 enum class Visibility{
@@ -83,6 +86,12 @@ class GameListFragment : Fragment() {
         binding.createBtn.setOnClickListener{
             createRoom();
         }
+        binding.buttonchat.setOnClickListener {
+            findNavController().navigate(R.id.action_gameListFragment_to_ChatFragment)
+        }
+        binding.buttonfriends.setOnClickListener {
+            findNavController().navigate(R.id.action_gameListFragment_to_friendsFragment)
+        }
         SocketHandler.getSocket().on("Game Room List Response"){ args ->
             if(args[0] != null){
                 val list = args[0] as JSONArray;
@@ -108,16 +117,19 @@ class GameListFragment : Fragment() {
         SocketHandler.getSocket().emit("Get Game Room List")
     }
 
+    @SuppressLint("MissingInflatedId")
     private fun loadListView(){
         val gameListView = binding.gameList;
         gameListView.removeAllViews()
         for((i, gameRoom) in gameList.withIndex()){
+            var countPlayers = 0
             Log.d("PLAYERS IN ROOM", gameRoom.getPlayersNames())
             val gameRoomInfo = layoutInflater.inflate(R.layout.gameroom_info, gameListView, false)
             val roomName: TextView = gameRoomInfo.findViewById(R.id.gameRoomName)
             val roomVisibiliy: TextView = gameRoomInfo.findViewById(R.id.roomVisibility)
             val roomStatus: TextView = gameRoomInfo.findViewById(R.id.roomStatus)
-            val roomPlayersList: LinearLayout = gameRoomInfo.findViewById(R.id.roomPlayersNames)
+            val roomHost: TextView = gameRoomInfo.findViewById(R.id.hostName)
+            val numberOfPlayers: TextView = gameRoomInfo.findViewById(R.id.numberPlayers)
 
             roomName.text = gameRoom.name.lowercase()
             roomVisibiliy.text = gameRoom.visibility.toString().lowercase()
@@ -127,15 +139,25 @@ class GameListFragment : Fragment() {
                 "protected" -> { roomVisibiliy.setTextColor(Color.YELLOW) }
                 else -> {}
             }
-            roomStatus.text = if(gameRoom.hasStarted) "started" else "waiting for players"
-            val players = gameRoom.getPlayersNames().split(",".toRegex()).toTypedArray()
-            for (playerInRoom in players){
-                if (playerInRoom != " ") {
-                    val player = TextView(context)
-                    player.text = playerInRoom
-                    roomPlayersList.addView(player)
-                }
+            when (LoggedInUser.getLang()) {
+                "fr" -> roomStatus.text = if(gameRoom.hasStarted) "commencé" else "en attente de joueurs"
+                "en" -> roomStatus.text = if(gameRoom.hasStarted) "started" else "waiting for players"
+                else -> {}
             }
+            val players = gameRoom.getPlayersNames().split(",".toRegex()).toTypedArray()
+            roomHost.text = players[0]
+            Log.d("ROOM ", players.toString())
+            for (player in players) {
+                if (player != " ") countPlayers++
+            }
+            numberOfPlayers.setText(HtmlCompat.fromHtml(getString(R.string.numberPlayers, countPlayers.toString()), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+//            for (playerInRoom in players){
+//                if (playerInRoom != " ") {
+//                    val player = TextView(context)
+//                    player.text = playerInRoom
+//                    roomPlayersList.addView(player)
+//                }
+//            }
 
             gameRoomInfo.id = i
             gameRoomInfo.setOnClickListener{

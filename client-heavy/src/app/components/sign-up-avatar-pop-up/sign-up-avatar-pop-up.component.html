@@ -1,6 +1,7 @@
 <div class="container">
+    <p>{{ 'PROFILE-PAGE.AVATAR' | translate }}</p>
     <div class="listAvatars">
-        <img (click)="changeAvatar(avatarSrc)"*ngFor="let avatarSrc of allAvatars" class='avatar' alt="image" src= "assets/avatar/{{avatarSrc}}"/> 
+        <img (click)="changeAvatar($event, avatarSrc)"*ngFor="let avatarSrc of allAvatars" class='avatar' alt="image" src= "assets/avatar/{{avatarSrc}}"/> 
     </div>
-    <button class="button" [mat-dialog-close]="avatarChosen" (click) = "closeDialog()">Confirmer l'avatar choisi</button>
+    <button class="button" [mat-dialog-close]="avatarChosen" (click) = "closeDialog()">{{ 'PROFILE-PAGE.CONFIRM' | translate }}</button>
 </div>
