@@ -26,7 +26,7 @@ class Message(val username:String, val timestamp:String, val message: String, va
     }
 }
 
-class Chat(val chatType : ChatType, val chatName :String, val _id:String)
+class Chat(val chatType : ChatType, var chatName :String, val _id:String)
 
 interface ObserverChat {
     fun updateMessage(chatCode: String, message: Message)
@@ -185,6 +185,28 @@ object ChatModel : ObservableChat {
                 notifyNewMessage(chatCode, message);
             }
         }
+    }
+
+    fun removePrivateChat(username: String){
+        val id=findChannel(username)
+        if(id=="-1")  {Log.i("Chat", "No modify :$username"); return}
+        chatList.remove(id);
+        notifyNewChanel();
+    }
+
+    fun modifyPrivateChat(oldUsername: String, newUsername:String){
+        val id=findChannel(oldUsername)
+        if(id=="-1")  {Log.i("Chat", "No modify :$oldUsername"); return}
+        chatList[id]?.chatName  = newUsername;
+        notifyNewChanel();
+    }
+
+    fun findChannel(username:String):String{
+        for(chat in chatList.values){
+            if(chat.chatName==username)
+                return chat._id
+        }
+        return "-1"
     }
 }
 

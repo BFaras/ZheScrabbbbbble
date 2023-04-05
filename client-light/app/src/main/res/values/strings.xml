@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">SCRABBLE</string>
 
     <string name="action_settings">Paramètres</string>
-    <string name="tapez_quelque_chose">Tapez quelque chose...</string>
+    <string name="tapez_quelque_chose">Tapez quelque chose…</string>
     <string name="game">Jeu</string>
     <string name="tournois">TOURNOIS</string>
     <string name="classique">CLASSIQUE</string>
@@ -24,6 +24,12 @@
     <string name="queueMessage">À la recherche d\'un tournoi</string>
     <string name="FriendCode">Entrez le code se trouvant sur le profil de votre ami pour l\'ajouter </string>
 
+    <string name="friendModified"> a remplacé son nom par </string>
+    <string name="friendRemoved"> vous a retiré de sa liste d\'amis</string>
+    <string name="friendChat">Voir clavardage</string>
+    <string name="friendProfile">Voir le profil</string>
+    <string name="friendJoin">Inviter dans une partie</string>
+    <string name="friendRemove">Retire de la liste d\'amis</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
@@ -39,7 +45,6 @@
     <string name="next">Clavardage</string>
     <string name="previous">Précédant</string>
     <string name="reset_fragment_label">Mot de passe oublié</string>
-
 
     <!-- Strings related to login -->
     <string name="prompt_email">Courriel</string>
@@ -112,5 +117,32 @@
     <string name="create_a_room">create a room</string>
     <string name="enter_a_room_name"><i>Enter a room name</i></string>
     <string name="enter_a_chat_name"><i>Enter a chat name</i></string>
+    <string name="needHelp">BESOIN D\'AIDE?</string>
+    <string name="voici_quelques_indices_pour_vous_aider">Voici quelques indices pour vous aider.</string>
+    <string name="vous_pouvez_cliquer_sur_n_importe_lequel_pour_le_pr_visualiser_sur_le_plateau">Vous pouvez cliquer sur n\'importe lequel pour le prévisualiser sur le plateau.</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="confirmAbandon">ARE YOU SUUUUURE?</string>
+    <string name="confirmButtonText">Êtes-vous sûr(e) de vouloir quitter la partie?</string>
+    <string name="now_observing_player1"><![CDATA[now observing %1$s]]></string>
+    <string name="move_mode">move mode</string>
+    <string name="swap_mode">swap mode</string>
+    <string name="indice">Indice</string>
+    <string name="xp_needed_till_next_level_00"><![CDATA[xp needed till next level - %1$s]]></string>
+    <string name="lvl">lvl</string>
+    <string name="iswinner">won</string>
+    <string name="isloser">lost</string>
+    <string name="your_friend_code_is">your friend code is</string>
+    <string name="language">language</string>
+    <string name="current_theme">current theme</string>
+    <string name="vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil">Vous pourrez le changer à nouveau dans votre page de profil.</string>
+    <string name="choisissez_votre_avatar">choisissez votre avatar</string>
+    <string name="revenez_quand_vous_aurez_fait_des_parties">Revenez quand vous aurez fait des parties!</string>
+    <string name="c_est_vide_ici">c\'est vide ici…</string>
+    <string name="host" translatable="false">host</string>
+    <string name="numberPlayers" translatable="false"><![CDATA[%1$s / 4]]></string>
+    <string name="congrats_to_all_players">congrats to all players!</string>
+    <string name="tournament_ranking">tournament ranking</string>
+    <string name="pas_besoin_d_indices">PAS BESOIN D\'INDICES</string>
 
 </resources>

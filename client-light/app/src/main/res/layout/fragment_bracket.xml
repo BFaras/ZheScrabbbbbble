@@ -3,65 +3,298 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?backgroundColor"
     tools:context=".BracketFragment">
 
-    <TextView
-        android:id="@+id/time"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="@drawable/background_side_panel"
+        android:backgroundTint="?colorSecondary"
+        android:layout_gravity="center|end">
+
+        <ImageButton
+            android:id="@+id/buttonfriends"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/ic_groups"
+            android:layout_gravity="center_vertical" />
+
+        <ImageButton
+            android:id="@+id/buttonchat"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_chat"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="2000dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp"
         android:layout_gravity="center|top"
+        android:gravity="center"
+        android:background="@drawable/background_direction_panel"
+        android:backgroundTint="?colorSecondary"
         android:layout_marginTop="100dp"
-        android:text="TIME"
-        android:textSize="25dp" />
+        >
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:text="TIME"
+            android:textColor="?colorOnSecondary"
+            android:textSize="35sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:text="till next round"
+            android:textColor="?colorOnSecondary"
+            android:fontFeatureSettings="smcp"
+            android:textSize="25dp" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/Semi1"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="100dp"
-        android:layout_marginLeft="-150dp"
-        android:text="Semi1"
-        android:textSize="25dp" />
+        android:orientation="horizontal"
+        android:showDividers="middle"
+        android:divider="@drawable/letters_hand_divider"
+        android:layout_gravity="center">
+        <LinearLayout
+            android:id="@+id/semis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:showDividers="middle"
+            android:divider="@drawable/letters_hand_divider"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/Semi2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="-150dp"
-        android:text="Semi2"
-        android:textSize="25dp" />
+            <LinearLayout
+                android:id="@+id/Semi1"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/background_direction_panel">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- semi a -"
+                    android:fontFeatureSettings="smcp"
+                    android:textStyle="bold"
+                    android:textSize="25dp"></TextView>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/semi1player1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLAYER"
+                        android:textSize="18dp"></TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="vs"
+                        android:fontFeatureSettings="smcp"
+                        android:textStyle="bold"
+                        android:textSize="25dp"></TextView>
+                    <TextView
+                        android:id="@+id/semi1player2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLAYER"
+                        android:textSize="18dp"></TextView>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/Semi2"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="10dp"
+                android:background="@drawable/background_direction_panel">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- semi b -"
+                    android:fontFeatureSettings="smcp"
+                    android:textStyle="bold"
+                    android:textSize="25dp"></TextView>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/semi2player1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLAYER"
+                        android:textSize="18dp"></TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="vs"
+                        android:fontFeatureSettings="smcp"
+                        android:textStyle="bold"
+                        android:textSize="25dp"></TextView>
+                    <TextView
+                        android:id="@+id/semi2player2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLAYER"
+                        android:textSize="18dp"></TextView>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/Final1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="100dp"
-        android:layout_marginLeft="150dp"
-        android:text="Final1"
-        android:textSize="25dp" />
+        <LinearLayout
+            android:id="@+id/finals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:showDividers="middle"
+            android:divider="@drawable/letters_hand_divider"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/Final2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="150dp"
-        android:text="Final2"
-        android:textSize="25dp" />
+
+            <LinearLayout
+                android:id="@+id/Final1"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:background="@drawable/background_direction_panel">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- final a -"
+                    android:fontFeatureSettings="smcp"
+                    android:textStyle="bold"
+                    android:textSize="25dp"></TextView>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/final1player1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLAYER"
+                        android:textSize="18dp"></TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="vs"
+                        android:fontFeatureSettings="smcp"
+                        android:textStyle="bold"
+                        android:textSize="25dp"></TextView>
+                    <TextView
+                        android:id="@+id/final1player2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLAYER"
+                        android:textSize="18dp"></TextView>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/Final2"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="10dp"
+                android:background="@drawable/background_direction_panel">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- final b -"
+                    android:fontFeatureSettings="smcp"
+                    android:textStyle="bold"
+                    android:textSize="25dp"></TextView>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/final2player1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLAYER"
+                        android:textSize="18dp"></TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="vs"
+                        android:fontFeatureSettings="smcp"
+                        android:textStyle="bold"
+                        android:textSize="25dp"></TextView>
+                    <TextView
+                        android:id="@+id/final2player2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLAYER"
+                        android:textSize="18dp"></TextView>
+                </LinearLayout>
+            </LinearLayout>
+
+
+<!--            <androidx.appcompat.widget.AppCompatButton-->
+<!--                android:id="@+id/Final1"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:text="Final1"-->
+<!--                android:textSize="25dp" />-->
+
+<!--            <androidx.appcompat.widget.AppCompatButton-->
+<!--                android:id="@+id/Final2"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:text="Final2"-->
+<!--                android:textSize="25dp" />-->
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/quitBtn"
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:text="@string/quit"
-        android:textColor="?colorOnPrimary"
+        android:textColor="?colorOnSecondary"
         android:background="@drawable/background_chat_input"
-        android:backgroundTint="?colorPrimary"
-        android:layout_marginBottom="100dp"
+        android:backgroundTint="?colorSecondary"
+        android:layout_marginBottom="150dp"
         android:layout_gravity="center|bottom"
-        android:textSize="18dp"/>
+        android:textSize="18sp"/>
 
 </FrameLayout>

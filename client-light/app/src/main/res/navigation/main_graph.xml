@@ -56,10 +56,16 @@
         tools:layout="@layout/fragment_fullscreen" >
         <action
             android:id="@+id/action_fullscreenFragment_to_ChatFragment"
+            app:popUpTo="@id/ChatFragment"
+            app:popUpToInclusive="true"
             app:destination="@id/ChatFragment" />
         <action
             android:id="@+id/action_fullscreenFragment_to_MainMenuFragment"
+            app:popUpTo="@id/MainMenuFragment"
             app:destination="@id/MainMenuFragment" />
+        <action
+            android:id="@+id/action_fullscreenFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
         <action
             android:id="@+id/action_fullscreenFragment_to_bracketFragment2"
             app:destination="@id/bracketFragment" />
@@ -77,6 +83,12 @@
                 app:argType="integer"
                 android:defaultValue="0" />
         </action>
+        <action
+            android:id="@+id/action_gameListFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_gameListFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameRoomFragment"
@@ -85,20 +97,31 @@
         tools:layout="@layout/fragment_game_room" >
         <action
             android:id="@+id/action_gameRoomFragment_to_MainMenuFragment"
+            app:popUpTo="@id/MainMenuFragment"
+            app:popUpToInclusive="true"
             app:destination="@id/MainMenuFragment" />
         <action
             android:id="@+id/action_gameRoomFragment_to_ChatFragment"
+            app:popUpTo="@id/ChatFragment"
+            app:popUpToInclusive="true"
             app:destination="@id/ChatFragment" />
         <action
             android:id="@+id/action_gameRoomFragment_to_fullscreenFragment"
             app:destination="@id/fullscreenFragment" />
+        <action
+            android:id="@+id/action_gameRoomFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/friendsFragment"
         android:name="com.example.testchatbox.FriendsFragment"
         android:label="fragment_friends"
-        tools:layout="@layout/fragment_friends" />
+        tools:layout="@layout/fragment_friends" >
+        <action
+            android:id="@+id/action_friendsFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+    </fragment>
     <activity
         android:id="@+id/profileActivity"
         android:name="com.example.testchatbox.ProfileActivity"
@@ -120,6 +143,12 @@
         <action
             android:id="@+id/action_queueFragment_to_MainMenuFragment"
             app:destination="@id/MainMenuFragment" />
+        <action
+            android:id="@+id/action_queueFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_queueFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
     </fragment>
     <fragment
         android:id="@+id/bracketFragment"
@@ -135,6 +164,12 @@
         <action
             android:id="@+id/action_bracketFragment_to_rankingFragment"
             app:destination="@id/rankingFragment" />
+        <action
+            android:id="@+id/action_bracketFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_bracketFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
     </fragment>
     <fragment
         android:id="@+id/rankingFragment"

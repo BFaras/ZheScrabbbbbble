@@ -136,6 +136,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         const dialogReference = this.dialogBlankTile.open(BlankTilePopUpComponent, {
             width: '250px',
             height: '250px',
+            panelClass: 'container-blank-letter'
         });
         dialogReference.afterClosed().subscribe(result => {
             if (result.letter) {

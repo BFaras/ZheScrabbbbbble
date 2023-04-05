@@ -97,6 +97,10 @@ object ThemeManager {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 context.setTheme(R.style.PinkTheme)
             }
+            "green" -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                context.setTheme(R.style.GreenTheme)
+            }
             "blizzard" -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 context.setTheme(R.style.BlizzardTheme)
