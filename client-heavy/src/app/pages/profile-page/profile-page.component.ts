@@ -8,6 +8,7 @@ import { AvatarPopUpComponent } from '@app/components/profil-pop-up/avatar-pop-u
 import { NO_ERROR, USERNAME_TAKEN } from '@app/constants/error-codes';
 import { Theme } from '@app/constants/themes';
 import { AccountService } from '@app/services/account-service/account.service';
+import { FriendsService } from '@app/services/friends.service';
 import { ThemesService } from '@app/services/themes-service/themes-service';
 import { Subscription } from 'rxjs';
 
@@ -17,13 +18,18 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./profile-page.component.scss']
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {
-  accountProfile: ProfileInfo
+  //true: profile
+  //false: friend
+  profileMode: boolean;
+  isBuilt: boolean = false;
+  accountProfile: ProfileInfo;
   accountUsername: string;
   errorCodeUsername: string
   subscriptionChangeAvatar: Subscription;
   subscriptionUsername: Subscription;
   progressionBarValue: number
   avatarCircle: string;
+  medals: string[] = ['1st-place.png', '2nd-place.png', '3rd-place.png'];
   connectionHistory: connectionHistory = {
     connections: [],
     disconnections: [],
@@ -31,7 +37,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   constructor(private accountService: AccountService,
     public dialog: MatDialog,
     private themeService: ThemesService,
-    private router: Router) {}
+    private router: Router,
+    private friends: FriendsService) { this.profileMode = this.friends.getMode(); }
 
   ngOnDestroy() {
     this.subscriptionChangeAvatar.unsubscribe();
@@ -40,8 +47,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
   openDialogChangeName(): void {
     const dialogRef = this.dialog.open(ChangeNamePopUpComponent, {
-      width: '250px',
-      height: '250px',
+      width: '450px',
+      height: '230px',
       data: { accountService: this.accountService }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -71,7 +78,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   }
 
   getUserName() {
-    this.accountUsername = this.accountService.getUsername();
+    if (this.profileMode) this.accountUsername = this.accountService.getUsername();
+    else this.accountUsername = this.friends.getUsername();
   }
 
   ngOnInit(): void {
@@ -93,11 +101,9 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
         window.alert("La base de données est inacessible!")
       }
     })
-    this.getUserName();
-    this.accountProfile = this.accountService.getProfile();
-    console.log(this.accountProfile);
-    this.avatarCircle = "assets/avatar/" + this.accountProfile.avatar;
-    this.progressionBarValue = (this.accountProfile.levelInfo.xp / this.accountProfile.levelInfo.nextLevelXp) * 100
+
+    this.selectProfile();
+    this.isBuilt = true;
   }
 
   changeThemeTo(newTheme: string) {
@@ -111,7 +117,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   }
 
   setActive(event: Event) {
-    let themes = document.getElementsByClassName("theme-button");
+    let themes = document.getElementsByClassName("theme");
     for (let i = 0; i < themes.length; i++) {
       themes[i].className = themes[i].className.replace(" active", "");
     }
@@ -124,6 +130,15 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
   updateUserTheme(theme: string) {
     this.accountService.changeTheme(theme);
+  }
+
+  selectProfile() {
+    if (this.isBuilt) this.profileMode = true;
+    this.getUserName();
+    if (this.profileMode) this.accountProfile = this.accountService.getProfile();
+    else this.accountProfile = this.friends.getProfile();
+    this.avatarCircle = "assets/avatar/" + this.accountProfile.avatar;
+    this.progressionBarValue = (this.accountProfile.levelInfo.xp / this.accountProfile.levelInfo.nextLevelXp) * 100
   }
 
 }

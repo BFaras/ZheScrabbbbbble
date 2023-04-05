@@ -40,6 +40,8 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
         private router: Router,
         /*private friendsPage: FriendsPageComponent*/) {
         this.username = this.account.getUsername();
+        console.log(this.chatService.getActive());
+        this.active = this.chatService.getActive();
     }
     descendants: boolean;
     emitDistinctChangesOnly: boolean;
@@ -48,6 +50,7 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
     isViewQuery: boolean;
     selector: any;
     static?: boolean | undefined;
+    active: string = "chat";
 
     ngOnInit() {
         this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
@@ -160,5 +163,9 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
 
     goToChats() {
         this.router.navigate(['/public-chats']);
+    }
+
+    getActiveChatMode() {
+        this.active = this.chatService.getActive();
     }
 }
