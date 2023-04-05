@@ -26,6 +26,7 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setLocale();
         setContentView(binding.root)
+        supportActionBar?.hide()
         setSupportActionBar(binding.toolbar)
         val navController =findNavController(R.id.nav_host_fragment_profile)
         appBarConfiguration = AppBarConfiguration(navController.graph)

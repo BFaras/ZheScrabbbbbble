@@ -3,55 +3,156 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?backgroundColor"
     tools:context=".RankingFragment">
 
     <TextView
-        android:id="@+id/Rank1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="150dp"
-        android:text=""
-        android:textSize="25dp" />
-
+        android:layout_gravity="center|top"
+        android:fontFamily="@font/shrikhand"
+        android:text="@string/scrabbleName"
+        android:layout_marginTop="70dp"
+        android:textColor="?colorSecondary"
+        android:textSize="70sp">
+    </TextView>
     <TextView
-        android:id="@+id/Rank2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="100dp"
-        android:text=""
-        android:textSize="25dp" />
-
+        android:layout_gravity="center|top"
+        android:fontFeatureSettings="smcp"
+        android:textStyle="bold"
+        android:layout_marginTop="130dp"
+        android:textAlignment="center"
+        android:text="@string/tournament_ranking"
+        android:textColor="?colorSecondary"
+        android:textSize="50sp">
+    </TextView>
     <TextView
-        android:id="@+id/Rank3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="50dp"
-        android:text=""
-        android:textSize="25dp" />
+        android:layout_gravity="center|top"
+        android:fontFeatureSettings="smcp"
+        android:textStyle="bold|italic"
+        android:layout_marginTop="190dp"
+        android:textAlignment="center"
+        android:text="@string/congrats_to_all_players"
+        android:textColor="?colorSecondaryVariant"
+        android:textSize="35sp">
+    </TextView>
 
-    <TextView
-        android:id="@+id/Rank4"
-        android:layout_width="wrap_content"
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginTop="50dp"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
+        android:padding="15dp"
         android:layout_gravity="center"
-        android:text=""
-        android:textSize="25dp" />
+        android:gravity="center|top"
+        android:background="@drawable/background_profile"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/ic_medal_first"></androidx.appcompat.widget.AppCompatImageView>
+            <TextView
+                android:id="@+id/Rank1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:text="PLAYER"
+                android:textColor="?colorOnSecondary"
+                android:textSize="50dp" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/ic_medal_second"></androidx.appcompat.widget.AppCompatImageView>
+            <TextView
+                android:id="@+id/Rank2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="PLAYER"
+                android:textColor="?colorOnSecondary"
+                android:textSize="40dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_medal_third"></androidx.appcompat.widget.AppCompatImageView>
+            <TextView
+                android:id="@+id/Rank3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="PLAYER"
+                android:textColor="?colorOnSecondary"
+                android:textSize="30dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4"
+                android:textStyle="bold"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="15dp"
+                android:textAlignment="center"
+                android:textColor="?colorOnSecondary"
+                android:textSize="25dp" />
+            <TextView
+                android:id="@+id/Rank4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PLAYER"
+                android:textColor="?colorOnSecondary"
+                android:textSize="25dp" />
+        </LinearLayout>
 
+    </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/quitBtn"
-        android:layout_width="300dp"
+        android:layout_width="160dp"
         android:layout_height="40dp"
         android:text="@string/quit"
-        android:textColor="?colorOnPrimary"
+        android:textColor="?colorOnSecondary"
+        android:layout_marginTop="30dp"
         android:background="@drawable/background_chat_input"
-        android:backgroundTint="?colorPrimary"
-        android:layout_marginBottom="100dp"
+        android:backgroundTint="?colorSecondary"
         android:layout_gravity="center|bottom"
         android:textSize="18dp"/>
+</LinearLayout>
+
+
+
 
 </FrameLayout>

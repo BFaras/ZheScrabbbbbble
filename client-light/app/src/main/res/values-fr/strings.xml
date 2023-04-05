@@ -21,13 +21,13 @@
     <string name="accepter">Accepter</string>
     <string name="annuler">Annuler</string>
     <string name="refuser">Refuser</string>
+    <string name="ajouter">Ajouter</string>
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="swap">Échanger</string>
     <string name="reserveText">LETTRES RESTANTES DANS LA RÉSERVE</string>
     <string name="pass">Passer</string>
     <string name="tillNextRound">JUSQU\'AU PROCHAIN TOUR</string>
     <string name="play">Jouer</string>
-    <string name="ajouter">Ajouter</string>
     <string name="queueMessage">À la recherche d\'un tournoi</string>
     <string name="FriendCode">Entrez le code se trouvant sur le profil de votre ami pour l\'ajouter </string>
 
@@ -49,6 +49,7 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Courriel</string>
+    <string name="prompt_friendcode">Code d\'ami</string>
     <string name="prompt_username">Nom d\'utilisateur</string>
     <string name="prompt_password">Mot de passe</string>
     <string name="action_sign_in">Se Connecter</string>
@@ -64,6 +65,7 @@
     <!-- Strings related to errors -->
     <string name="NO_ERROR">Aucune erreur </string>
     <string name="ERROR">Erreur</string>
+    <string name="WRONG_FRIEND_CODE">Le code d\'ami est incorrect</string>
     <string name="FIELD_EMPTY"> Une entrée est vide</string>
     <string name="USERNAME_INVALID">Le nom est invalide</string>
     <string name="PASSWORD_INVALID">Le mot de passe est invalide</string>
@@ -101,4 +103,39 @@
     <string name="register_new_passsword">Enregister le nouveau mot de passe</string>
     <string name="times_up">TEMPS ÉCOULÉ!</string>
     <string name="talkingIntext">Présentement dans</string>
+    <string name="manage_chats">Gérer les chats</string>
+    <string name="hello_message"><![CDATA[Bonjour <b>%1$s</b>!]]></string>
+    <string name="privateRoom">Privée</string>
+    <string name="publicRoom">Publique</string>
+    <string name="protectedRoom">Protégéé</string>
+    <string name="join_game_text">Voulez-vous rejoindre la partie en tant qu\'observateur?</string>
+    <string name="enter_the_room_password">entrez le mot de passe</string>
+    <string name="quit">Quitter</string>
+    <string name="winnerName"><![CDATA[%1$s a gagné la partie!]]></string>
+    <string name="waitingRoomText">Si l\'hôte décide de lancer la partie et qu\'il y a au minimum 2 joueurs , les places restantes seront comblées par des Joueurs Virtuels.</string>
+    <string name="create_a_room">créer une salle</string>
+    <string name="enter_a_room_name"><i>Entrez le nom de la salle</i></string>
+    <string name="enter_a_chat_name"><i>Entrez le nom du chat</i></string>
+    <string name="needHelp">BESOIN D\'AIDE?</string>
+    <string name="voici_quelques_indices_pour_vous_aider">Voici quelques indices pour vous aider.</string>
+    <string name="vous_pouvez_cliquer_sur_n_importe_lequel_pour_le_pr_visualiser_sur_le_plateau">Vous pouvez cliquer sur n\'importe lequel pour le prévisualiser sur le plateau.</string>
+    <string name="yes">oui, je quitte</string>
+    <string name="no">non, je reste</string>
+    <string name="confirmAbandon">Êtes vous suuuur(e)?</string>
+    <string name="confirmButtonText">Êtes-vous sûr(e) de vouloir quitter la partie? Cette action est irréversible.</string>
+    <string name="now_observing_player1"><![CDATA[en train d\'observer %1$s]]></string>
+    <string name="move_mode">mode placer</string>
+    <string name="swap_mode">mode échanger</string>
+    <string name="indice">indice</string>
+    <string name="xp_needed_till_next_level_00"><![CDATA[xp nécessaire pour le prochain niveau - %1$s]]></string>
+    <string name="lvl">niv</string>
+    <string name="iswinner">gagné</string>
+    <string name="isloser">perdu</string>
+    <string name="your_friend_code_is">votre code ami est</string>
+    <string name="language">langage</string>
+    <string name="current_theme">thème actuel</string>
+    <string name="vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil">Vous pourrez le changer à nouveau dans votre page de profil.</string>
+    <string name="choisissez_votre_avatar">choisissez votre avatar</string>
+    <string name="revenez_quand_vous_aurez_fait_des_parties">Revenez quand vous aurez fait des parties!</string>
+    <string name="c_est_vide_ici">c\'est vide ici…</string>
 </resources>

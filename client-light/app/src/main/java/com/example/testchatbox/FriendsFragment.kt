@@ -1,12 +1,15 @@
 package com.example.testchatbox
 
 import SocketHandler
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -48,6 +51,11 @@ class FriendsFragment : Fragment(), ObserverFriend {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         FriendModel.updateFriendList()
+        binding.friendCode.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
+        }
         binding.add.setOnClickListener {
             if(binding.friendCode.text.isNotBlank())
                 addFriend()
@@ -93,6 +101,7 @@ class FriendsFragment : Fragment(), ObserverFriend {
                     if(errorMessage == R.string.NO_ERROR ){
                         FriendModel.updateFriendList()
                         binding.friendCode.setText("")
+                        binding.friendCode.clearFocus()
                     }else{
                         val appContext = context?.applicationContext
                         Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
@@ -195,5 +204,9 @@ class FriendsFragment : Fragment(), ObserverFriend {
             }
             updateView()
         });
+    }
+    private fun hideKeyboard() {
+        val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
     }
 }

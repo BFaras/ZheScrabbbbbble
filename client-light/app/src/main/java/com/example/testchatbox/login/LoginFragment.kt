@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -58,6 +59,16 @@ class LoginFragment : Fragment() {
         var resetButton = binding.reset
         val loadingProgressBar = binding.loading
 
+        usernameEditText.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
+        }
+        passwordEditText.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
+        }
 
         binding.darkTheme.setOnClickListener {
             activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "inverted") };
@@ -247,5 +258,9 @@ class LoginFragment : Fragment() {
     private fun refreshActivity(){
         var refresh = Intent(context, LoginActivity::class.java)
         startActivity(refresh)
+    }
+    private fun hideKeyboard() {
+        val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
     }
 }
