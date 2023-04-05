@@ -227,9 +227,9 @@ export const blizzard: Theme = {
         "--button-quaternary": "#B6C5D4",
         "--button-quaternary-hover": "#4B5763",
 
-        "--scroll-default": "#FFFFFF",
+        "--scroll-default": "#C72C41",
         "--scroll-background": "#fbf9fb",
-        "--scroll-hover": "#EE4540",
+        "--scroll-hover": "#B7C1CC",
 
         "--tile-on-board": "#A9A9A9",
         "--tile-on-holder": "#A9A9A9",

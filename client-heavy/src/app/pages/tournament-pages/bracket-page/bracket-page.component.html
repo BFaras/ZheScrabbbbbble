@@ -12,32 +12,48 @@
     </div>
     <div class="match-list">
         <div class="game" [class.in-progress]="semi1.status === 1" (click)="observeInProgressGame(semi1)">
-            <img src="assets/avatar/{{setUpAvatarSemi(semi1.players[0])}}" height="30" width="30" alt="" class="avatar">
-            <h2 class="player" [class.winner]="semi1.status === 2 && semi1.winnerIndex === 0">{{semi1.players[0] ? semi1.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
-            <h2 class="vs">VS</h2>
-            <img src="assets/avatar/{{setUpAvatarSemi(semi1.players[1])}}" height="30" width="30" alt="" class="avatar">
-            <h2 class="player" [class.winner]="semi1.status === 2 && semi1.winnerIndex === 1">{{semi1.players[1] ? semi1.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+            <div class="name-container">
+                <img src="assets/avatar/{{setUpAvatarSemi(semi1.players[0])}}" height="30" width="30" alt="" class="avatar">
+                <span class="player" [class.winner]="semi1.status === 2 && semi1.winnerIndex === 0">{{semi1.players[0] ? semi1.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</span>
+            </div>
+            <p class="vs">VS</p>
+            <div class="name-container">
+                <img src="assets/avatar/{{setUpAvatarSemi(semi1.players[1])}}" height="30" width="30" alt="" class="avatar">
+                <span class="player" [class.winner]="semi1.status === 2 && semi1.winnerIndex === 1">{{semi1.players[1] ? semi1.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</span>
+            </div>
         </div>
         <div class="game" [class.in-progress]="final1.status === 1" (click)="observeInProgressGame(final1)">
-            <img src="assets/avatar/{{setUpAvatarSemi(final1.players[0])}}" height="30" width="30" alt="" class="avatar">
-            <h2 class="player" [class.winner]="final1.status === 2 && final1.winnerIndex === 0">{{final1.players[0] ? final1.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
-            <h2 class="vs">VS</h2>
-            <img src="assets/avatar/{{setUpAvatarSemi(final1.players[1])}}" height="30" width="30" alt="" class="avatar">
-            <h2 class="player" [class.winner]="final1.status === 2 && final1.winnerIndex === 1">{{final1.players[1] ? final1.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+            <div class="name-container">
+                <img src="assets/avatar/{{setUpAvatarSemi(final1.players[0])}}" height="30" width="30" alt="" class="avatar">
+                <span class="player" [class.winner]="final1.status === 2 && final1.winnerIndex === 0">{{final1.players[0] ? final1.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</span>
+            </div>
+            <p class="vs">VS</p>
+            <div class="name-container">
+                <img src="assets/avatar/{{setUpAvatarSemi(final1.players[1])}}" height="30" width="30" alt="" class="avatar">
+                <span class="player" [class.winner]="final1.status === 2 && final1.winnerIndex === 1">{{final1.players[1] ? final1.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</span>
+            </div>
         </div>
         <div class="game" [class.in-progress]="semi2.status === 1" (click)="observeInProgressGame(semi2)">
-            <img src="assets/avatar/{{setUpAvatarSemi(semi2.players[0])}}" height="30" width="30" alt="" class="avatar">
-            <h2 class="player" [class.winner]="semi2.status === 2 && semi2.winnerIndex === 0">{{semi2.players[0] ? semi2.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
-            <h2 class="vs">VS</h2>
-            <img src="assets/avatar/{{setUpAvatarSemi(semi2.players[1])}}" height="30" width="30" alt="" class="avatar">
-            <h2 class="player" [class.winner]="semi2.status === 2 && semi2.winnerIndex === 1">{{semi2.players[1] ? semi2.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+            <div class="name-container">
+                <img src="assets/avatar/{{setUpAvatarSemi(semi2.players[0])}}" height="30" width="30" alt="" class="avatar">
+                <span class="player" [class.winner]="semi2.status === 2 && semi2.winnerIndex === 0">{{semi2.players[0] ? semi2.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</span>
+            </div>
+            <p class="vs">VS</p>
+            <div class="name-container">
+                <img src="assets/avatar/{{setUpAvatarSemi(semi2.players[1])}}" height="30" width="30" alt="" class="avatar">
+                <span class="player" [class.winner]="semi2.status === 2 && semi2.winnerIndex === 1">{{semi2.players[1] ? semi2.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</span>
+            </div>
         </div>
         <div class="game" [class.in-progress]="final2.status === 1" (click)="observeInProgressGame(final2)">
-            <img src="assets/avatar/{{setUpAvatarSemi(final2.players[0])}}" height="30" width="30" alt="" class="avatar">
-            <h2 class="player" [class.winner]="final2.status === 2 && final2.winnerIndex === 0">{{final2.players[0] ? final2.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
-            <h2 class="vs">VS</h2>
-            <img src="assets/avatar/{{setUpAvatarSemi(final2.players[1])}}" height="30" width="30" alt="" class="avatar">
-            <h2 class="player" [class.winner]="final2.status === 2 && final2.winnerIndex === 1">{{final2.players[1] ? final2.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</h2>
+            <div class="name-container">
+                <img src="assets/avatar/{{setUpAvatarSemi(final2.players[0])}}" height="30" width="30" alt="" class="avatar">
+                <span class="player" [class.winner]="final2.status === 2 && final2.winnerIndex === 0">{{final2.players[0] ? final2.players[0]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</span>
+            </div>
+            <p class="vs">VS</p>
+            <div class="name-container">
+                <img src="assets/avatar/{{setUpAvatarSemi(final2.players[1])}}" height="30" width="30" alt="" class="avatar">
+                <span class="player" [class.winner]="final2.status === 2 && final2.winnerIndex === 1">{{final2.players[1] ? final2.players[1]: ('TOURNAMENT-BRACKET.TBD' | translate)}}</span>
+            </div>
         </div>
     </div>
     <div class="mode-buttons">

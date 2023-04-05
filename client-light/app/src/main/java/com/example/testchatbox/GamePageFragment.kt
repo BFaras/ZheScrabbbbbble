@@ -128,8 +128,14 @@ class GamePageFragment : Fragment() {
             }
         }
 
+        SocketHandler.getSocket().on("Game Started"){
+            gameOver=false
+        }
+
+
         gameObserver = Observer<GameState> { gameState ->
             timer.start()
+            binding.gameWinnerHolder.visibility = GONE
             binding.reserveLength.text = gameState.reserveLength.toString()
             isPlaying = gameState.playerTurnIndex
             isYourTurn = (gameState.players[isPlaying].username == LoggedInUser.getName())
