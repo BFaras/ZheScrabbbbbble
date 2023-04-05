@@ -1,18 +1,12 @@
 import { DATABASE_UNAVAILABLE, NO_ERROR, WRONG_FRIEND_CODE } from '@app/constants/error-code-constants';
-import {
-    FRIEND_CODE_LENGTH,
-    FRIEND_ROOM_BASE_NAME,
-    MAX_ASCII_LETTER,
-    MIN_ASCII_LETTER,
-    NOT_LETTER_ASCII_MAX,
-    NOT_LETTER_ASCII_MIN
-} from '@app/constants/profile-constants';
+import { FRIEND_CODE_LENGTH, FRIEND_ROOM_BASE_NAME } from '@app/constants/profile-constants';
 import { ConnectivityStatus, Friend } from '@app/interfaces/friend-info';
 import { Container, Service } from 'typedi';
 import { ChatService } from './chat.service';
 import { DatabaseService } from './database.service';
 import { UserSocketService } from './user-socket.service';
 import { UsersStatusService } from './users-status.service';
+import crypto = require('crypto');
 
 @Service()
 export class FriendService {
@@ -94,26 +88,7 @@ export class FriendService {
     }
 
     private generateFriendCode(): string {
-        let generatedFriendCode = 'Friend';
-
-        for (let i = 0; i < FRIEND_CODE_LENGTH; i++) {
-            let randomCharCode = Math.floor(Math.random() * MAX_ASCII_LETTER);
-
-            while (randomCharCode >= NOT_LETTER_ASCII_MIN && randomCharCode <= NOT_LETTER_ASCII_MAX) {
-                randomCharCode = Math.floor(Math.random() * MAX_ASCII_LETTER);
-
-                if (randomCharCode < MIN_ASCII_LETTER) {
-                    randomCharCode += MIN_ASCII_LETTER;
-                }
-            }
-
-            if (randomCharCode < MIN_ASCII_LETTER) {
-                randomCharCode += MIN_ASCII_LETTER;
-            }
-            generatedFriendCode += String.fromCharCode(randomCharCode);
-        }
-
-        return generatedFriendCode;
+        return 'Friend' + crypto.randomBytes(FRIEND_CODE_LENGTH / 2).toString('hex');
     }
 
     private async generateFriendList(friendsIds: string[]): Promise<Friend[]> {
