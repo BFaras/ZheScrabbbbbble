@@ -1,3 +1,6 @@
+*{
+    font-family: 'Courier New', Courier, monospace;
+}
 .container{
     height: 510px;
     padding: 5% 2%;
@@ -7,8 +10,20 @@
     justify-content: center;
     background-color: var(--background-tertiary);
     display:flex;
+    flex-direction: column;
+}
+::ng-deep mat-dialog-container{
+    background-color: var(--background-tertiary) !important;
+    /* Other CSS Styles */
 }
 
+.title{
+    color:var(--text-secondary);
+    align-self: center;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+}
 .avatar{
     width:160px;
     height:160px;
@@ -22,6 +37,14 @@
     border-radius: 80px;
     transition-property: background-color;
     transition-duration: 0.2s;
+}
+
+.avatar:hover{
+    cursor:pointer;
+    
+}
+img{
+    border-radius: 50%;
 }
 
 .listAvatars{

@@ -52,6 +52,9 @@ button {
     color: var(--text-default);
 }
 
+.message{
+    color: var(--button-text-default);
+}
 #chat-box {
     display: flex;
     align-items: center;

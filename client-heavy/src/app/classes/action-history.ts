@@ -1,7 +1,7 @@
 
 
-export const VICTORY_STATUS = 0;
-export const DEFEAT_STATUS = 1;
+export const VICTORY_STATUS = true;
+export const DEFEAT_STATUS = false;
 export const DEFEAT = "Défaite";
 export const VICTORY = "Victoire";
 export interface ActionHistory {
