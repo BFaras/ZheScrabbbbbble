@@ -124,7 +124,6 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
             }
             if (this.letterAdderService.onDropLetterSpot(coordinateClick)) {
                 this.fakeDroppedOnCanvas(letter, coordinateClick);
-                console.log(letter.item._dragRef.data.element.nativeElement)
                 this.letterAdderService.addLettersOnDrop(letter.item.data)
             }
             this.mouseIsIn = true;
@@ -132,7 +131,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         }
     }
 
-    openBlankTileDialog(letter: CdkDragDrop<any[]>, coord: Vec2) {
+    openBlankTileDialog(letter: CdkDragDrop<string[]>, coord: Vec2) {
         const dialogReference = this.dialogBlankTile.open(BlankTilePopUpComponent, {
             width: '250px',
             height: '250px',
@@ -143,6 +142,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
                 this.blankLetterOnDrop = result.letter;
 
                 if (this.letterAdderService.onDropLetterSpot(coord)) {
+                    letter.item.data = this.blankLetterOnDrop;
+                    this.fakeDroppedOnCanvas(letter, coord);
                     this.letterAdderService.addLettersOnDrop(this.blankLetterOnDrop)
                 }
             }
