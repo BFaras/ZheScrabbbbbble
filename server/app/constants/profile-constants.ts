@@ -8,8 +8,10 @@ export const GAMES_NB_STAT_NAME = 'Games played';
 export const POINTS_AVRG_STAT_NAME = 'Points Average';
 export const GAME_TIME_AVRG_STAT_NAME = 'Average Game Time';
 
-export const FRIEND_CODE_LENGTH = 20;
+export const FRIEND_CODE_LENGTH = 8;
 export const FRIEND_ROOM_BASE_NAME = 'friend';
 
 export const MIN_ASCII_LETTER = 65;
 export const MAX_ASCII_LETTER = 122;
+export const NOT_LETTER_ASCII_MIN = 91;
+export const NOT_LETTER_ASCII_MAX = 96;

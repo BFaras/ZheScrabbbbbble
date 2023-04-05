@@ -1,5 +1,12 @@
 import { DATABASE_UNAVAILABLE, NO_ERROR, WRONG_FRIEND_CODE } from '@app/constants/error-code-constants';
-import { FRIEND_CODE_LENGTH, FRIEND_ROOM_BASE_NAME, MAX_ASCII_LETTER, MIN_ASCII_LETTER } from '@app/constants/profile-constants';
+import {
+    FRIEND_CODE_LENGTH,
+    FRIEND_ROOM_BASE_NAME,
+    MAX_ASCII_LETTER,
+    MIN_ASCII_LETTER,
+    NOT_LETTER_ASCII_MAX,
+    NOT_LETTER_ASCII_MIN
+} from '@app/constants/profile-constants';
 import { ConnectivityStatus, Friend } from '@app/interfaces/friend-info';
 import { Container, Service } from 'typedi';
 import { ChatService } from './chat.service';
@@ -91,6 +98,15 @@ export class FriendService {
 
         for (let i = 0; i < FRIEND_CODE_LENGTH; i++) {
             let randomCharCode = Math.floor(Math.random() * MAX_ASCII_LETTER);
+
+            while (randomCharCode >= NOT_LETTER_ASCII_MIN && randomCharCode <= NOT_LETTER_ASCII_MAX) {
+                randomCharCode = Math.floor(Math.random() * MAX_ASCII_LETTER);
+
+                if (randomCharCode < MIN_ASCII_LETTER) {
+                    randomCharCode += MIN_ASCII_LETTER;
+                }
+            }
+
             if (randomCharCode < MIN_ASCII_LETTER) {
                 randomCharCode += MIN_ASCII_LETTER;
             }
