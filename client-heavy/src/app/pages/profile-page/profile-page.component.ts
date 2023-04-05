@@ -18,6 +18,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./profile-page.component.scss']
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {
+  //true: profile
+  //false: friend
   profileMode: boolean;
   accountProfile: ProfileInfo;
   accountUsername: string;
