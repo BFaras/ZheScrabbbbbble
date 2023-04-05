@@ -15,7 +15,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
-import com.example.testchatbox.FriendModel.updateFriendList
 import com.example.testchatbox.databinding.FragmentFriendsBinding
 import com.example.testchatbox.databinding.FragmentProfilBinding
 import org.json.JSONArray
@@ -51,7 +50,7 @@ class FriendsFragment : Fragment(), ObserverFriend {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        updateFriendList()
+        FriendModel.updateFriendList()
         binding.friendCode.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 hideKeyboard()
@@ -100,7 +99,7 @@ class FriendsFragment : Fragment(), ObserverFriend {
                 }
                 activity?.runOnUiThread(Runnable {
                     if(errorMessage == R.string.NO_ERROR ){
-                        updateFriendList()
+                        FriendModel.updateFriendList()
                         binding.friendCode.setText("")
                         binding.friendCode.clearFocus()
                     }else{
