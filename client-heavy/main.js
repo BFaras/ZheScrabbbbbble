@@ -1,9 +1,9 @@
 const { app, BrowserWindow } = require('electron');
 const pathLinker = require('path');
 let appWindow;
+let popup;
 
 function initWindow() {
-    console.log(pathLinker.join(__dirname, 'preload.js'));
     appWindow = new BrowserWindow({
         // fullscreen: true,
         name: "Scrabble",
@@ -19,6 +19,14 @@ function initWindow() {
             // webSecurity: false 
         },
         icon: "./assets/images/logo.png",
+    });
+
+    
+    appWindow.on('closed', function() {
+        if(popup){
+            popup.removeAllListeners('closed');
+            popup.close();
+        }
     });
 
     // Electron Build Path
@@ -55,20 +63,34 @@ app.on('activate', function () {
 const { ipcMain } = require('electron')
 ipcMain.on('open-chat', () => {
     createWindow();
-})
+});
 
 const createWindow = () => {
-    const win = new BrowserWindow({
+    popup = new BrowserWindow({
         width: 1400,
         height: 810,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            preload: pathLinker.join(__dirname, 'preload-popup.js'),
+            contextIsolation: false
         }
     });
-
+    
     const path = `file://${__dirname}/dist/client/index.html#/chat`;
-    win.loadURL(path);
-    win.on('closed', function() {
+    popup.loadURL(path);
+    popup.setMenuBarVisibility(false)
+    popup.on('closed', function() {
         appWindow.webContents.send('close-chat');
-    })
+        ipcMain.removeAllListeners('update-theme');
+        ipcMain.removeAllListeners('update-language');
+        popup = null;
+    });
+
+    ipcMain.on('update-theme', () => {
+        popup.webContents.send('update-theme');
+    });
+    
+    ipcMain.on('update-language', () => {
+        popup.webContents.send('update-language');
+    });
 }

@@ -4,7 +4,9 @@ import { AccountService } from '@app/services/account-service/account.service';
 //import { AccountService } from '@app/services/account-service/account.service';
 import { Router } from '@angular/router';
 import { ConnectivityStatus, Friend } from '@app/classes/friend-info';
+import { LanguageComponent } from '@app/components/language/language.component';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { ThemesService } from '@app/services/themes-service/themes-service';
 import { Subscription } from 'rxjs';
 
 //import { chat, chatlist } from './chats';
@@ -46,6 +48,8 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
         private chatService: ChatService,
         private account: AccountService,
         private router: Router,
+        private themeService: ThemesService,
+        private languageComponent: LanguageComponent
         /*private friendsPage: FriendsPageComponent*/) {
         this.username = this.account.getUsername();
         if (!this.username) {
@@ -106,6 +110,22 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
         this.account.setFullAccountInfo(JSON.parse(accountInfo));
         this.username = this.account.getUsername();
         this.chatService.linkSocketToUsername(this.username);
+        (window as any).setCallbacks(this.updateTheme.bind(this), this.updateLanguage.bind(this));
+        this.updateTheme();
+        this.updateLanguage(false);
+    }
+
+    updateTheme() {
+        const theme = localStorage.getItem('theme');
+        if (!theme) return;
+        this.themeService.setActiveTheme(JSON.parse(theme));
+    }
+
+    updateLanguage(isViewLoaded: boolean = true) {
+        const language = localStorage.getItem('language');
+        if (!language) return;
+        this.languageComponent.translateLanguageTo(language, false);
+        if (isViewLoaded) this.changeDetector.detectChanges();
     }
 
     ngAfterContentChecked(): void {

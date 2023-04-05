@@ -3,6 +3,7 @@ import { ProfileInfo, ProfileSettings } from '@app/classes/profileInfo';
 import { Observable, Observer } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import { SocketManagerService } from '../socket-manager-service/socket-manager.service';
+import { ThemesService } from '../themes-service/themes-service';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,8 +13,9 @@ export class AccountService {
   private socket: Socket;
   private profile: ProfileInfo;
   private usercode: string;
+  private language: string = 'fr';
 
-  constructor(private socketManagerService: SocketManagerService) {
+  constructor(private socketManagerService: SocketManagerService, private themeService: ThemesService) {
     this.setUpSocket()
   }
 
@@ -45,11 +47,19 @@ export class AccountService {
     return this.profile;
   }
 
-  getFullAccountInfo(): {username: string, profile : ProfileInfo, usercode : string}{
-    return {username : this.username, profile : this.profile, usercode:  this.usercode};
+  getLanguage(): string {
+    return this.language;
   }
 
-  setFullAccountInfo(accountInfo : {username: string, profile : ProfileInfo, usercode : string}) {
+  setLanguage(language: string) {
+    this.language = language;
+  }
+
+  getFullAccountInfo(): { username: string, profile: ProfileInfo, usercode: string } {
+    return { username: this.username, profile: this.profile, usercode: this.usercode };
+  }
+
+  setFullAccountInfo(accountInfo: { username: string, profile: ProfileInfo, usercode: string }) {
     this.username = accountInfo.username;
     this.profile = accountInfo.profile;
     this.usercode = accountInfo.usercode;
@@ -69,10 +79,14 @@ export class AccountService {
   }
 
   changeTheme(theme: string) {
+    const themeObject = this.themeService.getThemeFromString(theme);
+    if (!themeObject) return;
+    (window as any).updateTheme(themeObject);
     this.socket.emit('Change Theme', theme);
   }
 
   changeLanguage(lang: string) {
+    (window as any).updateLanguage(lang);
     this.socket.emit('Change Language', lang);
   }
 

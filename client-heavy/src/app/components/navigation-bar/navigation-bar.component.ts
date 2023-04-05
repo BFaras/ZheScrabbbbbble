@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/cor
 import { AccountService } from '@app/services/account-service/account.service';
 import { FriendsService } from '@app/services/friends.service';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
+import { ThemesService } from '@app/services/themes-service/themes-service';
 @Component({
   selector: 'app-navigation-bar',
   templateUrl: './navigation-bar.component.html',
@@ -10,7 +11,7 @@ import { SocketManagerService } from '@app/services/socket-manager-service/socke
 export class NavigationBarComponent {
   chatOpen: boolean = false;
   @Output("navLogic") navLogic: EventEmitter<void> = new EventEmitter();
-  constructor(private socketManager: SocketManagerService, private accountService: AccountService, private changeDetector: ChangeDetectorRef, private friends: FriendsService) {
+  constructor(private socketManager: SocketManagerService, private accountService: AccountService, private changeDetector: ChangeDetectorRef, private friends: FriendsService, private themeService: ThemesService) {
     (window as any).setChatStatusCallback(this.updateChatStatus.bind(this));
     this.chatOpen = (window as any).chatOpen;
   }
@@ -25,7 +26,7 @@ export class NavigationBarComponent {
   }
 
   openChat() {
-    (window as any).openChat(this.accountService.getFullAccountInfo());
+    (window as any).openChat(this.accountService.getFullAccountInfo(), this.themeService.getActiveTheme(), this.accountService.getLanguage());
   }
 
   updateChatStatus() {
