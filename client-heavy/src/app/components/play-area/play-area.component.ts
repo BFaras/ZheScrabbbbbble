@@ -71,6 +71,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         const dialogReference = this.dialogBlankTile.open(BlankTilePopUpComponent, {
             width: '250px',
             height: '250px',
+            panelClass: 'container-blank-letter'
         });
         dialogReference.afterClosed().subscribe(result => {
             this.letterAdderService.setAdderMode(this.formerAdderMode);
@@ -86,7 +87,11 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     @HostListener('document:keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
         if (this.receiver === "playarea") {
-            if (this.gameState.players[this.gameState.playerTurnIndex].username !== this.accountService.getUsername()) return;
+            if (this.gameStateService.isCoop()) {
+                if (this.gameStateService.hasPendingAction() || this.gameStateService.getObserverIndex() !== -1) return;
+            } else {
+                if (this.gameState.players[this.gameState.playerTurnIndex].username !== this.accountService.getUsername()) return;
+            }
             this.buttonPressed = event.key;
             this.letterAdderService.onPressDown(this.buttonPressed);
         }
@@ -131,7 +136,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
 
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
-            if (this.gameStateService.getObserverIndex() >= 0) return;
+            if (this.gameStateService.getObserverIndex() >= 0 || this.gameStateService.hasPendingAction()) return;
             this.setReceiver('playarea');
             const coordinateClick: Vec2 = { x: event.offsetX, y: event.offsetY };
             this.letterAdderService.onLeftClick(coordinateClick);

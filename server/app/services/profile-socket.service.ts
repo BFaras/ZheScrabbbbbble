@@ -44,6 +44,26 @@ export class ProfileSocketService {
             }
         });
 
+        socket.on('Get Avatar from Username', async (username: string) => { //for light client
+            if (username !== '' && username !== undefined && username !== null) {
+                console.log(username);
+                const avatar = (await this.profileService.getProfileInformation(username)).avatar;
+                console.log(avatar);
+                socket.emit('Avatar from Username Response', avatar);
+            }
+        });
+
+        socket.on('Get Avatars from Usernames', async (usernames: string[]) => { //for light client
+            const avatarsUsername = {};
+            for (const username of usernames) {
+                if (username !== '' && username !== undefined && username !== null) {
+                    const avatar = (await this.profileService.getProfileInformation(username)).avatar;
+                    avatarsUsername[username] = avatar;
+                }
+            }
+            socket.emit('Avatars from Usernames Response', avatarsUsername);
+        });
+
         socket.on('Change Avatar', async (newAvatar: string) => {
             socket.emit('Avatar Change Response', await this.profileService.changeAvatar(this.accountInfoService.getUserId(socket), newAvatar));
         });

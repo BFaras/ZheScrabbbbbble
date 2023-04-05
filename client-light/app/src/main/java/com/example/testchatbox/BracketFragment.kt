@@ -1,12 +1,18 @@
 package com.example.testchatbox
 
 import SocketHandler
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentBracketBinding
 import com.example.testchatbox.databinding.FragmentQueueBinding
@@ -27,6 +33,19 @@ class BracketFragment : Fragment(), Observer {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
+            // Hide both the status bar and the navigation bar
+            hide(WindowInsetsCompat.Type.systemBars())
+            hide(WindowInsetsCompat.Type.statusBars())
+            // Behavior of system bars
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+        binding.buttonchat.setOnClickListener {
+            findNavController().navigate(R.id.action_bracketFragment_to_ChatFragment)
+        }
+        binding.buttonfriends.setOnClickListener {
+            findNavController().navigate(R.id.action_bracketFragment_to_friendsFragment)
+        }
         binding.quitBtn.setOnClickListener {
              leaveTournament()
         }
@@ -50,8 +69,19 @@ class BracketFragment : Fragment(), Observer {
     }
 
     private fun leaveTournament(){
-        TournamentModel.exitTournament();
-        findNavController().navigate(R.id.action_bracketFragment_to_MainMenuFragment)
+        val builder = context?.let { it -> AlertDialog.Builder(it, R.style.CustomAlertDialog).create() }
+        val alertView = layoutInflater.inflate(R.layout.alert_abandon, null)
+        val yesButton = alertView.findViewById<AppCompatButton>(R.id.dialogYes)
+        val noButton = alertView.findViewById<AppCompatButton>(R.id.dialogNo)
+        builder?.setView(alertView)
+        yesButton.setOnClickListener {
+            TournamentModel.exitTournament();
+            findNavController().navigate(R.id.action_bracketFragment_to_MainMenuFragment)
+        }
+        noButton.setOnClickListener {
+            builder?.dismiss()
+        }
+        builder?.show()
     }
 
     private fun observeGame(gameId:String){
@@ -85,6 +115,74 @@ class BracketFragment : Fragment(), Observer {
             if(TournamentModel.tournamentTimer.phase==2)
                 findNavController().navigate(R.id.action_bracketFragment_to_rankingFragment)
             //TODO : Update UI
+            binding.time.text = TournamentModel.tournamentTimer.timeRemaning.toString()
+            for (game in TournamentModel.gamesData) {
+                when (game.type) {
+                    "Semi1" -> {
+                        binding.semi1player1.text = game.players[0]
+                        binding.semi1player2.text = game.players[1]
+                        when (game.winnerIndex) {
+                            0 -> {
+                                binding.semi1player1.typeface = Typeface.DEFAULT_BOLD
+                                binding.semi1player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                            }
+                            1 -> {
+                                binding.semi1player2.typeface = Typeface.DEFAULT_BOLD
+                                binding.semi1player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                            }
+                            else -> {}
+                        }
+                    }
+                    "Semi2" -> {
+                        binding.semi2player1.text = game.players[0]
+                        binding.semi2player2.text = game.players[1]
+                        when (game.winnerIndex) {
+                            0 -> {
+                                binding.semi1player1.typeface = Typeface.DEFAULT_BOLD
+                                binding.semi1player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                            }
+                            1 -> {
+                                binding.semi1player2.typeface = Typeface.DEFAULT_BOLD
+                                binding.semi1player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                            }
+                            else -> {}
+                        }
+                    }
+                    "Final1" -> {
+                        binding.finals.visibility = View.VISIBLE
+                        binding.final1player1.text = game.players[0]
+                        binding.final1player2.text = game.players[1]
+                        when (game.winnerIndex) {
+                            0 -> {
+                                binding.final1player1.typeface = Typeface.DEFAULT_BOLD
+                                binding.final1player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                            }
+                            1 -> {
+                                binding.final1player2.typeface = Typeface.DEFAULT_BOLD
+                                binding.final1player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                            }
+                            else -> {}
+                        }
+                    }
+                    "Final2" -> {
+                        binding.finals.visibility = View.VISIBLE
+                        binding.final2player1.text = game.players[0]
+                        binding.final2player2.text = game.players[1]
+                        when (game.winnerIndex) {
+                            0 -> {
+                                binding.final2player1.typeface = Typeface.DEFAULT_BOLD
+                                binding.final2player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                            }
+                            1 -> {
+                                binding.final2player2.typeface = Typeface.DEFAULT_BOLD
+                                binding.final2player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                            }
+                            else -> {}
+                        }
+                    }
+                    else -> {}
+                }
+            }
         });
     }
 

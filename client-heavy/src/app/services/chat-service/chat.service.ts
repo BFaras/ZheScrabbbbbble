@@ -56,6 +56,7 @@ export class ChatService {
     }
 
     sendMessage(message: string, ChatId: string) {
+        console.log("Emission d un message")
         this.socketManagerService.getSocket().emit('New Chat Message', message, ChatId);
     }
 
@@ -73,6 +74,7 @@ export class ChatService {
     getMessagesInGame(): Observable<{ chatCode: string, message: ChatMessage }> {
         return new Observable((observer: Observer<{ chatCode: string, message: ChatMessage }>) => {
             this.socketManagerService.getSocket().on('New Chat Message', (chatCode: string, chatMessage: ChatMessage) => {
+                console.log("reception dans observable")
                 const response = {
                     chatCode: chatCode as string,
                     message: chatMessage as ChatMessage,
@@ -117,6 +119,15 @@ export class ChatService {
         return new Observable((observer: Observer<string>) => {
             this.socketManagerService.getSocket().once('Chat Creation Response', (errorCode: string) => {
                 observer.next(errorCode);
+            });
+        });
+    }
+
+    getChatHistory(chatId: string): Observable<ChatMessage[]> {
+        this.socketManagerService.getSocket().emit('Get Chat History', chatId);
+        return new Observable((observer: Observer<ChatMessage[]>) => {
+            this.socketManagerService.getSocket().once('Chat History Response', (chatHistory: ChatMessage[]) => {
+                observer.next(chatHistory);
             });
         });
     }

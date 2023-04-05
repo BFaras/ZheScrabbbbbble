@@ -46,7 +46,7 @@
                     <p class="specific-stat">La moyenne de temps par partie: {{accountProfile.stats[3].statAmount}}</p>
                 </mat-card-content>
             </mat-card>
-            <app-former-action-history-area></app-former-action-history-area>
+            <app-former-action-history-area [formerActionsHistory] = "accountProfile.gameHistory"></app-former-action-history-area>
         </div>
     <app-connection-history-area [connectionInformation] = "accountProfile.connectionHistory"></app-connection-history-area>
 </div>
