@@ -64,8 +64,8 @@ export class WaitingRoomComponent implements OnDestroy {
         this.waitingRoomManagerService.startGame();
     }
 
-    goToGame(isCoop: boolean) {
-        this.gameStateService.setCoop(isCoop);
+    goToGame(info: { isCoop: boolean, roomCode?: string }) {
+        this.gameStateService.setCoop(info.isCoop);
         this.gameStateService.setObserver(-1);
         this.gameStateService.setTournamentGame(false);
         this.router.navigate(['/game']).then(() => {

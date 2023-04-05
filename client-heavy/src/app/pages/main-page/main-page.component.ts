@@ -23,7 +23,7 @@ export class MainPageComponent {
         private accountService: AccountService,
         private profile: ProfilePageComponent,
         private language: LanguageComponent) {
-        this.accountService.setUpSocket()
+        this.accountService.setUpSocket();
         this.subscriptions.push(this.accountService.getUserProfileInformation().subscribe((userProfile) => {
             this.accountService.setUpProfile(userProfile);
         }));
