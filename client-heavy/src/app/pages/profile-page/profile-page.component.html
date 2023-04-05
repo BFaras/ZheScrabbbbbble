@@ -1,4 +1,4 @@
-<app-navigation-bar></app-navigation-bar>
+<app-navigation-bar (navLogic)="selectProfile()"></app-navigation-bar>
 
 <div *ngIf="profileMode" class="container justified">
     <mat-card class="profileAvatarNameLevel box">

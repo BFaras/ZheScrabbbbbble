@@ -28,7 +28,6 @@ export class MainPageComponent {
             this.accountService.setUpProfile(userProfile);
         }));
         this.subscriptions.push(this.accountService.getThemeAndLanguage().subscribe((profile: ProfileSettings) => {
-            console.log(profile);
             this.profile.changeThemeTo(profile.theme);
             this.language.translateLanguageTo(profile.language);
         }));

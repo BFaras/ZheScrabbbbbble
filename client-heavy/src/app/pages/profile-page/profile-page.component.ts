@@ -21,6 +21,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   //true: profile
   //false: friend
   profileMode: boolean;
+  isBuilt: boolean = false;
   accountProfile: ProfileInfo;
   accountUsername: string;
   errorCodeUsername: string
@@ -37,7 +38,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private themeService: ThemesService,
     private router: Router,
-    private friends: FriendsService) { this.profileMode = this.friends.getMode(); console.log(this.profileMode) }
+    private friends: FriendsService) { this.profileMode = this.friends.getMode(); }
 
   ngOnDestroy() {
     this.subscriptionChangeAvatar.unsubscribe();
@@ -100,13 +101,9 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
         window.alert("La base de données est inacessible!")
       }
     })
-    this.getUserName();
 
-    if (this.profileMode) this.accountProfile = this.accountService.getProfile();
-    else this.accountProfile = this.friends.getProfile();
-    console.log(this.accountProfile);
-    this.avatarCircle = "assets/avatar/" + this.accountProfile.avatar;
-    this.progressionBarValue = (this.accountProfile.levelInfo.xp / this.accountProfile.levelInfo.nextLevelXp) * 100
+    this.selectProfile();
+    this.isBuilt = true;
   }
 
   changeThemeTo(newTheme: string) {
@@ -133,6 +130,15 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
   updateUserTheme(theme: string) {
     this.accountService.changeTheme(theme);
+  }
+
+  selectProfile() {
+    if (this.isBuilt) this.profileMode = true;
+    this.getUserName();
+    if (this.profileMode) this.accountProfile = this.accountService.getProfile();
+    else this.accountProfile = this.friends.getProfile();
+    this.avatarCircle = "assets/avatar/" + this.accountProfile.avatar;
+    this.progressionBarValue = (this.accountProfile.levelInfo.xp / this.accountProfile.levelInfo.nextLevelXp) * 100
   }
 
 }

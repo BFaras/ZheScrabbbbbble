@@ -61,7 +61,6 @@ export class FriendsPageComponent {
     this.friendsService.setMode(false);
     this.friendsService.setUsername(username);
     this.friendsService.getFriendsProfile(username).subscribe((userProfile) => {
-      console.log(userProfile);
       this.friendsService.setUpProfile(userProfile);
       this.router.navigate(['/profile-page']);
     });
