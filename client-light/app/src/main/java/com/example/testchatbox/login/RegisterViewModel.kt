@@ -18,7 +18,7 @@ class RegisterViewModel() : ViewModel() {
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun register(username: String, email: String, password: String, question : String, answer : String) {
+    fun register(username: String, email: String, avatar: String, password: String, question : String, answer : String) {
         SocketHandler.getSocket().once("Creation result"){ args ->
             if(args[0] != null){
                 val result = args[0] as String;
@@ -32,7 +32,7 @@ class RegisterViewModel() : ViewModel() {
                 }
             }
         }
-        SocketHandler.getSocket().emit("Create user account", username.trim(), password.trim(), email.trim(), "Avatar",  JSONObject().put("question",question.trim()).put("answer", answer.trim()));
+        SocketHandler.getSocket().emit("Create user account", username.trim(), password.trim(), email.trim(), avatar.trim(),  JSONObject().put("question",question.trim()).put("answer", answer.trim()));
     }
 
 
