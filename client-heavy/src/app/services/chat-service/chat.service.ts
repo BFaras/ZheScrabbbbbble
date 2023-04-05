@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ChatInfo, ChatMessage, ChatType } from '@app/classes/chat-info';
+import { ChatInfo, ChatMessage, ChatType, MessageInfo } from '@app/classes/chat-info';
+import { NO_ERROR } from '@app/constants/error-codes';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { Observable, Observer } from 'rxjs';
 import { Socket } from 'socket.io-client';
@@ -12,7 +13,7 @@ export class ChatService {
     messageLog = new Map<string, ChatMessage[]>();
     chatList: ChatInfo[] = [];
     chatInGameRoom: string;
-    chatMessageObserver: Observer<Map<string, ChatMessage[]>>;
+    chatMessageObserver: Observer<MessageInfo>;
     active: string = 'chat';
 
     constructor(private socketManagerService: SocketManagerService) {
@@ -39,8 +40,8 @@ export class ChatService {
         return this.socketManagerService.getSocket().id;
     }
 
-    getNewMessages(): Observable<Map<string, ChatMessage[]>> {
-        return new Observable((observer: Observer<Map<string, ChatMessage[]>>) => {
+    getNewMessages(): Observable<MessageInfo> {
+        return new Observable((observer: Observer<MessageInfo>) => {
             if (!this.socket.active) this.updateSocket();
             this.chatMessageObserver = observer;
         });
@@ -50,8 +51,7 @@ export class ChatService {
         this.socket = this.socketManagerService.getSocket();
         this.socket.on('New Chat Message', (id: string, message: ChatMessage) => {
             if (this.messageLog.has(id)) {
-                this.messageLog.get(id)!.push(message);
-                this.chatMessageObserver.next(this.messageLog);
+                this.chatMessageObserver.next({ id, message });
             }
         });
     }
@@ -101,6 +101,9 @@ export class ChatService {
         this.socketManagerService.getSocket().emit('Leave Public Chat', chat._id);
         return new Observable((observer: Observer<string>) => {
             this.socketManagerService.getSocket().once('Leave Chat Response', (errorCode: string) => {
+                if (errorCode === NO_ERROR) {
+                    this.messageLog.delete(chat._id);
+                }
                 observer.next(errorCode);
             });
         });
