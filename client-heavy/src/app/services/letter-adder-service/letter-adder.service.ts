@@ -5,8 +5,6 @@ import { ChatService } from '@app/services/chat-service/chat.service';
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
 import { PreviewPlayersActionService } from '../preview-players-action-service/preview-players-action.service';
-
-const ONE_LETTER_IN_LOGGER = 1;
 @Injectable({
     providedIn: 'root',
 })
@@ -65,7 +63,7 @@ export class LetterAdderService {
     }
 
     findDirectionOfDrop(row: string, column: number) {
-        if (this.addedLettersLog.size === ONE_LETTER_IN_LOGGER) {
+        if (this.addedLettersLog.size === 1) {
             if (this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row) {
                 this.arrowDirection = false;
             } else if (this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row) {
@@ -75,7 +73,10 @@ export class LetterAdderService {
     }
 
     isTileAround(xIndex: string, yIndex: number): boolean {
-        if (this.addedLettersLog.size === 0 || this.isFormerTileUsed(xIndex, yIndex) || (yIndex !== this.prevActiveSquare.y && xIndex == this.prevActiveSquare.x) || (xIndex.charCodeAt(0) !== this.prevActiveSquare.x.charCodeAt(0) && yIndex === this.prevActiveSquare.y)) {
+        /**modifier pour permettre la 2em tile d aller vers horizontal et vertical de premiere lettre */
+        if (this.addedLettersLog.size === 0 || this.isFormerTileUsed(xIndex, yIndex) ||
+            (yIndex !== this.prevActiveSquare.y && xIndex == this.prevActiveSquare.x) ||
+            (xIndex.charCodeAt(0) !== this.prevActiveSquare.x.charCodeAt(0) && yIndex === this.prevActiveSquare.y)) {
             this.activeSquare = { x: xIndex, y: yIndex }
             return true;
         }
@@ -83,7 +84,7 @@ export class LetterAdderService {
     }
 
     isRightDirection(row: string, column: number): boolean {
-        if (this.addedLettersLog.size >= 1) {
+        if (this.addedLettersLog.size >= 2) {
             if (this.arrowDirection == true && this.prevActiveSquare.y === column)
                 return false
             else if (this.arrowDirection == false && this.prevActiveSquare.x === row)
@@ -98,6 +99,14 @@ export class LetterAdderService {
     canDrop(coords: Vec2): boolean {
         const foundCoords = this.findCoords(coords.x, coords.y);
         this.findDirectionOfDrop(foundCoords.row, foundCoords.column)
+        console.log('-------------drop test----------------------')
+        console.log(this.canPlay);
+        console.log(foundCoords.valid);
+        console.log(this.isTileAround(foundCoords.row, foundCoords.column))
+        console.log(!this.isPositionTaken());
+        console.log(this.isRightDirection(foundCoords.row, foundCoords.column))
+        console.log(this.addedLettersLog)
+        console.log('-------------drop test----------------------')
         return this.canPlay && foundCoords.valid && this.isTileAround(foundCoords.row, foundCoords.column) && !this.isPositionTaken() && this.isRightDirection(foundCoords.row, foundCoords.column);
     }
 
@@ -201,10 +210,14 @@ export class LetterAdderService {
     }
 
     removeDrawingBeforeDragWithinCanvas() {
-        console.log(this.pervForDrag);
         this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
-        console.log(this.addedLettersLog);
         this.gridService.deleteAndRedraw(this.addedLettersLog);
+    }
+
+    removeDrawingBeforeDragOutsideCanvasOrNotValidSpot() {
+        this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
+        this.gridService.deleteAndRedraw(this.addedLettersLog);
+        /**ajouter logique pour remettre cartes dans la main */
     }
     removeLetters() {
         const decrement = -1;
@@ -260,6 +273,7 @@ export class LetterAdderService {
         const lastAddedLetter = Array.from(this.addedLettersLog)[this.addedLettersLog.size - 1];
         if (addOrDel) {
             this.addedLettersLog.delete(lastAddedLetter[0]);
+            console.log(lastAddedLetter[1])
             if (lastAddedLetter[1].length === 1) this.playerHand.push(lastAddedLetter[1]);
             else this.playerHand.push(lastAddedLetter[1].slice(0, GRID_CONSTANTS.lastLetter));
         } else {
@@ -338,6 +352,7 @@ export class LetterAdderService {
 
     makeMove() {
         if (this.addedLettersLog.size) {
+            console.log(this.formatAddedLetters());
             this.chatService.sendCommand(this.formatAddedLetters(), 'Place');
             this.removeAll();
         }

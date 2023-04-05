@@ -1,4 +1,4 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Vec2 } from '@app/classes/vec2';
@@ -72,43 +72,40 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
             left < 0 ||
             top > 800 ||
             left > 800
+        const foundCoords = this.letterAdderService.findCoords(Number(field.left.replace('px', '')), Number(field.top.replace('px', '')));
+        this.letterAdderService.pervForDrag.x = foundCoords.row
+        this.letterAdderService.pervForDrag.y = foundCoords.column
         if (!out) {
             console.log("infield")
             console.log(coordinateClick)
             console.log(field.top);
             console.log(field.left)
-            const foundCoords = this.letterAdderService.findCoords(Number(field.left.replace('px', '')), Number(field.top.replace('px', '')));
-            this.letterAdderService.pervForDrag.x = foundCoords.row
-            this.letterAdderService.pervForDrag.y = foundCoords.column
             if (this.letterAdderService.onDropLetterSpot(coordinateClick)) {
                 console.log("letter  in apporprite drop spot")
                 console.log('change position')
-                this.letterAdderService.removeDrawingBeforeDragWithinCanvas()
                 field.left = left + "px"
                 field.top = top + "px";
                 /**BOUGER LE TILE A ENLEVER VERS LA FIN */
+                this.letterAdderService.removeDrawingBeforeDragWithinCanvas()
                 this.changeTilePositionLastMovedTile(field)
                 this.letterAdderService.moveLetterInBoard(field.text)
             } else {
-                /**logique doit etre modifier pour que ca remet dans sport  */
+                /**Il faut ca remet dans la main  */
+                this.letterAdderService.removeDrawingBeforeDragOutsideCanvasOrNotValidSpot()
                 this.fields = this.fields.filter((x) => x != field);
                 console.log("letter not in apporprite drop spot , so it s has been removed")
-                this.letterAdderService.removeLetters()
             }
         } else {
             this.fields = this.fields.filter((x) => x != field);
             console.log("letter not in apporprite drop spot , so it s has been removed")
-            /**le remove letter est a modifier pour que ca prenne moins de temops */
-            this.letterAdderService.removeLetters()
+            /**Il faut ca remet dans la main  */
+            this.letterAdderService.removeDrawingBeforeDragOutsideCanvasOrNotValidSpot()
         }
 
     }
     slideLetterToCanvas(letter: CdkDragDrop<string>) {
         if (letter.previousContainer === letter.container) {
-            moveItemInArray(this.fields, letter.previousIndex, letter.currentIndex);
-            console.log(letter.previousIndex);
-            console.log(letter.currentIndex);
-            console.log('in the sliding and same container')
+            return;
         } else {
             console.log('in the sliding and not the same container')
             const leftBoard = document.getElementById("canvas")?.getBoundingClientRect().left as number;
