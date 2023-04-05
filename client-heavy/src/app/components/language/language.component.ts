@@ -40,7 +40,6 @@ export class LanguageComponent implements OnInit {
   }
 
   updateLanguage(lang: string) {
-    console.log(lang);
     this.accountService.changeLanguage(lang);
   }
 

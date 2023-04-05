@@ -1,21 +1,20 @@
 <mat-card class="connection-history">
-    <mat-card-header id="title">
-        <mat-card-title >Historique</mat-card-title>
+    <mat-card-header>
+        <mat-card-title id="title">{{ 'PROFILE-PAGE.LLHISTORY' | translate }}</mat-card-title>
     </mat-card-header>
-    <mat-card-actions id = "buttons-change-mode">
-        <button  class = "buttons" (click)="changeToConnection()">Connexions</button>
-        <button  class = "buttons"(click)="changeToDisconnection()">Déconnexions</button>
-      </mat-card-actions>
-    <div *ngIf="connectionMode === true">
-    <mat-card-content *ngFor = "let connection of connectionHistory.connections" class="connection-content">
-        <p  >Date : {{connection.date}}  Heure : {{connection.time}}</p>
-        <hr>
-    </mat-card-content>
+    <div id = "buttons-change-mode">
+        <p class="tabs active" (click)="changeToConnection($event)">{{ 'PROFILE-PAGE.LOGIN' | translate }}</p>
+        <p class="tabs" (click)="changeToDisconnection($event)">{{ 'PROFILE-PAGE.LOGOUT' | translate }}</p>
     </div>
-    <div *ngIf="connectionMode === false">
-    <mat-card-content *ngFor = "let disconnection of connectionHistory.disconnections" class="connection-content">
-        <p >Date : {{disconnection.date}}  Heure : {{disconnection.time}}</p>
-    </mat-card-content>
+    <div *ngIf="connectionMode === true" class="data-container">
+        <mat-card-content *ngFor = "let connection of connectionHistory.connections" class="connection-content">
+            <span>{{ 'PROFILE-PAGE.DATE' | translate }}{{connection.date}}  {{ 'PROFILE-PAGE.TIME' | translate }}{{connection.time}}</span>
+        </mat-card-content>
+    </div>
+    <div *ngIf="connectionMode === false" class="data-container">
+        <mat-card-content *ngFor = "let disconnection of connectionHistory.disconnections" class="connection-content">
+            <span>{{ 'PROFILE-PAGE.DATE' | translate }}{{disconnection.date}}  {{ 'PROFILE-PAGE.TIME' | translate }}{{disconnection.time}}</span>
+        </mat-card-content>
     </div>
 
 </mat-card>
