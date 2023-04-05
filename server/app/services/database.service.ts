@@ -105,13 +105,15 @@ export class DatabaseService {
     }
 
     async getUsernameFromId(userId: string): Promise<string> {
-        const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<AccountInfo>)?.findOne({
-            _id: new ObjectId(userId),
-        });
         let username = '';
+        if (userId) {
+            const userAccountInfoDoc = await (this.getCollection(CollectionType.USERACCOUNTS) as Collection<AccountInfo>)?.findOne({
+                _id: new ObjectId(userId),
+            });
 
-        if (userAccountInfoDoc !== undefined && userAccountInfoDoc !== null) {
-            username = userAccountInfoDoc.username;
+            if (userAccountInfoDoc !== undefined && userAccountInfoDoc !== null) {
+                username = userAccountInfoDoc.username;
+            }
         }
         return username;
     }
@@ -128,7 +130,7 @@ export class DatabaseService {
 
     async changeUsername(userId: string, newUsername: string): Promise<string> {
         let error = USERNAME_TAKEN;
-        if (await this.isUsernameFree(newUsername)) {
+        if ((await this.isUsernameFree(newUsername)) && userId) {
             error = NO_ERROR;
             await this.getCollection(CollectionType.USERACCOUNTS)
                 ?.updateOne({ _id: new ObjectId(userId) }, { $set: { username: newUsername } })
@@ -181,118 +183,145 @@ export class DatabaseService {
 
     async getUserProfileInfo(userId: string): Promise<ProfileInfo> {
         let profileInfo: ProfileInfo = Container.get(ProfileService).getDefaultProfileInformation();
-        const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
-            _id: new ObjectId(userId),
-        });
+        if (userId) {
+            const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
+                _id: new ObjectId(userId),
+            });
 
-        if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
-            profileInfo = userProfileInfoDoc.profileInfo;
+            if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
+                profileInfo = userProfileInfoDoc.profileInfo;
+            }
         }
         return profileInfo;
     }
 
     async getUserAvatar(userId: string): Promise<string> {
         let userAvatar = '';
-        const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
-            _id: new ObjectId(userId),
-        });
+        if (userId) {
+            const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
+                _id: new ObjectId(userId),
+            });
 
-        if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
-            userAvatar = userProfileInfoDoc.profileInfo.avatar;
+            if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
+                userAvatar = userProfileInfoDoc.profileInfo.avatar;
+            }
         }
         return userAvatar;
     }
 
     async getUserProfileSettings(userId: string): Promise<ProfileSettings> {
         let profileSettings: ProfileSettings = Container.get(ProfileService).getDefaultProfileSettings();
-        const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
-            _id: new ObjectId(userId),
-        });
-        if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
-            profileSettings = userProfileInfoDoc.profileSettings;
+        if (userId) {
+            const userProfileInfoDoc = await (this.getCollection(CollectionType.PROFILEINFO) as Collection<ProfileInfoDB>)?.findOne({
+                _id: new ObjectId(userId),
+            });
+            if (userProfileInfoDoc !== undefined && userProfileInfoDoc !== null) {
+                profileSettings = userProfileInfoDoc.profileSettings;
+            }
         }
         return profileSettings;
     }
 
     async addNewProfile(userId: string, profileInfo: ProfileInfo, profileSettings: ProfileSettings): Promise<boolean> {
-        const profileInfoDB: ProfileInfoDB = {
-            _id: new ObjectId(userId),
-            profileInfo,
-            profileSettings,
-        };
-        let isCreationSuccess = true;
-        await this.getCollection(CollectionType.PROFILEINFO)
-            ?.insertOne(profileInfoDB)
-            .catch(() => {
-                isCreationSuccess = false;
-            });
+        let isCreationSuccess = false;
+        if (userId) {
+            const profileInfoDB: ProfileInfoDB = {
+                _id: new ObjectId(userId),
+                profileInfo,
+                profileSettings,
+            };
+            isCreationSuccess = true;
+            await this.getCollection(CollectionType.PROFILEINFO)
+                ?.insertOne(profileInfoDB)
+                .catch(() => {
+                    isCreationSuccess = false;
+                });
+        }
         return isCreationSuccess;
     }
 
     async changeUserProfileInfo(userId: string, profileInfo: ProfileInfo): Promise<string> {
-        let errorCode = NO_ERROR;
-        await this.getCollection(CollectionType.PROFILEINFO)
-            ?.updateOne({ _id: new ObjectId(userId) }, { $set: { profileInfo } })
-            .catch(() => {
-                errorCode = DATABASE_UNAVAILABLE;
-            });
+        let errorCode = DATABASE_UNAVAILABLE;
+        if (userId) {
+            errorCode = NO_ERROR;
+            await this.getCollection(CollectionType.PROFILEINFO)
+                ?.updateOne({ _id: new ObjectId(userId) }, { $set: { profileInfo } })
+                .catch(() => {
+                    errorCode = DATABASE_UNAVAILABLE;
+                });
+        }
         return errorCode;
     }
 
     async changeUserProfileSettings(userId: string, profileSettings: ProfileSettings): Promise<string> {
-        let errorCode = NO_ERROR;
-        await this.getCollection(CollectionType.PROFILEINFO)
-            ?.updateOne({ _id: new ObjectId(userId) }, { $set: { profileSettings } })
-            .catch(() => {
-                errorCode = DATABASE_UNAVAILABLE;
-            });
+        let errorCode = DATABASE_UNAVAILABLE;
+        if (userId) {
+            errorCode = NO_ERROR;
+            await this.getCollection(CollectionType.PROFILEINFO)
+                ?.updateOne({ _id: new ObjectId(userId) }, { $set: { profileSettings } })
+                .catch(() => {
+                    errorCode = DATABASE_UNAVAILABLE;
+                });
+        }
         return errorCode;
     }
 
     async addFriendDoc(userId: string): Promise<boolean> {
-        const friendsInfo: FriendsDB = {
-            _id: new ObjectId(userId),
-            friendsId: [],
-        };
-        let isCreationSuccess = true;
-        await this.getCollection(CollectionType.FRIENDS)
-            ?.insertOne(friendsInfo)
-            .catch(() => {
-                isCreationSuccess = false;
-            });
+        let isCreationSuccess = false;
+
+        if (userId) {
+            const friendsInfo: FriendsDB = {
+                _id: new ObjectId(userId),
+                friendsId: [],
+            };
+            isCreationSuccess = true;
+            await this.getCollection(CollectionType.FRIENDS)
+                ?.insertOne(friendsInfo)
+                .catch(() => {
+                    isCreationSuccess = false;
+                });
+        }
         return isCreationSuccess;
     }
 
     async addFriend(userId: string, friendUserId: string): Promise<string> {
-        let errorCode: string = NO_ERROR;
-        await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)
-            ?.updateOne({ _id: new ObjectId(userId) }, { $push: { friendsId: friendUserId } })
-            .catch(() => {
-                errorCode = DATABASE_UNAVAILABLE;
-            });
+        let errorCode: string = DATABASE_UNAVAILABLE;
+        if (userId) {
+            errorCode = NO_ERROR;
+            await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)
+                ?.updateOne({ _id: new ObjectId(userId) }, { $push: { friendsId: friendUserId } })
+                .catch(() => {
+                    errorCode = DATABASE_UNAVAILABLE;
+                });
+        }
 
         return errorCode;
     }
 
     async removeFriend(userId: string, friendUserId: string): Promise<string> {
-        let errorCode: string = NO_ERROR;
-        await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)
-            ?.updateOne({ _id: new ObjectId(userId) }, { $pull: { friendsId: friendUserId } })
-            .catch(() => {
-                errorCode = DATABASE_UNAVAILABLE;
-            });
+        let errorCode: string = DATABASE_UNAVAILABLE;
+        if (userId) {
+            errorCode = NO_ERROR;
+            await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)
+                ?.updateOne({ _id: new ObjectId(userId) }, { $pull: { friendsId: friendUserId } })
+                .catch(() => {
+                    errorCode = DATABASE_UNAVAILABLE;
+                });
+        }
 
         return errorCode;
     }
 
     async getUserFriendList(userId: string): Promise<string[]> {
         let friendsList: string[] = [];
-        const userFriendsDoc = await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)?.findOne({
-            _id: new ObjectId(userId),
-        });
+        if (userId) {
+            const userFriendsDoc = await (this.getCollection(CollectionType.FRIENDS) as Collection<FriendsDB>)?.findOne({
+                _id: new ObjectId(userId),
+            });
 
-        if (userFriendsDoc !== undefined && userFriendsDoc !== null) {
-            friendsList = userFriendsDoc.friendsId;
+            if (userFriendsDoc !== undefined && userFriendsDoc !== null) {
+                friendsList = userFriendsDoc.friendsId;
+            }
         }
         return friendsList;
     }
@@ -334,7 +363,7 @@ export class DatabaseService {
 
     async joinChatCanal(userId: string, chatId: string): Promise<boolean> {
         let wasUserAddedToChat = false;
-        if (!(await this.isUserInChat(userId, chatId))) {
+        if (!(await this.isUserInChat(userId, chatId)) && userId && chatId) {
             wasUserAddedToChat = true;
             await this.getCollection(CollectionType.CHATCANALS)
                 ?.updateOne({ _id: new ObjectId(chatId) }, { $push: { usersIds: userId } })
@@ -348,7 +377,7 @@ export class DatabaseService {
 
     async addMessageToHistory(chatId: string, chatMessage: ChatMessageDB): Promise<string> {
         let error = DATABASE_UNAVAILABLE;
-        if (await this.isUserInChat(chatMessage.userId, chatId)) {
+        if ((await this.isUserInChat(chatMessage.userId, chatId)) && chatMessage.userId && chatId) {
             error = NO_ERROR;
             await this.getCollection(CollectionType.CHATCANALS)
                 ?.updateOne({ _id: new ObjectId(chatId) }, { $push: { chatHistory: chatMessage } })
@@ -362,7 +391,7 @@ export class DatabaseService {
 
     async leaveChatCanal(userId: string, chatId: string): Promise<boolean> {
         let wasUserRemovedFromChat = false;
-        if (await this.isUserInChat(userId, chatId)) {
+        if ((await this.isUserInChat(userId, chatId)) && chatId && userId) {
             wasUserRemovedFromChat = true;
             await this.getCollection(CollectionType.CHATCANALS)
                 ?.updateOne({ _id: new ObjectId(chatId) }, { $pull: { usersIds: userId } })
@@ -379,13 +408,15 @@ export class DatabaseService {
     }
 
     async getChatHistory(chatId: string): Promise<ChatMessageDB[]> {
-        const chatDoc = await ((await this.getCollection(CollectionType.CHATCANALS)) as Collection<ChatInfoDB>)?.findOne({
-            _id: new ObjectId(chatId),
-        });
         let chatHistory: ChatMessageDB[] = [];
+        if (chatId) {
+            const chatDoc = await ((await this.getCollection(CollectionType.CHATCANALS)) as Collection<ChatInfoDB>)?.findOne({
+                _id: new ObjectId(chatId),
+            });
 
-        if (chatDoc !== undefined && chatDoc !== null) {
-            chatHistory = chatDoc.chatHistory;
+            if (chatDoc !== undefined && chatDoc !== null) {
+                chatHistory = chatDoc.chatHistory;
+            }
         }
         return chatHistory;
     }
@@ -405,29 +436,39 @@ export class DatabaseService {
     }
 
     async getNumberOfUsersInChatCanal(chatId: string): Promise<number> {
-        const chatCanalDocResult = await this.getCollection(CollectionType.CHATCANALS)?.findOne(
-            { _id: new ObjectId(chatId) },
-            { projection: { _id: 0, usersIds: 1 } },
-        );
         let numberOfUsers = 100;
+        if (chatId) {
+            const chatCanalDocResult = await this.getCollection(CollectionType.CHATCANALS)?.findOne(
+                { _id: new ObjectId(chatId) },
+                { projection: { _id: 0, usersIds: 1 } },
+            );
 
-        if (chatCanalDocResult !== undefined && chatCanalDocResult !== null) {
-            numberOfUsers = (chatCanalDocResult as unknown as ChatInfoDB).usersIds.length;
+            if (chatCanalDocResult !== undefined && chatCanalDocResult !== null) {
+                numberOfUsers = (chatCanalDocResult as unknown as ChatInfoDB).usersIds.length;
+            }
         }
         return numberOfUsers;
     }
 
     async removeChatCanal(chatId: string): Promise<void> {
-        await this.getCollection(CollectionType.CHATCANALS)?.deleteOne({ _id: new ObjectId(chatId) });
+        if (chatId) {
+            await this.getCollection(CollectionType.CHATCANALS)?.deleteOne({ _id: new ObjectId(chatId) });
+        }
     }
 
     async isUserInChat(userId: string, chatId: string): Promise<boolean> {
-        const thisChatWithUserInIt = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: new ObjectId(chatId), usersIds: userId });
+        let thisChatWithUserInIt = null;
+        if (chatId) {
+            thisChatWithUserInIt = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: new ObjectId(chatId), usersIds: userId });
+        }
         return Promise.resolve(!(thisChatWithUserInIt === undefined || thisChatWithUserInIt === null));
     }
 
     async isChatExistant(chatId: string): Promise<boolean> {
-        const chatDoc = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: new ObjectId(chatId) });
+        let chatDoc = null;
+        if (chatId) {
+            chatDoc = await this.getCollection(CollectionType.CHATCANALS)?.findOne({ _id: new ObjectId(chatId) });
+        }
         return Promise.resolve(!(chatDoc === undefined || chatDoc === null));
     }
 
