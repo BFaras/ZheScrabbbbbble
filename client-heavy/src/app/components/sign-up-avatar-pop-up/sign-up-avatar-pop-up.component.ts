@@ -18,7 +18,8 @@ export class SignUpAvatarPopUpComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  changeAvatar(value: string) {
+  changeAvatar(event: Event, value: string) {
+    this.setActive(event);
     console.log(value)
     this.avatarChosen = value;
 
@@ -26,6 +27,14 @@ export class SignUpAvatarPopUpComponent implements OnInit {
   closeDialog() {
     console.log(this.avatarChosen);
     this.dialogRef.close({ avatar: this.avatarChosen })
+  }
+
+  setActive(event: Event) {
+    let themes = document.getElementsByClassName("avatar");
+    for (let i = 0; i < themes.length; i++) {
+      themes[i].className = themes[i].className.replace(" active", "");
+    }
+    (event.currentTarget! as HTMLTextAreaElement).className += " active";
   }
 
 

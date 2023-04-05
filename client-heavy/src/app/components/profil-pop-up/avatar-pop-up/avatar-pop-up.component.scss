@@ -18,6 +18,13 @@
     border: none;
 }
 
+.active {
+    background-color: var(--button-primary);
+    border-radius: 80px;
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
 .listAvatars{
     display: grid;
     grid-template-columns: auto auto auto;

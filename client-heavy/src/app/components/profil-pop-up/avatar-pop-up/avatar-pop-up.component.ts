@@ -23,16 +23,25 @@ export class AvatarPopUpComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   }
 
-  changeAvatar(value: string) {
+  changeAvatar(event: Event, value: string) {
     this.colorChosen = value;
-
+    this.setActive(event);
 
   }
+
   closeDialog() {
     if (this.colorChosen !== "") {
       this.account.accountService.changeAvatar(this.colorChosen);
     }
     this.dialogRef.close({ avatar: this.colorChosen })
+  }
+
+  setActive(event: Event) {
+    let themes = document.getElementsByClassName("avatar");
+    for (let i = 0; i < themes.length; i++) {
+      themes[i].className = themes[i].className.replace(" active", "");
+    }
+    (event.currentTarget! as HTMLTextAreaElement).className += " active";
   }
 
 
