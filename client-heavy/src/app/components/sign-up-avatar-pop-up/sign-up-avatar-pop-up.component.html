@@ -1,4 +1,5 @@
 <div class="container">
+    <h1 class="title"> Veuillez choisir un avatar</h1>
     <div class="listAvatars">
         <img (click)="changeAvatar(avatarSrc)"*ngFor="let avatarSrc of allAvatars" class='avatar' alt="image" src= "assets/avatar/{{avatarSrc}}"/> 
     </div>

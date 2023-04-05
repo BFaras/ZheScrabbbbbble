@@ -8,7 +8,7 @@
             <div *ngFor="let message of messageHistory">
                 <ul >
                     <img class = "avatar" src = "assets/avatar/{{message.avatar}}" height="20" width="20">
-                    <div style="color: green;">{{ message.username }} : {{ message.message }}</div>
+                    <div class = "message">{{ message.username }} : {{ message.message }}</div>
                 </ul>
             </div>
         </div>

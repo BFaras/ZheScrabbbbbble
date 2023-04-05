@@ -1,12 +1,28 @@
 .container{
     display:flex;
+    flex-direction: column;
+    height: 100%;
 }
 
+.title{
+    color:var(--text-secondary);
+    align-self: center;
+    text-align: center;
+}
 .avatar{
     width:160px;
     height:160px;
     border-style: double;
+    box-shadow: var(--box-shadow);;
     
+}
+
+.avatar:hover{
+    cursor:pointer;
+    
+}
+img{
+    border-radius: 50%;
 }
 
 .listAvatars{
@@ -15,4 +31,34 @@
     gap: 20px;
     justify-content: center;
     align-items: center;
+}
+
+.button {
+    width: 200px;
+    position:relative;
+    top : 20%;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    padding: 10px;
+    background-color: var(--button-primary);
+    border-radius: 7px;
+    width: 40vh;
+    box-shadow: var(--box-shadow);
+    font-size: 17px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: var(--button-text-default);
+    transition: color 0.5s linear;
+    -webkit-transition: color 0.2s linear;
+    align-self: center;
+}
+
+
+.button:hover {
+    color: var(--button-text-hover);
+    cursor: pointer;
+    background: var(--button-primary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
 }
