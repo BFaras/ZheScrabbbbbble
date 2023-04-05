@@ -151,7 +151,8 @@ class BracketFragment : Fragment(), Observer {
                     "Final1" -> {
                         binding.finals.visibility = View.VISIBLE
                         binding.final1player1.text = game.players[0]
-                        binding.final1player2.text = game.players[1]
+                        if(game.players.size==2)
+                            binding.final1player2.text = game.players[1]
                         when (game.winnerIndex) {
                             0 -> {
                                 binding.final1player1.typeface = Typeface.DEFAULT_BOLD
@@ -167,7 +168,8 @@ class BracketFragment : Fragment(), Observer {
                     "Final2" -> {
                         binding.finals.visibility = View.VISIBLE
                         binding.final2player1.text = game.players[0]
-                        binding.final2player2.text = game.players[1]
+                        if(game.players.size==2)
+                            binding.final2player2.text = game.players[1]
                         when (game.winnerIndex) {
                             0 -> {
                                 binding.final2player1.typeface = Typeface.DEFAULT_BOLD

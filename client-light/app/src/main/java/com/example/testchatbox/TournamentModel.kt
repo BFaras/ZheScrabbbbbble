@@ -72,7 +72,6 @@ object TournamentModel :Observable{
         SocketHandler.getSocket().on("Game Started"){args->
             val roomCode = args[1] as String;
             populateGameRoomModel(roomCode, false);
-            notifyObserver();
         }
     }
 
