@@ -1,7 +1,10 @@
 <div class="container">
     <p>{{ 'PROFILE-PAGE.AVATAR' | translate }}</p>
     <div class="listAvatars">
-        <img (click)="changeAvatar($event, avatarSrc)"*ngFor="let avatarSrc of allAvatars" class='avatar' alt="image" src= "assets/avatar/{{avatarSrc}}"/> 
+        <div *ngFor="let avatarSrc of allAvatars">
+            <img (click)="changeAvatar($event, avatarSrc)" *ngIf="!isLocked(avatarSrc)" class='avatar' alt="image" src= "assets/avatar/{{avatarSrc}}"/> 
+            <img (click)="changeAvatar($event, avatarSrc)" *ngIf="isLocked(avatarSrc)" class='avatar locked' alt="image" src= "assets/avatar/{{avatarSrc}}"/> 
+        </div>
     </div>
     <button class="button" [mat-dialog-close]="colorChosen" (click) = "closeDialog()">{{ 'PROFILE-PAGE.CONFIRM' | translate }}</button>
 </div>

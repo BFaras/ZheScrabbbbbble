@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AccountService } from '@app/services/account-service/account.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -7,16 +7,13 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './language.component.html',
   styleUrls: ['./language.component.scss']
 })
-export class LanguageComponent implements OnInit {
+export class LanguageComponent {
   currentLang: string = 'fr';
   oppositeLang: string = 'en';
   username: string;
 
   constructor(public translate: TranslateService, private accountService: AccountService) {
     translate.addLangs(['fr', 'en']);
-  }
-
-  ngOnInit(): void {
   }
 
   translateLanguageTo(lang: string) {

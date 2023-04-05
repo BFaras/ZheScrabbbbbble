@@ -25,6 +25,13 @@
     transition-duration: 0.2s;
 }
 
+
+.locked {
+    opacity: 0.4;
+    filter: alpha(opacity=40); 
+    pointer-events: none;
+}
+
 .listAvatars{
     display: grid;
     grid-template-columns: auto auto auto;
