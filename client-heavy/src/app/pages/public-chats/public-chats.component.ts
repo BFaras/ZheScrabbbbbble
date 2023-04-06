@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatInfo, ChatType } from '@app/classes/chat-info';
 import { ChatService } from '@app/services/chat-service/chat.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-public-chats',
@@ -11,7 +10,6 @@ import { Subscription } from 'rxjs';
 export class PublicChatsComponent implements OnInit {
   absentChatList: ChatInfo[];
   presentChatList: ChatInfo[] = [];
-  subscriptions: Subscription[] = [];
   activeInput: number;
 
   constructor(private chatService: ChatService) {
@@ -19,25 +17,21 @@ export class PublicChatsComponent implements OnInit {
   }
 
   updateChats() {
-    this.subscriptions.push(this.chatService.getPublicChatObservable().subscribe((publicChats: ChatInfo[]) => {
+    this.chatService.getPublicChatObservable().subscribe((publicChats: ChatInfo[]) => {
       this.absentChatList = publicChats;
-    }));
+    })
     this.chatService.getPublicChats();
-    this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
+    this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
       const newChats: ChatInfo[] = [];
       chatList.forEach((chat: ChatInfo) => {
         if (chat.chatType === ChatType.PUBLIC) newChats.push(chat);
         this.presentChatList = newChats;
       });
-    }));
+    })
   }
 
   ngOnInit(): void {
 
-  }
-
-  ngOnDestroy(): void {
-    for (const subscription of this.subscriptions) subscription.unsubscribe();
   }
 
   alert(chat: ChatInfo) {

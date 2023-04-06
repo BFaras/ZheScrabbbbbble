@@ -4,7 +4,6 @@ import { Container, Service } from 'typedi';
 import { AccountInfoService } from './account-info.service';
 import { FriendSocketService } from './friend-socket.service';
 import { ProfileService } from './profile.service';
-/* const fs = require('fs');*/
 @Service()
 export class ProfileSocketService {
     private readonly profileService: ProfileService;

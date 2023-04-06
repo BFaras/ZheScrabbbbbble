@@ -139,6 +139,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     else this.accountProfile = this.friends.getProfile();
     this.avatarCircle = "assets/avatar/" + this.accountProfile.avatar;
     this.progressionBarValue = (this.accountProfile.levelInfo.xp / this.accountProfile.levelInfo.nextLevelXp) * 100
+    console.log(this.accountProfile)
   }
 
 }
