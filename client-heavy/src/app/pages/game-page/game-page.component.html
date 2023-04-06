@@ -19,7 +19,7 @@
             <app-language></app-language>
             <ng-template #other_content><button class="button" (click)="goHome()" id="quitter">{{'GIVEUP.QUIT' | translate}}</button></ng-template>
             
-            <button class="open-button" (click)="toggle()">{{chatDisplay ? "A c t i o n" : "C  h  a  t"}}</button>
+            <button class="open-button" [hidden]="isPopupOpen()" (click)="toggle()">{{chatDisplay ? "A c t i o n" : "C  h  a  t"}}</button>
 
             <div class="state-history">
                 <p class="centered-title">{{'ACTION-HISTORY.TITLE' | translate}}</p>
@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <div class="chat-popup" id="myChat" [style.display]="chatDisplay ? 'block' : 'none'">
+            <div class="chat-popup" id="myChat" [hidden]="isPopupOpen() || !chatDisplay">
                 <form action="/action_page.php">
                     <app-chat id="chatBox" (receiver)="setReceiver($event)"></app-chat>
                 </form>

@@ -1,10 +1,9 @@
 const { app, BrowserWindow } = require('electron');
 const pathLinker = require('path');
 let appWindow;
+let popup;
 
 function initWindow() {
-    console.log("TEST 0");
-    console.log(pathLinker.join(__dirname, 'preload.js'));
     appWindow = new BrowserWindow({
         // fullscreen: true,
         name: "Scrabble",
@@ -20,6 +19,14 @@ function initWindow() {
             // webSecurity: false 
         },
         icon: "./assets/images/logo.png",
+    });
+
+    
+    appWindow.on('closed', function() {
+        if(popup){
+            popup.removeAllListeners('closed');
+            popup.close();
+        }
     });
 
     // Electron Build Path
@@ -54,39 +61,42 @@ app.on('activate', function () {
 
 //ipc
 const { ipcMain } = require('electron')
-ipcMain.on('asynchronous-message', (event, arg) => {
-    createWindow(arg);
-})
+ipcMain.on('open-chat', () => {
+    createWindow();
+});
 
-const createWindow = (args) => {
-    console.log("arg");
-    console.log(args);
-    const win = new BrowserWindow({
+const createWindow = () => {
+    popup = new BrowserWindow({
         width: 1400,
         height: 810,
+        webPreferences: {
+            nodeIntegration: true,
+            preload: pathLinker.join(__dirname, 'preload-popup.js'),
+            contextIsolation: false
+        }
+    });
+    
+    const path = `file://${__dirname}/dist/client/index.html#/chat`;
+    popup.loadURL(path);
+    popup.setMenuBarVisibility(false)
+    popup.on('closed', function() {
+        appWindow.webContents.send('close-chat');
+        ipcMain.removeAllListeners('update-theme');
+        ipcMain.removeAllListeners('update-language');
+        ipcMain.removeAllListeners('update-game-chat');
+        popup = null;
     });
 
-    const path = `file://${__dirname}/dist/client/index.html#/chat`;
-    win.loadURL(path);
-    win.webContents.executeJavaScript("document.querySelector('body').setAttribute('needsRestore', 'true')");
-    win.webContents.executeJavaScript(`document.querySelector('body').setAttribute('socketID', '${args[0]}')`);
-    win.webContents.executeJavaScript(`document.querySelector('body').setAttribute('currentChannel', '${args[1]}')`);
-    win.webContents.executeJavaScript(`document.querySelector('body').classList = '${args[2]}'`);
-    win.webContents.executeJavaScript("document.getElementById('restoreMessages').dispatchEvent(new Event('click'));")
-    win.on('closed', function() {
-        appWindow.webContents.send('reactivate-chatbox', '');
-    })
+    ipcMain.on('update-theme', () => {
+        popup.webContents.send('update-theme');
+    });
+    
+    ipcMain.on('update-language', () => {
+        popup.webContents.send('update-language');
+    });
 
-    win.on('close', function() { //   <---- Catch close event
-        
+    ipcMain.on('update-game-chat', () => {
+        popup.webContents.send('update-game-chat');
     });
 }
-
-// app.whenReady().then(() => {
-//     createWindow();
-
-//     app.on('activate', () => {
-//         if (BrowserWindow.getAllWindows().length === 0) createWindow();
-//     })
-// })
 
