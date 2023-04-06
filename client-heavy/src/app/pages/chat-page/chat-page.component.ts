@@ -110,9 +110,11 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
         this.account.setFullAccountInfo(JSON.parse(accountInfo));
         this.username = this.account.getUsername();
         this.chatService.linkSocketToUsername(this.username);
-        (window as any).setCallbacks(this.updateTheme.bind(this), this.updateLanguage.bind(this));
-        this.updateTheme();
-        this.updateLanguage(false);
+        if ((window as any).setCallbacks) {
+            (window as any).setCallbacks(this.updateTheme.bind(this), this.updateLanguage.bind(this));
+            this.updateTheme();
+            this.updateLanguage(false);
+        }
     }
 
     updateTheme() {

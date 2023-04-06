@@ -79,14 +79,18 @@ export class AccountService {
   }
 
   changeTheme(theme: string) {
-    const themeObject = this.themeService.getThemeFromString(theme);
-    if (!themeObject) return;
-    (window as any).updateTheme(themeObject);
+    if ((window as any).updateTheme) {
+      const themeObject = this.themeService.getThemeFromString(theme);
+      if (!themeObject) return;
+      (window as any).updateTheme(themeObject);
+    }
     this.socket.emit('Change Theme', theme);
   }
 
   changeLanguage(lang: string) {
-    (window as any).updateLanguage(lang);
+    if ((window as any).updateLanguage) {
+      (window as any).updateLanguage(lang);
+    }
     this.socket.emit('Change Language', lang);
   }
 
