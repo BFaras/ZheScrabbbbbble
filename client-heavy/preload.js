@@ -1,5 +1,10 @@
 const { ipcRenderer } = require('electron');
 
+localStorage.removeItem('theme');
+localStorage.removeItem('language');
+localStorage.removeItem('account');
+localStorage.removeItem('gameRoomChat');
+
 let chatStatusCallback;
 
 window.openChat = function(accountInfo, theme, language){
@@ -28,4 +33,13 @@ window.updateTheme = function(theme){
 window.updateLanguage = function(language){
   localStorage.setItem('language', language);
   ipcRenderer.send('update-language');
+}
+
+window.updateRoomChat = function(chatId){
+  if(chatId){
+    localStorage.setItem('gameRoomChat', chatId);
+  }else{
+    localStorage.removeItem('gameRoomChat');
+  }
+  ipcRenderer.send('update-game-chat');
 }

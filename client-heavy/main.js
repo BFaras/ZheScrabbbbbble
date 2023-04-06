@@ -83,6 +83,7 @@ const createWindow = () => {
         appWindow.webContents.send('close-chat');
         ipcMain.removeAllListeners('update-theme');
         ipcMain.removeAllListeners('update-language');
+        ipcMain.removeAllListeners('update-game-chat');
         popup = null;
     });
 
@@ -93,4 +94,9 @@ const createWindow = () => {
     ipcMain.on('update-language', () => {
         popup.webContents.send('update-language');
     });
+
+    ipcMain.on('update-game-chat', () => {
+        popup.webContents.send('update-game-chat');
+    });
 }
+

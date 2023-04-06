@@ -38,7 +38,7 @@ export class ChatSocketService {
 
             socket.emit('New Chat Message', chatCode, chatMessage);
 
-            if (await this.chatService.isGameChat(chatCode)) {
+            if (this.chatService.isGameChat(chatCode)) {
                 socket.to(chatCode).emit('New Chat Message', chatCode, chatMessage);
             } else {
                 socket.to(this.chatService.getChatRoomName(chatCode)).emit('New Chat Message', chatCode, chatMessage);
@@ -80,6 +80,17 @@ export class ChatSocketService {
 
         socket.on('Link Socket Username', async (username: string) => {
             this.authSocketService.setupUser(socket, username, true);
+        });
+
+        socket.on('Link Socket Room', (room: string) => {
+            socket.data.linkedRoom = room;
+            socket.join(room);
+        });
+
+        socket.on('Unlink Socket Room', () => {
+            if (!socket.data.linkedRoom) return;
+            socket.leave(socket.data.linkedRoom);
+            socket.data.linkedRoom = undefined;
         });
     }
 }

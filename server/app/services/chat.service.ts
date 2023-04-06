@@ -130,8 +130,8 @@ export class ChatService {
         return CHAT_ROOM_BEGINNING + chatId;
     }
 
-    async isGameChat(chatId: string) {
-        return await this.chatGameHistoryService.isGameChat(chatId);
+    isGameChat(chatId: string) {
+        return this.chatGameHistoryService.isGameChat(chatId);
     }
 
     private async createGlobalChat(userId: string): Promise<boolean> {

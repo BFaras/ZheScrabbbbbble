@@ -3,7 +3,7 @@ import { ChatMessage } from '@app/classes/chat-info';
 import { Message } from '@app/classes/message';
 import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
-import { MessageParserService, MessageType } from '@app/services/message-parser-service/message-parser.service';
+import { MessageParserService } from '@app/services/message-parser-service/message-parser.service';
 import { ThemesService } from '@app/services/themes-service/themes-service';
 import { Subscription } from 'rxjs';
 
@@ -24,7 +24,6 @@ export class ChatComponent implements OnDestroy {
         body: '',
         color: '',
     };
-    gameRoomName: string;
 
     messageHistory: ChatMessage[] = [];
 
@@ -32,14 +31,14 @@ export class ChatComponent implements OnDestroy {
     subscriptionHistoryMessage: Subscription;
 
     constructor(private chatService: ChatService, private messageParserService: MessageParserService, private accountService: AccountService, private themeService: ThemesService) {
-        this.gameRoomName = this.chatService.getChatInGameRoom();
-        this.subscriptionHistoryMessage = this.chatService.getChatHistory(this.gameRoomName).subscribe((chatHistory: ChatMessage[]) => {
+
+        this.subscriptionHistoryMessage = this.chatService.getChatHistory(this.chatService.getChatInGameRoom()).subscribe((chatHistory: ChatMessage[]) => {
             chatHistory.forEach((chatMessage) => {
                 this.updateMessageHistory(chatMessage)
             })
         });
         this.subscriptionMessage = this.chatService.getMessagesInGame().subscribe((response: { chatCode: string, message: ChatMessage }) => {
-            if (response.chatCode === this.gameRoomName) this.updateMessageHistory(response.message);
+            if (response.chatCode === this.chatService.getChatInGameRoom()) this.updateMessageHistory(response.message);
         });
     }
 
@@ -61,8 +60,10 @@ export class ChatComponent implements OnDestroy {
             this.message.body = '';
             return;
         }
-        const messageType: MessageType = this.messageParserService.parseCommand(this.message);
-        this.sendMessageByType(messageType);
+        if (this.messageParserService.isEmpty(this.message)) return;
+        const gameRooomId = this.chatService.getChatInGameRoom();
+        if (gameRooomId) this.chatService.sendMessage(this.message.body, gameRooomId);
+        this.message.body = '';
     }
 
     isReceiver() {
@@ -72,20 +73,5 @@ export class ChatComponent implements OnDestroy {
 
     ngOnDestroy() {
         this.subscriptionMessage.unsubscribe();
-    }
-
-    private sendMessageByType(messageType: MessageType) {
-        switch (messageType) {
-            case MessageType.Empty:
-                break;
-            case MessageType.Normal:
-                this.chatService.sendMessage(this.message.body, this.gameRoomName);
-                this.message.body = '';
-                break;
-        }
-    }
-
-    goToLink() {
-        window.open('/profile-page', "_blank");
     }
 }

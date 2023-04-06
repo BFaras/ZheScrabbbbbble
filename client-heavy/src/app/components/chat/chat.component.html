@@ -6,7 +6,7 @@
         <button id="popup-btn" type="button" (click)="openPopupChat()">
             <mat-icon>open_in_new</mat-icon>
         </button>
-        <p id="title-chat">{{'CHATBOX.CHATBOX' | translate}}</p><!--<button (click)="goToLink()">chat</button>-->
+        <p id="title-chat">{{'CHATBOX.CHATBOX' | translate}}</p>
         <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
             <div *ngFor="let message of messageHistory">
                 <ul >

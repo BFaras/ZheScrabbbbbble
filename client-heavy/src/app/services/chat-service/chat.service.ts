@@ -75,15 +75,23 @@ export class ChatService {
     updateSocket() {
         this.socket = this.socketManagerService.getSocket();
         this.socket.on('New Chat Message', (id: string, message: ChatMessage) => {
+            console.log
             if (this.messageLog.has(id)) {
                 this.chatMessageObserver.next({ id, message });
             }
         });
     }
 
-    sendMessage(message: string, ChatId: string) {
-        console.log("Emission d un message")
-        this.socketManagerService.getSocket().emit('New Chat Message', message, ChatId);
+    sendMessage(message: string, chatId: string) {
+        this.socketManagerService.getSocket().emit('New Chat Message', message, chatId);
+    }
+
+    linkGameChat(chatId: string) {
+        this.socketManagerService.getSocket().emit('Link Socket Room', chatId);
+    }
+
+    unlinkGameChat() {
+        this.socketManagerService.getSocket().emit('Unlink Socket Room');
     }
 
     sendCommand(argument: string, command: string) {
@@ -95,6 +103,7 @@ export class ChatService {
     }
 
     setChatInGameRoom(chatGameRoom: string) {
+        if ((window as any).updateRoomChat) (window as any).updateRoomChat(chatGameRoom);
         this.chatInGameRoom = chatGameRoom;
     }
 
