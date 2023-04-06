@@ -7,7 +7,8 @@
             <p id="name" class="data">{{accountUsername}}</p>
             <p class="data">{{ 'USERDATA.USERCODE' | translate }}{{accountProfile.userCode}}</p>
             <div class="progress-level">
-                <p class="data">{{ 'USERDATA.LEVEL' | translate }}{{accountProfile.levelInfo.level}}</p>
+                <p class="data">{{ 'USERDATA.LEVEL' | translate }}</p>
+                <p class="data level">{{accountProfile.levelInfo.level}}</p>
                 <mat-progress-bar mode="determinate" [value]="progressionBarValue" class = "xp"></mat-progress-bar>
                 <span class="next">{{accountProfile.levelInfo.level + 1}}</span>
             </div>
@@ -63,14 +64,16 @@
 
 <div *ngIf="!profileMode" class="container justified">
     <mat-card class="profileAvatarNameLevel box">
-        <div class="avatarSection">
-            <img class="avatarSquare" [src] ="avatarCircle">
-            <mat-progress-bar mode="determinate" [value]="progressionBarValue" class = "xp"></mat-progress-bar>
-        </div>
+        <img class="avatarSquare" [src] ="avatarCircle">
         <div id="nameLevel">
             <p id="name" class="data">{{accountUsername}}</p>
             <p class="data">{{ 'USERDATA.USERCODE' | translate }}{{accountProfile.userCode}}</p>
-            <p class="data">{{ 'USERDATA.LEVEL' | translate }}{{accountProfile.levelInfo.level}}</p>
+            <div class="progress-level">
+                <p class="data">{{ 'USERDATA.LEVEL' | translate }}</p>
+                <p class="data level">{{accountProfile.levelInfo.level}}</p>
+                <mat-progress-bar mode="determinate" [value]="progressionBarValue" class = "xp"></mat-progress-bar>
+                <span class="next">{{accountProfile.levelInfo.level + 1}}</span>
+            </div>
         </div>
         <div id="tournamentMedals" >
             <img class="medal" *ngFor="let medal of medals" src= "assets/medals/{{medal}}"/>
