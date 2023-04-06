@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { ChatInfo, ChatMessage, ChatType, MessageInfo } from '@app/classes/chat-info';
 import { NO_ERROR } from '@app/constants/error-codes';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
@@ -15,9 +15,23 @@ export class ChatService {
     chatInGameRoom: string;
     chatMessageObserver: Observer<MessageInfo>;
     active: string = 'chat';
+    private popupOpen: boolean = false;
+    private changeDetector: ChangeDetectorRef;
 
     constructor(private socketManagerService: SocketManagerService) {
         this.updateSocket();
+        if ((window as any).setChatStatusCallback) {
+            (window as any).setChatStatusCallback(this.updateChatStatus.bind(this));
+            this.popupOpen = (window as any).chatOpen;
+        }
+    }
+
+    isPopupOpen(): boolean {
+        return this.popupOpen;
+    }
+
+    setChangeDetector(changeDetector: ChangeDetectorRef) {
+        this.changeDetector = changeDetector;
     }
 
     getChatsList(): Observable<ChatInfo[]> {
@@ -28,6 +42,13 @@ export class ChatService {
                 this.updateChatList(chatList);
             });
         });
+    }
+
+    updateChatStatus() {
+        if ((window as any).chatOpen !== null && (window as any).chatOpen !== undefined) {
+            this.popupOpen = (window as any).chatOpen;
+            this.changeDetector.detectChanges();
+        }
     }
 
     linkSocketToUsername(username: string) {

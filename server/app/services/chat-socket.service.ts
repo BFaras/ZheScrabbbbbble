@@ -45,7 +45,7 @@ export class ChatSocketService {
             }
 
             // eslint-disable-next-line no-console
-            console.log(new Date().toLocaleTimeString() + ' | New Message : ' + message);
+            (new Date().toLocaleTimeString() + ' | New Message : ' + message);
         });
 
         socket.on('Create New Chat', async (chatName: string, chatType: ChatType) => {

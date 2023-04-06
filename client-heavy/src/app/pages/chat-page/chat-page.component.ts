@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ChatInfo, ChatMessage, ChatType, MessageInfo } from '@app/classes/chat-info';
 import { AccountService } from '@app/services/account-service/account.service';
 //import { AccountService } from '@app/services/account-service/account.service';
@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
     templateUrl: './chat-page.component.html',
     styleUrls: ['./chat-page.component.scss'],
 })
-export class ChatPageComponent implements AfterContentChecked, OnInit, AfterViewInit, ViewChildren {
+export class ChatPageComponent implements OnInit, AfterViewInit, ViewChildren {
     @ViewChildren('chat-button') chatItems: QueryList<ElementRef>;
 
     chatText: string = '';
@@ -44,12 +44,14 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
     isPopup: boolean = false;
     //chatButton: HTMLElement;
 
-    constructor(private changeDetector: ChangeDetectorRef,
+    constructor(
+        private changeDetector: ChangeDetectorRef,
         private chatService: ChatService,
         private account: AccountService,
         private router: Router,
         private themeService: ThemesService,
-        private languageComponent: LanguageComponent
+        private languageComponent: LanguageComponent,
+        private accountService: AccountService
         /*private friendsPage: FriendsPageComponent*/) {
         this.username = this.account.getUsername();
         if (!this.username) {
@@ -117,6 +119,13 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
         }
     }
 
+    openPopupChat() {
+        if ((window as any).openChat) {
+            (window as any).openChat(this.accountService.getFullAccountInfo(), this.themeService.getActiveTheme(), this.accountService.getLanguage());
+            this.router.navigate(['/home']);
+        }
+    }
+
     updateTheme() {
         const theme = localStorage.getItem('theme');
         if (!theme) return;
@@ -128,10 +137,6 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
         if (!language) return;
         this.languageComponent.translateLanguageTo(language, false);
         if (isViewLoaded) this.changeDetector.detectChanges();
-    }
-
-    ngAfterContentChecked(): void {
-        this.changeDetector.detectChanges();
     }
 
     ngOnDestroy(): void {

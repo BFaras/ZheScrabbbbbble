@@ -1,21 +1,16 @@
 import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
-import { AccountService } from '@app/services/account-service/account.service';
+import { ChatService } from '@app/services/chat-service/chat.service';
 import { FriendsService } from '@app/services/friends.service';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
-import { ThemesService } from '@app/services/themes-service/themes-service';
 @Component({
   selector: 'app-navigation-bar',
   templateUrl: './navigation-bar.component.html',
   styleUrls: ['./navigation-bar.component.scss']
 })
 export class NavigationBarComponent {
-  chatOpen: boolean = false;
   @Output("navLogic") navLogic: EventEmitter<void> = new EventEmitter();
-  constructor(private socketManager: SocketManagerService, private accountService: AccountService, private changeDetector: ChangeDetectorRef, private friends: FriendsService, private themeService: ThemesService) {
-    if ((window as any).setChatStatusCallback) {
-      (window as any).setChatStatusCallback(this.updateChatStatus.bind(this));
-      this.chatOpen = (window as any).chatOpen;
-    }
+  constructor(private socketManager: SocketManagerService, private friends: FriendsService, private chatService: ChatService, private changeDetector: ChangeDetectorRef) {
+    this.chatService.setChangeDetector(this.changeDetector);
   }
 
   disconnectUser() {
@@ -27,17 +22,8 @@ export class NavigationBarComponent {
     this.navLogic.emit();
   }
 
-  openChat() {
-    if ((window as any).openChat) {
-      (window as any).openChat(this.accountService.getFullAccountInfo(), this.themeService.getActiveTheme(), this.accountService.getLanguage());
-    }
-  }
-
-  updateChatStatus() {
-    if ((window as any).chatOpen) {
-      this.chatOpen = (window as any).chatOpen;
-    }
-    this.changeDetector.detectChanges();
+  isPopupOpen(): boolean {
+    return this.chatService.isPopupOpen();
   }
 
   setMode(mode: boolean) {

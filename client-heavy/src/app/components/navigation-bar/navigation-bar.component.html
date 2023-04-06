@@ -4,8 +4,8 @@
         <p class="tabs" routerLink="/home" (click)="callNavLogic()">{{ 'NAVBAR.HOME' | translate }}</p>
         <p class="tabs" routerLink="/profile-page" (click)="callNavLogic()" (click)="setMode(true)">{{ 'NAVBAR.PROFILE' | translate }}</p>
         <p class="tabs" routerLink="/friends-page" (click)="callNavLogic()">{{ 'NAVBAR.FRIENDS' | translate }}</p>
-        <p class="tabs" *ngIf="!chatOpen" (click)="openChat()" href="chat-page/chat-page.component.html" target="_blank" >Chat Pop Up</p>
-        <p class="tabs" *ngIf="!chatOpen" routerLink="/chat" (click)="callNavLogic()">Chat</p>
+        <!--<p class="tabs" *ngIf="!chatOpen" (click)="openChat()" href="chat-page/chat-page.component.html" target="_blank" >Chat Pop Up</p>-->
+        <p class="tabs" [hidden]="isPopupOpen()" routerLink="/chat" (click)="callNavLogic()">Chat</p>
         <p class="tabs" (click) = "disconnectUser()" routerLink="/login">{{ 'NAVBAR.SIGNOUT' | translate }}</p>
     </div> 
 </div>

@@ -1,8 +1,10 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { ChatMessage } from '@app/classes/chat-info';
 import { Message } from '@app/classes/message';
+import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { MessageParserService, MessageType } from '@app/services/message-parser-service/message-parser.service';
+import { ThemesService } from '@app/services/themes-service/themes-service';
 import { Subscription } from 'rxjs';
 
 const LIMIT_OF_CHARACTERS = 512;
@@ -29,18 +31,15 @@ export class ChatComponent implements OnDestroy {
     subscriptionMessage: Subscription;
     subscriptionHistoryMessage: Subscription;
 
-    constructor(private chatService: ChatService, private messageParserService: MessageParserService) {
+    constructor(private chatService: ChatService, private messageParserService: MessageParserService, private accountService: AccountService, private themeService: ThemesService) {
         this.gameRoomName = this.chatService.getChatInGameRoom();
-        console.log(this.gameRoomName);
         this.subscriptionHistoryMessage = this.chatService.getChatHistory(this.gameRoomName).subscribe((chatHistory: ChatMessage[]) => {
             chatHistory.forEach((chatMessage) => {
                 this.updateMessageHistory(chatMessage)
             })
         });
         this.subscriptionMessage = this.chatService.getMessagesInGame().subscribe((response: { chatCode: string, message: ChatMessage }) => {
-            console.log("reception d un message")
-            console.log(response)
-            this.updateMessageHistory(response.message)
+            if (response.chatCode === this.gameRoomName) this.updateMessageHistory(response.message);
         });
     }
 
@@ -50,6 +49,11 @@ export class ChatComponent implements OnDestroy {
         sessionStorage.setItem('chat', JSON.stringify(this.messageHistory));
     }
 
+    openPopupChat() {
+        if ((window as any).openChat) {
+            (window as any).openChat(this.accountService.getFullAccountInfo(), this.themeService.getActiveTheme(), this.accountService.getLanguage());
+        }
+    }
 
     sendMessage() {
         if (this.message.body.length >= LIMIT_OF_CHARACTERS) {
@@ -60,6 +64,7 @@ export class ChatComponent implements OnDestroy {
         const messageType: MessageType = this.messageParserService.parseCommand(this.message);
         this.sendMessageByType(messageType);
     }
+
     isReceiver() {
         this.switch = !this.switch;
         this.receiver.emit('chatbox' + this.switch);

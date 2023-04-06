@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
@@ -36,8 +36,11 @@ export class GamePageComponent implements OnInit, OnDestroy {
         private readonly letterAdderService: LetterAdderService,
         private readonly accountService: AccountService,
         private readonly translate: TranslateService,
-        private readonly chatService: ChatService
-    ) {}
+        private readonly chatService: ChatService,
+        private readonly changeDetector: ChangeDetectorRef
+    ) {
+        this.chatService.setChangeDetector(this.changeDetector);
+    }
 
     ngOnInit() {
         this.hasPendingAction = false;
@@ -75,6 +78,10 @@ export class GamePageComponent implements OnInit, OnDestroy {
                 this.actionHistory = [];
             });
         }
+    }
+
+    isPopupOpen(): boolean {
+        return this.chatService.isPopupOpen();
     }
 
     ngOnDestroy(): void {

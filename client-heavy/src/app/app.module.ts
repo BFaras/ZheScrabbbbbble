@@ -107,7 +107,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         BlankTilePopUpComponent,
         ConnectionHistoryAreaComponent,
         FormerActionHistoryAreaComponent,
-        ChangeNamePopUpComponent,
+        ChangeNamePopUpComponent
     ],
     imports: [
         AppMaterialModule,

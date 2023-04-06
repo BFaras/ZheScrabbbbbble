@@ -1,6 +1,9 @@
 <app-navigation-bar *ngIf="!isPopup"></app-navigation-bar>
 <div id="container">
     <div id="chat-list">
+        <button *ngIf="!isPopup" id="popup-btn" (click)="openPopupChat()">
+            <mat-icon>open_in_new</mat-icon>
+        </button>
         <div id="tabs-container">
             <span class="title">Chats</span>
             <div id="title-tabs">
