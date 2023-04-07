@@ -75,6 +75,12 @@ export class SocketManager {
                 socket.to(currentRoom.getID()).emit('Remove Selected Tile Response', activeSquare);
             });
 
+            socket.on('Send Emote', (emoteByPlayer: { username: string; emote: string }) => { //client léger
+                const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
+                if (!currentRoom) return;
+                socket.to(currentRoom.getID()).emit('Emote Response', emoteByPlayer);
+            });
+
             socket.on('Create Game Room', async (name: string, visibility: RoomVisibility, password?: string, gameType: GameType = GameType.Classic) => {
                 if (visibility === RoomVisibility.Tournament) return;
                 console.log(new Date().toLocaleTimeString() + ' | Room creation request received');

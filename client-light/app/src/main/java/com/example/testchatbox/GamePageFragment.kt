@@ -15,6 +15,7 @@ import android.util.TypedValue
 import android.view.*
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.View.*
+import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -40,7 +41,6 @@ import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class GamePageFragment : Fragment() {
@@ -76,7 +76,7 @@ class GamePageFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private var isSelected = ArrayList<Int>() //a changer pour ArrayList<Pair>()
+    private var isSelected = ArrayList<Int>()
     private var isPlaced = mutableListOf<LetterInHand>()
     private var isInside = false
     private var isPlaying = 0
@@ -93,6 +93,7 @@ class GamePageFragment : Fragment() {
     private lateinit var gameObserver: Observer<GameState>
     private lateinit var activeTileObserver: Observer<Pair<String, Int>>
     private lateinit var deleteActiveTileObserver: Observer<Pair<String, Int>>
+    private lateinit var emoteObserver: Observer<Pair<String, String>>
     private lateinit var firstLetterPlaced: LetterInHand
     private lateinit var timer: CountDownTimer
 
@@ -110,7 +111,7 @@ class GamePageFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "DiscouragedApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Coordinates.setCoordinates()
@@ -130,6 +131,7 @@ class GamePageFragment : Fragment() {
 
         gameObserver = Observer<GameState> { gameState ->
             timer.start()
+            binding.gameWinnerHolder.visibility = GONE
             binding.reserveLength.text = gameState.reserveLength.toString()
             isPlaying = gameState.playerTurnIndex
             isYourTurn = (gameState.players[isPlaying].username == LoggedInUser.getName())
@@ -214,7 +216,76 @@ class GamePageFragment : Fragment() {
         }
         gameModel.deleteActiveTile.observe(viewLifecycleOwner, deleteActiveTileObserver)
 
+        emoteObserver = Observer<Pair<String, String>> { emote ->
+            val username = emote.first
+            val emoteName = emote.second
+                for (element in binding.playersInfoHolder.children) {
+                    if (element.tag == username) {
+                        when (binding.playersInfoHolder.indexOfChild(element)) {
+                            0 ->
+                            {
+                                binding.emotePlayer1.setImageResource(resources.getIdentifier(emoteName, "drawable", activity?.packageName))
+                                binding.emotePlayer1.visibility = VISIBLE
+                                val animation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
+                                binding.emotePlayer1.startAnimation(animation)
+                                val handler = Handler()
+                                handler.postDelayed({
+                                    binding.emotePlayer1.visibility = INVISIBLE
+                                }, 2000)
+                            }
+                            1 ->
+                            {
+                                binding.emotePlayer2.setImageResource(resources.getIdentifier(emoteName, "drawable", activity?.packageName))
+                                binding.emotePlayer2.visibility = VISIBLE
+                                val animation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
+                                binding.emotePlayer2.startAnimation(animation)
+                                val handler = Handler()
+                                handler.postDelayed({
+                                    binding.emotePlayer2.visibility = INVISIBLE
+                                }, 2000)
+                            }
+                            2 ->
+                            {
+                                binding.emotePlayer3.setImageResource(resources.getIdentifier(emoteName, "drawable", activity?.packageName))
+                                binding.emotePlayer3.visibility = VISIBLE
+                                val animation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
+                                binding.emotePlayer3.startAnimation(animation)
+                                val handler = Handler()
+                                handler.postDelayed({
+                                    binding.emotePlayer3.visibility = INVISIBLE
+                                }, 2000)
+                            }
+                            3 ->
+                            {
+                                binding.emotePlayer4.setImageResource(resources.getIdentifier(emoteName, "drawable", activity?.packageName))
+                                binding.emotePlayer4.visibility = VISIBLE
+                                val animation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
+                                binding.emotePlayer4.startAnimation(animation)
+                                val handler = Handler()
+                                handler.postDelayed({
+                                    binding.emotePlayer4.visibility = INVISIBLE
+                                }, 2000)
+                            }
+                        }
+                    }
+            }
+        }
+        gameModel.emote.observe(viewLifecycleOwner, emoteObserver)
+
         binding.apply {
+
+            emoteNice.setOnClickListener {
+                SocketHandler.getSocket().emit("Send Emote", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "hmm")))
+                showEmote("hmm")
+                Log.d("EMOTE SEND", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "ic_good")).toString())
+            }
+
+            emoteBoo.setOnClickListener {
+                SocketHandler.getSocket().emit("Send Emote", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "ic_sad")))
+                showEmote("ic_sad")
+            Log.d("EMOTE SEND", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "hmm")).toString())
+        }
+
             buttonchat.setOnClickListener {
                 findNavController().navigate(R.id.action_fullscreenFragment_to_ChatFragment)
             }
@@ -368,13 +439,11 @@ class GamePageFragment : Fragment() {
                                                 }
                                             } else -> {}
                                         }
-
                                         for (tile in letterRack.children) { //effacer lettre du chevalet
                                             if (tile.findViewById<TextView>(R.id.letter).text == letter.text) {
                                                 letterRack.removeView(tile)
                                             }
                                         }
-
                                         firstLetterPlaced = isPlaced[0]
                                         Log.d("ARE PLACED ", isPlaced.toString())
                                     }
@@ -386,9 +455,6 @@ class GamePageFragment : Fragment() {
                     }
                     }
                 }
-
-
-
             }
             confirmLetter.setOnClickListener {
                 sendBlankLetter()
@@ -405,22 +471,12 @@ class GamePageFragment : Fragment() {
                 val noButton = alertView.findViewById<AppCompatButton>(R.id.dialogNo)
                 builder?.setView(alertView)
                 yesButton.setOnClickListener {
-                    if (!GameRoomModel.isPlayer) { // problème de redirection
-                        SocketHandler.getSocket().emit("Abandon")
-                        GameRoomModel.leaveRoom()
-                        if(TournamentModel.inTournament) {
-                            findNavController().navigate(R.id.action_fullscreenFragment_to_bracketFragment2)
-                        } else {
-                            findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
-                        }
+                    SocketHandler.getSocket().emit("Abandon")
+                    GameRoomModel.leaveRoom()
+                    if(TournamentModel.inTournament) {
+                        findNavController().navigate(R.id.action_fullscreenFragment_to_bracketFragment2)
                     } else {
-                        SocketHandler.getSocket().emit("Abandon")
-                        GameRoomModel.leaveRoom()
-                        if(TournamentModel.inTournament) {
-                            findNavController().navigate(R.id.action_fullscreenFragment_to_bracketFragment2)
-                        } else {
-                            findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
-                        }
+                        findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)
                     }
                     builder?.dismiss()
                 }
@@ -729,6 +785,55 @@ class GamePageFragment : Fragment() {
         private const val UI_ANIMATION_DELAY = 300
     }
 
+    private fun showEmote(emote: String) {
+        when (binding.playersInfoHolder.indexOfChild(binding.playersInfoHolder.findViewWithTag(LoggedInUser.getName()))) {
+            0 ->
+            {
+                val animation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
+                binding.emotePlayer1.startAnimation(animation)
+                binding.emotePlayer1.setImageResource(resources.getIdentifier(emote, "drawable", activity?.packageName))
+                binding.emotePlayer1.visibility = VISIBLE
+                val handler = Handler()
+                handler.postDelayed({
+                    binding.emotePlayer1.visibility = INVISIBLE
+                }, 2000)
+            }
+            1 ->
+            {
+                val animation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
+                binding.emotePlayer2.startAnimation(animation)
+                binding.emotePlayer2.setImageResource(resources.getIdentifier(emote, "drawable", activity?.packageName))
+                binding.emotePlayer2.visibility = VISIBLE
+                val handler = Handler()
+                handler.postDelayed({
+                    binding.emotePlayer2.visibility = INVISIBLE
+                }, 2000)
+            }
+            2 ->
+            {
+                val animation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
+                binding.emotePlayer3.startAnimation(animation)
+                binding.emotePlayer3.setImageResource(resources.getIdentifier(emote, "drawable", activity?.packageName))
+                binding.emotePlayer3.visibility = VISIBLE
+                val handler = Handler()
+                handler.postDelayed({
+                    binding.emotePlayer3.visibility = INVISIBLE
+                }, 2000)
+            }
+            3 ->
+            {
+                val animation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
+                binding.emotePlayer4.startAnimation(animation)
+                binding.emotePlayer4.setImageResource(resources.getIdentifier(emote, "drawable", activity?.packageName))
+                binding.emotePlayer4.visibility = VISIBLE
+                val handler = Handler()
+                handler.postDelayed({
+                    binding.emotePlayer4.visibility = INVISIBLE
+                }, 2000)
+            }
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private fun updateRack(playerHand: ArrayList<String>) {
         binding.letterRack.removeAllViews()
@@ -812,6 +917,7 @@ class GamePageFragment : Fragment() {
                 }
             }
         }
+
         for (player in playersList) {
             val playerInfo =
                 layoutInflater.inflate(R.layout.player_info, binding.playersInfoHolder, false)
@@ -825,13 +931,10 @@ class GamePageFragment : Fragment() {
                 if (name == player.username) currentAvatar = avatar
             }
 
-            when (currentAvatar) {
-                "dog.jpg" -> {
-                    playerAvatar.setImageResource(R.drawable.dog)
-                }
-                "cat.jpg" -> playerAvatar.setImageResource(R.drawable.cat)
-                "flower.jpg" -> playerAvatar.setImageResource(R.drawable.flower)
-                else -> playerAvatar.setImageResource(R.color.Aqua)
+            if (resources.getIdentifier((currentAvatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                playerAvatar.setImageResource(resources.getIdentifier((currentAvatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+            } else {
+                playerAvatar.setImageResource(R.drawable.robot)
             }
 
             playerName.text = player.username
@@ -1098,7 +1201,6 @@ class GamePageFragment : Fragment() {
                 context?.theme?.resolveAttribute(android.R.attr.textColor, initialColor, true)
                 binding.secondsTimer.setTextColor(initialColor.data)
                 val f : NumberFormat = DecimalFormat("00")
-                binding.timesup.visibility = GONE
                 if ((millisUntilFinished / 1000 % 60) < 10) {
                     binding.minutesTimer.text = f.format(millisUntilFinished / 60000 % 60)
                     binding.secondsTimer.text = f.format(millisUntilFinished / 1000 % 60)
@@ -1111,7 +1213,6 @@ class GamePageFragment : Fragment() {
 
             }
             override fun onFinish() {
-                binding.timesup.visibility = VISIBLE
                 val initialColor = TypedValue()
                 context?.theme?.resolveAttribute(android.R.attr.textColor, initialColor, true)
                 binding.minutesTimer.text = "00"

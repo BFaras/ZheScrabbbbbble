@@ -45,6 +45,10 @@ class GameStateModel: ViewModel() {
     val activeTile: LiveData<Pair<String, Int>>
         get() = _activeTile
 
+    private var _emote = MutableLiveData<Pair<String, String>>()
+    val emote: LiveData<Pair<String, String>>
+        get() = _emote
+
     private var _deleteActiveTile = MutableLiveData<Pair<String, Int>>()
     val deleteActiveTile: LiveData<Pair<String, Int>>
         get() = _deleteActiveTile
@@ -81,7 +85,6 @@ class GameStateModel: ViewModel() {
                     }
                     gameStateTemp.players.add(PlayersState(playerState.get("username") as String,hand ,playerState.get("score") as Int))
                 }
-
                 gameStateTemp.playerTurnIndex=gameJSON.get("playerTurnIndex") as Int
                 gameStateTemp.reserveLength=gameJSON.get("reserveLength") as Int
                 gameStateTemp.gameOver=gameJSON.get("gameOver") as Boolean
@@ -97,12 +100,9 @@ class GameStateModel: ViewModel() {
                 }catch (e:Exception){
                     Log.e("Game State", e.toString())
                 }
-
                 _gameState.postValue(gameStateTemp);
             }
-
         getGameState()
-
 
         SocketHandler.getSocket().on("Get First Tile") { args ->
             Log.i("args  ", args.toString())
@@ -120,6 +120,12 @@ class GameStateModel: ViewModel() {
             val firstTileTemp = Pair(firstTileJSON.get("x") as String, firstTileJSON.get("y") as Int)
             Log.i("firstTileTemp ", firstTileTemp.toString())
             _deleteActiveTile.postValue(firstTileTemp)
+        }
+
+        SocketHandler.getSocket().on("Emote Response") { args ->
+            val emoteJSON = args[0] as JSONObject
+            Log.i("emoteJSON  ", args[0].toString())
+            _emote.postValue(Pair(emoteJSON.get("username") as String, emoteJSON.get("emote") as String))
         }
     }
 
