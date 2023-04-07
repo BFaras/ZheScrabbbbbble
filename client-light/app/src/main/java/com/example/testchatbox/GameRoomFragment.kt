@@ -112,13 +112,10 @@ class GameRoomFragment : Fragment(), Observer {
 
             for ((name, avatar) in avatars) {
                 if (name == player) {
-                    when (avatar) {
-                        "dog.jpg" -> {
-                            avatarPic.setImageResource(R.drawable.dog)
-                        }
-                        "cat.jpg" -> avatarPic.setImageResource(R.drawable.cat)
-                        "flower.jpg" -> avatarPic.setImageResource(R.drawable.flower)
-                        else -> avatarPic.setImageResource(R.color.Aqua)
+                    if (resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                        avatarPic.setImageResource(resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                    } else {
+                        avatarPic.setImageResource(R.drawable.robot)
                     }
                 }
             }
