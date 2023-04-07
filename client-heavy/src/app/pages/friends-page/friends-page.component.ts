@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConnectivityStatus, Friend } from '@app/classes/friend-info';
 import { ProfileInfo } from '@app/classes/profileInfo';
 import { AccountService } from '@app/services/account-service/account.service';
@@ -19,14 +20,19 @@ export class FriendsPageComponent {
   friend: Friend = { username: 'cat', status: ConnectivityStatus.ONLINE };
   redirect: boolean = false;
 
-  constructor(private friendsService: FriendsService, private account: AccountService, /*private router: Router*/) {
+  constructor(private friendsService: FriendsService, private account: AccountService, private router: Router) {
     this.updateFriendsList();
     this.usercode = this.account.getProfile().userCode;
   }
 
-  alert() {
+  alert(username: string) {
     const text = 'Êtes-vous sûr(e) de vouloir retirer cet ami?';
-    if (confirm(text)) {}
+    if (confirm(text)) {
+      this.friendsService.removeFriend(username).subscribe((errorCode: string) => {
+        this.updateFriendsList();
+        console.log(errorCode);
+      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -54,6 +60,15 @@ export class FriendsPageComponent {
 
   setProfile(code: ProfileInfo) {
     this.profile = code;
+  }
+
+  goToProfile(username: string) {
+    this.friendsService.setMode(false);
+    this.friendsService.setUsername(username);
+    this.friendsService.getFriendsProfile(username).subscribe((userProfile) => {
+      this.friendsService.setUpProfile(userProfile);
+      this.router.navigate(['/profile-page']);
+    });
   }
 
   /*

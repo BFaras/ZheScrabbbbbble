@@ -1,6 +1,11 @@
 *{
-    font-family: 'Courrier New';
+    font-family: 'Courier New', Courier, monospace;
 }
+
+::ng-deep  mat-dialog-container {
+        background-color: var(--background-tertiary) !important;
+        box-shadow: var(--box-shadow);
+       }
 
 .container{
     display: flex;
@@ -12,6 +17,7 @@
 .title{
     font-size: 17px;
     font-weight: bold;
+    color: var(--text-secondary);
 }
 .button {
     text-decoration: none;
@@ -32,7 +38,6 @@ input {
     color: var(--text-default);
     font-size: 18px;
     position: relative;
-    bottom:30px
 }
 
 input:-webkit-autofill,

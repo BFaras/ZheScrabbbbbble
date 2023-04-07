@@ -6,7 +6,7 @@ import com.example.testchatbox.ThemeManager
 import com.example.testchatbox.ThemeStorage
 
 
-data class User(val username:String) {
+data class User(var username:String) {
     var theme:String="";
     var lang:String="";
 }
@@ -38,6 +38,10 @@ object LoggedInUser {
 
     fun setLang(lang: String){
         this.user.lang=lang;
+    }
+
+    fun setName(name: String){
+        this.user.username=name;
     }
 
     fun disconnectUser(){

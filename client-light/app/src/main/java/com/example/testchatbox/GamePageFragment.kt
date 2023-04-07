@@ -129,6 +129,11 @@ class GamePageFragment : Fragment() {
             }
         }
 
+        SocketHandler.getSocket().on("Game Started"){
+            gameOver=false
+        }
+
+
         gameObserver = Observer<GameState> { gameState ->
             timer.start()
             binding.gameWinnerHolder.visibility = GONE

@@ -391,6 +391,7 @@ class ProfilFragment : Fragment() {
         binding.changeToFr.setOnClickListener { setLocale("fr"); changeLang("fr");refreshActivity() }
         binding.changeToEn.setOnClickListener { setLocale("en"); changeLang("en");refreshActivity() }
 
+
         binding.button2.setOnClickListener {
             findNavController().navigate(R.id.action_profilFragment_to_mainActivity2)
         }
@@ -473,6 +474,29 @@ class ProfilFragment : Fragment() {
             }
         }
         SocketHandler.getSocket().emit("Change Avatar", newAvatar)
+    }
+
+    private fun changeUsername(newUsername:String){
+        SocketHandler.getSocket().once("Username Change Response"){args->
+            if(args[0]!=null){
+                val errorMessage = when(args[0] as String){
+                    "0" -> R.string.NO_ERROR
+                    "4" -> R.string.USERNAME_TAKEN
+                    "5" -> R.string.DATABASE_UNAVAILABLE
+                    else -> R.string.ERROR
+                }
+                activity?.runOnUiThread(Runnable {
+                    if(errorMessage == R.string.NO_ERROR ){
+                        LoggedInUser.setName(newUsername)
+                        binding.playerName.text= newUsername
+                    }else{
+                        val appContext = context?.applicationContext
+                        Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
+                    }
+                });
+            }
+        }
+        SocketHandler.getSocket().emit("Change Username", newUsername)
     }
 
     private fun changeTheme(newTheme:String){

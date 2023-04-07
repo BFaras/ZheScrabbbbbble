@@ -313,7 +313,7 @@ export class SocketManager {
                 }
                 if (currentRoom.getRealPlayerCount(false) === 0) {
                     const message = currentRoom.getGame.endGame(socket.id);
-                    if(!(currentRoom instanceof CoopGameRoom)) this.sendGameState(currentRoom, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
+                    if (!(currentRoom instanceof CoopGameRoom)) this.sendGameState(currentRoom, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
                     this.sendGameState(currentRoom, { messageType: END_GAME_MESSAGE, values: [message] });
                     if (currentRoom.getRealPlayerCount(true) === 0) {
                         this.roomManager.deleteRoom(currentRoom.getID());
@@ -321,7 +321,7 @@ export class SocketManager {
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
-                if(!(currentRoom instanceof CoopGameRoom)) this.sendGameState(currentRoom, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
+                if (!(currentRoom instanceof CoopGameRoom)) this.sendGameState(currentRoom, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
                 this.playVirtualTurns(currentRoom);
             });
 
@@ -434,7 +434,7 @@ export class SocketManager {
                 }
                 if (room.getRealPlayerCount(false) === 0) {
                     const message = room.getGame.endGame(socket.id);
-                    if(!(room instanceof CoopGameRoom)) this.sendGameState(room, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
+                    if (!(room instanceof CoopGameRoom)) this.sendGameState(room, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
                     this.sendGameState(room, { messageType: END_GAME_MESSAGE, values: [message] });
                     if (room.getRealPlayerCount(true) === 0) {
                         this.roomManager.deleteRoom(room.getID());
@@ -442,7 +442,7 @@ export class SocketManager {
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                     return;
                 }
-                if(!(room instanceof CoopGameRoom)) this.sendGameState(room, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
+                if (!(room instanceof CoopGameRoom)) this.sendGameState(room, { messageType: REPLACED_MESSAGE, values: [this.accountInfoService.getUsername(socket)] });
                 this.playVirtualTurns(room);
             });
         });
@@ -464,7 +464,6 @@ export class SocketManager {
     }
 
     private timerCallback(room: GameRoom, username: string, result: CommandResult) {
-        if (room.getGame.isGameOver()) return;
         this.sendGameState(room, { messageType: OUT_OF_TIME_MESSAGE, values: [username] });
         if (result.endGameMessage) {
             this.sendGameState(room, { messageType: END_GAME_MESSAGE, values: [result.endGameMessage] });
@@ -484,7 +483,7 @@ export class SocketManager {
         if (room1.getPlayerCount() === 2) {
             room1.startGame(this.timerCallback.bind(this));
             this.roomManager.updateTournamentGameStatus(tid, rooms[0], GameStatus.IN_PROGRESS);
-            this.sio.in(rooms[0]).emit('Game Started', false);
+            this.sio.in(rooms[0]).emit('Game Started', false, rooms[0]);
         } else if (room1.getPlayerCount() === 1) {
             const player = room1.getPlayerFromIndex(0);
             const tournament = this.roomManager.findTournamentFromId(tid);
@@ -500,7 +499,7 @@ export class SocketManager {
         if (room2.getPlayerCount() === 2) {
             room2.startGame(this.timerCallback.bind(this));
             this.roomManager.updateTournamentGameStatus(tid, rooms[1], GameStatus.IN_PROGRESS);
-            this.sio.in(rooms[1]).emit('Game Started', false);
+            this.sio.in(rooms[1]).emit('Game Started', false, rooms[1]);
         } else if (room2.getPlayerCount() === 1) {
             const player = room2.getPlayerFromIndex(0);
             const tournament = this.roomManager.findTournamentFromId(tid);
