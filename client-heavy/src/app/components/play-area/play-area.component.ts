@@ -73,7 +73,6 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     }
 
     getPointIfNotBlank(letter: string) {
-        console.log(letter)
         const upperCase = letter.toUpperCase();
         if (letter === upperCase) return 0;
         return LETTER_POINTS[letter.toUpperCase() as keyof typeof LETTER_POINTS]

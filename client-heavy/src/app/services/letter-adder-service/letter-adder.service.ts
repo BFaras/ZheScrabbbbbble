@@ -73,12 +73,10 @@ export class LetterAdderService {
 */
 
     findDirectionOfDrop(row: string, column: number) {
-        if (this.addedLettersLog.size === 1) {
-            if (this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row) {
-                this.arrowDirection = false;
-            } else if (this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row) {
-                this.arrowDirection = true;
-            }
+        if (this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row) {
+            this.arrowDirection = false;
+        } else if (this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row) {
+            this.arrowDirection = true;
         }
     }
 
@@ -363,14 +361,17 @@ export class LetterAdderService {
 
     makeMove() {
         if (this.addedLettersLog.size) {
-            console.log(this.formatAddedLetters())
+            const placedLetters = this.formatAddedLetters()
+            if (placedLetters === "wrongMove") {
+                return
+            }
             if (!this.verifyLettersAreLinked()) {
                 window.alert(window.alert("les lettres placées doivent être relier les unes aux autres"))
                 this.getLetterNotAcceptedObservable().next(true);
                 this.removeAll();
+                return;
             }
-            this.verifyLettersAreLinked()
-            this.chatService.sendCommand(this.formatAddedLetters(), 'Place');
+            this.chatService.sendCommand(placedLetters, 'Place');
             this.removeAll();
         }
     }
@@ -468,41 +469,55 @@ export class LetterAdderService {
     }
 
     isHorizontal(keys: string[]): boolean {
-        true
-        const expectedValue = keys[0][0]
+        console.log('--------test horitonal direction--------')
+        console.log(keys)
+        const expectedValue = keys[0][0];
         for (const element of keys) {
+            console.log(element)
+            console.log(element[0])
+            console.log(expectedValue)
             if (element[0] === expectedValue) {
                 continue
             }
             else {
+                console.log('--------end test horitonal direction--------')
                 return false;
             }
         }
+        console.log('--------end test horitonal direction--------')
         return true;
     }
 
     isVertical(keys: string[]): boolean {
-        false
-        const expectedValue = keys[0][1]
+        console.log('--------test vertical direction--------')
+        console.log(keys)
+        const expectedValue = keys[0].substring(1)
         for (const element of keys) {
-            if (element[1] === expectedValue) {
+            console.log(element)
+            console.log(element.substring(1))
+            console.log(expectedValue)
+            if (element.substring(1) === expectedValue) {
                 continue
             }
             else {
+                console.log('--------end test vertical direction--------')
                 return false;
             }
         }
+        console.log('--------end test vertical direction--------')
         return true;
     }
 
     formatAddedLetters(): string {
         this.orderAddedLetterLog();
+        console.log("directoin :" + this.formatDirection())
         const keys = Array.from(this.orderedAddedLetterLog.keys());
         if (this.arrowDirection) {
             if (!this.isHorizontal(keys)) {
                 window.alert("le mot place n'est pas sur la même direction")
                 this.getLetterNotAcceptedObservable().next(true)
                 this.removeAll()
+                return "wrongMove"
                 /**ajouter enelveer les lettres du fields dans component*/
 
             };
@@ -512,6 +527,7 @@ export class LetterAdderService {
                 window.alert("le mot place n'est pas sur la même direction")
                 this.getLetterNotAcceptedObservable().next(true)
                 this.removeAll()
+                return "wrongMove"
                 /**ajouter enelveer les lettres du fields dans component*/
             }
         }
