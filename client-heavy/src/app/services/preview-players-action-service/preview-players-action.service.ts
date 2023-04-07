@@ -34,12 +34,8 @@ export class PreviewPlayersActionService {
       this.removeSelectedTile(formerSpot);
       this.sharePlayerFirstTile(newSpot)
       this.firstTilePosition = newSpot;
-      console.log(this.previewTilesPosition)
-
-
       this.previewTilesPosition = this.previewTilesPosition.filter((previewTiles) => (formerSpot !== previewTiles))
       this.previewTilesPosition.unshift(newSpot);
-      console.log(this.previewTilesPosition)
       return
     }
 

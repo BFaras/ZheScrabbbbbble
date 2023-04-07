@@ -277,7 +277,7 @@ export class LetterAdderService {
         if (addOrDel) {
             this.addedLettersLog.delete(lastAddedLetter[0]);
             console.log("tout enlever");
-            this.previewPlayerActionService.removePreviewTile({ x: lastAddedLetter[0][0], y: Number(lastAddedLetter[0][1]) });
+            this.previewPlayerActionService.removePreviewTile({ x: lastAddedLetter[0][0], y: Number(lastAddedLetter[0].substring(1)) });
             if (lastAddedLetter[1].length === 1) this.playerHand.push(lastAddedLetter[1]);
             else this.playerHand.push(lastAddedLetter[1].slice(0, GRID_CONSTANTS.lastLetter));
         } else {
