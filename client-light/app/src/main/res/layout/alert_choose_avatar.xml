@@ -18,16 +18,10 @@
             android:textAlignment="center"
             android:text="@string/choisissez_votre_avatar"
             android:textStyle="bold"
+            android:textAllCaps="true"
             android:fontFeatureSettings="smcp"
             android:textSize="28sp"/>
 
-        <TextView
-            android:layout_width="400dp"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:layout_marginTop="10dp"
-            android:textAlignment="center"
-            android:text="@string/vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil"/>
         <HorizontalScrollView
             android:layout_width="470dp"
             android:layout_height="match_parent"

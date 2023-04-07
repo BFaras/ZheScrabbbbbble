@@ -17,83 +17,6 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_gravity="center">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="80dp"
-            android:layout_marginRight="10dp"
-            android:gravity="top">
-            <FrameLayout
-                android:id="@+id/lightTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/background_chat_input"
-                android:backgroundTint="?colorPrimary">
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_sun"
-                    android:tint="?colorOnPrimary">
-                </androidx.appcompat.widget.AppCompatImageView>
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/darkTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/background_chat_input"
-                android:backgroundTint="?colorPrimary">
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_night"
-                    android:tint="?colorOnPrimary">
-                </androidx.appcompat.widget.AppCompatImageView>
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/astro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/background_chat_input"
-                android:backgroundTint="?colorPrimary">
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_pink"
-                    android:tint="?colorOnPrimary">
-                </androidx.appcompat.widget.AppCompatImageView>
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/blizzard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:background="@drawable/background_chat_input"
-                android:backgroundTint="?colorPrimary">
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_snow"
-                    android:tint="?colorOnPrimary">
-                </androidx.appcompat.widget.AppCompatImageView>
-            </FrameLayout>
-
-        </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_gravity="center"
         android:orientation="vertical">
@@ -167,6 +90,7 @@
                 android:hint="@string/prompt_username"
                 android:inputType="text"
                 android:selectAllOnFocus="true"
+                android:textColorHint="?colorOnPrimary"
                 android:layout_gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -176,6 +100,7 @@
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColorHint="?colorOnPrimary"
                 android:autofillHints="@string/prompt_password"
                 android:hint="@string/prompt_password"
                 android:imeActionLabel="@string/action_sign_in_short"
@@ -193,6 +118,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:enabled="false"
+                android:textColor="?colorOnPrimary"
                 android:text="@string/action_sign_in"
                 />
             <TextView
@@ -206,6 +132,7 @@
                 android:id="@+id/reset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?colorOnPrimary"
                 android:text="@string/reset_password"
                 android:backgroundTint="?colorPrimaryVariant"/>
             <TextView
@@ -221,11 +148,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:textColor="?colorOnPrimary"
                 android:text="@string/register"
                 android:backgroundTint="?colorPrimaryVariant"/>
         </LinearLayout>
 
-        </LinearLayout>
     </LinearLayout>
 
     <ProgressBar

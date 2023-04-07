@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">SCRABBLE</string>
 
     <string name="action_settings">Paramètres</string>
     <string name="tapez_quelque_chose">Tapez quelque chose...</string>
@@ -85,7 +84,7 @@
     <string name="MSG_5"><![CDATA[<b>%1$s</b> s\'est déconnecté et a été remplacé par un JV.]]></string>
     <string name="MSG_6"><![CDATA[<b>%1$s</b> a manqué de temps et a passé son tour.]]></string>
     <string name="MSG_7"><![CDATA[Fin de partie - <b>%1$s</b> lettres restantes]]></string>
-    <string name="scrabbleName">SCRABBLE</string>
+    <string name="scrabbleName">Scrabble</string>
     <string name="info_panel">PANNEAU INFORMATIF</string>
     <string name="detectedJoker">JOKER DÉTECTÉ!</string>
     <string name="blankLetterOnBoard">Une lettre blanche a été placée sur le plateau.</string>
@@ -123,7 +122,7 @@
     <string name="no">non, je reste</string>
     <string name="confirmAbandon">Êtes vous suuuur(e)?</string>
     <string name="confirmButtonText">Êtes-vous sûr(e) de vouloir quitter la partie? Cette action est irréversible.</string>
-    <string name="now_observing_player1"><![CDATA[en train d\'observer %1$s]]></string>
+    <string name="now_observing_player1"><![CDATA[EN TRAIN D\'OBSERVER %1$s]]></string>
     <string name="move_mode">mode placer</string>
     <string name="swap_mode">mode échanger</string>
     <string name="indice">indice</string>
@@ -132,10 +131,15 @@
     <string name="iswinner">gagné</string>
     <string name="isloser">perdu</string>
     <string name="your_friend_code_is">votre code ami est</string>
+    <string name="avatarError">Veuillez choisir un avatar</string>
     <string name="language">langage</string>
     <string name="current_theme">thème actuel</string>
     <string name="vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil">Vous pourrez le changer à nouveau dans votre page de profil.</string>
     <string name="choisissez_votre_avatar">choisissez votre avatar</string>
     <string name="revenez_quand_vous_aurez_fait_des_parties">Revenez quand vous aurez fait des parties!</string>
     <string name="c_est_vide_ici">c\'est vide ici…</string>
+    <string name="host">hôte</string>
+    <string name="congrats_to_all_players">félicitations à tous les joueurs!</string>
+    <string name="tournament_ranking">classement du tournoi</string>
+    <string name="pas_besoin_d_indices">PAS BESOIN D\'INDICES</string>
 </resources>

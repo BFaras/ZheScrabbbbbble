@@ -136,6 +136,7 @@
                 android:layout_marginTop="20dp"
                 android:visibility="gone">
             </ProgressBar>
+
             <LinearLayout
                 android:id="@+id/hintPanel"
                 android:layout_width="match_parent"
@@ -174,6 +175,17 @@
                     android:textStyle="italic|bold"
                     android:textColor="?colorOnPrimary"
                     android:text="@string/vous_pouvez_cliquer_sur_n_importe_lequel_pour_le_pr_visualiser_sur_le_plateau"></TextView>
+                <TextView
+                    android:id="@+id/noHintFound"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_marginTop="10dp"
+                    android:textSize="14dp"
+                    android:textAlignment="center"
+                    android:textStyle="italic|bold"
+                    android:textColor="?colorOnPrimary"
+                    android:text="Sorry... \nNo hints have been found."></TextView>
                 <GridLayout
                     android:id="@+id/hint_holder"
                     android:layout_gravity="center"
@@ -187,7 +199,7 @@
                     android:id="@+id/noHelpHint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="15dp"
                     android:background="@drawable/background_direction_panel"
                     android:backgroundTint="?colorSecondary">
                     <TextView
@@ -199,6 +211,7 @@
                         android:textStyle="bold"
                         android:textColor="?colorOnSecondary"
                         android:text="@string/pas_besoin_d_indices"
+                        android:textAllCaps="true"
                         android:layout_height="wrap_content"
                         android:justificationMode="inter_word" />
                 </FrameLayout>
@@ -210,7 +223,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_gravity="center"
-                android:padding="10dp"
+                android:padding="6dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/background_direction_panel"
                 android:visibility="gone"
@@ -251,7 +264,7 @@
                         android:layout_height="match_parent"
                         android:background="@drawable/background_chat_input"
                         android:backgroundTint="?colorBackgroundFloating"
-                        android:padding="5dp"
+                        android:padding="2dp"
                         android:textSize="12sp"
                         android:imeOptions="actionSend"
                         android:inputType=""
@@ -262,8 +275,8 @@
                         android:maxLength="1" />
                     <FrameLayout
                         android:id="@+id/confirmLetter"
-                        android:layout_width="35dp"
-                        android:layout_height="match_parent"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_marginStart="5dp"
                         android:layout_gravity="center_horizontal|center"
                         android:background="@drawable/background_chat_input"
@@ -465,7 +478,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/move_mode"
-                android:textSize="18dp"
+                android:textSize="13dp"
+                android:textAllCaps="true"
                 android:textStyle="bold"
                 android:fontFeatureSettings="smcp"></TextView>
             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -479,7 +493,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/swap_mode"
-                android:textSize="18dp"
+                android:textAllCaps="true"
+                android:textSize="13dp"
                 android:textStyle="bold"
                 android:fontFeatureSettings="smcp"></TextView>
         </LinearLayout>

@@ -42,7 +42,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFeatureSettings="smcp"
+                        android:textAllCaps="true"
                         android:text="@string/your_friend_code_is"
                         android:textAlignment="center"
                         android:textColor="?colorSecondary"
@@ -65,7 +65,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:fontFeatureSettings="smcp"
+                        android:textAllCaps="true"
                         android:text="@string/language"
                         android:textColor="?colorOnSecondary"
                         android:textSize="20dp"
@@ -117,7 +117,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:fontFeatureSettings="smcp"
+                        android:textAllCaps="true"
                         android:text="@string/current_theme"
                         android:textColor="?colorOnSecondary"
                         android:textSize="20dp"
@@ -260,7 +260,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFeatureSettings="smcp"
+                                android:textAllCaps="true"
                                 android:includeFontPadding="false"
                                 android:text="@string/lvl"
                                 android:textColor="?colorOnSecondary"
@@ -271,7 +271,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="bottom"
-                                android:fontFeatureSettings="smcp"
+                                android:textAllCaps="true"
                                 android:includeFontPadding="false"
                                 android:text="@string/xp_needed_till_next_level_00"
                                 android:textColor="?colorOnSecondary"
@@ -283,7 +283,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:fontFeatureSettings="smcp"
                             android:includeFontPadding="false"
                             android:text="42"
                             android:textColor="?colorOnSecondary"
@@ -293,9 +292,10 @@
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/levelProgress"
-                        android:layout_width="320dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:layout_gravity="left"
                         android:background="?colorSecondary"
                         android:max="500"
                         android:progress="100"
@@ -311,7 +311,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="175dp"
                     android:layout_marginEnd="520dp"
-                    android:fontFeatureSettings="smcp"
+                    android:textAllCaps="true"
                     android:text="game log"
                     android:textColor="?colorSecondary"
                     android:textSize="25dp"
@@ -443,7 +443,6 @@
                 android:tint="?colorOnSecondary">
             </androidx.appcompat.widget.AppCompatImageView>
         </FrameLayout>
-
         <FrameLayout
             android:id="@+id/pink"
             android:layout_width="wrap_content"

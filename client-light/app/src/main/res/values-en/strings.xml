@@ -77,7 +77,7 @@
     <string name="MSG_5"><![CDATA[<b>%1$s</b> disconnected and was replaced by a VP.]]></string>
     <string name="MSG_6"><![CDATA[<b>%1$s</b> ran out of time and passed their time.]]></string>
     <string name="MSG_7"><![CDATA[Game Over - <b>%1$s</b> letters left]]></string>
-    <string name="scrabbleName">SCRABBLE</string>
+    <string name="scrabbleName">Scrabble</string>
     <string name="info_panel">INFO PANEL</string>
     <string name="detectedJoker">A JOKER HAS BEEN DETECTED!</string>
     <string name="blankLetterOnBoard">A blank letter is on the board.</string>
@@ -115,7 +115,7 @@
     <string name="no">no, i stay</string>
     <string name="confirmAbandon">ARE YOU SUUUUURE?</string>
     <string name="confirmButtonText">Are you sure you want to quit the current game? You can\'t come back once you quit.</string>
-    <string name="now_observing_player1"><![CDATA[now observing %1$s]]></string>
+    <string name="now_observing_player1"><![CDATA[NOW OBSERVING %1$s]]></string>
     <string name="move_mode">move mode</string>
     <string name="swap_mode">swap mode</string>
     <string name="indice">hint</string>
@@ -124,10 +124,15 @@
     <string name="iswinner">won</string>
     <string name="isloser">lost</string>
     <string name="your_friend_code_is">your friend code is</string>
+    <string name="avatarError">You need to choose a profile picture.</string>
     <string name="language">language</string>
     <string name="current_theme">current theme</string>
     <string name="vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil">You can change it again in your profil page.</string>
     <string name="choisissez_votre_avatar">choose your profile picture</string>
     <string name="revenez_quand_vous_aurez_fait_des_parties">Come back when you\'ve played some games!</string>
     <string name="c_est_vide_ici">it\'s empty here...</string>
+    <string name="host">host</string>
+    <string name="congrats_to_all_players">congrats to all players!</string>
+    <string name="tournament_ranking">tournament ranking</string>
+    <string name="pas_besoin_d_indices">no need for hints</string>
 </resources>
