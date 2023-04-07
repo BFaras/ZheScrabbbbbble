@@ -425,20 +425,20 @@ export class LetterAdderService {
                         localeCompare(rightLetter[0].substring(1, rightLetter[0].length), undefined, { numeric: true })
                 }));
             const LettersOnOneDirectionArray = Array.from(LettersOnOneDirection.keys())
-            let positionLetter = LettersOnOneDirectionArray[0][1];
+            let positionLetter = LettersOnOneDirectionArray[0].substring(1);
 
             for (const position of LettersOnOneDirectionArray) {
-                /*
-                console.log("firstValue: " + firstValuePosition[1])
-                console.log("actualPosition: " + position[1])
-                console.log("lastValue: " + lastValuePosition[1])
-                console.log("PositionLetter: " + positionLetter)
+
+                console.log("firstValue: " + firstValuePosition.substring(1))
+                console.log("actualPosition: " + position.substring(1))
+                console.log("lastValue: " + lastValuePosition.substring(1))
+                console.log("PositionLetter: " + positionLetter.substring(1))
                 console.log("compaisaion : ------------------")
                 console.log("lastValue: " + lastValuePosition)
                 console.log("actualPosition: " + position)
                 console.log("compaisaion : ------------------")
-                */
-                if (position[1] === positionLetter) {
+
+                if (position.substring(1) === positionLetter) {
                     if (position === lastValuePosition) {
                         //console.log("is it Linked Horizontal : " + true);
                         return true
