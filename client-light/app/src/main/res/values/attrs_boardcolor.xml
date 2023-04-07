@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="doubleWord" format="reference" />
-    <attr name="tripleWord" format="reference" />
-    <attr name="doubleLetter" format="reference" />
-    <attr name="playerSelection" format="reference" />
-    <attr name="grid" format="reference" ></attr>
-    <attr name="coords" format="reference" ></attr>
-    <attr name="boardBackground" format="reference"></attr>
-    <attr name="lettersOnBoard" format="reference" />
-    <attr name="lettersInHand" format="reference" ></attr>
-    <attr name="chatBox" format="reference"></attr>
-    <attr name="activeTile" format="reference"></attr>
-    <attr name="backgroundProfile" format="reference"></attr>
+    <attr name="doubleWord" format="color" />
+    <attr name="tripleWord" format="color" />
+    <attr name="doubleLetter" format="color" />
+    <attr name="playerSelection" format="color" />
+    <attr name="grid" format="color" ></attr>
+    <attr name="coords" format="color" ></attr>
+    <attr name="boardBackground" format="color"></attr>
+    <attr name="lettersOnBoard" format="color" />
+    <attr name="lettersInHand" format="color" ></attr>
+    <attr name="chatBox" format="color"></attr>
+    <attr name="activeTile" format="color"></attr>
+    <attr name="backgroundProfile" format="color"></attr>
 </resources>

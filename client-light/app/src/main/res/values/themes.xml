@@ -5,16 +5,18 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowActionBar">false</item>
+        <item name="android:fontFamily">@font/courier_prime</item>
         <item name="android:windowBackground">@color/beige</item>
         <item name="backgroundColor">@color/beige</item>
+        <item name="hintTextColor">@color/black</item>
         <item name="android:textColorHighlight">@color/beige</item>
         <item name="android:textColor">@color/darkForestGreen</item>
-        <item name="colorPrimary">@color/corail</item>
-        <item name="colorPrimaryVariant">@color/darkCorail</item>
-        <item name="colorOnPrimary">@color/lightBeige</item>
+        <item name="colorPrimary">#fffbfb</item>
+        <item name="colorPrimaryVariant">#ede6e6</item>
+        <item name="colorOnPrimary">@color/darkForestGreen</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">#bccca9</item>
-        <item name="colorSecondaryVariant">@color/Brown</item>
+        <item name="colorSecondaryVariant">#cb654f</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
@@ -43,22 +45,23 @@
         <item name="backgroundColor">#f7dfed</item>
         <item name="android:textColorHighlight">#e0cddc</item>
         <item name="android:textColor">@color/black</item>
+        <item name="hintTextColor">#cb4f7f</item>
         <item name="colorPrimary">#fffbfb</item>
         <item name="colorPrimaryVariant">#e0cddc</item>
         <item name="colorOnPrimary">#7e0062</item>
         <item name="colorSecondary">#cb4f7f</item>
-        <item name="colorSecondaryVariant">@color/MediumVioletRed</item>
+        <item name="colorSecondaryVariant">#a75c8c</item>
         <item name="android:statusBarColor">#cb4f7f</item>
         <item name="playerSelection">@color/BlueViolet</item>
         <item name="colorOnSecondary">@color/DarkSunset</item>
-        <item name="doubleWord">@color/lightCorail</item>
-        <item name="tripleWord">@color/IndianRed</item>
-        <item name="doubleLetter">@color/RosyBrown</item>
+        <item name="doubleWord">#d3a7bc</item>
+        <item name="tripleWord">#cb4f7f</item>
+        <item name="doubleLetter">#be8caa</item>
         <item name="grid">@color/black</item>
-        <item name="coords">@color/PurpleSunset</item>
+        <item name="coords">#520027</item>
         <item name="boardBackground">@color/lightBeige</item>
         <item name="lettersOnBoard">@color/BabyPink</item>
-        <item name="lettersInHand">@color/AntiqueWhite</item>
+        <item name="lettersInHand">#f0d5d5</item>
         <item name="chatBox">@color/white</item>
         <item name="activeTile">@color/purple_700</item>
         <item name="backgroundProfile">@color/LightBabyPink</item>
@@ -67,18 +70,19 @@
 
     <style name="EclipseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="backgroundColor">@color/darkSea</item>
-        <item name="android:textColor">@color/LightSlateGray</item>
-        <item name="colorPrimary">@color/clearSea</item>
+        <item name="android:textColor">@color/WhiteSmoke</item>
+        <item name="hintTextAppearance">@color/WhiteSmoke</item>
+        <item name="colorPrimary">#281f32</item>
         <item name="colorPrimaryVariant">@color/BackSea</item>
-        <item name="colorOnPrimary">@color/Gainsboro</item>
-        <item name="colorSecondary">@color/CadetBlue</item>
+        <item name="colorOnPrimary">@color/WhiteSmoke</item>
+        <item name="colorSecondary">#349ab0</item>
         <item name="android:statusBarColor">@color/black</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <item name="doubleWord">@color/CadetBlue</item>
-        <item name="tripleWord">@color/forestGreen</item>
-        <item name="doubleLetter">@color/DarkSlateGray</item>
-        <item name="grid">@color/SlateGray</item>
+        <item name="colorSecondaryVariant">#349ab0</item>
+        <item name="colorOnSecondary">@color/WhiteSmoke</item>
+        <item name="doubleWord">#2c4e58</item>
+        <item name="tripleWord">#349ab0</item>
+        <item name="doubleLetter">#73415c</item>
+        <item name="grid">@color/white</item>
         <item name="coords">@color/white</item>
         <item name="boardBackground">@color/black</item>
         <item name="playerSelection">@color/teal_200</item>
@@ -86,7 +90,7 @@
         <item name="lettersInHand">@color/LightSlateGray</item>
         <item name="chatBox">@color/Platinium</item>
         <item name="activeTile">@color/Gold</item>
-        <item name="backgroundProfile">@color/LightCadet</item>
+        <item name="backgroundProfile">#050a0e</item>
         <item name="chatIconNotif">@color/clearSea</item>
     </style>
 
@@ -128,7 +132,7 @@
         <item name="android:textColorHighlight">#1e301e</item>
         <item name="colorSecondary">#89b034</item>
         <item name="colorSecondaryVariant">#89b034</item>
-        <item name="colorOnSecondary">@color/DarkForestGreen</item>
+        <item name="colorOnSecondary">@color/SpringGreen</item>
         <item name="doubleWord">@color/DarkOliveGreen</item>
         <item name="tripleWord">@color/Olive</item>
         <item name="doubleLetter">@color/DarkOliveGreen</item>
@@ -137,10 +141,10 @@
         <item name="boardBackground">@color/DarkForestGreen</item>
         <item name="playerSelection">@color/Gold</item>
         <item name="lettersOnBoard">@color/DarkGreen</item>
-        <item name="lettersInHand">@color/SpringGreen</item>
+        <item name="lettersInHand">#83b564</item>
         <item name="chatBox">@color/DarkGreen</item>
         <item name="activeTile">@color/Gold</item>
-        <item name="backgroundProfile">@color/MintCream</item>
+        <item name="backgroundProfile">#0b1c09</item>
         <item name="chatIconNotif">#D8BDBB</item>
     </style>
 

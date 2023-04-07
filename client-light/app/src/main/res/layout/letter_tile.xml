@@ -29,6 +29,7 @@
             android:layout_alignRight="@+id/letterTile"
             android:layout_alignBottom="@+id/letterTile"
             android:layout_margin="1dp"
+            android:text="A"
             android:gravity="center"
             android:textSize="25dp"
             android:textColor="?colorOnSecondary" />

@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:fontFeatureSettings="smcp"
+                android:textAllCaps="true"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
                 android:textSize="20sp"
@@ -94,7 +94,7 @@
 
         <FrameLayout
             android:id="@+id/createSection"
-            android:layout_width="300dp"
+            android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center|end"
             android:background="@drawable/background_direction_panel"
@@ -114,7 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:fontFeatureSettings="smcp"
+                    android:textAllCaps="true"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:text="@string/create_a_room" />
@@ -133,13 +133,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:buttonTint="?colorSecondary"
+                        android:textColor="?colorOnPrimary"
                         android:text="@string/privateRoom" />
 
                     <RadioButton
                         android:id="@+id/publicRoom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
+                        android:textColor="?colorOnPrimary"
                         android:buttonTint="?colorSecondary"
                         android:text="@string/publicRoom" />
 
@@ -148,6 +149,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:buttonTint="?colorSecondary"
+                        android:textColor="?colorOnPrimary"
                         android:text="@string/protectedRoom" />
                 </RadioGroup>
                 <EditText
