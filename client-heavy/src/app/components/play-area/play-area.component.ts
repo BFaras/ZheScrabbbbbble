@@ -1,5 +1,5 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { AfterViewInit, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CdkDragDrop, CdkDragEnd, CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Vec2 } from '@app/classes/vec2';
 import { COLUMNS, GRID_CONSTANTS, ROWS } from '@app/constants/grid-constants';
@@ -26,8 +26,12 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     formerAdderMode: string = "";
     blankLetterOnDrop: string;
     fields: any[] = []
+    hoveredElement: any = {}
     private gameState: GameState;
     private canvasSize = { x: GRID_CONSTANTS.defaultWidth, y: GRID_CONSTANTS.defaultHeight };
+
+    public dragStart: any = { top: 0, left: 0, text: '' };
+    public dragEnd: any = { top: 0, left: 0, text: '' };
 
     constructor(
         private readonly accountService: AccountService,
@@ -35,6 +39,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         private readonly gameStateService: GameStateService,
         private readonly letterAdderService: LetterAdderService,
         public readonly dialogBlankTile: MatDialog,
+        private renderer: Renderer2,
     ) {
         this.subscription = this.gameStateService.getGameStateObservable().subscribe(async (gameState) => {
             if (this.viewLoaded) {
@@ -43,6 +48,12 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
             }
             this.gameState = gameState;
         });
+
+        this.letterAdderService.getLetterNotAcceptedObservable().subscribe((status) => {
+            if (status) {
+                this.fields = [];
+            }
+        })
     }
 
     addField(tile: any, index: number) {
@@ -59,6 +70,37 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         this.addField({ ...tile }, event.currentIndex);
     }
 
+    hoverElement(event: CdkDragMove, field: { top: string; left: string; text: string }) {
+        console.log('hover')
+        /*
+        const leftBoard = document.getElementById("canvas")?.getBoundingClientRect().left as number;
+        const topBorad = document.getElementById("canvas")?.getBoundingClientRect().top as number;
+        let left = event.pointerPosition.x - leftBoard
+        let top = event.pointerPosition.y - topBorad;
+        const tile = this.letterAdderService.getDroppedSpot(left, top)
+        this.hoveredElement.left = COLUMNS[tile.column];
+        this.hoveredElement.top = ROWS[tile.row];
+        console.log(COLUMNS[tile.column]);
+        console.log(ROWS[tile.row])
+        */
+
+
+    }
+    /** */
+    dragStarted(event: CdkDragStart, field: { top: string; left: string; text: string }) {
+        console.log('quand je commence a drag')
+    }
+
+    public dragEnded(event: CdkDragEnd, field: { top: string; left: string; text: string }): void {
+        console.log('quand je lache la lettre')
+        /*
+        field.top = this.hoveredElement.top + 'px'
+        field.left = this.hoveredElement.left + 'px'
+        console.log(field)
+        */
+        this.renderer.setStyle(event.source.element.nativeElement, 'opacity', '50%');
+
+    }
     changePosition(event: CdkDragDrop<string>, field: { top: string; left: string; text: string }) {
         console.log('change position');
         this.setReceiver('playarea');
@@ -75,29 +117,25 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         const foundCoords = this.letterAdderService.findCoords(Number(field.left.replace('px', '')), Number(field.top.replace('px', '')));
         this.letterAdderService.pervForDrag.x = foundCoords.row
         this.letterAdderService.pervForDrag.y = foundCoords.column
+        this.letterAdderService.pervForDrag.text = field.text;
         if (!out) {
             console.log("infield")
-            console.log(coordinateClick)
-            console.log(field.top);
-            console.log(field.left)
             if (this.letterAdderService.onDropLetterSpot(coordinateClick)) {
                 console.log("letter  in apporprite drop spot")
-                console.log('change position')
-                field.left = left + "px"
-                field.top = top + "px";
-                /**BOUGER LE TILE A ENLEVER VERS LA FIN */
+                field.top = top + "px"
+                field.left = left + 'px'
                 this.letterAdderService.removeDrawingBeforeDragWithinCanvas()
                 this.changeTilePositionLastMovedTile(field)
                 this.letterAdderService.moveLetterInBoard(field.text)
             } else {
                 /**Il faut ca remet dans la main  */
+                console.log("letter not in apporprite drop spot , so it s has been removed")
                 this.letterAdderService.removeDrawingBeforeDragOutsideCanvasOrNotValidSpot()
                 this.fields = this.fields.filter((x) => x != field);
-                console.log("letter not in apporprite drop spot , so it s has been removed")
             }
         } else {
-            this.fields = this.fields.filter((x) => x != field);
             console.log("letter not in apporprite drop spot , so it s has been removed")
+            this.fields = this.fields.filter((x) => x != field);
             /**Il faut ca remet dans la main  */
             this.letterAdderService.removeDrawingBeforeDragOutsideCanvasOrNotValidSpot()
         }
@@ -169,12 +207,14 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     changeTilePositionLastMovedTile(field: { top: string; left: string; text: string }) {
 
         this.fields.push(this.fields.splice(this.fields.indexOf(field), 1)[0])
-        console.log(this.fields);
     }
 
     removeTileDraggedIntoBoard(event: KeyboardEvent) {
         if (this.fields && event.key === "Backspace") {
             this.fields.pop();
+        }
+        else if (this.fields && event.key === "Escape") {
+            this.fields = [];
         }
     }
 

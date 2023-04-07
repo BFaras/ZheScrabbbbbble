@@ -4,6 +4,7 @@ import { DIRECTION, GRID_CONSTANTS } from '@app/constants/grid-constants';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
+import { Subject } from 'rxjs';
 import { PreviewPlayersActionService } from '../preview-players-action-service/preview-players-action.service';
 @Injectable({
     providedIn: 'root',
@@ -12,7 +13,8 @@ export class LetterAdderService {
     arrowDirection: boolean = true;
     activeSquare: { x: string; y: number } = { x: 'P', y: 0 };
     prevActiveSquare: { x: string; y: number } = { x: 'P', y: 0 };
-    pervForDrag: { x: string; y: number } = { x: 'P', y: 0 };
+    pervForDrag: { x: string; y: number; text: string } = { x: 'P', y: 0, text: "" };
+    droppedSpotDrag: { x: string; y: number } = { x: 'P', y: 0 };
     addedLettersLog = new Map<string, string>();
     orderedAddedLetterLog = new Map<string, string>();
     playerHand: string[];
@@ -21,11 +23,20 @@ export class LetterAdderService {
     key: string;
     canPlay: boolean;
     letterAdderMode: string = '';
+    letterNotAccepted: Subject<boolean> = new Subject()
     constructor(private letterHolderService: LetterHolderService,
         private gridService: GridService,
         private chatService: ChatService,
         private previewPlayerActionService: PreviewPlayersActionService) {
 
+    }
+
+    getLetterNotAcceptedObservable(): Subject<boolean> {
+        return this.letterNotAccepted;
+    }
+
+    getDroppedSpot(pixelX: number, pixelY: number) {
+        return this.findCoords(pixelX, pixelY)
     }
 
     onLeftClick(coords: Vec2) {
@@ -48,7 +59,7 @@ export class LetterAdderService {
             return true
         } else return false
     }
-
+    /*
     isFormerTileUsed(row: string, column: number) {
         if (this.arrowDirection) {
             const foundLetter = this.mappedBoardState.get(row + (column - 1));
@@ -61,6 +72,7 @@ export class LetterAdderService {
             return Boolean(foundLetter) && isDirectionTopToBottom;
         }
     }
+*/
 
     findDirectionOfDrop(row: string, column: number) {
         if (this.addedLettersLog.size === 1) {
@@ -72,26 +84,8 @@ export class LetterAdderService {
         }
     }
 
-    isTileAround(xIndex: string, yIndex: number): boolean {
-        /**modifier pour permettre la 2em tile d aller vers horizontal et vertical de premiere lettre */
-        if (this.addedLettersLog.size === 0 || this.isFormerTileUsed(xIndex, yIndex) ||
-            (yIndex !== this.prevActiveSquare.y && xIndex == this.prevActiveSquare.x) ||
-            (xIndex.charCodeAt(0) !== this.prevActiveSquare.x.charCodeAt(0) && yIndex === this.prevActiveSquare.y)) {
-            this.activeSquare = { x: xIndex, y: yIndex }
-            return true;
-        }
-        return false;
-    }
-
-    isRightDirection(row: string, column: number): boolean {
-        if (this.addedLettersLog.size >= 2) {
-            if (this.arrowDirection == true && this.prevActiveSquare.y === column)
-                return false
-            else if (this.arrowDirection == false && this.prevActiveSquare.x === row)
-                return false
-        } else {
-            return true
-        }
+    setActiveSquare(xIndex: string, yIndex: number): boolean {
+        this.activeSquare = { x: xIndex, y: yIndex }
         return true;
     }
 
@@ -99,15 +93,15 @@ export class LetterAdderService {
     canDrop(coords: Vec2): boolean {
         const foundCoords = this.findCoords(coords.x, coords.y);
         this.findDirectionOfDrop(foundCoords.row, foundCoords.column)
+        /*
         console.log('-------------drop test----------------------')
         console.log(this.canPlay);
         console.log(foundCoords.valid);
-        console.log(this.isTileAround(foundCoords.row, foundCoords.column))
-        console.log(!this.isPositionTaken());
-        console.log(this.isRightDirection(foundCoords.row, foundCoords.column))
+        console.log(!this.isPositionTakenDragAndDrop());
         console.log(this.addedLettersLog)
         console.log('-------------drop test----------------------')
-        return this.canPlay && foundCoords.valid && this.isTileAround(foundCoords.row, foundCoords.column) && !this.isPositionTaken() && this.isRightDirection(foundCoords.row, foundCoords.column);
+        */
+        return this.canPlay && foundCoords.valid && this.setActiveSquare(foundCoords.row, foundCoords.column) && !this.isPositionTakenDragAndDrop();
     }
 
     canClick(coords: Vec2): boolean {
@@ -161,18 +155,15 @@ export class LetterAdderService {
     }
     /**crrer double poujr quand on deplace une piuece dans le board */
     moveLetterInBoard(key: string) {
-        console.log(0)
+
         this.key = this.isLetterBlank(key) ? this.isLetterBlank(key) : this.simplifyLetter(key);
-        console.log(1)
         if (this.isInBounds()) {
-            console.log(2)
+
             if (!this.isPositionTaken()) {
-                console.log(3)
+
                 this.updateDragLetterLog()
-                //this.addToHand(false);
                 /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty poser lettre*/
                 if (this.playerHand.length === 6) {
-                    console.log('sent first Tile')
                     this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
                 }
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
@@ -189,7 +180,6 @@ export class LetterAdderService {
                 this.addToHand(false);
                 /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty poser lettre*/
                 if (this.playerHand.length === 6) {
-                    console.log('sent first Tile')
                     this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
                 }
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
@@ -215,8 +205,20 @@ export class LetterAdderService {
     }
 
     removeDrawingBeforeDragOutsideCanvasOrNotValidSpot() {
+        /**ajoute lettre dans playershand */
+        const remainingLettersDrag: string[] = this.playerHand;
+        const lastDraggedItem = this.addedLettersLog.get(this.pervForDrag.x + this.pervForDrag.y);
+        if (lastDraggedItem!.length === 1) this.playerHand.push(lastDraggedItem!);
+        else this.playerHand.push(lastDraggedItem!.slice(0, GRID_CONSTANTS.lastLetter));
+        this.playerHand = remainingLettersDrag;
+        this.letterHolderService.drawTypedLetters(this.playerHand);
+
+        /** */
         this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
+        if (this.addedLettersLog.size === 1) this.setAdderMode('')
         this.gridService.deleteAndRedraw(this.addedLettersLog);
+        /**
+        this.letterHolderService.drawTypedLetters(this.playerHand);
         /**ajouter logique pour remettre cartes dans la main */
     }
     removeLetters() {
@@ -273,7 +275,6 @@ export class LetterAdderService {
         const lastAddedLetter = Array.from(this.addedLettersLog)[this.addedLettersLog.size - 1];
         if (addOrDel) {
             this.addedLettersLog.delete(lastAddedLetter[0]);
-            console.log(lastAddedLetter[1])
             if (lastAddedLetter[1].length === 1) this.playerHand.push(lastAddedLetter[1]);
             else this.playerHand.push(lastAddedLetter[1].slice(0, GRID_CONSTANTS.lastLetter));
         } else {
@@ -326,6 +327,13 @@ export class LetterAdderService {
         return Boolean(foundLetter);
     }
 
+    isPositionTakenDragAndDrop(): boolean {
+        this.mapBoardState();
+        const foundLetter = this.mappedBoardState.get(this.activeSquare.x + this.activeSquare.y);
+        const foundLetterPutThisTurn = this.addedLettersLog.get(this.activeSquare.x + this.activeSquare.y);
+        return Boolean(foundLetter) || Boolean(foundLetterPutThisTurn);
+    }
+
     isInBounds(): boolean {
         return (
             this.activeSquare.y !== 0 &&
@@ -352,10 +360,99 @@ export class LetterAdderService {
 
     makeMove() {
         if (this.addedLettersLog.size) {
-            console.log(this.formatAddedLetters());
+            console.log(this.formatAddedLetters())
+            if (!this.verifyLettersAreLinked()) {
+                window.alert(window.alert("les lettres placées doivent être relier les unes aux autres"))
+                this.getLetterNotAcceptedObservable().next(true);
+                this.removeAll();
+            }
+            this.verifyLettersAreLinked()
             this.chatService.sendCommand(this.formatAddedLetters(), 'Place');
             this.removeAll();
         }
+    }
+    verifyLettersAreLinked() {
+        let LettersOnOneDirection = new Map<string, string>();
+        const arrayOfOrderedAddedLog: string[] = Array.from(this.orderedAddedLetterLog.keys());
+        const firstValuePosition: string = arrayOfOrderedAddedLog[0];
+
+        const lastValuePosition: string = arrayOfOrderedAddedLog[arrayOfOrderedAddedLog.length - 1];
+        this.orderedAddedLetterLog.forEach((value, key) =>
+            LettersOnOneDirection.set(key, value)
+        );
+        this.mappedBoardState.forEach((value, key) => {
+            if (this.arrowDirection) {
+                if (key[0] === firstValuePosition[0]) {
+                    LettersOnOneDirection.set(key, value)
+                }
+            } else {
+                if (key[1] === firstValuePosition[1]) {
+                    LettersOnOneDirection.set(key, value)
+                }
+
+            }
+        })
+        if (!this.arrowDirection) {
+            LettersOnOneDirection = new Map<string, string>([...LettersOnOneDirection.entries()].sort());
+            const LettersOnOneDirectionArray = Array.from(LettersOnOneDirection.keys())
+            /*console.log(LettersOnOneDirectionArray);*/
+            let positionLetter = LettersOnOneDirectionArray[0][0].charCodeAt(0)
+            for (const position of LettersOnOneDirectionArray) {
+                /*
+                console.log("firstValue" + firstValuePosition[0])
+                console.log("actualPosition" + position[0])
+                console.log("lastValue" + lastValuePosition[0])
+                console.log("CharCode PositionStart" + positionLetter)
+                console.log("CharCode PositionStart" + position[0].charCodeAt(0))*/
+                if (position[0].charCodeAt(0) === positionLetter) {
+                    if (position === lastValuePosition) {
+                        //console.log("is it Linked Vertical : " + true)
+                        return true
+                    }
+                    positionLetter += 1
+                } else {
+                    //console.log("is it Linked Vertical : " + false)
+                    return false
+                }
+            }
+        } else {
+            LettersOnOneDirection = new Map([...LettersOnOneDirection.entries()].sort(
+                (leftLetter, rightLetter) => {
+                    return leftLetter[0].substring(1, leftLetter[0].length).
+                        localeCompare(rightLetter[0].substring(1, rightLetter[0].length), undefined, { numeric: true })
+                }));
+            const LettersOnOneDirectionArray = Array.from(LettersOnOneDirection.keys())
+            console.log(LettersOnOneDirectionArray);
+            let positionLetter = LettersOnOneDirectionArray[0][1];
+
+            for (const position of LettersOnOneDirectionArray) {
+                /*
+                console.log("firstValue: " + firstValuePosition[1])
+                console.log("actualPosition: " + position[1])
+                console.log("lastValue: " + lastValuePosition[1])
+                console.log("PositionLetter: " + positionLetter)
+                console.log("compaisaion : ------------------")
+                console.log("lastValue: " + lastValuePosition)
+                console.log("actualPosition: " + position)
+                console.log("compaisaion : ------------------")
+                */
+                if (position[1] === positionLetter) {
+                    if (position === lastValuePosition) {
+                        //console.log("is it Linked Horizontal : " + true);
+                        return true
+                    }
+                    positionLetter = (Number(positionLetter) + 1).toString();
+                } else {
+                    //console.log("is it Linked Horizontal : " + false);
+                    return false
+                }
+
+            }
+
+        }
+        return true
+
+
     }
 
     orderAddedLetterLog() {
@@ -368,9 +465,55 @@ export class LetterAdderService {
         }
     }
 
+    isHorizontal(keys: string[]): boolean {
+        true
+        const expectedValue = keys[0][0]
+        for (const element of keys) {
+            if (element[0] === expectedValue) {
+                continue
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    isVertical(keys: string[]): boolean {
+        false
+        const expectedValue = keys[0][1]
+        for (const element of keys) {
+            if (element[1] === expectedValue) {
+                continue
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
+    }
+
     formatAddedLetters(): string {
         this.orderAddedLetterLog();
         const keys = Array.from(this.orderedAddedLetterLog.keys());
+        if (this.arrowDirection) {
+            if (!this.isHorizontal(keys)) {
+                window.alert("le mot place n'est pas sur la même direction")
+                this.getLetterNotAcceptedObservable().next(true)
+                this.removeAll()
+                /**ajouter enelveer les lettres du fields dans component*/
+
+            };
+        }
+        else {
+            if (!this.isVertical(keys)) {
+                window.alert("le mot place n'est pas sur la même direction")
+                this.getLetterNotAcceptedObservable().next(true)
+                this.removeAll()
+                /**ajouter enelveer les lettres du fields dans component*/
+            }
+        }
+        /**no space between letters notificiation else notification and remove all letters */
         keys.forEach((key) => {
             const value = this.orderedAddedLetterLog.get(key);
             if (value && value?.length > 1) this.orderedAddedLetterLog.set(key, value?.substring(value.length - 1).toUpperCase() as string);
