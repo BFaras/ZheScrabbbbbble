@@ -51,9 +51,7 @@ export class LetterAdderService {
     }
 
     onDropLetterSpot(coords: Vec2) {
-        console.log("prepare to verify if can be dropped here")
         if (this.canDrop(coords)) {
-            console.log("it can be dropped here")
             this.gridService.deleteAndRedraw();
             this.prevActiveSquare = this.activeSquare;
             return true
@@ -137,11 +135,13 @@ export class LetterAdderService {
         if (this.inPlayerHand() && this.isInBounds()) {
             if (!this.isPositionTaken()) {
                 this.addToHand(false);
-                /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty ecrie lettre*/
-                if (this.playerHand.length === 6) {
+                /**on va mettre ca en commentaire pour essayer un truc
+                
+                /*if (this.addedLettersLog.size === 6) {
                     console.log('sent first Tile')
                     this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
-                }
+                }*/
+                this.previewPlayerActionService.addPreviewTile(this.activeSquare)
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
                 this.changeActivePosition(1);
@@ -162,10 +162,13 @@ export class LetterAdderService {
             if (!this.isPositionTaken()) {
 
                 this.updateDragLetterLog()
-                /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty poser lettre*/
-                if (this.playerHand.length === 6) {
+                this.previewPlayerActionService.movePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y }, this.activeSquare)
+                /**on va mettre ca en commentaire pour essayer un truc
+                if (this.addedLettersLog.size === 0) {
+                    console.log('sent first Tile')
                     this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
-                }
+                }*/
+
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
                 this.letterAdderMode = 'dragAndDrop';
@@ -178,10 +181,12 @@ export class LetterAdderService {
         if (this.inPlayerHand() && this.isInBounds()) {
             if (!this.isPositionTaken()) {
                 this.addToHand(false);
-                /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty poser lettre*/
-                if (this.playerHand.length === 6) {
+                /**On va mettre cela en commentaire */
+                /*
+                if (this.addedLettersLog.size === 0) {
                     this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
-                }
+                }*/
+                this.previewPlayerActionService.addPreviewTile(this.activeSquare)
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
                 this.letterAdderMode = 'dragAndDrop';
@@ -201,31 +206,27 @@ export class LetterAdderService {
 
     removeDrawingBeforeDragWithinCanvas() {
         this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
+        this.previewPlayerActionService.removePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y });
         this.gridService.deleteAndRedraw(this.addedLettersLog);
     }
 
     removeDrawingBeforeDragOutsideCanvasOrNotValidSpot() {
-        /**ajoute lettre dans playershand */
         const remainingLettersDrag: string[] = this.playerHand;
         const lastDraggedItem = this.addedLettersLog.get(this.pervForDrag.x + this.pervForDrag.y);
         if (lastDraggedItem!.length === 1) this.playerHand.push(lastDraggedItem!);
         else this.playerHand.push(lastDraggedItem!.slice(0, GRID_CONSTANTS.lastLetter));
         this.playerHand = remainingLettersDrag;
         this.letterHolderService.drawTypedLetters(this.playerHand);
-
-        /** */
         this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
+        this.previewPlayerActionService.removePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y });
         if (this.addedLettersLog.size === 1) this.setAdderMode('')
         this.gridService.deleteAndRedraw(this.addedLettersLog);
-        /**
-        this.letterHolderService.drawTypedLetters(this.playerHand);
-        /**ajouter logique pour remettre cartes dans la main */
+
     }
     removeLetters() {
         const decrement = -1;
         if (this.addedLettersLog.size === 1) {
             this.letterAdderMode = "";
-            this.previewPlayerActionService.removeSelectedTile(this.activeSquare);
         }
         if (!this.addedLettersLog.size) return;
         if (!this.isPositionTaken()) {
@@ -275,6 +276,8 @@ export class LetterAdderService {
         const lastAddedLetter = Array.from(this.addedLettersLog)[this.addedLettersLog.size - 1];
         if (addOrDel) {
             this.addedLettersLog.delete(lastAddedLetter[0]);
+            console.log("tout enlever");
+            this.previewPlayerActionService.removePreviewTile({ x: lastAddedLetter[0][0], y: Number(lastAddedLetter[0][1]) });
             if (lastAddedLetter[1].length === 1) this.playerHand.push(lastAddedLetter[1]);
             else this.playerHand.push(lastAddedLetter[1].slice(0, GRID_CONSTANTS.lastLetter));
         } else {
@@ -422,7 +425,6 @@ export class LetterAdderService {
                         localeCompare(rightLetter[0].substring(1, rightLetter[0].length), undefined, { numeric: true })
                 }));
             const LettersOnOneDirectionArray = Array.from(LettersOnOneDirection.keys())
-            console.log(LettersOnOneDirectionArray);
             let positionLetter = LettersOnOneDirectionArray[0][1];
 
             for (const position of LettersOnOneDirectionArray) {

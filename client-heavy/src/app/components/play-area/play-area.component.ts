@@ -102,7 +102,6 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
 
     }
     changePosition(event: CdkDragDrop<string>, field: { top: string; left: string; text: string }) {
-        console.log('change position');
         this.setReceiver('playarea');
         const leftBoard = document.getElementById("canvas")?.getBoundingClientRect().left as number;
         const topBorad = document.getElementById("canvas")?.getBoundingClientRect().top as number;
@@ -121,12 +120,13 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         if (!out) {
             console.log("infield")
             if (this.letterAdderService.onDropLetterSpot(coordinateClick)) {
-                console.log("letter  in apporprite drop spot")
                 field.top = top + "px"
                 field.left = left + 'px'
-                this.letterAdderService.removeDrawingBeforeDragWithinCanvas()
                 this.changeTilePositionLastMovedTile(field)
                 this.letterAdderService.moveLetterInBoard(field.text)
+                /*il faut que e soit dans cet ordre pour enlever les dessin quand je bouge */
+                this.letterAdderService.removeDrawingBeforeDragWithinCanvas()
+
             } else {
                 /**Il faut ca remet dans la main  */
                 console.log("letter not in apporprite drop spot , so it s has been removed")
