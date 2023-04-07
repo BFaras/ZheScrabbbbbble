@@ -428,7 +428,7 @@ export class LetterAdderService {
             let positionLetter = LettersOnOneDirectionArray[0].substring(1);
 
             for (const position of LettersOnOneDirectionArray) {
-
+                /*
                 console.log("firstValue: " + firstValuePosition.substring(1))
                 console.log("actualPosition: " + position.substring(1))
                 console.log("lastValue: " + lastValuePosition.substring(1))
@@ -437,7 +437,7 @@ export class LetterAdderService {
                 console.log("lastValue: " + lastValuePosition)
                 console.log("actualPosition: " + position)
                 console.log("compaisaion : ------------------")
-
+                */
                 if (position.substring(1) === positionLetter) {
                     if (position === lastValuePosition) {
                         //console.log("is it Linked Horizontal : " + true);

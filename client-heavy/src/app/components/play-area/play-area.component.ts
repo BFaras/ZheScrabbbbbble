@@ -8,6 +8,7 @@ import { AccountService } from '@app/services/account-service/account.service';
 import { GameState, GameStateService } from '@app/services/game-state-service/game-state.service';
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
+import { PreviewPlayersActionService } from '@app/services/preview-players-action-service/preview-players-action.service';
 import { Subscription } from 'rxjs';
 import { BlankTilePopUpComponent } from '../blank-tile-pop-up/blank-tile-pop-up.component';
 @Component({
@@ -33,6 +34,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     public dragStart: any = { top: 0, left: 0, text: '' };
     public dragEnd: any = { top: 0, left: 0, text: '' };
 
+    addTilePreviewSubscription: Subscription
+    removeTilePreviewSubscription: Subscription
     constructor(
         private readonly accountService: AccountService,
         private readonly gridService: GridService,
@@ -40,6 +43,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         private readonly letterAdderService: LetterAdderService,
         public readonly dialogBlankTile: MatDialog,
         private renderer: Renderer2,
+        private previewFirstTileService: PreviewPlayersActionService
     ) {
         this.subscription = this.gameStateService.getGameStateObservable().subscribe(async (gameState) => {
             if (this.viewLoaded) {
@@ -53,6 +57,15 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
             if (status) {
                 this.fields = [];
             }
+        })
+
+        this.previewFirstTileService.setUpSocket()
+        this.addTilePreviewSubscription = this.previewFirstTileService.getActivePlayerFirstTile().subscribe((position) => {
+            this.gridService.showActivePlayerFirstTile(position)
+        })
+
+        this.removeTilePreviewSubscription = this.previewFirstTileService.getSelectedTileStatus().subscribe((position) => {
+            this.gridService.deleteActivePlayerFirstTile(position)
         })
     }
 
@@ -242,6 +255,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+        this.addTilePreviewSubscription.unsubscribe()
+        this.removeTilePreviewSubscription.unsubscribe()
     }
 
     get width(): number {

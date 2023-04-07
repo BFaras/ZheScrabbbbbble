@@ -75,9 +75,7 @@ export class SocketManager {
 
             socket.on('Share First Tile', (activeSquare: { x: string; y: number }) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
-                console.log('we dont have  a room' + activeSquare);
                 if (!currentRoom || activeSquare === null) return;
-                console.log('we have a room' + activeSquare);
                 socket.to(currentRoom.getID()).emit('Get First Tile', activeSquare);
             });
 

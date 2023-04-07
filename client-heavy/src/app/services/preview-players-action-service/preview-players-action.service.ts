@@ -1,18 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
+import { Socket } from 'socket.io-client';
 import { SocketManagerService } from '../socket-manager-service/socket-manager.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PreviewPlayersActionService {
+  private socket: Socket;
   previewTilesPosition: { x: string; y: number }[] = [];
   firstTilePosition: { x: string; y: number } = { x: "", y: 0 }
-  constructor(private socketManagerService: SocketManagerService) {}
+  constructor(private socketManagerService: SocketManagerService) {
+    this.setUpSocket()
+
+  }
+
+  setUpSocket() {
+    this.socket = this.socketManagerService.getSocket();
+  }
 
   addPreviewTile(tilePosition: { x: string; y: number }) {
-    console.log(tilePosition);
-    console.log(this.previewTilesPosition);
+
     this.previewTilesPosition.push(tilePosition);
     if (this.previewTilesPosition.length === 1) {
       console.log("share first Position");
@@ -24,12 +32,9 @@ export class PreviewPlayersActionService {
       this.removeSelectedTile(this.firstTilePosition);
       this.sharePlayerFirstTile(tilePosition);
     }
-    console.log(this.previewTilesPosition);
-    console.log(this.firstTilePosition);
   }
 
   movePreviewTile(formerSpot: { x: string; y: number }, newSpot: { x: string; y: number }) {
-    console.log(this.previewTilesPosition)
     if ((formerSpot.x === this.firstTilePosition.x) && (formerSpot.y === this.firstTilePosition.y)) {
       this.removeSelectedTile(formerSpot);
       this.sharePlayerFirstTile(newSpot)
@@ -42,8 +47,6 @@ export class PreviewPlayersActionService {
     this.previewTilesPosition = this.previewTilesPosition.filter((previewTiles) => (formerSpot !== previewTiles))
 
     this.previewTilesPosition.push(newSpot);
-    console.log(this.previewTilesPosition)
-
   }
 
   removePreviewTile(tilePosition: { x: string; y: number }) {
@@ -58,7 +61,7 @@ export class PreviewPlayersActionService {
     if (this.previewTilesPosition.length === 0) {
       this.firstTilePosition = { x: "", y: 0 }
     }
-    console.log(this.previewTilesPosition)
+
   };
 
   sharePlayerFirstTile(activeSquare: { x: string; y: number }) {
@@ -68,17 +71,17 @@ export class PreviewPlayersActionService {
   getActivePlayerFirstTile(): Observable<{ x: string, y: number }> {
     console.log('received first tile')
     return new Observable((observer: Observer<{ x: string, y: number }>) => {
-      this.socketManagerService.getSocket().on('Get First Tile', (activeSquare: { x: string, y: number }) => observer.next(activeSquare))
+      this.socket.on('Get First Tile', (activeSquare: { x: string, y: number }) => observer.next(activeSquare))
     })
   }
 
   removeSelectedTile(activeSquare: { x: string; y: number }) {
-    this.socketManagerService.getSocket().emit('Remove Selected Tile', activeSquare);
+    this.socket.emit('Remove Selected Tile', activeSquare);
   }
 
   getSelectedTileStatus(): Observable<{ x: string, y: number }> {
     return new Observable((observer: Observer<{ x: string, y: number }>) => {
-      this.socketManagerService.getSocket().on('Remove Selected Tile Response', (activeSquare: { x: string, y: number }) => observer.next(activeSquare))
+      this.socket.on('Remove Selected Tile Response', (activeSquare: { x: string, y: number }) => observer.next(activeSquare))
     })
   }
 

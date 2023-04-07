@@ -6,7 +6,6 @@ import { blizzard, classic, green, inverted, pink } from '@app/constants/themes'
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { PreviewPlayersActionService } from '../preview-players-action-service/preview-players-action.service';
 import { ThemesService } from '../themes-service/themes-service';
 
 const isCoordinateOf = (colourCoords: number[][], coord: number[]): boolean => {
@@ -42,15 +41,8 @@ export class GridService implements OnDestroy {
     private subscriptionRemovePreview: Subscription;
     constructor(private size: FontSizeService,
         private theme: ThemesService,
-        public translate: TranslateService,
-        private previewPlayerActionService: PreviewPlayersActionService
+        public translate: TranslateService
     ) {
-
-        this.subscriptionAddPreview = this.previewPlayerActionService.getActivePlayerFirstTile().subscribe(
-            (activeSquare) => { this.showActivePlayerFirstTile(activeSquare) })
-
-        this.subscriptionRemovePreview = this.previewPlayerActionService.getSelectedTileStatus().subscribe(
-            (activeSquare) => { this.deleteActivePlayerFirstTile(activeSquare) })
     }
 
     ngOnDestroy(): void {
