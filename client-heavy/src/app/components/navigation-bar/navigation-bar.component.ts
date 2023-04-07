@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { FriendsService } from '@app/services/friends.service';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
@@ -8,9 +8,10 @@ import { SocketManagerService } from '@app/services/socket-manager-service/socke
   styleUrls: ['./navigation-bar.component.scss']
 })
 export class NavigationBarComponent {
-  active: string = "chat";
   @Output("navLogic") navLogic: EventEmitter<void> = new EventEmitter();
-  constructor(private socketManager: SocketManagerService, private chatService: ChatService, private friends: FriendsService) {}
+  constructor(private socketManager: SocketManagerService, private friends: FriendsService, private chatService: ChatService, private changeDetector: ChangeDetectorRef) {
+    this.chatService.setChangeDetector(this.changeDetector);
+  }
 
   disconnectUser() {
     this.socketManager.getSocket().disconnect();
@@ -21,13 +22,8 @@ export class NavigationBarComponent {
     this.navLogic.emit();
   }
 
-  openChat(mode: string) {
-    (window as any).openChat("hellooooooooo");
-  }
-
-  setActive(mode: string) {
-    this.active = mode;
-    this.chatService.setActive(mode);
+  isPopupOpen(): boolean {
+    return this.chatService.isPopupOpen();
   }
 
   setMode(mode: boolean) {

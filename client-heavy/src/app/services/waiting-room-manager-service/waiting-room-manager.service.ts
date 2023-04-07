@@ -4,6 +4,7 @@ import { WaitingRoom } from '@app/classes/waiting-room';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { Observable, Observer } from 'rxjs';
 import { Socket } from 'socket.io-client';
+import { ChatService } from '../chat-service/chat.service';
 
 export interface Settings {
     playerName: string;
@@ -40,7 +41,7 @@ export class WaitingRoomManagerService {
     private socket: Socket;
     private observer: boolean;
 
-    constructor(private socketManagerService: SocketManagerService) {
+    constructor(private socketManagerService: SocketManagerService, private chatService: ChatService) {
         this.socket = this.socketManagerService.getSocket();
         this.waitingRoomObservable = new Observable((observer: Observer<WaitingRoom[]>) => {
             if (!this.socket.active) this.refreshSocketRequests();
@@ -111,6 +112,7 @@ export class WaitingRoomManagerService {
     }
 
     leaveRoom(): void {
+        this.chatService.setChatInGameRoom('');
         this.socketManagerService.getSocket().emit('Leave Game Room');
     }
 

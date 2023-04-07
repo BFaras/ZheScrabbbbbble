@@ -11,7 +11,7 @@ export class ChatGameHistoryService {
         this.gameChatsHistory = new Map<string, ChatMessageDB[]>();
     }
 
-    async isGameChat(chatId: string): Promise<boolean> {
+    isGameChat(chatId: string): boolean {
         return chatId.includes(ROOM_ID_BEGINNING);
     }
 
