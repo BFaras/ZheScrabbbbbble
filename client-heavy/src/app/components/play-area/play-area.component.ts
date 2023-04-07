@@ -3,6 +3,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, Input, OnChanges, O
 import { MatDialog } from '@angular/material/dialog';
 import { Vec2 } from '@app/classes/vec2';
 import { COLUMNS, GRID_CONSTANTS, ROWS } from '@app/constants/grid-constants';
+import { LETTER_POINTS } from '@app/constants/letters-constants';
 import { MouseButton } from '@app/constants/mouse-buttons';
 import { AccountService } from '@app/services/account-service/account.service';
 import { GameState, GameStateService } from '@app/services/game-state-service/game-state.service';
@@ -67,6 +68,15 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         this.removeTilePreviewSubscription = this.previewFirstTileService.getSelectedTileStatus().subscribe((position) => {
             this.gridService.deleteActivePlayerFirstTile(position)
         })
+
+        LETTER_POINTS
+    }
+
+    getPointIfNotBlank(letter: string) {
+        console.log(letter)
+        const upperCase = letter.toUpperCase();
+        if (letter === upperCase) return 0;
+        return LETTER_POINTS[letter.toUpperCase() as keyof typeof LETTER_POINTS]
     }
 
     addField(tile: any, index: number) {

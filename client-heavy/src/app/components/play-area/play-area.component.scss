@@ -8,12 +8,12 @@ canvas{
     text-align: center;
     gap: 0px;
     position: relative;
-    left:25px;
-    top:25px;
     font-weight: bold;
     text-align: center;
     font-size: 32px;
-    background-color: #cfcb9c;
+    background: var(--tile-on-holder);
+    box-shadow: var(--box-shadow);
+    color: var(--button-text-default);
     opacity: 100%;
  }
 .tile{
@@ -25,7 +25,9 @@ canvas{
     font-weight: bold;
     text-align: center;
     font-size: 32px;
-    background-color: #cfcb9c;
+    background: var(--tile-on-holder);
+    box-shadow: var(--box-shadow);
+    color: var(--button-text-default);
 }
 
 #container{
