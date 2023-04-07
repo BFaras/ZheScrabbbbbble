@@ -54,6 +54,7 @@ export class FriendsPageComponent {
   updateFriendsList() {
     this.subscriptions.push(this.friendsService.getFriendsListObservable().subscribe((friendsList: Friend[]) => {
       this.friends = friendsList;
+      console.log(friendsList);
     }));
     this.friendsService.getFriendsList();
   }

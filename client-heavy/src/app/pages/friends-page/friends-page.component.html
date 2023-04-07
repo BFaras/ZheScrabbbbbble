@@ -12,7 +12,12 @@
         <div class="friends-container">
             <h2 class="text">{{ 'FRIENDS-PAGE.FRIENDS' | translate }}</h2>
             <div class="friend-container" *ngFor="let friend of friends">
-                <span class="chat text name" (click)="goToProfile(friend.username)">{{ friend.username }}</span>
+                <div class="name-status">
+                    <span class="status" *ngIf="friend.status === 0">⚪</span>
+                    <span class="status" *ngIf="friend.status === 1">🟢</span>
+                    <span class="status" *ngIf="friend.status === 2">🔴</span>
+                    <span class="chat text name" (click)="goToProfile(friend.username)">{{ friend.username }}</span>
+                </div>
                 <button (click)="alert(friend.username)">{{ 'FRIENDS-PAGE.UNFRIEND' | translate }}</button>
                 <!--<button (click)="openChat(friend)">Chat</button>-->
             </div>
