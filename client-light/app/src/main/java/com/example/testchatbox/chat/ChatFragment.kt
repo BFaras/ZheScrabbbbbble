@@ -4,6 +4,7 @@ import SocketHandler
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -97,7 +98,7 @@ class ChatFragment : Fragment(), ObserverChat {
 
     private fun loadChatMessages(){
         binding.chatProgress.visibility = View.VISIBLE
-        SocketHandler.getSocket().once("Chat History Response"){args ->
+        SocketHandler.getSocket().once("Chat History Response"){ args ->
             val messageArray= args[0] as JSONArray
             val messagesBox = binding.textView
             activity?.runOnUiThread(java.lang.Runnable {
@@ -122,16 +123,19 @@ class ChatFragment : Fragment(), ObserverChat {
                 usernameMessage.text = message.username
                 timeStampMessage.text = message.timestamp
 
-                when (message.avatar) {
-                    "dog.jpg" -> {
-                        avatar.setImageResource(R.drawable.dog)
-                    }
-                    "cat.jpg" -> avatar.setImageResource(R.drawable.cat)
-                    "flower.jpg" -> avatar.setImageResource(R.drawable.flower)
-                    else -> avatar.setImageResource(R.color.Aqua)
+                Log.d("message AVATAR", message.avatar)
+
+                if (resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                    Log.d("AVATAR", message.avatar)
+                    avatar.setImageResource(resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                } else {
+                    avatar.setImageResource(R.drawable.robot)
                 }
 
                 activity?.runOnUiThread(java.lang.Runnable {
+                    if (messageArray.length() == 0) {
+                        binding.chatProgress.visibility = View.GONE
+                    }
                     binding.chatProgress.visibility = View.GONE
                     messagesBox.addView(messageContainer)
                     binding.scrollView.post { binding.scrollView.fullScroll(View.FOCUS_DOWN) }
@@ -180,13 +184,11 @@ class ChatFragment : Fragment(), ObserverChat {
         usernameMessage.text = message.username
         timeStampMessage.text = message.timestamp
 
-        when (avatarProfil) {
-            "dog.jpg" -> {
-                avatar.setImageResource(R.drawable.dog)
-            }
-            "cat.jpg" -> avatar.setImageResource(R.drawable.cat)
-            "flower.jpg" -> avatar.setImageResource(R.drawable.flower)
-            else -> avatar.setImageResource(R.color.Aqua)
+        if (resources.getIdentifier((avatarProfil.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+            Log.d("AVATARPROFIL", message.avatar)
+            avatar.setImageResource(resources.getIdentifier((avatarProfil.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+        } else {
+            avatar.setImageResource(R.drawable.robot)
         }
 
         activity?.runOnUiThread(java.lang.Runnable {

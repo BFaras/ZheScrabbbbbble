@@ -6,13 +6,11 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/avatarProfile"
-        android:layout_height="35dp"
-        android:layout_width="35dp"
+        android:layout_height="60dp"
+        android:layout_width="60dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/textMessage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-        android:background="@color/white">
+        app:layout_constraintStart_toStartOf="parent">
     </com.google.android.material.imageview.ShapeableImageView>
 
     <TextView
@@ -24,7 +22,7 @@
         android:padding="10dp"
         android:text="this is a text message sent as a test"
         android:maxWidth="500dp"
-        android:textSize="18dp"
+        android:textSize="25dp"
         app:layout_constraintStart_toEndOf="@+id/avatarProfile"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.5"
@@ -36,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:text="Manuel"
-        android:textSize="13dp"
+        android:textSize="20dp"
         app:layout_constraintStart_toStartOf="@id/textMessage"
         app:layout_constraintTop_toBottomOf="@id/textMessage"></TextView>
     <TextView
@@ -46,7 +44,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginLeft="5dp"
         android:text="-"
-        android:textSize="13dp"
+        android:textSize="20dp"
         app:layout_constraintStart_toEndOf="@id/usernameMessage"
         app:layout_constraintTop_toBottomOf="@id/textMessage"></TextView>
     <TextView
@@ -56,7 +54,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginLeft="5dp"
         android:text="00|00|00"
-        android:textSize="13dp"
+        android:textSize="20dp"
         app:layout_constraintStart_toEndOf="@id/separator"
         app:layout_constraintTop_toBottomOf="@id/textMessage">
 

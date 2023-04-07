@@ -36,7 +36,6 @@
                         android:id="@+id/playerInGameAvatar"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
-                        android:background="@color/BabyPink"
                         android:scaleType="centerCrop"
                         app:shapeAppearance="@style/roundedImageViewRounded"></com.google.android.material.imageview.ShapeableImageView>
 
@@ -300,7 +299,7 @@
                         android:background="?colorSecondary"
                         android:max="500"
                         android:progress="100"
-                        app:indicatorColor="@color/DarkForestGreen"
+                        app:indicatorColor="@color/BackSea"
                         app:trackThickness="10dp">
 
                     </com.google.android.material.progressindicator.LinearProgressIndicator>
