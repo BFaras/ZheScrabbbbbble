@@ -23,7 +23,6 @@ export class PreviewPlayersActionService {
 
     this.previewTilesPosition.push(tilePosition);
     if (this.previewTilesPosition.length === 1) {
-      console.log("share first Position");
       this.firstTilePosition = tilePosition
       this.sharePlayerFirstTile(tilePosition);
     }
@@ -69,7 +68,6 @@ export class PreviewPlayersActionService {
   }
 
   getActivePlayerFirstTile(): Observable<{ x: string, y: number }> {
-    console.log('received first tile')
     return new Observable((observer: Observer<{ x: string, y: number }>) => {
       this.socket.on('Get First Tile', (activeSquare: { x: string, y: number }) => observer.next(activeSquare))
     })

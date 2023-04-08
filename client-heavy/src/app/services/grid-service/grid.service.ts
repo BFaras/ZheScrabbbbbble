@@ -79,8 +79,15 @@ export class GridService implements OnDestroy {
         this.gridContext.strokeRect(COLUMNS[activeSquare.y], ROWS[activeSquare.x], GRID_CONSTANTS.defaultSide, GRID_CONSTANTS.defaultSide);
     }
 
-    deleteActivePlayerFirstTile(activeSquare: { x: string, y: number }) {
-        this.deleteAndRedraw();
+    deleteActivePlayerFirstTile(activeSquare: { x: string, y: number }, addedLettersLog?: Map<string, string>) {
+        console.log(" log des lettres ajoute : " + addedLettersLog)
+        if (addedLettersLog) {
+            console.log("on prend en compte les lettres ajoutes ")
+            this.deleteAndRedraw(addedLettersLog)
+        } else {
+            console.log("on ne prend pas  en compte les lettres ajoutes ")
+            this.deleteAndRedraw();
+        }
     }
     drawIdentificators() {
         this.setGrids();
@@ -212,6 +219,8 @@ export class GridService implements OnDestroy {
             }
         }
         if (addedLettersLog) {
+            console.log("on redessine les lettres qu on a")
+            console.log(addedLettersLog)
             Array.from(addedLettersLog.keys()).forEach((key) => {
                 const column = parseInt(key.slice(1), 10);
                 const row = key.charAt(0);

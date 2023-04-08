@@ -44,7 +44,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         private readonly letterAdderService: LetterAdderService,
         public readonly dialogBlankTile: MatDialog,
         private renderer: Renderer2,
-        private previewFirstTileService: PreviewPlayersActionService
+        private previewFirstTileService: PreviewPlayersActionService,
+        private GameStateService: GameStateService
     ) {
         this.subscription = this.gameStateService.getGameStateObservable().subscribe(async (gameState) => {
             if (this.viewLoaded) {
@@ -66,7 +67,13 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         })
 
         this.removeTilePreviewSubscription = this.previewFirstTileService.getSelectedTileStatus().subscribe((position) => {
-            this.gridService.deleteActivePlayerFirstTile(position)
+            if (this.GameStateService.isCoop()) {
+                console.log("mode co op")
+                this.gridService.deleteActivePlayerFirstTile(position, this.letterAdderService.addedLettersLog)
+            } else {
+                console.log("mode non co op")
+                this.gridService.deleteActivePlayerFirstTile(position)
+            }
         })
 
         LETTER_POINTS

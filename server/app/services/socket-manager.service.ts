@@ -81,7 +81,7 @@ export class SocketManager {
 
             socket.on('Remove Selected Tile', (activeSquare: { x: string; y: number }) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
-                if (!currentRoom) return;
+                if (!currentRoom || activeSquare === null) return;
                 socket.to(currentRoom.getID()).emit('Remove Selected Tile Response', activeSquare);
             });
 
