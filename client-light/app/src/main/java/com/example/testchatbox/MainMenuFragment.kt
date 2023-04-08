@@ -2,6 +2,8 @@ package com.example.testchatbox
 
 import NotificationInfoHolder
 import SocketHandler
+import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,6 +29,7 @@ private var _binding: FragmentMainMenuBinding? = null
     // onDestroyView.
     private val binding get() = _binding!!
     private var isChatIconChanged = false;
+    private var notifSound: MediaPlayer? = null;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +42,7 @@ private var _binding: FragmentMainMenuBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupChatNotifs()
+        setupChatNotifs(view.context)
 
         WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
             // Hide both the status bar and the navigation bar
@@ -86,10 +89,13 @@ private var _binding: FragmentMainMenuBinding? = null
         _binding = null
     }
 
-    fun setupChatNotifs() {
+    fun setupChatNotifs(context: Context) {
         isChatIconChanged = false;
         NotificationInfoHolder.startObserverChat();
         NotificationInfoHolder.setFunctionOnMessageReceived(::changeToNotifChatIcon);
+        notifSound = MediaPlayer.create(context, R.raw.ding)
+
+        notifSound?.setOnCompletionListener { notifSound?.release() }
 
         if(NotificationInfoHolder.areChatsUnread())
             changeToNotifChatIcon();
@@ -99,6 +105,7 @@ private var _binding: FragmentMainMenuBinding? = null
         if (!isChatIconChanged)
         {
             binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+            notifSound?.start()
             isChatIconChanged = true;
         }
     }

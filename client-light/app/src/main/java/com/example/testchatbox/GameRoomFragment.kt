@@ -2,6 +2,8 @@ package com.example.testchatbox
 
 import SocketHandler
 import android.annotation.SuppressLint
+import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -31,6 +33,7 @@ class GameRoomFragment : Fragment(), Observer {
     private var _binding: FragmentGameRoomBinding? = null
     private val binding get() = _binding!!
     private var isChatIconChanged = false;
+    private var notifSound: MediaPlayer? = null;
 
     var avatars = mutableMapOf<String, String>()
 
@@ -50,7 +53,7 @@ class GameRoomFragment : Fragment(), Observer {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupChatNotifs()
+        setupChatNotifs(view.context)
         update();
 
 
@@ -170,10 +173,13 @@ class GameRoomFragment : Fragment(), Observer {
         if (GameRoomModel.joinRequest.isNotEmpty()) showJoinSection()
     }
 
-    fun setupChatNotifs() {
+    fun setupChatNotifs(context: Context) {
         isChatIconChanged = false;
         NotificationInfoHolder.startObserverChat();
         NotificationInfoHolder.setFunctionOnMessageReceived(::changeToNotifChatIcon);
+        notifSound = MediaPlayer.create(context, R.raw.ding)
+
+        notifSound?.setOnCompletionListener { notifSound?.release() }
 
         if(NotificationInfoHolder.areChatsUnread())
             changeToNotifChatIcon();
@@ -183,6 +189,7 @@ class GameRoomFragment : Fragment(), Observer {
         if (!isChatIconChanged)
         {
             binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+            notifSound?.start()
             isChatIconChanged = true;
         }
     }
