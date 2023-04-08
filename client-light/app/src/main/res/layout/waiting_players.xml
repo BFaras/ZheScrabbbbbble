@@ -18,8 +18,10 @@
         android:layout_marginStart="20dp"
         android:gravity="center_vertical">
         <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/avatar"
             android:layout_height="40dp"
             android:layout_width="40dp"
+            android:scaleType="centerCrop"
             card_view:shapeAppearanceOverlay="@style/roundedImageViewRounded"
             android:background="@color/white">
         </com.google.android.material.imageview.ShapeableImageView>

@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
-import { NO_ERROR, WRONG_SECURITY_ANSWER } from '@app/constants/error-code-constants';
+import { NO_ERROR, USERNAME_TAKEN, WRONG_SECURITY_ANSWER } from '@app/constants/error-code-constants';
 import { Question } from '@app/interfaces/question';
 import { Server } from 'app/server';
 import { expect } from 'chai';
@@ -51,7 +51,7 @@ describe('Authentification Tests', async () => {
 
     it('Socket emit Create User Account should create a user account if it does not exist', (done) => {
         clientSocket.once('Creation result', (isCreationSuccess: boolean) => {
-            expect(isCreationSuccess).to.be.true;
+            expect(isCreationSuccess).to.equal(NO_ERROR);
             done();
         });
         clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);
@@ -60,7 +60,7 @@ describe('Authentification Tests', async () => {
     it('Socket emit Create User Account should not create a user account if username is taken', (done) => {
         clientSocket.once('Creation result', () => {
             clientSocket.once('Creation result', (isCreationSuccess: boolean) => {
-                expect(isCreationSuccess).to.be.false;
+                expect(isCreationSuccess).to.equal(USERNAME_TAKEN);
                 done();
             });
             clientSocket.emit('Create user account', testUsername, testPassword, testGoodEmail, testAvatar, testSecurityQuestion);

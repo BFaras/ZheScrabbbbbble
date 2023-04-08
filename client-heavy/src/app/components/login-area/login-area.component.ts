@@ -44,7 +44,6 @@ export class LoginAreaComponent {
 
   showStatus(status: boolean) {
     if (status == true) {
-      console.log('Manuel Test');
       this.account.setUsername(this.userAccount.username);
       this.router.navigate(['/home']);
     } else {

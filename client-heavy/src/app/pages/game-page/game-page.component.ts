@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
@@ -34,10 +34,13 @@ export class GamePageComponent implements OnInit, OnDestroy {
         private readonly fontSize: FontSizeService,
         private readonly waitingRoomManagerService: WaitingRoomManagerService,
         private readonly letterAdderService: LetterAdderService,
-        private readonly accountService : AccountService,
+        private readonly accountService: AccountService,
         private readonly translate: TranslateService,
-        private readonly chatService: ChatService
-    ) {}
+        private readonly chatService: ChatService,
+        private readonly changeDetector: ChangeDetectorRef
+    ) {
+        this.chatService.setChangeDetector(this.changeDetector);
+    }
 
     ngOnInit() {
         this.hasPendingAction = false;
@@ -48,25 +51,26 @@ export class GamePageComponent implements OnInit, OnDestroy {
             this.endGame = gameState.gameOver;
         }));
         this.subscriptions.push(this.gameStateService.getActionMessageObservable().subscribe((message) => {
-            if(message.messageType === 'MSG-13'){
+            if (message.messageType === 'MSG-13') {
                 this.letterAdderService.removeAll();
                 this.gameStateService.setPendingAction(true);
             }
-            if(message.messageType === 'MSG-12' || message.messageType === 'MSG-14'){
+            if (message.messageType === 'MSG-12' || message.messageType === 'MSG-14') {
                 this.gameStateService.setPendingAction(false);
                 this.hasPendingAction = false;
             }
-            if(message.messageType === 'MSG-13' && this.gameStateService.getObserverIndex() === -1 && message.values[0] !== this.accountService.getUsername()){
+            if (message.messageType === 'MSG-13' && this.gameStateService.getObserverIndex() === -1 && message.values[0] !== this.accountService.getUsername()) {
                 this.hasPendingAction = true;
             }
             this.actionHistory.push(message);
         }));
         this.subscriptions.push(this.gameStateService.getClueObservable().subscribe((clues: string[]) => {
-            this.actionHistory.push({messageType: 'MSG-CLUE', values : clues});
+            this.actionHistory.push({ messageType: 'MSG-CLUE', values: clues });
         }))
-        if(this.gameStateService.isTournamentGame()){
-            this.waitingRoomManagerService.getStartGameObservable().subscribe((isCoop: boolean) => {
-                this.gameStateService.setCoop(isCoop);
+        if (this.gameStateService.isTournamentGame()) {
+            this.waitingRoomManagerService.getStartGameObservable().subscribe((info: { isCoop: boolean, roomCode?: string }) => {
+                if (info.roomCode) this.chatService.setChatInGameRoom(info.roomCode);
+                this.gameStateService.setCoop(info.isCoop);
                 this.gameStateService.setObserver(-1);
                 this.gameStateService.sendAbandonRequest();
                 this.letterAdderService.resetMappedBoard();
@@ -74,6 +78,10 @@ export class GamePageComponent implements OnInit, OnDestroy {
                 this.actionHistory = [];
             });
         }
+    }
+
+    isPopupOpen(): boolean {
+        return this.chatService.isPopupOpen();
     }
 
     ngOnDestroy(): void {
@@ -125,16 +133,16 @@ export class GamePageComponent implements OnInit, OnDestroy {
         return this.gameStateService.getObserverIndex() >= 0;
     }
 
-    answerPendingAction(answer : boolean){
-        if(!this.hasPendingAction) return;
+    answerPendingAction(answer: boolean) {
+        if (!this.hasPendingAction) return;
         this.hasPendingAction = false;
         this.gameStateService.respondCoopAction(answer);
     }
 
-    isLatestProposedAction(index: number){
-        if(this.actionHistory[index].messageType !== 'MSG-13') return false;
-        for(let i = this.actionHistory.length - 1; i >= 0; i--){
-            if(this.actionHistory[i].messageType === 'MSG-13'){
+    isLatestProposedAction(index: number) {
+        if (this.actionHistory[index].messageType !== 'MSG-13') return false;
+        for (let i = this.actionHistory.length - 1; i >= 0; i--) {
+            if (this.actionHistory[i].messageType === 'MSG-13') {
                 return i === index;
             }
         }
@@ -143,22 +151,22 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
     formatActionInList(message: string, values: string[], messageType: string): string {
         for (let i = 0; i < values.length; i++) {
-            if(i === 0){
-                if(!values[i]){
+            if (i === 0) {
+                if (!values[i]) {
                     message = message.replace('$' + i, this.translate.instant('INFOBOARD.COOP-TEAM'));
                     continue;
                 }
                 const messageArray = values[i].split(' : ');
-                if(messageArray[0] === '\n'){
+                if (messageArray[0] === '\n') {
                     message = message.replace('$' + i, '\n' + this.translate.instant('INFOBOARD.COOP-TEAM') + ' : ' + messageArray[1]);
                     continue;
                 }
             }
-            if(i === 1 && messageType === 'MSG-13'){
+            if (i === 1 && messageType === 'MSG-13') {
                 const messageArray = values[i].split(' ');
                 messageArray[0] = this.translate.instant('ACTION-HISTORY.' + messageArray[0].toUpperCase());
                 let combinedMessage = '';
-                for(const msg of messageArray){
+                for (const msg of messageArray) {
                     combinedMessage += msg + ' '
                 }
                 message = message.replace('$' + i, combinedMessage);
@@ -169,14 +177,14 @@ export class GamePageComponent implements OnInit, OnDestroy {
         return message;
     }
 
-    playHint(command : string){
+    playHint(command: string) {
         this.clearHints();
-        this.chatService.sendCommand(command.substring(command.indexOf(' ')+1), command.split(' ')[0]);
+        this.chatService.sendCommand(command.substring(command.indexOf(' ') + 1), command.split(' ')[0]);
     }
 
-    clearHints(){
-        for(let i = 0; i < this.actionHistory.length; i++){
-            if(this.actionHistory[i].messageType === 'MSG-CLUE'){
+    clearHints() {
+        for (let i = 0; i < this.actionHistory.length; i++) {
+            if (this.actionHistory[i].messageType === 'MSG-CLUE') {
                 this.actionHistory.splice(i, 1);
                 ReadableStreamDefaultController;
             }

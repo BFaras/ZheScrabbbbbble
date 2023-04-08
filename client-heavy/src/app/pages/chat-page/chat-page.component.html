@@ -1,11 +1,16 @@
-<app-navigation-bar></app-navigation-bar>
+<app-navigation-bar *ngIf="!isPopup"></app-navigation-bar>
 <div id="container">
-    <section id="chat-list">
-        <div id="title-tabs">"
-            <p class="title">Chats</p>
-            <p class="tabs active" id="global" (click)="setVisibility($event, global)">{{ 'TABS.GLOBAL' | translate }}</p>
-            <p class="tabs" id="public" (click)="setVisibility($event, public)">{{ 'TABS.PUBLIC' | translate }}</p>
-            <p class="tabs" id="private" (click)="setVisibility($event, private)">{{ 'TABS.PRIVATE' | translate }}</p>
+    <div id="chat-list">
+        <button *ngIf="!isPopup" id="popup-btn" (click)="openPopupChat()">
+            <mat-icon>open_in_new</mat-icon>
+        </button>
+        <div id="tabs-container">
+            <span class="title">Chats</span>
+            <div id="title-tabs">
+                <span class="tabs active" id="global" (click)="setVisibility($event, global)">{{ 'TABS.GLOBAL' | translate }}</span>
+                <span class="tabs" id="public" (click)="setVisibility($event, public)">{{ 'TABS.PUBLIC' | translate }}</span>
+                <span class="tabs" id="private" (click)="setVisibility($event, private)">{{ 'TABS.PRIVATE' | translate }}</span>
+            </div>
         </div>
         <div class="chats-container">
             <ng-container *ngFor="let chat of chatList">
@@ -14,12 +19,12 @@
                 </button>
             </ng-container>
         </div>
-        <button class="join" (click)="goToChats()">{{ 'CHATBOX.JOIN' | translate }}</button>
-    </section>
-    <section id="chat-messages">
+        <button *ngIf="!isPopup" class="join" (click)="goToChats()">{{ 'CHATBOX.JOIN' | translate }}</button>
+    </div>
+    <div id="chat-messages">
         <div id="chat-box">
             <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
-                <div class="message-bubble" *ngFor="let message of chatLog.get(selectedChat)">
+                <div class="message-bubble" *ngFor="let message of chatLog">
                     <div id="name-time-avatar">
                         <img src="assets/avatar/{{message.avatar}}" height = "30" width= "30" alt="image" class="message image">
                         <span class="message username" *ngIf="message.username !== username" style="color: var(--playarea-coords)">{{ message.username }}</span>
@@ -34,5 +39,5 @@
                 <button (click)="sendMessage()">{{ 'CHATBOX.SEND' | translate}}</button>
             </div>
         </div>
-    </section> 
+    </div> 
 </div>

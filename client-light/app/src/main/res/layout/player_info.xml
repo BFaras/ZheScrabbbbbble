@@ -28,6 +28,7 @@
                 android:layout_height="35dp"
                 android:layout_width="35dp"
                 card_view:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                android:scaleType="centerCrop"
                 android:background="@color/white">
             </com.google.android.material.imageview.ShapeableImageView>
 

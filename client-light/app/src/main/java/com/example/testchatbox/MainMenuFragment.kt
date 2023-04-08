@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.chat.ChatModel
 import com.example.testchatbox.chat.Message
@@ -39,6 +41,13 @@ private var _binding: FragmentMainMenuBinding? = null
         super.onViewCreated(view, savedInstanceState)
         setupChatNotifs()
 
+        WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
+            // Hide both the status bar and the navigation bar
+            hide(WindowInsetsCompat.Type.systemBars())
+            hide(WindowInsetsCompat.Type.statusBars())
+            // Behavior of system bars
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
         binding.textviewFirst.setText(HtmlCompat.fromHtml(getString(R.string.hello_message, LoggedInUser.getName()), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
 
         binding.buttonchat.setOnClickListener {
@@ -49,9 +58,9 @@ private var _binding: FragmentMainMenuBinding? = null
             findNavController().navigate(R.id.action_MainMenuFragment_to_profileActivity)
         }
 
-       // binding.buttonfriends.setOnClickListener {
-        //    findNavController().navigate(R.id.action_MainMenuFragment_to_friendsFragment)
-       // }
+        binding.buttonfriends.setOnClickListener {
+            findNavController().navigate(R.id.action_MainMenuFragment_to_friendsFragment)
+        }
 
         binding.modeTournoi.setOnClickListener {
             findNavController().navigate(R.id.action_MainMenuFragment_to_queueFragment)

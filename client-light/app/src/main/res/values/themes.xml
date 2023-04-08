@@ -7,12 +7,13 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowBackground">@color/beige</item>
         <item name="backgroundColor">@color/beige</item>
+        <item name="android:textColorHighlight">@color/beige</item>
         <item name="android:textColor">@color/darkForestGreen</item>
         <item name="colorPrimary">@color/corail</item>
         <item name="colorPrimaryVariant">@color/darkCorail</item>
         <item name="colorOnPrimary">@color/lightBeige</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">#cce0b7</item>
+        <item name="colorSecondary">#bccca9</item>
         <item name="colorSecondaryVariant">@color/Brown</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
@@ -29,6 +30,7 @@
         <item name="lettersInHand">@color/AntiqueWhite</item>
         <item name="chatBox">@color/lightBeige</item>
         <item name="activeTile">@color/purple_700</item>
+        <item name="backgroundProfile">@color/lightBeige</item>
         <item name="chatIconNotif">#38683A</item>
         <item name="chatCanalNotif">#EEE6A3</item>
     </style>
@@ -40,6 +42,7 @@
 
     <style name="PinkTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="backgroundColor">#f7dfed</item>
+        <item name="android:textColorHighlight">#e0cddc</item>
         <item name="android:textColor">@color/black</item>
         <item name="colorPrimary">#fffbfb</item>
         <item name="colorPrimaryVariant">#e0cddc</item>
@@ -48,7 +51,7 @@
         <item name="colorSecondaryVariant">@color/MediumVioletRed</item>
         <item name="android:statusBarColor">#cb4f7f</item>
         <item name="playerSelection">@color/BlueViolet</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/DarkSunset</item>
         <item name="doubleWord">@color/lightCorail</item>
         <item name="tripleWord">@color/IndianRed</item>
         <item name="doubleLetter">@color/RosyBrown</item>
@@ -59,13 +62,14 @@
         <item name="lettersInHand">@color/AntiqueWhite</item>
         <item name="chatBox">@color/white</item>
         <item name="activeTile">@color/purple_700</item>
+        <item name="backgroundProfile">@color/LightBabyPink</item>
         <item name="chatIconNotif">#f7dfed</item>
         <item name="chatCanalNotif">#DFB2CC</item>
     </style>
 
     <style name="EclipseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="backgroundColor">@color/darkSea</item>
-        <item name="android:textColor">@color/forestGreen</item>
+        <item name="android:textColor">@color/LightSlateGray</item>
         <item name="colorPrimary">@color/clearSea</item>
         <item name="colorPrimaryVariant">@color/BackSea</item>
         <item name="colorOnPrimary">@color/Gainsboro</item>
@@ -81,9 +85,10 @@
         <item name="boardBackground">@color/black</item>
         <item name="playerSelection">@color/teal_200</item>
         <item name="lettersOnBoard">@color/SlateGray</item>
-        <item name="lettersInHand">@color/AntiqueWhite</item>
+        <item name="lettersInHand">@color/LightSlateGray</item>
         <item name="chatBox">@color/Platinium</item>
         <item name="activeTile">@color/Gold</item>
+        <item name="backgroundProfile">@color/LightCadet</item>
         <item name="chatIconNotif">@color/clearSea</item>
         <item name="chatCanalNotif">#2A5B9C</item>
     </style>
@@ -99,7 +104,7 @@
         <item name="android:textColorHighlight">@color/BrightSunset</item>
         <item name="colorSecondary">@color/BrightSunset</item>
         <item name="colorSecondaryVariant">@color/Sunset</item>
-        <item name="colorOnSecondary">@color/BrightSunset</item>
+        <item name="colorOnSecondary">@color/BackSea</item>
         <item name="doubleWord">@color/BrightSunset</item>
         <item name="tripleWord">@color/SlateGray</item>
         <item name="doubleLetter">@color/DimGray</item>
@@ -109,7 +114,36 @@
         <item name="boardBackground">@color/WhiteSmoke</item>
         <item name="lettersOnBoard">@color/grayWhite</item>
         <item name="lettersInHand">@color/SlateWhite</item>
+        <item name="chatBox">@color/grayWhite</item>
         <item name="activeTile">@color/purple_700</item>
+        <item name="backgroundProfile">@color/WhiteSmoke</item>
+        <item name="chatIconNotif">#D8BDBB</item>
+    </style>
+
+    <style name="GreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="backgroundColor">#19300b</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="colorAccent">#89b034</item>
+        <item name="colorPrimary">#3b7517</item>
+        <item name="android:statusBarColor">#0b1c09</item>
+        <item name="colorPrimaryVariant">#122912</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColorHighlight">#1e301e</item>
+        <item name="colorSecondary">#89b034</item>
+        <item name="colorSecondaryVariant">#89b034</item>
+        <item name="colorOnSecondary">@color/DarkForestGreen</item>
+        <item name="doubleWord">@color/DarkOliveGreen</item>
+        <item name="tripleWord">@color/Olive</item>
+        <item name="doubleLetter">@color/DarkOliveGreen</item>
+        <item name="grid">@color/white</item>
+        <item name="coords">@color/SpringGreen</item>
+        <item name="boardBackground">@color/DarkForestGreen</item>
+        <item name="playerSelection">@color/Gold</item>
+        <item name="lettersOnBoard">@color/DarkGreen</item>
+        <item name="lettersInHand">@color/SpringGreen</item>
+        <item name="chatBox">@color/DarkGreen</item>
+        <item name="activeTile">@color/Gold</item>
+        <item name="backgroundProfile">@color/MintCream</item>
         <item name="chatIconNotif">#D8BDBB</item>
         <item name="chatCanalNotif">@color/BrightSunset</item>
     </style>

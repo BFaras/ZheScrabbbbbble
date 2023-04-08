@@ -57,6 +57,7 @@ class GameStateModel: ViewModel() {
     private lateinit var gameMock: GameState
 
     init {
+        getAvatars()
         getGameState()
         SocketHandler.getSocket().on("Game State Update") { args ->
                 val gameJSON = args[0] as JSONObject
@@ -124,6 +125,10 @@ class GameStateModel: ViewModel() {
 
     fun getGameState() {
         SocketHandler.getSocket().emit("Request Game State")
+    }
+
+    fun getAvatars() {
+        SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray((GameRoomModel.gameRoom?.players!!.filter { !it.contains("(V)") }).toTypedArray()))
     }
 
     fun getTimer() {

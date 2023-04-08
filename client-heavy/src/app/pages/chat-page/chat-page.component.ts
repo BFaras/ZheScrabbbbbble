@@ -1,10 +1,12 @@
-import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { ChatInfo, ChatMessage, ChatType } from '@app/classes/chat-info';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { ChatInfo, ChatMessage, ChatType, MessageInfo } from '@app/classes/chat-info';
 import { AccountService } from '@app/services/account-service/account.service';
 //import { AccountService } from '@app/services/account-service/account.service';
 import { Router } from '@angular/router';
 import { ConnectivityStatus, Friend } from '@app/classes/friend-info';
+import { LanguageComponent } from '@app/components/language/language.component';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { ThemesService } from '@app/services/themes-service/themes-service';
 import { Subscription } from 'rxjs';
 
 //import { chat, chatlist } from './chats';
@@ -14,13 +16,13 @@ import { Subscription } from 'rxjs';
     templateUrl: './chat-page.component.html',
     styleUrls: ['./chat-page.component.scss'],
 })
-export class ChatPageComponent implements AfterContentChecked, OnInit, AfterViewInit, ViewChildren {
+export class ChatPageComponent implements OnInit, AfterViewInit, ViewChildren {
     @ViewChildren('chat-button') chatItems: QueryList<ElementRef>;
 
     chatText: string = '';
     nextMessage: string = '';
     chatList: ChatInfo[];
-    chatLog: Map<string, ChatMessage[]> = new Map<string, ChatMessage[]>();
+    chatLog: ChatMessage[] = [];
     public: ChatType = ChatType.PUBLIC;
     private: ChatType = ChatType.PRIVATE;
     global: ChatType = ChatType.GLOBAL;
@@ -32,15 +34,6 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
     friend: Friend = { username: 'cat', status: ConnectivityStatus.ONLINE };
     redirect: boolean = false;
     angular: any;
-    //chatButton: HTMLElement;
-
-    constructor(private changeDetector: ChangeDetectorRef,
-        private chatService: ChatService,
-        private account: AccountService,
-        private router: Router,
-        /*private friendsPage: FriendsPageComponent*/) {
-        this.username = this.account.getUsername();
-    }
     descendants: boolean;
     emitDistinctChangesOnly: boolean;
     first: boolean;
@@ -48,11 +41,32 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
     isViewQuery: boolean;
     selector: any;
     static?: boolean | undefined;
+    isPopup: boolean = false;
+    //chatButton: HTMLElement;
+
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private chatService: ChatService,
+        private account: AccountService,
+        private router: Router,
+        private themeService: ThemesService,
+        private languageComponent: LanguageComponent,
+        private accountService: AccountService
+        /*private friendsPage: FriendsPageComponent*/) {
+        this.username = this.account.getUsername();
+        if (!this.username) {
+            this.isPopup = true;
+            this.importMainWindowsData();
+        }
+    }
 
     ngOnInit() {
         this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
             this.chatList = chatList;
-            this.chatLog = this.chatService.messageLog;
+            this.updateGameRoomChat();
+            if (this.selectedChat) {
+                this.setChatHistory(this.selectedChat);
+            }
             /*
             this.setFriendRedirect();
             if (true) {
@@ -67,9 +81,31 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
             }
             */
         }));
-        this.subscriptions.push(this.chatService.getNewMessages().subscribe((messageLog: Map<string, ChatMessage[]>) => {
-            this.chatLog = messageLog;
+        this.subscriptions.push(this.chatService.getNewMessages().subscribe((messageInfo: MessageInfo) => {
+            if (messageInfo.id === this.selectedChat) {
+                this.chatLog.push(messageInfo.message);
+            }
         }));
+    }
+
+    updateGameRoomChat() {
+        for (let i = 0; i < this.chatList.length; i++) {
+            if (this.chatList[i].chatName === 'Room Chat' && this.chatList[i].chatType === ChatType.GLOBAL) {
+                this.chatList.splice(i, 1);
+                break;
+            }
+        }
+        const chatId = localStorage.getItem('gameRoomChat');
+        if (!chatId) {
+            this.chatService.unlinkGameChat();
+            this.changeDetector.detectChanges();
+            this.selectedChat = "";
+            return;
+        };
+        this.chatService.linkGameChat(chatId);
+        this.chatList.push({ chatName: 'Room Chat', chatType: ChatType.GLOBAL, _id: chatId });
+        this.chatService.updateChatList(this.chatList);
+        this.changeDetector.detectChanges();
     }
 
     public ngAfterViewInit() {
@@ -91,9 +127,37 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
         */
     }
 
+    importMainWindowsData() {
+        const accountInfo = localStorage.getItem('account');
+        if (!accountInfo) return;
+        this.account.setFullAccountInfo(JSON.parse(accountInfo));
+        this.username = this.account.getUsername();
+        this.chatService.linkSocketToUsername(this.username);
+        if ((window as any).setCallbacks) {
+            (window as any).setCallbacks(this.updateTheme.bind(this), this.updateLanguage.bind(this), this.updateGameRoomChat.bind(this));
+            this.updateTheme();
+            this.updateLanguage(false);
+        }
+    }
 
-    ngAfterContentChecked(): void {
-        this.changeDetector.detectChanges();
+    openPopupChat() {
+        if ((window as any).openChat) {
+            (window as any).openChat(this.accountService.getFullAccountInfo(), this.themeService.getActiveTheme(), this.accountService.getLanguage());
+            this.router.navigate(['/home']);
+        }
+    }
+
+    updateTheme() {
+        const theme = localStorage.getItem('theme');
+        if (!theme) return;
+        this.themeService.setActiveTheme(JSON.parse(theme));
+    }
+
+    updateLanguage(isViewLoaded: boolean = true) {
+        const language = localStorage.getItem('language');
+        if (!language) return;
+        this.languageComponent.translateLanguageTo(language, false);
+        if (isViewLoaded) this.changeDetector.detectChanges();
     }
 
     ngOnDestroy(): void {
@@ -144,6 +208,7 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
 
     selectChat(event: Event, id: string) {
         this.selectedChat = id;
+        this.setChatHistory(this.selectedChat);
         this.setDisabled();
         let chatButtons;
         chatButtons = document.getElementsByClassName("chat-button");
@@ -160,5 +225,11 @@ export class ChatPageComponent implements AfterContentChecked, OnInit, AfterView
 
     goToChats() {
         this.router.navigate(['/public-chats']);
+    }
+
+    setChatHistory(chatId: string) {
+        this.chatService.getChatHistory(chatId).subscribe((chatHistory: ChatMessage[]) => {
+            this.chatLog = chatHistory;
+        })
     }
 }

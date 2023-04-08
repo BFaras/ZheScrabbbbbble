@@ -19,7 +19,9 @@ import com.example.testchatbox.chat.ChatModel
 import com.example.testchatbox.databinding.FragmentGameListBinding
 import com.example.testchatbox.databinding.FragmentGameRoomBinding
 import com.example.testchatbox.login.model.LoggedInUser
+import com.google.android.material.imageview.ShapeableImageView
 import org.json.JSONArray
+import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -29,6 +31,8 @@ class GameRoomFragment : Fragment(), Observer {
     private var _binding: FragmentGameRoomBinding? = null
     private val binding get() = _binding!!
     private var isChatIconChanged = false;
+
+    var avatars = mutableMapOf<String, String>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +65,9 @@ class GameRoomFragment : Fragment(), Observer {
         binding.buttonchat.setOnClickListener {
             findNavController().navigate(R.id.action_gameRoomFragment_to_ChatFragment)
         }
+        binding.buttonfriends.setOnClickListener {
+            findNavController().navigate(R.id.action_gameRoomFragment_to_friendsFragment)
+        }
     }
 
     override fun onStart() {
@@ -75,12 +82,23 @@ class GameRoomFragment : Fragment(), Observer {
     }
 
     override fun update() {
+        SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray(GameRoomModel.gameRoom?.players))
         activity?.runOnUiThread(Runnable {
             if(GameRoomModel.gameRoom!!.hasStarted)
                 findNavController().navigate(R.id.action_gameRoomFragment_to_fullscreenFragment)
             if(GameRoomModel.joinRequest.isNotEmpty())
                 showJoinSection()
-            updateNames()
+            SocketHandler.getSocket().on("Avatars from Usernames Response") { args ->
+                val avatarListJSON = args[0] as JSONObject
+                Log.d("AVATARS JSON IN ROOM", args[0].toString())
+
+                for (i in 0 until avatarListJSON.length()) {
+                    avatars[avatarListJSON.names()?.getString(i) as String] = (avatarListJSON.names()?.getString(i)?.let { avatarListJSON.get(it) }) as String
+                }
+                activity?.runOnUiThread {
+                    updateNames()
+                }
+            }
         });
     }
 
@@ -93,15 +111,28 @@ class GameRoomFragment : Fragment(), Observer {
                 layoutInflater.inflate(R.layout.waiting_players, binding.waitingPlayersList, false)
             val playerName: TextView = playerInfo.findViewById(R.id.waitingPlayerName)
             val isOwner: ImageView = playerInfo.findViewById(R.id.isRoomOwner)
+            val avatarPic = playerInfo.findViewById<ShapeableImageView>(R.id.avatar)
             isOwner.visibility = GONE
             playerName.text = player
+
+            for ((name, avatar) in avatars) {
+                if (name == player) {
+                    when (avatar) {
+                        "dog.jpg" -> {
+                            avatarPic.setImageResource(R.drawable.dog)
+                        }
+                        "cat.jpg" -> avatarPic.setImageResource(R.drawable.cat)
+                        "flower.jpg" -> avatarPic.setImageResource(R.drawable.flower)
+                        else -> avatarPic.setImageResource(R.color.Aqua)
+                    }
+                }
+            }
 
             if (player == GameRoomModel.gameRoom!!.players[0]) {
                 isOwner.visibility = VISIBLE
             } else {
                 isOwner.visibility = GONE
             }
-
             binding.waitingPlayersList.addView(playerInfo)
 //            binding.startGame.visibility=View.VISIBLE
         }

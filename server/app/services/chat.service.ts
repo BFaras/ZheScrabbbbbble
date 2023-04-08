@@ -130,6 +130,10 @@ export class ChatService {
         return CHAT_ROOM_BEGINNING + chatId;
     }
 
+    isGameChat(chatId: string) {
+        return this.chatGameHistoryService.isGameChat(chatId);
+    }
+
     private async createGlobalChat(userId: string): Promise<boolean> {
         if (!(await this.dbService.isGlobalChatExistant())) {
             await this.createChat(userId, 'Global Chat', ChatType.GLOBAL);

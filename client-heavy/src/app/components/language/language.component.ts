@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AccountService } from '@app/services/account-service/account.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -7,23 +7,21 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './language.component.html',
   styleUrls: ['./language.component.scss']
 })
-export class LanguageComponent implements OnInit {
-  currentLang: string = 'fr';
-  oppositeLang: string = 'en';
+export class LanguageComponent {
+  currentLang: string = this.translate.currentLang;
+  oppositeLang: string = this.translate.currentLang === 'fr' ? 'en' : 'fr';
   username: string;
 
   constructor(public translate: TranslateService, private accountService: AccountService) {
     translate.addLangs(['fr', 'en']);
   }
 
-  ngOnInit(): void {
-  }
-
-  translateLanguageTo(lang: string) {
+  translateLanguageTo(lang: string, updateSocket: boolean = true) {
     this.oppositeLang = this.currentLang;
     this.currentLang = lang;
     this.translate.use(lang);
-    this.updateLanguage(lang);
+    this.accountService.setLanguage(lang);
+    if (updateSocket) this.updateLanguage(lang);
     //localStorage.setItem("currentLang", lang);
   }
 
@@ -40,7 +38,6 @@ export class LanguageComponent implements OnInit {
   }
 
   updateLanguage(lang: string) {
-    console.log(lang);
     this.accountService.changeLanguage(lang);
   }
 

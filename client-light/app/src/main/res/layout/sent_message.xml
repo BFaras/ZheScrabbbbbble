@@ -4,16 +4,16 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/avatarProfile"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:scaleType="center"
+        android:layout_height="35dp"
+        android:layout_width="35dp"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/textMessage"
-        android:background="@drawable/background_chat_input"
-        app:layout_constraintEnd_toEndOf="parent">
-
-    </androidx.appcompat.widget.AppCompatImageView>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+        android:background="@color/white">
+    </com.google.android.material.imageview.ShapeableImageView>
 
     <TextView
         android:id="@+id/textMessage"

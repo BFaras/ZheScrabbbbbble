@@ -1,4 +1,4 @@
-#chat-messages{
+#chat-messages {
     background-color: var(--background-tertiary);
     border-radius: 20px;
     width: 70%;
@@ -6,7 +6,6 @@
     right: 1%;
     position: fixed;
 }
-
 
 #chat-list {
     position: fixed;
@@ -19,6 +18,20 @@
     align-items: center;
     flex-direction: column;
     justify-content: center;
+}
+
+#popup-btn {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    padding: 0%;
+    top: 10px;
+    right: 10px;
+    background-color: var(--background-tertiary);
+}
+
+mat-icon {
+    color: var(--accent-default);
 }
 
 #container {
@@ -45,7 +58,12 @@
     box-shadow: var(--box-shadow);
     font-family: 'Courier New', Courier, monospace;
     font-weight: bolder;
-    font-size: 16px;
+    font-size: 100%;
+}
+
+.chat-content {
+    margin-bottom: 3%;
+    font-size: 18px;
 }
 
 #history-container {
@@ -68,14 +86,14 @@
 
 .input {
     border-radius: 5px;
-    padding: 0% 2%;
+    padding: 0% 1%;
     width: 100%;
     //flex-grow: 1;
     margin-right: 0.5%;
     border: none;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bolder;
-    font-size: 18px;
+    font-size: 100%;
     background-color: var(--background-secondary);
     color: var(--button-text-default);
 }
@@ -99,7 +117,7 @@
     border: none;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bolder;
-    font-size: 18px;
+    font-size: 100%;
     background-color: var(--background-secondary);
     color: var(--button-text-default);
 }
@@ -109,12 +127,11 @@
     color: var(--playarea-letterx2);
 }
 
-
 button {
     font-family: 'Courier New', Courier, monospace;
     width: 10%;
     font-weight: bolder;
-    font-size: 15px;
+    font-size: 100%;
     border: none;
     border-radius: 5px;
     background-color: var(--button-primary);
@@ -127,42 +144,47 @@ button:hover {
     background: var(--button-primary-hover);
     transition-property: background-color;
     transition-duration: 0.2s;
-} 
+}
 
 .join {
+    margin-bottom: 6.5%;
     width: 70%;
     padding: 2% 1%;
     box-shadow: var(--box-shadow);
     color: var(--text-default);
 }
 
+#tabs-container {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
 .title {
-    width: 100%;
-    height: 100%;
-    padding-top: 2%;
-    font-family: "Shrikhand";
-    font-size: 40px;
+    font-family: 'Shrikhand';
+    padding: 10% 0% 2%;
+    font-size: 25px;
     color: var(--accent-default);
-    position: relative;
-    right: 5%;
 }
 
 #title-tabs {
-    padding-right: 3%;
-    width: 80%;
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between; 
+    justify-content: space-between;
     margin-top: 1%;
+    white-space: normal;
 }
 
 .tabs {
     color: var(--accent-default);
-    font-family: "Shrikhand";
-    font-size: 20px;
-    padding-left: 5%;
+    font-family: 'Shrikhand';
+    font-size: 18px;
     cursor: pointer;
+    white-space: normal;
 }
 
 .tabs:hover {
@@ -204,7 +226,7 @@ button:hover {
 
 .chat-button {
     width: 90%;
-    position:relative;
+    position: relative;
     text-decoration: none;
     text-align: center;
     border: none;
@@ -214,7 +236,7 @@ button:hover {
     background-color: var(--button-primary);
     box-shadow: var(--box-shadow);
     border-radius: 7px;
-    font-size: 17px;
+    font-size: 100%;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
     color: var(--button-text-default);
@@ -238,7 +260,7 @@ button:hover {
 
 .chat-button button.active {
     background-color: var(--button-primary-hover);
-  }
+}
 
 .message {
     color: var(--text-default);
@@ -246,21 +268,21 @@ button:hover {
 
 .content {
     margin-bottom: 0%;
-    font-size: 15px;
+    font-size: 100%;
     margin-left: 2px;
 }
 
 .timestamp {
-    font-size: 12px;
-    opacity: .5;
+    font-size: 100%;
+    opacity: 0.5;
 }
 
 .username {
-    font-size: 18px;
+    font-size: 130%;
     margin-right: 2%;
 }
 
-.image{
+.image {
     border-radius: 50%;
 }
 

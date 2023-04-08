@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentBracketBinding
 import com.example.testchatbox.databinding.FragmentRankingBinding
@@ -25,6 +27,13 @@ class RankingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
+            // Hide both the status bar and the navigation bar
+            hide(WindowInsetsCompat.Type.systemBars())
+            hide(WindowInsetsCompat.Type.statusBars())
+            // Behavior of system bars
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
         binding.quitBtn.setOnClickListener {
             TournamentModel.exitTournament()
             findNavController().navigate(R.id.action_rankingFragment_to_MainMenuFragment)
