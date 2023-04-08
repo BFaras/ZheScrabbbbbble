@@ -18,7 +18,11 @@
                     <span class="status" *ngIf="friend.status === 2">🔴</span>
                     <span class="chat text name" (click)="goToProfile(friend.username)">{{ friend.username }}</span>
                 </div>
-                <button (click)="alert(friend.username)">{{ 'FRIENDS-PAGE.UNFRIEND' | translate }}</button>
+                <div class="button-container">
+                    <button (click)="alert(friend.username)">{{ 'FRIENDS-PAGE.UNFRIEND' | translate }}</button>
+                    <button (click)="alert(friend.username)">Chat</button>
+                    <button (click)="alert(friend.username)">{{ 'FRIENDS-PAGE.INVITE' | translate }}</button>
+                </div>
                 <!--<button (click)="openChat(friend)">Chat</button>-->
             </div>
         </div>

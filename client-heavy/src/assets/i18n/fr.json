@@ -195,7 +195,8 @@
         "INPUT": "Veuillez entrer le code d'amitié: ",
         "ADD": "Ajouter",
         "FRIENDS": "Liste d'amis",
-        "UNFRIEND": "Enlever"
+        "UNFRIEND": "Enlever",
+        "INVITE": "Inviter"
     },
     "PROFILE-PAGE": {
         "FRIENDS": "Gérer ses amis",

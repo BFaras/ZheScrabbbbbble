@@ -12,7 +12,7 @@
 .friends-container {
     display: flex;
     height: 535px;
-    width: 650px;
+    width: 900px;
     margin: 30px;
     justify-content: flex-start;
     align-items: center;
@@ -33,7 +33,7 @@
 }
 
 .button-container {
-    width: 220px;
+    width: 330px;
 }
 
 .chat {
@@ -45,7 +45,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    width: 530px;
+    width: 830px;
     background-color: var(--tile-on-holder);
     padding: 10px 15px;
     border-radius: 10px;

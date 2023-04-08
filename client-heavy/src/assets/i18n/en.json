@@ -195,7 +195,8 @@
         "INPUT": "Please enter your friend's code: ",
         "ADD": "Add",
         "FRIENDS": "Friends list",
-        "UNFRIEND": "Unfriend"
+        "UNFRIEND": "Unfriend",
+        "INVITE": "Invite"
     },
     "PROFILE-PAGE": {
         "FRIENDS": "Manage friends",
