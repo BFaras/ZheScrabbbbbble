@@ -25,6 +25,8 @@ class ManageChatFragment : Fragment(), ObserverChat {
 
     private var chatList = ChatModel.getList();
     private var publicChatList = ChatModel.getPublicList();
+    private var chatButtons: ArrayList<CardView> = arrayListOf()
+    private var publicChatButtons: ArrayList<CardView> = arrayListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +55,8 @@ class ManageChatFragment : Fragment(), ObserverChat {
                 binding.chatName.clearFocus()
             }
         }
+        binding.searchJoinChat.setOnFocusChangeListener(::onJoinSearchTextFinished)
+        binding.searchLeaveChat.setOnFocusChangeListener(::onLeaveSearchTextFinished)
         binding.reloadChats.setOnClickListener {
             ChatModel.updatePublicList()
         }
@@ -68,6 +72,20 @@ class ManageChatFragment : Fragment(), ObserverChat {
     override fun onStop() {
         super.onStop()
         ChatModel.removeObserver(this);
+    }
+
+    fun onJoinSearchTextFinished(view: View, hasFocus: Boolean) {
+        if (!hasFocus)
+        {
+            searchChats(publicChatButtons, binding.searchJoinChat.text.toString())
+        }
+    }
+
+    fun onLeaveSearchTextFinished(view: View, hasFocus: Boolean) {
+        if (!hasFocus)
+        {
+            searchChats(chatButtons, binding.searchLeaveChat.text.toString())
+        }
     }
 
     private fun searchChats(chatRoomButtons: ArrayList<CardView>, chatSearchText: String) {
@@ -86,14 +104,24 @@ class ManageChatFragment : Fragment(), ObserverChat {
         }
     }
 
+    fun resetSearchBoxes() {
+        binding.searchJoinChat.setText("")
+        binding.searchJoinChat.clearFocus()
+        binding.searchLeaveChat.setText("")
+        binding.searchLeaveChat.clearFocus()
+    }
+
     @SuppressLint("MissingInflatedId")
     private fun loadList(){
+        resetSearchBoxes()
         chatList = ChatModel.getList();
+        chatButtons = arrayListOf()
         val chatListView = binding.chatList;
         chatListView.removeAllViews()
         for((i, chat) in chatList.withIndex()){
             if (chat.chatType==ChatType.PUBLIC){
                 val chatRoomLayout = layoutInflater.inflate(R.layout.joined_chat, chatListView, false)
+                chatButtons.add(chatRoomLayout.findViewById<CardView>(R.id.chatButtonParent))
                 val chatRoomName = chatRoomLayout.findViewById<TextView>(R.id.chatbutton)
                 chatRoomName.text = chat.chatName
                 chatRoomLayout.id = i
@@ -115,7 +143,9 @@ class ManageChatFragment : Fragment(), ObserverChat {
     }
 
     private fun loadPublicList(){
+        resetSearchBoxes()
         publicChatList = ChatModel.getPublicList();
+        publicChatButtons = arrayListOf()
         Log.i("list", publicChatList.toString());
         val chatListView = binding.publicChatList;
         chatListView.removeAllViews()
@@ -123,6 +153,7 @@ class ManageChatFragment : Fragment(), ObserverChat {
             if (chat.chatType==ChatType.PUBLIC) {
                 val chatRoomLayout = layoutInflater.inflate(R.layout.joined_chat, chatListView, false)
                 val chatRoomName = chatRoomLayout.findViewById<TextView>(R.id.chatbutton)
+                publicChatButtons.add(chatRoomLayout.findViewById<CardView>(R.id.chatButtonParent))
                 chatRoomName.text = chat.chatName
                 chatRoomLayout.id = i
                 chatRoomLayout.setOnClickListener{
