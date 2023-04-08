@@ -1,4 +1,4 @@
-import { CdkDragDrop, CdkDragEnd, CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDragEnd } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Vec2 } from '@app/classes/vec2';
@@ -28,12 +28,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     formerAdderMode: string = "";
     blankLetterOnDrop: string;
     fields: any[] = []
-    hoveredElement: any = {}
     private gameState: GameState;
     private canvasSize = { x: GRID_CONSTANTS.defaultWidth, y: GRID_CONSTANTS.defaultHeight };
-
-    public dragStart: any = { top: 0, left: 0, text: '' };
-    public dragEnd: any = { top: 0, left: 0, text: '' };
 
     addTilePreviewSubscription: Subscription
     removeTilePreviewSubscription: Subscription
@@ -101,34 +97,10 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         this.addField({ ...tile }, event.currentIndex);
     }
 
-    hoverElement(event: CdkDragMove, field: { top: string; left: string; text: string }) {
-        /*
-        const leftBoard = document.getElementById("canvas")?.getBoundingClientRect().left as number;
-        const topBorad = document.getElementById("canvas")?.getBoundingClientRect().top as number;
-        let left = event.pointerPosition.x - leftBoard
-        let top = event.pointerPosition.y - topBorad;
-        const tile = this.letterAdderService.getDroppedSpot(left, top)
-        this.hoveredElement.left = COLUMNS[tile.column];
-        this.hoveredElement.top = ROWS[tile.row];
-        console.log(COLUMNS[tile.column]);
-        console.log(ROWS[tile.row])
-        */
-
-
-    }
-    /** */
-    dragStarted(event: CdkDragStart, field: { top: string; left: string; text: string }) {
-
-    }
-
     public dragEnded(event: CdkDragEnd, field: { top: string; left: string; text: string }): void {
-
-        /*
-        field.top = this.hoveredElement.top + 'px'
-        field.left = this.hoveredElement.left + 'px'
-        console.log(field)
-        */
-        this.renderer.setStyle(event.source.element.nativeElement, 'opacity', '50%');
+        console.log("-------------start Drag Ended-----------------------")
+        this.renderer.setStyle(event.source.element.nativeElement, 'opacity', '100%');
+        console.log("-------------------------finish Drag Endede----------------------------")
 
     }
     changePosition(event: CdkDragDrop<string>, field: { top: string; left: string; text: string }) {
@@ -149,10 +121,19 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         this.letterAdderService.pervForDrag.text = field.text;
         if (!out) {
             if (this.letterAdderService.onDropLetterSpot(coordinateClick)) {
-                field.top = top + "px"
-                field.left = left + 'px'
-                this.changeTilePositionLastMovedTile(field)
+                const tile = this.letterAdderService.getDroppedSpot(coordinateClick.x, coordinateClick.y);
+                console.log("nouvelle position on veut etre:")
+                console.log(tile);
+                let newField: { top: string; left: string; text: string } = {
+                    top: ROWS[tile.row] + "px",
+                    left: COLUMNS[tile.column] + "px",
+                    text: field.text
+
+                }
+                this.changeTilePositionLastMovedTile(field, newField)
                 this.letterAdderService.moveLetterInBoard(field.text)
+                //field.left = left + "px"
+                //field.top = top + "px"
                 /*il faut que e soit dans cet ordre pour enlever les dessin quand je bouge */
                 this.letterAdderService.removeDrawingBeforeDragWithinCanvas()
 
@@ -230,9 +211,9 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         }
     }
 
-    changeTilePositionLastMovedTile(field: { top: string; left: string; text: string }) {
-
-        this.fields.push(this.fields.splice(this.fields.indexOf(field), 1)[0])
+    changeTilePositionLastMovedTile(field: { top: string; left: string; text: string }, newField: { top: string; left: string; text: string }) {
+        this.fields.splice(this.fields.indexOf(field), 1)
+        this.fields.push(newField)
     }
 
     removeTileDraggedIntoBoard(event: KeyboardEvent) {
