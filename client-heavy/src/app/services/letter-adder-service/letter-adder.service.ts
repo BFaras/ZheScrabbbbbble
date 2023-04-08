@@ -92,14 +92,6 @@ export class LetterAdderService {
     canDrop(coords: Vec2): boolean {
         const foundCoords = this.findCoords(coords.x, coords.y);
         this.findDirectionOfDrop(foundCoords.row, foundCoords.column)
-        /*
-        console.log('-------------drop test----------------------')
-        console.log(this.canPlay);
-        console.log(foundCoords.valid);
-        console.log(!this.isPositionTakenDragAndDrop());
-        console.log(this.addedLettersLog)
-        console.log('-------------drop test----------------------')
-        */
         return this.canPlay && foundCoords.valid && this.setActiveSquare(foundCoords.row, foundCoords.column) && !this.isPositionTakenDragAndDrop();
     }
 
@@ -165,12 +157,6 @@ export class LetterAdderService {
 
                 this.updateDragLetterLog()
                 this.previewPlayerActionService.movePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y }, this.activeSquare)
-                /**on va mettre ca en commentaire pour essayer un truc
-                if (this.addedLettersLog.size === 0) {
-                    console.log('sent first Tile')
-                    this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
-                }*/
-
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
                 this.letterAdderMode = 'dragAndDrop';
@@ -213,7 +199,6 @@ export class LetterAdderService {
         this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
         this.gridService.deleteAndRedraw(this.addedLettersLog);
         if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
-            console.log("preview of other plauer in co op tp draw")
             this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
         }
         this.previewPlayerActionService.removePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y });
@@ -230,7 +215,6 @@ export class LetterAdderService {
         if (this.addedLettersLog.size === 1) this.setAdderMode('')
         this.gridService.deleteAndRedraw(this.addedLettersLog);
         if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
-            console.log("preview of other plauer in co op tp draw")
             this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
         }
         this.previewPlayerActionService.removePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y });
@@ -246,7 +230,6 @@ export class LetterAdderService {
             this.addToHand(true);
             this.gridService.deleteAndRedraw(this.addedLettersLog);
             if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
-                console.log("preview of other plauer in co op tp draw")
                 this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
             }
             this.changeActivePosition(decrement);
@@ -293,7 +276,6 @@ export class LetterAdderService {
         const lastAddedLetter = Array.from(this.addedLettersLog)[this.addedLettersLog.size - 1];
         if (addOrDel) {
             this.addedLettersLog.delete(lastAddedLetter[0]);
-            console.log("tout enlever");
             this.previewPlayerActionService.removePreviewTile({ x: lastAddedLetter[0][0], y: Number(lastAddedLetter[0].substring(1)) });
             if (lastAddedLetter[1].length === 1) this.playerHand.push(lastAddedLetter[1]);
             else this.playerHand.push(lastAddedLetter[1].slice(0, GRID_CONSTANTS.lastLetter));
@@ -418,23 +400,15 @@ export class LetterAdderService {
         if (!this.arrowDirection) {
             LettersOnOneDirection = new Map<string, string>([...LettersOnOneDirection.entries()].sort());
             const LettersOnOneDirectionArray = Array.from(LettersOnOneDirection.keys())
-            /*console.log(LettersOnOneDirectionArray);*/
             let positionLetter = LettersOnOneDirectionArray[0][0].charCodeAt(0)
             for (const position of LettersOnOneDirectionArray) {
-                /*
-                console.log("firstValue" + firstValuePosition[0])
-                console.log("actualPosition" + position[0])
-                console.log("lastValue" + lastValuePosition[0])
-                console.log("CharCode PositionStart" + positionLetter)
-                console.log("CharCode PositionStart" + position[0].charCodeAt(0))*/
+
                 if (position[0].charCodeAt(0) === positionLetter) {
                     if (position === lastValuePosition) {
-                        //console.log("is it Linked Vertical : " + true)
                         return true
                     }
                     positionLetter += 1
                 } else {
-                    //console.log("is it Linked Vertical : " + false)
                     return false
                 }
             }
@@ -448,24 +422,12 @@ export class LetterAdderService {
             let positionLetter = LettersOnOneDirectionArray[0].substring(1);
 
             for (const position of LettersOnOneDirectionArray) {
-                /*
-                console.log("firstValue: " + firstValuePosition.substring(1))
-                console.log("actualPosition: " + position.substring(1))
-                console.log("lastValue: " + lastValuePosition.substring(1))
-                console.log("PositionLetter: " + positionLetter.substring(1))
-                console.log("compaisaion : ------------------")
-                console.log("lastValue: " + lastValuePosition)
-                console.log("actualPosition: " + position)
-                console.log("compaisaion : ------------------")
-                */
                 if (position.substring(1) === positionLetter) {
                     if (position === lastValuePosition) {
-                        //console.log("is it Linked Horizontal : " + true);
                         return true
                     }
                     positionLetter = (Number(positionLetter) + 1).toString();
                 } else {
-                    //console.log("is it Linked Horizontal : " + false);
                     return false
                 }
 
@@ -488,48 +450,36 @@ export class LetterAdderService {
     }
 
     isHorizontal(keys: string[]): boolean {
-        console.log('--------test horitonal direction--------')
         console.log(keys)
         const expectedValue = keys[0][0];
         for (const element of keys) {
-            console.log(element)
-            console.log(element[0])
-            console.log(expectedValue)
             if (element[0] === expectedValue) {
                 continue
             }
             else {
-                console.log('--------end test horitonal direction--------')
                 return false;
             }
         }
-        console.log('--------end test horitonal direction--------')
+
         return true;
     }
 
     isVertical(keys: string[]): boolean {
-        console.log('--------test vertical direction--------')
-        console.log(keys)
         const expectedValue = keys[0].substring(1)
         for (const element of keys) {
-            console.log(element)
-            console.log(element.substring(1))
-            console.log(expectedValue)
+
             if (element.substring(1) === expectedValue) {
                 continue
             }
             else {
-                console.log('--------end test vertical direction--------')
                 return false;
             }
         }
-        console.log('--------end test vertical direction--------')
         return true;
     }
 
     formatAddedLetters(): string {
         this.orderAddedLetterLog();
-        console.log("directoin :" + this.formatDirection())
         const keys = Array.from(this.orderedAddedLetterLog.keys());
         if (this.arrowDirection) {
             if (!this.isHorizontal(keys)) {
