@@ -195,7 +195,8 @@
         "INPUT": "Veuillez entrer le code d'amitié: ",
         "ADD": "Ajouter",
         "FRIENDS": "Liste d'amis",
-        "UNFRIEND": "Enlever"
+        "UNFRIEND": "Enlever",
+        "INVITE": "Inviter"
     },
     "PROFILE-PAGE": {
         "FRIENDS": "Gérer ses amis",
@@ -235,5 +236,13 @@
     "TOURNAMENT-RESULT": {
         "TITLE": "Résultats du tournois",
         "RETURN": "Retourner au menu principal"
+    },
+    "UNLOCK-AVATAR": {
+        "SHARK": "Niveau 2",
+        "BUNNY": "2 médailles d'or",
+        "PANDA": "Niveau 4",
+        "TIGER": "Niveau 6",
+        "SKELETON": "1 médaille d'or",
+        "UNLOCKED": "Déverrouillé!"
     }
 }
