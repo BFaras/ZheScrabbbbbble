@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AvatarInRoomsService } from '@app/services/avatar-in-rooms.service';
+import { ChatService } from '@app/services/chat-service/chat.service';
 import { JoinResponse, WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { JoinResponse, WaitingRoomManagerService } from '@app/services/waiting-r
     styleUrls: ['./pending-room.component.scss'],
 })
 export class PendingRoomComponent {
-    constructor(private waitingRoomManagerService: WaitingRoomManagerService, private router: Router, private avatarInRoomService: AvatarInRoomsService) {
+    constructor(private waitingRoomManagerService: WaitingRoomManagerService, private router: Router, private avatarInRoomService: AvatarInRoomsService, private chatService : ChatService) {
         this.waitingRoomManagerService.joinRoomResponse().subscribe(this.receiveResponse.bind(this));
     }
 
@@ -40,6 +41,7 @@ export class PendingRoomComponent {
         if (this.waitingRoomManagerService.isObserver()) {
             this.router.navigate(['/observer-room']);
         } else {
+            this.chatService.setChatInGameRoom(this.waitingRoomManagerService.getRoomToJoinId( ));
             this.router.navigate(['/waiting-room']);
         }
     }

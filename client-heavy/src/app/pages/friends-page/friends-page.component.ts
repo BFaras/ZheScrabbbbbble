@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConnectivityStatus, Friend } from '@app/classes/friend-info';
+import { Friend } from '@app/classes/friend-info';
 import { ProfileInfo } from '@app/classes/profileInfo';
 import { AccountService } from '@app/services/account-service/account.service';
 import { FriendsService } from '@app/services/friends.service';
@@ -17,7 +17,6 @@ export class FriendsPageComponent {
   subscriptions: Subscription[] = [];
   profile: ProfileInfo;
   username: string = "";
-  friend: Friend = { username: 'cat', status: ConnectivityStatus.ONLINE };
   redirect: boolean = false;
 
   constructor(private friendsService: FriendsService, private account: AccountService, private router: Router) {
@@ -70,12 +69,4 @@ export class FriendsPageComponent {
       this.router.navigate(['/profile-page']);
     });
   }
-
-  /*
-  openChat(friend: Friend) {
-    //this.friend = friend;
-    //this.redirect = true;
-    this.router.navigate(['/chat']);
-  }
-  */
 }

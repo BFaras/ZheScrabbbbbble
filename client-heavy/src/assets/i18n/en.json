@@ -130,7 +130,8 @@
         "OBSERVE": " wants to spectate the game.",
         "ACCEPT": "Accept",
         "DECLINE": "Decline",
-        "START": "Start"
+        "START": "Start",
+        "INVITE-FRIENDS": "Invite friends"
     },
     "JOIN-GAME": {
         "HOST": "Host",

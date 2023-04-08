@@ -14,6 +14,7 @@ import Container from 'typedi';
 import { AccountInfoService } from './account-info.service';
 import { AuthSocketService } from './auth-socket.service';
 import { ChatSocketService } from './chat-socket.service';
+import { DatabaseService } from './database.service';
 import { FriendSocketService } from './friend-socket.service';
 import { ProfileSocketService } from './profile-socket.service';
 import { RoomManagerService } from './room-manager.service';
@@ -34,6 +35,7 @@ export class SocketManager {
     private accountInfoService: AccountInfoService;
     private profileSocketService: ProfileSocketService;
     private friendSocketService: FriendSocketService;
+    private dbService : DatabaseService;
     private pendingJoinGameRequests: Map<string, [string, io.Socket, boolean]>;
     private tournamentQueue: io.Socket[];
 
@@ -48,6 +50,7 @@ export class SocketManager {
         this.roomManager = Container.get(RoomManagerService);
         this.profileSocketService = Container.get(ProfileSocketService);
         this.friendSocketService = Container.get(FriendSocketService);
+        this.dbService = Container.get(DatabaseService);
         this.pendingJoinGameRequests = new Map<string, [string, io.Socket, boolean]>();
         this.commandController = new CommandController(this.roomManager);
         this.friendSocketService.setSio(this.sio);
@@ -184,6 +187,30 @@ export class SocketManager {
                 const playerNames = this.roomManager.getRoomPlayerNames(room.getID());
                 socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                 socket.to(room.getID()).emit('Room Player Update', playerNames);
+            });
+
+            socket.on('Invite Friend To Game', async(username: string) => {
+                const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
+                if (!currentRoom) return;
+                if(currentRoom.isGameStarted()) return;
+                const userId = await this.dbService.getUserId(username);
+                if(!userId) return;
+                if(this.usersStatusService.isUserInGame(userId)) return;
+                const friendSocket = this.usersStatusService.getUserSocketFromId(userId);
+                if(!friendSocket) return;
+                friendSocket.emit('Game Invite Request', this.accountInfoService.getUsername(socket), currentRoom.getID());
+            });
+
+            socket.on('Join Friend Game', async(roomId: string) => {
+                const currentRoom = this.roomManager.getRoom(roomId);
+                if (!currentRoom) return;
+                socket.join(roomId);
+                this.usersStatusService.addUserToInGameList(this.accountInfoService.getUserId(socket));
+                this.roomManager.addPlayer(roomId, new Player(socket.id, this.accountInfoService.getUserId(socket), this.accountInfoService.getUsername(socket)));
+                const playerNames = this.roomManager.getRoomPlayerNames(roomId);
+                socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
+                socket.to(roomId).emit('Room Player Update', playerNames);
+                socket.emit('Join Room Response', NO_ERROR, playerNames);
             });
 
             socket.on('Start Game', async () => {
@@ -421,6 +448,10 @@ export class SocketManager {
                 socket.leave(room.getID());
                 if (isObserver) return;
                 if (!room.isGameStarted()) {
+                    if (room.getPlayerCount() === 0) {
+                        this.roomManager.deleteRoom(room.getID());
+                        return;
+                    }
                     const playerNames = this.roomManager.getRoomPlayerNames(room.getID());
                     socket.to(room.getID()).emit('Room Player Update', playerNames);
                     socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());

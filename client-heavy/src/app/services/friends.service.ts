@@ -52,6 +52,10 @@ export class FriendsService {
     });
   }
 
+  inviteFriend(username: string){
+    this.socketManagerService.getSocket().emit('Invite Friend To Game', username);
+  }
+
   setUpProfile(profileInfo: ProfileInfo) {
     this.friendProfile = profileInfo;
   }
