@@ -344,7 +344,6 @@ class GameListFragment : Fragment() {
     }
 
     fun playNotifSoundAndChangeIcon() {
-        Log.i("CHAT", "Notified")
         if (!isChatIconChanged) {
             changeToNotifChatIcon()
             notifSound?.start()

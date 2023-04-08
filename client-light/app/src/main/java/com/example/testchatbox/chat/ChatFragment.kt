@@ -228,7 +228,12 @@ class ChatFragment : Fragment(), ObserverChat {
         }
         else {
             activity?.runOnUiThread(Runnable {
-                chatRoomsNotifBubble.get(chatCode)?.visibility = View.VISIBLE;
+                for (roomEntry in chatRoomsNotifBubble) {
+                    if (NotificationInfoHolder.isChatUnread(roomEntry.key))
+                    {
+                        chatRoomsNotifBubble.get(roomEntry.key)?.visibility = View.VISIBLE;
+                    }
+                }
             })
         }
         if(chatsList[selectedChatIndex]._id == chatCode) {
