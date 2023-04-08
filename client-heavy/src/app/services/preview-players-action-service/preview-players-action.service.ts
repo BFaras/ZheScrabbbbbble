@@ -9,7 +9,9 @@ import { SocketManagerService } from '../socket-manager-service/socket-manager.s
 export class PreviewPlayersActionService {
   private socket: Socket;
   previewTilesPosition: { x: string; y: number }[] = [];
-  firstTilePosition: { x: string; y: number } = { x: "", y: 0 }
+  firstTilePosition: { x: string; y: number } = { x: "", y: 0 };
+
+  previewPartnerFirstTileCoop: { x: string; y: number } | undefined = undefined;
   constructor(private socketManagerService: SocketManagerService) {
     this.setUpSocket()
 
@@ -19,9 +21,15 @@ export class PreviewPlayersActionService {
     this.socket = this.socketManagerService.getSocket();
   }
 
-  addPreviewTile(tilePosition: { x: string; y: number }) {
+  setUpPreviewPartnerFirstTileCoop(value: { x: string; y: number } | undefined) {
+    this.previewPartnerFirstTileCoop = value;
+  }
 
+  addPreviewTile(tilePosition: { x: string; y: number }) {
+    console.log('on ecrit avec le clavier ')
+    console.log(tilePosition)
     this.previewTilesPosition.push(tilePosition);
+    console.log(this.previewTilesPosition)
     if (this.previewTilesPosition.length === 1) {
       this.firstTilePosition = tilePosition
       this.sharePlayerFirstTile(tilePosition);
@@ -49,8 +57,7 @@ export class PreviewPlayersActionService {
   }
 
   removePreviewTile(tilePosition: { x: string; y: number }) {
-    console.log(this.previewTilesPosition);
-    console.log(tilePosition)
+
     this.previewTilesPosition = this.previewTilesPosition.filter((previewTiles) => ((tilePosition.x !== previewTiles.x) || (tilePosition.y !== previewTiles.y)))
     if ((tilePosition.x === this.firstTilePosition.x) && (tilePosition.y === this.firstTilePosition.y)) {
       this.removeSelectedTile(tilePosition);
@@ -69,18 +76,29 @@ export class PreviewPlayersActionService {
 
   getActivePlayerFirstTile(): Observable<{ x: string, y: number }> {
     return new Observable((observer: Observer<{ x: string, y: number }>) => {
-      this.socket.on('Get First Tile', (activeSquare: { x: string, y: number }) => observer.next(activeSquare))
+      this.socket.on('Get First Tile', (activeSquare: { x: string, y: number }) => {
+        this.previewPartnerFirstTileCoop = activeSquare;
+        observer.next(activeSquare)
+      })
     })
   }
 
   removeSelectedTile(activeSquare: { x: string; y: number }) {
     this.socket.emit('Remove Selected Tile', activeSquare);
+
   }
 
   getSelectedTileStatus(): Observable<{ x: string, y: number }> {
     return new Observable((observer: Observer<{ x: string, y: number }>) => {
-      this.socket.on('Remove Selected Tile Response', (activeSquare: { x: string, y: number }) => observer.next(activeSquare))
+      this.socket.on('Remove Selected Tile Response', (activeSquare: { x: string, y: number }) => {
+        this.previewPartnerFirstTileCoop = undefined
+        observer.next(activeSquare)
+      })
     })
+  }
+
+  getPreviewFirstTileCoop() {
+    return this.previewPartnerFirstTileCoop;
   }
 
 }

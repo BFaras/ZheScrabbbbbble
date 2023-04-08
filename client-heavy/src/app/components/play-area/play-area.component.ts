@@ -47,20 +47,21 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         private previewFirstTileService: PreviewPlayersActionService,
         private GameStateService: GameStateService
     ) {
+        this.initializePreviewTileIfCoop()
         this.subscription = this.gameStateService.getGameStateObservable().subscribe(async (gameState) => {
             if (this.viewLoaded) {
                 this.updateBoardState(gameState)
                 this.fields = []
+
             }
             this.gameState = gameState;
-        });
 
+        });
         this.letterAdderService.getLetterNotAcceptedObservable().subscribe((status) => {
             if (status) {
                 this.fields = [];
             }
         })
-
         this.previewFirstTileService.setUpSocket()
         this.addTilePreviewSubscription = this.previewFirstTileService.getActivePlayerFirstTile().subscribe((position) => {
             this.gridService.showActivePlayerFirstTile(position)
@@ -68,17 +69,18 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
 
         this.removeTilePreviewSubscription = this.previewFirstTileService.getSelectedTileStatus().subscribe((position) => {
             if (this.GameStateService.isCoop()) {
-                console.log("mode co op")
                 this.gridService.deleteActivePlayerFirstTile(position, this.letterAdderService.addedLettersLog)
             } else {
-                console.log("mode non co op")
                 this.gridService.deleteActivePlayerFirstTile(position)
             }
         })
 
-        LETTER_POINTS
+
     }
 
+    initializePreviewTileIfCoop() {
+        this.previewFirstTileService.setUpPreviewPartnerFirstTileCoop(undefined)
+    }
     getPointIfNotBlank(letter: string) {
         const upperCase = letter.toUpperCase();
         if (letter === upperCase) return 0;
@@ -100,7 +102,6 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     }
 
     hoverElement(event: CdkDragMove, field: { top: string; left: string; text: string }) {
-        console.log('hover')
         /*
         const leftBoard = document.getElementById("canvas")?.getBoundingClientRect().left as number;
         const topBorad = document.getElementById("canvas")?.getBoundingClientRect().top as number;
@@ -117,11 +118,11 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
     }
     /** */
     dragStarted(event: CdkDragStart, field: { top: string; left: string; text: string }) {
-        console.log('quand je commence a drag')
+
     }
 
     public dragEnded(event: CdkDragEnd, field: { top: string; left: string; text: string }): void {
-        console.log('quand je lache la lettre')
+
         /*
         field.top = this.hoveredElement.top + 'px'
         field.left = this.hoveredElement.left + 'px'
@@ -147,7 +148,6 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         this.letterAdderService.pervForDrag.y = foundCoords.column
         this.letterAdderService.pervForDrag.text = field.text;
         if (!out) {
-            console.log("infield")
             if (this.letterAdderService.onDropLetterSpot(coordinateClick)) {
                 field.top = top + "px"
                 field.left = left + 'px'
@@ -158,12 +158,10 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
 
             } else {
                 /**Il faut ca remet dans la main  */
-                console.log("letter not in apporprite drop spot , so it s has been removed")
                 this.letterAdderService.removeDrawingBeforeDragOutsideCanvasOrNotValidSpot()
                 this.fields = this.fields.filter((x) => x != field);
             }
         } else {
-            console.log("letter not in apporprite drop spot , so it s has been removed")
             this.fields = this.fields.filter((x) => x != field);
             /**Il faut ca remet dans la main  */
             this.letterAdderService.removeDrawingBeforeDragOutsideCanvasOrNotValidSpot()
@@ -174,7 +172,6 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         if (letter.previousContainer === letter.container) {
             return;
         } else {
-            console.log('in the sliding and not the same container')
             const leftBoard = document.getElementById("canvas")?.getBoundingClientRect().left as number;
             const topBorad = document.getElementById("canvas")?.getBoundingClientRect().top as number;
             this.setReceiver('playarea');

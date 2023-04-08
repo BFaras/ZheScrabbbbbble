@@ -42,6 +42,9 @@ export class LetterAdderService {
     onLeftClick(coords: Vec2) {
         if (this.canClick(coords)) {
             this.gridService.deleteAndRedraw();
+            if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
+                this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+            }
             if (this.prevActiveSquare.x === this.activeSquare.x && this.prevActiveSquare.y === this.activeSquare.y)
                 this.arrowDirection = !this.arrowDirection;
             else this.arrowDirection = true;
@@ -133,15 +136,16 @@ export class LetterAdderService {
         if (this.inPlayerHand() && this.isInBounds()) {
             if (!this.isPositionTaken()) {
                 this.addToHand(false);
-                /**on va mettre ca en commentaire pour essayer un truc
-                
-                /*if (this.addedLettersLog.size === 6) {
-                    console.log('sent first Tile')
-                    this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
-                }*/
-                this.previewPlayerActionService.addPreviewTile(this.activeSquare)
+                /**active square change rapidement le temps que je l utilise dans preview , c est d/ja devenu une autre valeur a cause de this.activeChangePostion
+                 * c est pour cela que je fais une deepcopy de l object.Cela est seulement affect/ dans prevuiew
+                 */
+                const deepCopyActiveSquare = JSON.parse(JSON.stringify(this.activeSquare));
+                this.previewPlayerActionService.addPreviewTile(deepCopyActiveSquare)
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
+                if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
+                    this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+                }
                 this.changeActivePosition(1);
                 this.letterAdderMode = 'keyPress';
             }
@@ -187,6 +191,9 @@ export class LetterAdderService {
                 this.previewPlayerActionService.addPreviewTile(this.activeSquare)
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
+                if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
+                    this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+                }
                 this.letterAdderMode = 'dragAndDrop';
             }
         }
@@ -204,8 +211,12 @@ export class LetterAdderService {
 
     removeDrawingBeforeDragWithinCanvas() {
         this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
-        this.previewPlayerActionService.removePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y });
         this.gridService.deleteAndRedraw(this.addedLettersLog);
+        if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
+            console.log("preview of other plauer in co op tp draw")
+            this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+        }
+        this.previewPlayerActionService.removePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y });
     }
 
     removeDrawingBeforeDragOutsideCanvasOrNotValidSpot() {
@@ -216,9 +227,13 @@ export class LetterAdderService {
         this.playerHand = remainingLettersDrag;
         this.letterHolderService.drawTypedLetters(this.playerHand);
         this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
-        this.previewPlayerActionService.removePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y });
         if (this.addedLettersLog.size === 1) this.setAdderMode('')
         this.gridService.deleteAndRedraw(this.addedLettersLog);
+        if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
+            console.log("preview of other plauer in co op tp draw")
+            this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+        }
+        this.previewPlayerActionService.removePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y });
 
     }
     removeLetters() {
@@ -230,6 +245,10 @@ export class LetterAdderService {
         if (!this.isPositionTaken()) {
             this.addToHand(true);
             this.gridService.deleteAndRedraw(this.addedLettersLog);
+            if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
+                console.log("preview of other plauer in co op tp draw")
+                this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+            }
             this.changeActivePosition(decrement);
         }
         while (this.isPositionTaken()) {
