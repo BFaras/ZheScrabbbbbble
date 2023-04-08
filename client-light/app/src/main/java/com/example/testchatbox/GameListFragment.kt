@@ -2,7 +2,9 @@ package com.example.testchatbox
 
 import SocketHandler
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -55,6 +57,8 @@ class GameListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var gameList:ArrayList<GameRoom> = arrayListOf();
+    private var isChatIconChanged = false;
+    private var notifSound: MediaPlayer? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +77,7 @@ class GameListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupChatNotifs(view.context)
         updateGameList();
         binding.roomType.check(R.id.publicRoom)
         binding.roomType.setOnCheckedChangeListener { radioGroup, i ->
@@ -320,5 +325,34 @@ class GameListFragment : Fragment() {
 
     }
 
+    override fun onStop() {
+        super.onStop()
+        NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        notifSound?.release()
+    }
 
+    fun setupChatNotifs(context: Context) {
+        isChatIconChanged = false;
+        NotificationInfoHolder.startObserverChat();
+        NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
+        notifSound = MediaPlayer.create(context, R.raw.ding)
+
+        notifSound?.setOnCompletionListener { notifSound?.release() }
+
+        if(NotificationInfoHolder.areChatsUnread())
+            changeToNotifChatIcon();
+    }
+
+    fun playNotifSoundAndChangeIcon() {
+        Log.i("CHAT", "Notified")
+        if (!isChatIconChanged) {
+            changeToNotifChatIcon()
+            notifSound?.start()
+        }
+    }
+
+    fun changeToNotifChatIcon() {
+        binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+        isChatIconChanged = true;
+    }
 }

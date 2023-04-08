@@ -85,14 +85,19 @@ private var _binding: FragmentMainMenuBinding? = null
 
     override fun onDestroyView() {
         super.onDestroyView()
-        NotificationInfoHolder.setFunctionOnMessageReceived(null);
         _binding = null
+    }
+
+    override fun onStop() {
+        super.onStop()
+        NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        notifSound?.release()
     }
 
     fun setupChatNotifs(context: Context) {
         isChatIconChanged = false;
         NotificationInfoHolder.startObserverChat();
-        NotificationInfoHolder.setFunctionOnMessageReceived(::changeToNotifChatIcon);
+        NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
         notifSound = MediaPlayer.create(context, R.raw.ding)
 
         notifSound?.setOnCompletionListener { notifSound?.release() }
@@ -101,12 +106,15 @@ private var _binding: FragmentMainMenuBinding? = null
             changeToNotifChatIcon();
     }
 
-    fun changeToNotifChatIcon() {
-        if (!isChatIconChanged)
-        {
-            binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+    fun playNotifSoundAndChangeIcon() {
+        if (!isChatIconChanged) {
+            changeToNotifChatIcon()
             notifSound?.start()
-            isChatIconChanged = true;
         }
+    }
+
+    fun changeToNotifChatIcon() {
+        binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+        isChatIconChanged = true;
     }
 }

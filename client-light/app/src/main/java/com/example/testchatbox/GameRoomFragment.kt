@@ -81,6 +81,7 @@ class GameRoomFragment : Fragment(), Observer {
     override fun onStop() {
         super.onStop()
         NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        notifSound?.release()
         GameRoomModel.removeObserver(this);
     }
 
@@ -176,7 +177,7 @@ class GameRoomFragment : Fragment(), Observer {
     fun setupChatNotifs(context: Context) {
         isChatIconChanged = false;
         NotificationInfoHolder.startObserverChat();
-        NotificationInfoHolder.setFunctionOnMessageReceived(::changeToNotifChatIcon);
+        NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
         notifSound = MediaPlayer.create(context, R.raw.ding)
 
         notifSound?.setOnCompletionListener { notifSound?.release() }
@@ -185,12 +186,15 @@ class GameRoomFragment : Fragment(), Observer {
             changeToNotifChatIcon();
     }
 
-    fun changeToNotifChatIcon() {
-        if (!isChatIconChanged)
-        {
-            binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+    fun playNotifSoundAndChangeIcon() {
+        if (!isChatIconChanged) {
+            changeToNotifChatIcon()
             notifSound?.start()
-            isChatIconChanged = true;
         }
+    }
+
+    fun changeToNotifChatIcon() {
+        binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+        isChatIconChanged = true;
     }
 }
