@@ -18,7 +18,7 @@ export class CreateGameComponent {
     visibility: RoomVisibility = RoomVisibility.PUBLIC;
     IsProtectedRoom: boolean = false;
     passwordRoom: string = "";
-    gameType : string = 'Classic'
+    gameType: string = 'Classic'
 
     constructor(
         private waitingRoomManagerService: WaitingRoomManagerService,
@@ -26,9 +26,7 @@ export class CreateGameComponent {
         private router: Router,
         private chatService: ChatService,
         private avatarInRoomService: AvatarInRoomsService
-    ) {
-        console.log(this.accountService.getProfile())
-    }
+    ) {}
 
 
     getVisibilityButtonValue(event: MatRadioChange) {
@@ -65,7 +63,7 @@ export class CreateGameComponent {
         }
 
         sessionStorage.clear();
-        this.waitingRoomManagerService.createRoomResponse().subscribe((response)=> this.redirectPlayer(response));
+        this.waitingRoomManagerService.createRoomResponse().subscribe((response) => this.redirectPlayer(response));
         this.waitingRoomManagerService.createMultiRoom(roomNameValue, this.visibility, this.passwordRoom, this.gameType);
     }
 

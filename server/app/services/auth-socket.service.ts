@@ -73,14 +73,14 @@ export class AuthSocketService {
         });
     }
 
-    private async setupUser(socket: io.Socket, username: string) {
+    async setupUser(socket: io.Socket, username: string, isSecondarySocket : boolean = false) {
         const userId = await this.authentificationService.getUserId(username);
         this.accountInfoService.setUsername(socket, username);
         this.accountInfoService.setUserId(socket, userId);
         await this.joinUserChatRooms(userId, socket);
         await this.joinUserFriendsRooms(userId, socket);
         await this.chatService.joinGlobalChat(userId);
-        this.usersStatusService.addOnlineUser(userId, socket);
+        if(!isSecondarySocket) this.usersStatusService.addOnlineUser(userId, socket);
     }
 
     private async joinUserChatRooms(userId: string, socket: io.Socket) {

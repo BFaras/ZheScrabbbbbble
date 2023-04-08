@@ -8,19 +8,20 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./language.component.scss']
 })
 export class LanguageComponent {
-  currentLang: string = 'fr';
-  oppositeLang: string = 'en';
+  currentLang: string = this.translate.currentLang;
+  oppositeLang: string = this.translate.currentLang === 'fr' ? 'en' : 'fr';
   username: string;
 
   constructor(public translate: TranslateService, private accountService: AccountService) {
     translate.addLangs(['fr', 'en']);
   }
 
-  translateLanguageTo(lang: string) {
+  translateLanguageTo(lang: string, updateSocket: boolean = true) {
     this.oppositeLang = this.currentLang;
     this.currentLang = lang;
     this.translate.use(lang);
-    this.updateLanguage(lang);
+    this.accountService.setLanguage(lang);
+    if (updateSocket) this.updateLanguage(lang);
     //localStorage.setItem("currentLang", lang);
   }
 

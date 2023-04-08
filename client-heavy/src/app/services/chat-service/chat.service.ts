@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { ChatInfo, ChatMessage, ChatType, MessageInfo } from '@app/classes/chat-info';
 import { NO_ERROR } from '@app/constants/error-codes';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
@@ -15,9 +15,23 @@ export class ChatService {
     chatInGameRoom: string;
     chatMessageObserver: Observer<MessageInfo>;
     active: string = 'chat';
+    private popupOpen: boolean = false;
+    private changeDetector: ChangeDetectorRef;
 
     constructor(private socketManagerService: SocketManagerService) {
         this.updateSocket();
+        if ((window as any).setChatStatusCallback) {
+            (window as any).setChatStatusCallback(this.updateChatStatus.bind(this));
+            this.popupOpen = (window as any).chatOpen;
+        }
+    }
+
+    isPopupOpen(): boolean {
+        return this.popupOpen;
+    }
+
+    setChangeDetector(changeDetector: ChangeDetectorRef) {
+        this.changeDetector = changeDetector;
     }
 
     getChatsList(): Observable<ChatInfo[]> {
@@ -28,6 +42,17 @@ export class ChatService {
                 this.updateChatList(chatList);
             });
         });
+    }
+
+    updateChatStatus() {
+        if ((window as any).chatOpen !== null && (window as any).chatOpen !== undefined) {
+            this.popupOpen = (window as any).chatOpen;
+            this.changeDetector.detectChanges();
+        }
+    }
+
+    linkSocketToUsername(username: string) {
+        this.socketManagerService.getSocket().emit('Link Socket Username', username);
     }
 
     updateChatList(chatList: ChatInfo[]) {
@@ -50,15 +75,23 @@ export class ChatService {
     updateSocket() {
         this.socket = this.socketManagerService.getSocket();
         this.socket.on('New Chat Message', (id: string, message: ChatMessage) => {
+            console.log
             if (this.messageLog.has(id)) {
                 this.chatMessageObserver.next({ id, message });
             }
         });
     }
 
-    sendMessage(message: string, ChatId: string) {
-        console.log("Emission d un message")
-        this.socketManagerService.getSocket().emit('New Chat Message', message, ChatId);
+    sendMessage(message: string, chatId: string) {
+        this.socketManagerService.getSocket().emit('New Chat Message', message, chatId);
+    }
+
+    linkGameChat(chatId: string) {
+        this.socketManagerService.getSocket().emit('Link Socket Room', chatId);
+    }
+
+    unlinkGameChat() {
+        this.socketManagerService.getSocket().emit('Unlink Socket Room');
     }
 
     sendCommand(argument: string, command: string) {
@@ -70,6 +103,7 @@ export class ChatService {
     }
 
     setChatInGameRoom(chatGameRoom: string) {
+        if ((window as any).updateRoomChat) (window as any).updateRoomChat(chatGameRoom);
         this.chatInGameRoom = chatGameRoom;
     }
 

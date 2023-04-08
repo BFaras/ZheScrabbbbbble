@@ -8,8 +8,8 @@ export class VirtualPlayerHard extends VirtualPlayer {
         const minTime: number = Date.now() + MIN_PLAY_TIME;
         this.playing = true;
         let details: CommandDetails = await this.place();
-        if (details.result.errorType === undefined && details.command.split(' ')[0] === '!placer')
-            details.result.playerMessage = {messageType: PLACE_MESSAGE, values : [this.getName(), details.command.split(' ')[2], details.result.playerMessage!.messageType]};
+        if (details.result.errorType === undefined && details.command.split(' ')[0] === 'Place')
+            details.result.playerMessage = { messageType: PLACE_MESSAGE, values: [this.getName(), details.command.split(' ')[2], details.result.playerMessage!.messageType] };
         if (details.result.errorType !== undefined) details = this.swap();
         if (details.result.errorType !== undefined) details = this.pass();
         while (Date.now() < minTime);
