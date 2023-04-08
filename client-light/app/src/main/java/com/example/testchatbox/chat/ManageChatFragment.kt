@@ -9,10 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import com.example.testchatbox.MainActivity
 import com.example.testchatbox.R
 import com.example.testchatbox.databinding.FragmentManageChatBinding
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.LinkedHashMap
 
 
 class ManageChatFragment : Fragment(), ObserverChat {
@@ -65,6 +68,22 @@ class ManageChatFragment : Fragment(), ObserverChat {
     override fun onStop() {
         super.onStop()
         ChatModel.removeObserver(this);
+    }
+
+    private fun searchChats(chatRoomButtons: ArrayList<CardView>, chatSearchText: String) {
+        for (chatRoomButton in chatRoomButtons) {
+            val chatRoomName = chatRoomButton.findViewById<TextView>(R.id.chatbutton)
+            val chatName: String = chatRoomName.text.toString()
+
+            if (chatName.contains(chatSearchText))
+            {
+                chatRoomButton.visibility = View.VISIBLE
+            }
+            else
+            {
+                chatRoomButton.visibility = View.GONE
+            }
+        }
     }
 
     @SuppressLint("MissingInflatedId")
