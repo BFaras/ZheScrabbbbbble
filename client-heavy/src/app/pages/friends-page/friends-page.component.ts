@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Friend } from '@app/classes/friend-info';
+import { ConnectivityStatus, Friend } from '@app/classes/friend-info';
 import { ProfileInfo } from '@app/classes/profileInfo';
 import { AccountService } from '@app/services/account-service/account.service';
 import { FriendsService } from '@app/services/friends.service';
@@ -75,5 +75,11 @@ export class FriendsPageComponent {
       this.friendsService.setUpProfile(userProfile);
       this.router.navigate(['/profile-page']);
     });
+  }
+
+  createGameWithInvite(friend: Friend){
+    if(friend.status !== ConnectivityStatus.ONLINE) return;
+    this.friendsService.setFriendToInvite(friend.username);
+    this.router.navigate(['/create-game']);
   }
 }

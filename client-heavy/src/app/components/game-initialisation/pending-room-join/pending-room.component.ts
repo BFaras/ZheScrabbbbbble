@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AvatarInRoomsService } from '@app/services/avatar-in-rooms.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { JoinResponse, WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
+import { first } from 'rxjs/operators';
 
 @Component({
     selector: 'app-pending-room',
@@ -12,7 +13,7 @@ import { JoinResponse, WaitingRoomManagerService } from '@app/services/waiting-r
 })
 export class PendingRoomComponent {
     constructor(private snackBar: MatSnackBar, private waitingRoomManagerService: WaitingRoomManagerService, private router: Router, private avatarInRoomService: AvatarInRoomsService, private chatService : ChatService) {
-        this.waitingRoomManagerService.joinRoomResponse().subscribe(this.receiveResponse.bind(this));
+        this.waitingRoomManagerService.joinRoomResponse().pipe(first()).subscribe(this.receiveResponse.bind(this));
     }
 
     cancelDemand() {
@@ -39,10 +40,10 @@ export class PendingRoomComponent {
         this.avatarInRoomService.setUsersInRoom(message.playerNames);
         this.avatarInRoomService.askAllUsersAvatar();
         /**fin partie ajouter*/
+        this.chatService.setChatInGameRoom(this.waitingRoomManagerService.getRoomToJoinId());
         if (this.waitingRoomManagerService.isObserver()) {
             this.router.navigate(['/observer-room']);
         } else {
-            this.chatService.setChatInGameRoom(this.waitingRoomManagerService.getRoomToJoinId( ));
             this.router.navigate(['/waiting-room']);
         }
     }

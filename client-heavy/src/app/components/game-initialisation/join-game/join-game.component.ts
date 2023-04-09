@@ -59,10 +59,10 @@ export class JoinGameComponent implements OnDestroy {
             passwordDialog.afterClosed().subscribe(result => {
                 if (!result) return;
                 this.waitingRoomManagerService.setDefaultPlayersInRoom(result);
+                this.chatService.setChatInGameRoom(this.waitingRoomManagerService.getRoomToJoinId());
                 if (this.waitingRoomManagerService.isObserver()) {
                     this.router.navigate(['/observer-room']);
                 } else {
-                    this.chatService.setChatInGameRoom(this.waitingRoomManagerService.getRoomToJoinId());
                     this.router.navigate(['/waiting-room']);
                 }
             });
@@ -87,10 +87,10 @@ export class JoinGameComponent implements OnDestroy {
             return;
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom(message.playerNames);
+        this.chatService.setChatInGameRoom(this.waitingRoomManagerService.getRoomToJoinId());
         if (this.waitingRoomManagerService.isObserver()) {
             this.router.navigate(['/observer-room']);
         } else {
-            this.chatService.setChatInGameRoom(this.waitingRoomManagerService.getRoomToJoinId());
             this.router.navigate(['/waiting-room']);
         }
     }

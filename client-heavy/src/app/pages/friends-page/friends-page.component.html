@@ -20,8 +20,8 @@
                 </div>
                 <div class="button-container">
                     <button (click)="alert(friend.username)">{{ 'FRIENDS-PAGE.UNFRIEND' | translate }}</button>
-                    <button (click)="alert(friend.username)">Chat</button>
-                    <button (click)="alert(friend.username)">{{ 'FRIENDS-PAGE.INVITE' | translate }}</button>
+                    <button>Chat</button>
+                    <button *ngIf="friend.status === 1" (click)="createGameWithInvite(friend)">{{ 'FRIENDS-PAGE.INVITE' | translate }}</button>
                 </div>
                 <!--<button (click)="openChat(friend)">Chat</button>-->
             </div>

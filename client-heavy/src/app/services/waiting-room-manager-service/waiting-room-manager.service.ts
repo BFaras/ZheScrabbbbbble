@@ -129,6 +129,10 @@ export class WaitingRoomManagerService {
         this.socketManagerService.getSocket().emit('Join Game Room', id, this.observer, password);
     }
 
+    joinFriendRoom(id: string): void {
+        this.socketManagerService.getSocket().emit('Join Friend Game', id);
+    }
+
     leaveRoom(): void {
         this.chatService.setChatInGameRoom('');
         this.socketManagerService.getSocket().emit('Leave Game Room');
