@@ -36,7 +36,6 @@ data class PlayerMessage (
 
 class GameStateModel: ViewModel() {
 
-
     private var _gameState = MutableLiveData<GameState>()
     val gameState: LiveData<GameState>
         get() = _gameState
@@ -44,6 +43,11 @@ class GameStateModel: ViewModel() {
     private var _activeTile = MutableLiveData<Pair<String, Int>>()
     val activeTile: LiveData<Pair<String, Int>>
         get() = _activeTile
+
+    private var _avatarsList =  MutableLiveData<MutableMap<String,String>>()
+    val avatarsList: LiveData<MutableMap<String,String>>
+        get() = _avatarsList
+
 
     private var _emote = MutableLiveData<Pair<String, String>>()
     val emote: LiveData<Pair<String, String>>
@@ -62,7 +66,21 @@ class GameStateModel: ViewModel() {
 
     init {
         getAvatars()
+
+        SocketHandler.getSocket().on("Avatars from Usernames Response") { args ->
+            val avatarListJSON = args[0] as JSONObject
+            val avatarListTemp = mutableMapOf<String, String>()
+            Log.d("AVATARS JSON", args[0].toString())
+
+            for (i in 0 until avatarListJSON.length()) {
+                avatarListTemp[avatarListJSON.names()?.getString(i) as String] = (avatarListJSON.names()?.getString(i)?.let { avatarListJSON.get(it) }) as String
+            }
+            _avatarsList.postValue(avatarListTemp)
+        }
+        getAvatars()
+
         getGameState()
+
         SocketHandler.getSocket().on("Game State Update") { args ->
                 val gameJSON = args[0] as JSONObject
                 Log.i("gameState", gameJSON.toString())
@@ -127,6 +145,8 @@ class GameStateModel: ViewModel() {
             Log.i("emoteJSON  ", args[0].toString())
             _emote.postValue(Pair(emoteJSON.get("username") as String, emoteJSON.get("emote") as String))
         }
+
+
     }
 
     fun getGameState() {

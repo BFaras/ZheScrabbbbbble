@@ -84,7 +84,7 @@ class GamePageFragment : Fragment() {
     private var chosenDirection = "h"
     private var gameOver = false
     private var toBeObserved = 0
-    private var avatarsList = mutableMapOf<String, String>()
+    private var playersAvatars = mutableMapOf<String, String>()
 
     private var isFirstRound = true
 
@@ -94,6 +94,7 @@ class GamePageFragment : Fragment() {
     private lateinit var activeTileObserver: Observer<Pair<String, Int>>
     private lateinit var deleteActiveTileObserver: Observer<Pair<String, Int>>
     private lateinit var emoteObserver: Observer<Pair<String, String>>
+    private lateinit var avatarsObserver: Observer<MutableMap<String,String>>
     private lateinit var firstLetterPlaced: LetterInHand
     private lateinit var timer: CountDownTimer
 
@@ -115,8 +116,13 @@ class GamePageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Coordinates.setCoordinates()
-        gameModel.getAvatars()
+
         timer = setTimer()
+
+        avatarsObserver = Observer<MutableMap<String,String>> { avatarsList ->
+            playersAvatars = avatarsList
+        }
+        gameModel.avatarsList.observe(viewLifecycleOwner, avatarsObserver)
 
         if (!GameRoomModel.isPlayer) {
             binding.apply {
@@ -180,21 +186,7 @@ class GamePageFragment : Fragment() {
             moveInfo = gameState.message!!
             updateMoveInfo(moveInfo)
 
-            SocketHandler.getSocket().on("Avatars from Usernames Response") { args ->
-                val avatarListJSON = args[0] as JSONObject
-                Log.d("AVATARS JSON", args[0].toString())
-
-                for (i in 0 until avatarListJSON.length()) {
-                    avatarsList[avatarListJSON.names()?.getString(i) as String] = (avatarListJSON.names()?.getString(i)?.let { avatarListJSON.get(it) }) as String
-                }
-                activity?.runOnUiThread {
-                    updatePlayersInfo(gameState.players, avatarsList)
-                    isFirstRound = false
-                }
-            }
-            if (!isFirstRound) {
-                updatePlayersInfo(gameState.players, avatarsList)
-            }
+            updatePlayersInfo(gameState.players, playersAvatars)
             clearTurn()
         }
         gameModel.gameState.observe(viewLifecycleOwner, gameObserver)
@@ -285,11 +277,17 @@ class GamePageFragment : Fragment() {
                 Log.d("EMOTE SEND", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "ic_good")).toString())
             }
 
-            emoteBoo.setOnClickListener {
-                SocketHandler.getSocket().emit("Send Emote", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "ic_sad")))
-                showEmote("ic_sad")
+            emoteCringe.setOnClickListener {
+                SocketHandler.getSocket().emit("Send Emote", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "cringe")))
+                showEmote("cringe")
             Log.d("EMOTE SEND", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "hmm")).toString())
-        }
+            }
+
+            emoteWat.setOnClickListener {
+                SocketHandler.getSocket().emit("Send Emote", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "wat")))
+                showEmote("wat")
+                Log.d("EMOTE SEND", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "hmm")).toString())
+            }
 
             buttonchat.setOnClickListener {
                 findNavController().navigate(R.id.action_fullscreenFragment_to_ChatFragment)
@@ -311,6 +309,7 @@ class GamePageFragment : Fragment() {
                 buttonHint.isEnabled = false
                 isYourTurn = false
                 toggleSwap.isEnabled = false
+                buttonPass.isEnabled = false
 
                 val hintList = arrayListOf<String>()
 
@@ -329,12 +328,13 @@ class GamePageFragment : Fragment() {
                         activity?.runOnUiThread {
                             clearTurn()
                             toggleSwap.isEnabled = false
+                            buttonPass.isEnabled = true
                             hintHolder.removeAllViews()
                             cluesProgress.visibility = GONE
                             hintPanel.visibility = VISIBLE
                             hintPanel.findViewById<FrameLayout>(R.id.noHelpHint).setOnClickListener {
                                 clearTurn()
-                                buttonHint.isEnabled = false
+                                buttonHint.isEnabled = true
                             }
                             isYourTurn = true
 
@@ -603,29 +603,42 @@ class GamePageFragment : Fragment() {
                                         }
                                         else -> {}
                                     }
-                                    val params = RelativeLayout.LayoutParams(
-                                        draggableItem.width,
-                                        draggableItem.height
-                                    )
-                                    params.leftMargin = letterInHand.xPosition.toInt() //x
-                                    params.topMargin = letterInHand.yPosition.toInt() //y
+                                    if (view is GameBoardView) {
+                                        val params = RelativeLayout.LayoutParams(
+                                            draggableItem.width,
+                                            draggableItem.height
+                                        )
+                                        params.leftMargin = letterInHand.xPosition.toInt() //x
+                                        params.topMargin = letterInHand.yPosition.toInt() //y
 
-                                    binding.gameBoard.addView(draggableItem, params)
-                                    isPlaced.removeAll { it.viewTag == draggableItem.tag }
-                                    isPlaced.add(letterInHand)
+                                        binding.gameBoard.addView(draggableItem, params)
+                                        isPlaced.removeAll { it.viewTag == draggableItem.tag }
+                                        isPlaced.add(letterInHand)
 
-                                    if (letterInHand.viewTag == firstLetterPlaced.viewTag)  {
-                                        SocketHandler.getSocket().emit("Share First Tile", JSONObject(mapOf("x" to letterInHand.row, "y" to letterInHand.col)))
-                                        oldPosCol = letterInHand.col
-                                        oldPosRow = letterInHand.row
+                                        if (letterInHand.viewTag == firstLetterPlaced.viewTag)  {
+                                            SocketHandler.getSocket().emit("Share First Tile", JSONObject(mapOf("x" to letterInHand.row, "y" to letterInHand.col)))
+                                            oldPosCol = letterInHand.col
+                                            oldPosRow = letterInHand.row
+                                        }
+                                        if (letterInHand.letter == "") {
+                                            binding.jokerDetected.visibility = VISIBLE
+                                            binding.scrollMoveInfo.visibility = GONE
+                                        }
+                                        Log.d(tag, "LETTERS PLACED - $isPlaced")
+                                        isInside = true
+                                    } else {
+                                        isPlaced.removeAll { it.viewTag == draggableItem.tag }
+                                        if (isPlaced.size <= 0) {
+                                            isInside = false
+                                        } else {
+                                            firstLetterPlaced = isPlaced[0]
+                                            SocketHandler.getSocket().emit("Share First Tile", JSONObject(mapOf("x" to isPlaced[0].row, "y" to isPlaced[0].col)))
+                                            oldPosCol = isPlaced[0].col
+                                            oldPosRow = isPlaced[0].row
+                                        }
+                                        val lp = LinearLayout.LayoutParams(draggableItem.width, draggableItem.width)
+                                        binding.letterRack.addView(draggableItem, lp)
                                     }
-                                    if (letterInHand.letter == "") {
-                                        binding.jokerDetected.visibility = VISIBLE
-                                        binding.scrollMoveInfo.visibility = GONE
-                                    }
-
-                                    Log.d(tag, "LETTERS PLACED - $isPlaced")
-                                    isInside = true
                                     true
                                 } else {
                                     false
@@ -658,61 +671,10 @@ class GamePageFragment : Fragment() {
             }
             true
         }
-        if (GameRoomModel.isPlayer) { binding.gameBoard.setOnDragListener(dragListener) }
-
-//
-//        val rackDragListener = OnDragListener {
-//                view, event ->
-//            val tag = "Drag and drop"
-//            val draggableItem = event.localState as View
-//
-//            //val lettre = draggableItem.findViewById<TextView>(R.id.letter).text.toString()
-//
-//            val parent = draggableItem.parent
-//            if (parent is GameBoardView) {
-//                event?.let {
-//                    when (event.action) {
-//                        DragEvent.ACTION_DRAG_STARTED -> {
-//                            true
-//                        }
-//                        DragEvent.ACTION_DRAG_ENTERED -> {
-//                            true
-//
-//                            Log.d(tag, "ACTION_DRAG_ENTERED")
-//                        }
-//                        DragEvent.ACTION_DRAG_EXITED -> {
-//                            //view.invalidate()
-//                            true
-//
-//                            Log.d(tag, "ACTION_DRAG_ENDED")
-//                        }
-//                        DragEvent.ACTION_DROP -> {
-//
-//                            parent.removeView(draggableItem)
-//                            binding.letterRack.addView(draggableItem)
-//                            view.invalidate()
-//                            true
-//
-//                        }
-//
-//                        DragEvent.ACTION_DRAG_ENDED -> {
-//                            //if (binding.gameBoard.childCount > 0) binding.buttonPlay.isEnabled = true
-//                            draggableItem.visibility = VISIBLE
-//                            view.invalidate()
-//                            true
-//
-//                            Log.d(tag, "ACTION_DRAG_ENDED")
-//                        }
-//                        else -> {
-//                            false
-//                        }
-//                    }
-//                }
-//                true
-//            } else
-//            false
-//        }
-//        binding.letterRack.setOnDragListener(rackDragListener)
+        if (GameRoomModel.isPlayer) {
+            binding.gameBoard.setOnDragListener(dragListener)
+            binding.letterRack.setOnDragListener(dragListener)
+        }
     }
 
     override fun onResume() {
