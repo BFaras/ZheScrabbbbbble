@@ -121,6 +121,9 @@
         <action
             android:id="@+id/action_friendsFragment_to_ChatFragment"
             app:destination="@id/ChatFragment" />
+        <action
+            android:id="@+id/action_friendsFragment_to_profilFriendFragment"
+            app:destination="@id/profilFriendFragment" />
     </fragment>
     <activity
         android:id="@+id/profileActivity"
@@ -178,6 +181,17 @@
         tools:layout="@layout/fragment_ranking" >
         <action
             android:id="@+id/action_rankingFragment_to_MainMenuFragment"
+            app:destination="@id/MainMenuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profilFriendFragment"
+        android:name="com.example.testchatbox.ProfilFriendFragment"
+        android:label="fragment_profil_friend"
+        tools:layout="@layout/fragment_profil_friend" >
+        <action
+            android:id="@+id/action_profilFriendFragment_to_MainMenuFragment"
+            app:popUpTo="@id/MainMenuFragment"
+            app:popUpToInclusive="true"
             app:destination="@id/MainMenuFragment" />
     </fragment>
 

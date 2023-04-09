@@ -116,7 +116,8 @@ class FriendsFragment : Fragment(), ObserverFriend {
     }
 
     private fun checkProfile(username: String){
-        //TODO
+        val bundle = bundleOf("username" to username)
+        findNavController().navigate(R.id.action_friendsFragment_to_profilFriendFragment, bundle)
     }
 
     private fun checkChat(username: String){
@@ -168,9 +169,7 @@ class FriendsFragment : Fragment(), ObserverFriend {
             checkChat(username);
         }
         binding.profileBtn.setOnClickListener {
-            val appContext = context?.applicationContext;
-            Toast.makeText(appContext, "NOT IMPLEMENTED", Toast.LENGTH_LONG).show();
-            hideActionMenu();
+            checkProfile(username);
         }
     }
 
