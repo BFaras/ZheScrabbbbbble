@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -208,6 +210,23 @@ class ProfilFragment : Fragment() {
 
         binding.button2.setOnClickListener {
             findNavController().navigate(R.id.action_profilFragment_to_mainActivity2)
+        }
+
+        binding.editName.setOnClickListener {
+            val builder = context?.let { it -> AlertDialog.Builder(it,R.style.CustomAlertDialog).create() }
+            val alertView = layoutInflater.inflate(R.layout.alert_change_username, null)
+            val dialogNo = alertView.findViewById<AppCompatButton>(R.id.dialogNo)
+            val dialogYes = alertView.findViewById<AppCompatButton>(R.id.dialogYes)
+            val username = alertView.findViewById<EditText>(R.id.username)
+            builder?.setView(alertView)
+            dialogNo.setOnClickListener {
+                builder?.dismiss()
+            }
+            dialogYes.setOnClickListener {
+                changeUsername(username.text.toString().trim())
+                builder?.dismiss()
+            }
+            builder?.show()
         }
     }
 

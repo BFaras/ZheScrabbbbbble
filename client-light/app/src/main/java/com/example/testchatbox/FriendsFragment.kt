@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentFriendsBinding
@@ -51,6 +52,7 @@ class FriendsFragment : Fragment(), ObserverFriend {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         FriendModel.updateFriendList()
+
         binding.friendCode.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 hideKeyboard()
@@ -64,17 +66,18 @@ class FriendsFragment : Fragment(), ObserverFriend {
     }
 
     private fun updateView(){
-        val friendListView = binding.friendList;
+        val friendListView = binding.friendListSection;
         friendListView.removeAllViews()
-        for(friend in friendList){
-            val friendText = Button((activity as MainActivity?)!!)
-            friendText.text = friend.username  +" | " +friend.connectionStatus;
+        val friends = friendList;
+        Log.i("Friends", friends.toString())
+        for(friend in friends){
+            val friendText = AppCompatButton((activity as MainActivity?)!!)
+            friendText.text = friend.username  +" | " +friend.connectionStatus.name;
             friendText.textSize= 18F;
             friendText.setOnClickListener {
                 showActionMenu(friend.username);
             }
             friendListView.addView(friendText)
-
         }
     }
 
