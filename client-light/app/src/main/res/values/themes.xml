@@ -33,6 +33,7 @@
         <item name="chatBox">@color/lightBeige</item>
         <item name="activeTile">@color/purple_700</item>
         <item name="backgroundProfile">@color/lightBeige</item>
+        <item name="profileAccentColor">#679089</item>
         <item name="chatIconNotif">#38683A</item>
     </style>
 
@@ -66,6 +67,7 @@
         <item name="chatBox">@color/white</item>
         <item name="activeTile">@color/purple_700</item>
         <item name="backgroundProfile">@color/LightBabyPink</item>
+        <item name="profileAccentColor">#a75c8c</item>
         <item name="chatIconNotif">#f7dfed</item>
     </style>
 
@@ -77,9 +79,9 @@
         <item name="colorPrimary">#281f32</item>
         <item name="colorPrimaryVariant">@color/BackSea</item>
         <item name="colorOnPrimary">@color/WhiteSmoke</item>
-        <item name="colorSecondary">#349ab0</item>
+        <item name="colorSecondary">#453385</item>
         <item name="android:statusBarColor">@color/black</item>
-        <item name="colorSecondaryVariant">#349ab0</item>
+        <item name="colorSecondaryVariant">#331f48</item>
         <item name="colorOnSecondary">@color/WhiteSmoke</item>
         <item name="doubleWord">#2c4e58</item>
         <item name="tripleWord">#349ab0</item>
@@ -93,6 +95,7 @@
         <item name="chatBox">@color/Platinium</item>
         <item name="activeTile">@color/Gold</item>
         <item name="backgroundProfile">#050a0e</item>
+        <item name="profileAccentColor">#986f76</item>
         <item name="chatIconNotif">@color/clearSea</item>
     </style>
 
@@ -107,7 +110,7 @@
         <item name="colorOnPrimary">@color/BackSea</item>
         <item name="android:textColorHighlight">@color/BrightSunset</item>
         <item name="colorSecondary">@color/BrightSunset</item>
-        <item name="colorSecondaryVariant">@color/Sunset</item>
+        <item name="colorSecondaryVariant">@color/grayWhite</item>
         <item name="colorOnSecondary">@color/BackSea</item>
         <item name="doubleWord">@color/BrightSunset</item>
         <item name="tripleWord">@color/SlateGray</item>
@@ -121,6 +124,7 @@
         <item name="chatBox">@color/grayWhite</item>
         <item name="activeTile">@color/purple_700</item>
         <item name="backgroundProfile">@color/WhiteSmoke</item>
+        <item name="profileAccentColor">#b7c1cc</item>
         <item name="chatIconNotif">#D8BDBB</item>
     </style>
 
@@ -135,7 +139,7 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:textColorHighlight">#1e301e</item>
         <item name="colorSecondary">#89b034</item>
-        <item name="colorSecondaryVariant">#89b034</item>
+        <item name="colorSecondaryVariant">#5a7b4f</item>
         <item name="colorOnSecondary">@color/SpringGreen</item>
         <item name="doubleWord">@color/DarkOliveGreen</item>
         <item name="tripleWord">@color/Olive</item>
@@ -149,6 +153,7 @@
         <item name="chatBox">@color/DarkGreen</item>
         <item name="activeTile">@color/Gold</item>
         <item name="backgroundProfile">#0b1c09</item>
+        <item name="profileAccentColor">#89b034</item>
         <item name="chatIconNotif">#D8BDBB</item>
     </style>
 

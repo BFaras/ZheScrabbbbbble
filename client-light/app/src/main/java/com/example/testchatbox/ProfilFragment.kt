@@ -511,7 +511,8 @@ class ProfilFragment : Fragment() {
                     if(errorMessage == R.string.NO_ERROR ){
                         Log.d("THEME ", newTheme)
                         LoggedInUser.setTheme(newTheme)
-                        binding.theme.text= newTheme.lowercase()
+                        context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
+                        binding.theme.text= newTheme
                     }else{
                         val appContext = context?.applicationContext
                         Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
@@ -570,8 +571,17 @@ class ProfilFragment : Fragment() {
             binding.frLangue.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
             binding.enLangue.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
         }
+
+        when (LoggedInUser.getTheme()) {
+            "pink" -> binding.pink.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            "green" -> binding.green.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            "blizzard" -> binding.blizzard.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            "classic" -> binding.lightTheme.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            "inverted" -> binding.darkTheme.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            else -> {}
+        }
+
         binding.theme.text= LoggedInUser.getTheme()
-        Log.d("USER THEME ", LoggedInUser.getTheme())
         binding.level.text= "${profile.level.level}"
 
         binding.tournamentFirst.text = profile.tournamentWins[0].toString()

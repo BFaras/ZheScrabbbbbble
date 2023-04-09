@@ -27,13 +27,6 @@
         android:background="@drawable/background_direction_panel"
         >
 
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:fontFamily="@font/shrikhand"-->
-<!--            android:text="@string/app_name"-->
-<!--            android:textSize="50dp"></TextView>-->
-
         <EditText
             android:id="@+id/username"
             android:layout_width="match_parent"
@@ -42,6 +35,7 @@
             android:hint="@string/prompt_username"
             android:inputType="text"
             android:textColorHint="?colorOnPrimary"
+            android:textColor="?colorOnPrimary"
             android:selectAllOnFocus="true" />
 
         <EditText
@@ -51,6 +45,7 @@
             android:autofillHints="@string/prompt_email"
             android:hint="@string/prompt_email"
             android:textColorHint="?colorOnPrimary"
+            android:textColor="?colorOnPrimary"
             android:inputType="textEmailAddress"
             android:selectAllOnFocus="true" />
 
@@ -61,6 +56,7 @@
             android:autofillHints="@string/prompt_password"
             android:hint="@string/prompt_password"
             android:textColorHint="?colorOnPrimary"
+            android:textColor="?colorOnPrimary"
             android:selectAllOnFocus="true"
             android:inputType="textPassword" />
 
@@ -71,6 +67,7 @@
             android:autofillHints="Security question"
             android:hint="@string/security_question"
             android:textColorHint="?colorOnPrimary"
+            android:textColor="?colorOnPrimary"
             android:selectAllOnFocus="true"/>
         <EditText
             android:id="@+id/answer"
@@ -79,6 +76,7 @@
             android:autofillHints="Answer"
             android:hint="@string/answer"
             android:textColorHint="?colorOnPrimary"
+            android:textColor="?colorOnPrimary"
             android:imeActionLabel="Register"
             android:imeOptions="actionDone"
             android:inputType="textPassword"

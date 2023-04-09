@@ -12,4 +12,5 @@
     <attr name="chatBox" format="color"></attr>
     <attr name="activeTile" format="color"></attr>
     <attr name="backgroundProfile" format="color"></attr>
+    <attr name="profileAccentColor" format="color"></attr>
 </resources>

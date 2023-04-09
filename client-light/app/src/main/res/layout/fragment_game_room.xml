@@ -7,6 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".GameRoomFragment">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:fontFamily="@font/shrikhand"
+        android:text="@string/scrabbleName"
+        android:textColor="?colorSecondary"
+        android:layout_marginTop="70dp"
+        android:textSize="70sp">
+    </TextView>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,9 +63,9 @@
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_gravity="center"
-           android:text="WAITING FOR PLAYERS"
+           android:text="@string/players_in_game"
            android:textSize="15dp"
-           android:textStyle="bold|italic"
+           android:textStyle="bold"
            >
        </TextView>
        <TextView
@@ -90,7 +101,7 @@
                android:id="@+id/startGame"
                android:layout_width="150dp"
                android:layout_height="40dp"
-               android:text="Start game"
+               android:text="@string/start_game"
                android:layout_marginBottom="15dp"
                android:background="@drawable/background_chat_input"
                android:backgroundTint="?colorSecondary"
@@ -104,7 +115,7 @@
                android:background="@drawable/background_chat_input"
                android:backgroundTint="?colorSecondary"
                android:textColor="?colorOnPrimary"
-               android:text="Leave" />
+               android:text="@string/leave" />
        </LinearLayout>
    </LinearLayout>
 

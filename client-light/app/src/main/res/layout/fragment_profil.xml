@@ -6,6 +6,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?backgroundColor"
     tools:context=".ProfilFragment">
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button2"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/ic_back"
+        android:backgroundTint="?colorSecondary"
+        android:layout_gravity="top|left"
+        android:layout_marginTop="105dp"
+        android:layout_marginStart="100dp"/>
 
     <LinearLayout
         android:layout_width="900dp"
@@ -56,6 +65,7 @@
                         android:background="@drawable/background_direction_panel"
                         android:backgroundTint="?colorSecondary"
                         android:padding="5dp"
+                        android:textColorHighlight="@color/aqua"
                         android:textAlignment="center"
                         android:textColor="?colorOnSecondary"
                         android:textIsSelectable="true"
@@ -127,7 +137,7 @@
                         android:id="@+id/theme"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFeatureSettings="smcp"
+                        android:textAllCaps="true"
                         android:text=""
                         android:textColor="?colorSecondary"
                         android:textSize="20dp"
@@ -223,13 +233,15 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="10dp"
-                        android:background="@drawable/ic_pencil"></androidx.appcompat.widget.AppCompatButton>
+                        android:background="@drawable/ic_pencil"
+                        android:backgroundTint="?colorOnSecondary"></androidx.appcompat.widget.AppCompatButton>
 
                     <TextView
                         android:id="@+id/playerName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="PLAYER NAME"
+                        android:fontFamily="@font/shrikhand"
                         android:textColor="?colorOnSecondary"
                         android:textSize="50dp" />
                 </LinearLayout>
@@ -284,7 +296,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
                             android:includeFontPadding="false"
-                            android:text="42"
+                            android:text="  "
                             android:textColor="?colorOnSecondary"
                             android:textSize="65dp"></TextView>
 
@@ -299,7 +311,7 @@
                         android:background="?colorSecondary"
                         android:max="500"
                         android:progress="100"
-                        app:indicatorColor="@color/BackSea"
+                        app:indicatorColor="?colorOnPrimary"
                         app:trackThickness="10dp">
 
                     </com.google.android.material.progressindicator.LinearProgressIndicator>
@@ -313,7 +325,7 @@
                     android:layout_marginEnd="520dp"
                     android:textAllCaps="true"
                     android:text="game log"
-                    android:textColor="?colorSecondary"
+                    android:textColor="?profileAccentColor"
                     android:textSize="25dp"
                     android:textStyle="bold"></TextView>
 
@@ -325,7 +337,7 @@
                     android:layout_marginEnd="30dp"
                     android:layout_marginBottom="35dp"
                     android:background="@drawable/background_direction_panel"
-                    android:backgroundTint="?colorSecondary"
+                    android:backgroundTint="?profileAccentColor"
                     android:divider="@drawable/letters_hand_divider"
                     android:orientation="horizontal"
                     android:padding="5dp"
@@ -393,102 +405,75 @@
                 </LinearLayout>
             </RelativeLayout>
         </FrameLayout>
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button2"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:background="@drawable/ic_back"
-            android:backgroundTint="?colorSecondary"
-            android:layout_gravity="bottom"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:showDividers="middle"
-        android:divider="@drawable/letters_hand_divider"
-        android:layout_gravity="center|start"
-        android:layout_marginTop="25dp"
-        android:layout_marginStart="120dp"
-        android:gravity="top">
-        <FrameLayout
-            android:id="@+id/lightTheme"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/background_chat_input"
-            android:backgroundTint="?colorSecondary">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_sun"
-                android:tint="?colorOnSecondary">
-            </androidx.appcompat.widget.AppCompatImageView>
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/darkTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/background_chat_input"
-            android:backgroundTint="?colorSecondary">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_night"
-                android:tint="?colorOnSecondary">
-            </androidx.appcompat.widget.AppCompatImageView>
-        </FrameLayout>
-        <FrameLayout
-            android:id="@+id/pink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/background_chat_input"
-            android:backgroundTint="?colorSecondary">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_pink"
-                android:tint="?colorOnSecondary">
-            </androidx.appcompat.widget.AppCompatImageView>
-        </FrameLayout>
-        <FrameLayout
-            android:id="@+id/green"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/background_chat_input"
-            android:backgroundTint="?colorSecondary">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_green"
-                android:tint="?colorOnSecondary">
-            </androidx.appcompat.widget.AppCompatImageView>
-        </FrameLayout>
-        <FrameLayout
-            android:id="@+id/blizzard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:background="@drawable/background_chat_input"
-            android:backgroundTint="?colorSecondary">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_snow"
-                android:tint="?colorOnSecondary">
-            </androidx.appcompat.widget.AppCompatImageView>
-        </FrameLayout>
+            android:orientation="horizontal"
+            android:showDividers="middle"
+            android:divider="@drawable/letters_hand_divider"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/lightTheme"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="@string/classicTheme"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorSecondaryVariant"
+                android:padding="10dp"></TextView>
+            <TextView
+                android:id="@+id/darkTheme"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="@string/invertedTheme"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorSecondaryVariant"
+                android:padding="10dp"></TextView>
+            <TextView
+                android:id="@+id/green"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:text="@string/greenTheme"
+                android:textAllCaps="true"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorSecondaryVariant"
+                android:padding="10dp"></TextView>
+            <TextView
+                android:id="@+id/pink"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:text="@string/pinkTheme"
+                android:textAllCaps="true"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorSecondaryVariant"
+                android:padding="10dp"></TextView>
+            <TextView
+                android:id="@+id/blizzard"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:text="@string/blizzardTheme"
+                android:textAllCaps="true"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorSecondaryVariant"
+                android:padding="10dp"></TextView>
+        </LinearLayout>
 
     </LinearLayout>
+
+
 
     <LinearLayout
         android:id="@+id/gameLogText"

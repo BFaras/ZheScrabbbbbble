@@ -185,21 +185,34 @@
                     android:textAlignment="center"
                     android:textStyle="italic|bold"
                     android:textColor="?colorOnPrimary"
-                    android:text="Sorry... \nNo hints have been found."></TextView>
-                <GridLayout
-                    android:id="@+id/hint_holder"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
+                    android:text="@string/sorry_nno_hints_have_been_found"></TextView>
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:rowCount="2"
-                    android:orientation="vertical">
-                </GridLayout>
+                    android:scrollbars="none"
+                    android:layout_gravity="center"
+                    >
+                    <LinearLayout
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <GridLayout
+                            android:id="@+id/hint_holder"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:columnCount="2"
+                            android:rowCount="3"></GridLayout>
+                    </LinearLayout>
+                </HorizontalScrollView>
                 <FrameLayout
                     android:id="@+id/noHelpHint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/background_direction_panel"
                     android:backgroundTint="?colorSecondary">
                     <TextView
@@ -335,7 +348,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_height="485dp"
+            android:layout_height="wrap_content"
             android:layout_width="280dp"
             android:background="@drawable/background_player_panel"
             android:layout_gravity="left|center"
@@ -399,6 +412,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/reserveLength"
@@ -425,6 +439,7 @@
                     android:layout_gravity="center"
                     android:gravity="center_horizontal"
                     android:layout_marginTop="5dp"
+                    android:layout_marginBottom="20dp"
                     android:orientation="horizontal">
 
                     <FrameLayout
@@ -442,17 +457,30 @@
                         </androidx.appcompat.widget.AppCompatImageView>
                     </FrameLayout>
                     <FrameLayout
-                        android:id="@+id/emoteBoo"
+                        android:id="@+id/emoteCringe"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:padding="10dp"
+                        android:layout_marginEnd="20dp"
+                        android:padding="5dp"
                         android:background="@drawable/background_chat_input"
                         android:backgroundTint="?colorSecondary">
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ic_sad"
-                            android:tint="?colorOnSecondary">
+                            android:src="@drawable/cringe">
+                        </androidx.appcompat.widget.AppCompatImageView>
+                    </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/emoteWat"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:padding="8dp"
+                        android:background="@drawable/background_chat_input"
+                        android:backgroundTint="?colorSecondary">
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/wat">
                         </androidx.appcompat.widget.AppCompatImageView>
                     </FrameLayout>
 
@@ -504,7 +532,7 @@
             android:orientation="vertical"
             android:layout_gravity="top|left"
             android:layout_marginStart="250dp"
-            android:layout_marginTop="140dp"
+            android:layout_marginTop="100dp"
             android:gravity="center">
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -602,23 +630,6 @@
             android:layout_marginLeft="380dp"
             >
         </Button>
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/backInHand"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="@drawable/background_player_panel"-->
-<!--            android:layout_gravity="center|right"-->
-<!--            android:paddingLeft="10dp"-->
-<!--            android:paddingRight="10dp"-->
-<!--            android:paddingTop="5dp"-->
-<!--            android:paddingBottom="12dp"-->
-<!--            android:visibility="gone"-->
-<!--            android:src="@drawable/ic_hand"-->
-<!--            android:layout_marginTop="275dp"-->
-<!--            android:layout_marginRight="240dp">-->
-
-<!--        </ImageButton>-->
 
         <Button
             android:id="@+id/buttonHint"

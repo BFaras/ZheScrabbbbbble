@@ -5,8 +5,7 @@
     android:layout_width="85dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:padding="3dp"
-    android:layout_marginBottom="5dp"
+    android:layout_margin="2dp"
     android:background="@drawable/background_direction_panel"
     android:backgroundTint="?colorOnPrimary">
 
