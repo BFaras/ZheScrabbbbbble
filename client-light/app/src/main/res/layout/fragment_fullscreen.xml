@@ -17,6 +17,7 @@
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,6 +39,8 @@
             android:text="@string/scrabbleName"
             android:textSize="45dp">
         </TextView>
+
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/gameWinnerHolder"
@@ -65,22 +68,7 @@
                 android:text="@string/winnerName"></TextView>
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/info_panel"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:textAlignment="center"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:paddingRight="10dp"
-            android:layout_marginTop="100dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/background_letter_rack">
 
-        </TextView>
 
         <LinearLayout
             android:layout_width="260dp"
@@ -133,6 +121,7 @@
                 android:layout_marginTop="20dp"
                 android:visibility="gone">
             </ProgressBar>
+
             <LinearLayout
                 android:id="@+id/hintPanel"
                 android:layout_width="match_parent"
@@ -171,20 +160,44 @@
                     android:textStyle="italic|bold"
                     android:textColor="?colorOnPrimary"
                     android:text="@string/vous_pouvez_cliquer_sur_n_importe_lequel_pour_le_pr_visualiser_sur_le_plateau"></TextView>
-                <GridLayout
-                    android:id="@+id/hint_holder"
-                    android:layout_gravity="center"
+                <TextView
+                    android:id="@+id/noHintFound"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_marginTop="10dp"
-                    android:rowCount="2"
-                    android:orientation="vertical">
-                </GridLayout>
+                    android:textSize="14dp"
+                    android:textAlignment="center"
+                    android:textStyle="italic|bold"
+                    android:textColor="?colorOnPrimary"
+                    android:text="@string/sorry_nno_hints_have_been_found"></TextView>
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:layout_gravity="center"
+                    >
+                    <LinearLayout
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <GridLayout
+                            android:id="@+id/hint_holder"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:columnCount="2"
+                            android:rowCount="3"></GridLayout>
+                    </LinearLayout>
+                </HorizontalScrollView>
                 <FrameLayout
                     android:id="@+id/noHelpHint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/background_direction_panel"
                     android:backgroundTint="?colorSecondary">
                     <TextView
@@ -196,6 +209,7 @@
                         android:textStyle="bold"
                         android:textColor="?colorOnSecondary"
                         android:text="@string/pas_besoin_d_indices"
+                        android:textAllCaps="true"
                         android:layout_height="wrap_content"
                         android:justificationMode="inter_word" />
                 </FrameLayout>
@@ -207,7 +221,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_gravity="center"
-                android:padding="10dp"
+                android:padding="6dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/background_direction_panel"
                 android:visibility="gone"
@@ -248,7 +262,7 @@
                         android:layout_height="match_parent"
                         android:background="@drawable/background_chat_input"
                         android:backgroundTint="?colorBackgroundFloating"
-                        android:padding="5dp"
+                        android:padding="2dp"
                         android:textSize="12sp"
                         android:imeOptions="actionSend"
                         android:inputType=""
@@ -259,8 +273,8 @@
                         android:maxLength="1" />
                     <FrameLayout
                         android:id="@+id/confirmLetter"
-                        android:layout_width="35dp"
-                        android:layout_height="match_parent"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_marginStart="5dp"
                         android:layout_gravity="center_horizontal|center"
                         android:background="@drawable/background_chat_input"
@@ -295,8 +309,6 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -319,141 +331,243 @@
                 android:background="@drawable/ic_chat"
                 android:layout_gravity="center_vertical" />
         </LinearLayout>
-
         <LinearLayout
-            android:layout_height="480dp"
-            android:layout_width="280dp"
-            android:background="@drawable/background_player_panel"
-            android:layout_gravity="left|center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginBottom="30dp"
-            android:paddingTop="30dp">
-
-            <LinearLayout
-                android:id="@+id/playersInfoHolder"
-                android:layout_width="match_parent"
+            android:layout_gravity="center|left">
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/info_panel"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:textAlignment="center"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/background_letter_rack"></TextView>
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="280dp"
+                android:background="@drawable/background_player_panel"
+                android:layout_gravity="left|center"
                 android:orientation="vertical"
-                >
+                android:layout_marginBottom="10dp"
+                android:paddingTop="10dp">
+                <LinearLayout
+                    android:id="@+id/playersInfoHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="15dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        >
+                        <TextView
+                            android:id="@+id/minutesTimer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:text="00"
+                            android:textSize="40dp"
+                            android:textColor="?colorOnPrimary"
+                            android:layout_gravity="center|bottom">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/secondsTimer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="00"
+                            android:textSize="40dp"
+                            android:layout_gravity="center|bottom">
+                        </TextView>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:text="@string/tillNextRound"
+                        android:textColor="?colorOnPrimary"
+                        android:layout_gravity="center|bottom">
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/reserveLength"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00"
+                        android:textStyle="bold"
+                        android:layout_gravity="center|bottom"
+                        android:textSize="25dp"
+                        android:textAlignment="center"
+                        >
+                    </TextView>
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:text="@string/reserveText"
+                        android:textColor="?colorOnPrimary"
+                        android:layout_gravity="center|bottom">
+                    </TextView>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:id="@+id/emoteNice"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:padding="5dp"
+                            android:background="@drawable/background_chat_input"
+                            android:layout_marginEnd="20dp"
+                            android:backgroundTint="?colorSecondary">
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/hmm">
+                            </androidx.appcompat.widget.AppCompatImageView>
+                        </FrameLayout>
+                        <FrameLayout
+                            android:id="@+id/emoteCringe"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginEnd="20dp"
+                            android:padding="5dp"
+                            android:background="@drawable/background_chat_input"
+                            android:backgroundTint="?colorSecondary">
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/cringe">
+                            </androidx.appcompat.widget.AppCompatImageView>
+                        </FrameLayout>
+                        <FrameLayout
+                            android:id="@+id/emoteWat"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:padding="8dp"
+                            android:background="@drawable/background_chat_input"
+                            android:backgroundTint="?colorSecondary">
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/wat">
+                            </androidx.appcompat.widget.AppCompatImageView>
+                        </FrameLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/toggle_swap_holder"
+                android:layout_height="wrap_content"
+                android:layout_width="280dp"
+                android:orientation="horizontal"
+                android:layout_gravity="left|bottom"
+                android:paddingLeft="15dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="4dp"
+                android:gravity="center_vertical"
+                android:divider="@drawable/letters_hand_divider"
+                android:showDividers="middle"
+                android:background="@drawable/background_player_panel">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/move_mode"
+                    android:textSize="13dp"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:fontFeatureSettings="smcp"></TextView>
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/toggleSwap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|bottom"
+                    android:fontFeatureSettings="smcp">
+                </com.google.android.material.switchmaterial.SwitchMaterial>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/swap_mode"
+                    android:textAllCaps="true"
+                    android:textSize="13dp"
+                    android:textStyle="bold"
+                    android:fontFeatureSettings="smcp"></TextView>
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:orientation="vertical"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp">
-            <TextView
-                android:id="@+id/timesup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/times_up"
-                android:visibility="gone"
-                android:layout_gravity="center"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:textAlignment="center">
-            </TextView>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center"
-                >
-                <TextView
-                    android:id="@+id/minutesTimer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:text="00"
-                    android:textSize="40dp"
-                    android:textColor="?colorOnPrimary"
-                    android:layout_gravity="center|bottom">
-                </TextView>
-                <TextView
-                    android:id="@+id/secondsTimer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="00"
-                    android:textSize="40dp"
-                    android:layout_gravity="center|bottom">
-                </TextView>
-            </LinearLayout>
+            android:layout_gravity="top|left"
+            android:layout_marginStart="250dp"
+            android:layout_marginTop="100dp"
+            android:gravity="center">
 
-            <TextView
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="@string/tillNextRound"
-                android:textColor="?colorOnPrimary"
-                android:layout_gravity="center|bottom">
-            </TextView>
-
-        </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/reserveLength"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="00"
-                    android:textStyle="bold"
-                    android:layout_gravity="center|bottom"
-                    android:textSize="25dp"
-                    android:textAlignment="center"
-                    >
-                </TextView>
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:text="@string/reserveText"
-                    android:textColor="?colorOnPrimary"
-                    android:layout_gravity="center|bottom">
-                </TextView>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/toggle_swap_holder"
-            android:layout_height="wrap_content"
-            android:layout_width="280dp"
-            android:orientation="horizontal"
-            android:layout_gravity="left|bottom"
-            android:layout_marginBottom="130dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="4dp"
-            android:gravity="center_vertical"
-            android:divider="@drawable/letters_hand_divider"
-            android:showDividers="middle"
-            android:background="@drawable/background_player_panel">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/move_mode"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                android:fontFeatureSettings="smcp"></TextView>
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/toggleSwap"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left|bottom"
-                android:fontFeatureSettings="smcp">
-            </com.google.android.material.switchmaterial.SwitchMaterial>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/swap_mode"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                android:fontFeatureSettings="smcp"></TextView>
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/emotePlayer1"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop"
+                android:visibility="invisible">
+            </com.google.android.material.imageview.ShapeableImageView>
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/emotePlayer2"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop"
+                android:visibility="invisible">
+            </com.google.android.material.imageview.ShapeableImageView>
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/emotePlayer3"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop"
+                android:visibility="invisible">
+            </com.google.android.material.imageview.ShapeableImageView>
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/emotePlayer4"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop">
+            </com.google.android.material.imageview.ShapeableImageView>
         </LinearLayout>
         <RelativeLayout
             android:layout_width="600dp"
@@ -522,23 +636,6 @@
             android:layout_marginLeft="380dp"
             >
         </Button>
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/backInHand"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="@drawable/background_player_panel"-->
-<!--            android:layout_gravity="center|right"-->
-<!--            android:paddingLeft="10dp"-->
-<!--            android:paddingRight="10dp"-->
-<!--            android:paddingTop="5dp"-->
-<!--            android:paddingBottom="12dp"-->
-<!--            android:visibility="gone"-->
-<!--            android:src="@drawable/ic_hand"-->
-<!--            android:layout_marginTop="275dp"-->
-<!--            android:layout_marginRight="240dp">-->
-
-<!--        </ImageButton>-->
 
         <Button
             android:id="@+id/buttonHint"

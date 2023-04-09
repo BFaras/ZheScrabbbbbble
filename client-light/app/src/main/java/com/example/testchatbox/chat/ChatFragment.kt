@@ -45,7 +45,6 @@ class ChatFragment : Fragment(), ObserverChat {
     private var chatsList = ChatModel.getList();
     private var chatRoomsNotifBubble: LinkedHashMap<String, ImageView> = LinkedHashMap<String, ImageView>();
     private var notifSound: MediaPlayer? = null;
-    private var avatarProfil = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -108,7 +107,7 @@ class ChatFragment : Fragment(), ObserverChat {
 
     private fun loadChatMessages(){
         binding.chatProgress.visibility = View.VISIBLE
-        SocketHandler.getSocket().once("Chat History Response"){args ->
+        SocketHandler.getSocket().once("Chat History Response"){ args ->
             val messageArray= args[0] as JSONArray
             val messagesBox = binding.textView
             activity?.runOnUiThread(java.lang.Runnable {
@@ -133,13 +132,11 @@ class ChatFragment : Fragment(), ObserverChat {
                 usernameMessage.text = message.username
                 timeStampMessage.text = message.timestamp
 
-                when (message.avatar) {
-                    "dog.jpg" -> {
-                        avatar.setImageResource(R.drawable.dog)
-                    }
-                    "cat.jpg" -> avatar.setImageResource(R.drawable.cat)
-                    "flower.jpg" -> avatar.setImageResource(R.drawable.flower)
-                    else -> avatar.setImageResource(R.color.Aqua)
+                if (resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                    Log.d("AVATAR", message.avatar)
+                    avatar.setImageResource(resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                } else {
+                    avatar.setImageResource(R.drawable.robot)
                 }
 
                 activity?.runOnUiThread(java.lang.Runnable {
@@ -153,6 +150,7 @@ class ChatFragment : Fragment(), ObserverChat {
                 messagesBox.requestLayout();
             });
         }
+        binding.chatProgress.visibility = View.GONE
         SocketHandler.getSocket().emit("Get Chat History", chatsList[selectedChatIndex]._id)
     }
 
@@ -200,13 +198,10 @@ class ChatFragment : Fragment(), ObserverChat {
         usernameMessage.text = message.username
         timeStampMessage.text = message.timestamp
 
-        when (avatarProfil) {
-            "dog.jpg" -> {
-                avatar.setImageResource(R.drawable.dog)
-            }
-            "cat.jpg" -> avatar.setImageResource(R.drawable.cat)
-            "flower.jpg" -> avatar.setImageResource(R.drawable.flower)
-            else -> avatar.setImageResource(R.color.Aqua)
+        if (resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+            avatar.setImageResource(resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+        } else {
+            avatar.setImageResource(R.drawable.robot)
         }
 
         activity?.runOnUiThread(java.lang.Runnable {
@@ -236,17 +231,6 @@ class ChatFragment : Fragment(), ObserverChat {
                 }
             })
         }
-        if(chatsList[selectedChatIndex]._id == chatCode) {
-            SocketHandler.getSocket().emit("Get Avatar from Username", message.username)
-            SocketHandler.getSocket().once("Avatar from Username Response") { args ->
-                if (args[0] != null) {
-                    avatarProfil = args[0] as String
-                }
-                addMessage(message);
-            }
-        }
-
-
     }
 
     override fun updateChannels() {

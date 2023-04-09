@@ -17,7 +17,7 @@
             android:textAlignment="center"
             android:text="@string/confirmAbandon"
             android:textStyle="bold"
-            android:fontFeatureSettings="smcp"
+            android:textAllCaps="true"
             android:textSize="28sp"/>
 
         <TextView
@@ -37,26 +37,26 @@
             android:orientation="horizontal">
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/dialogYes"
-                android:layout_width="150dp"
+                android:layout_width="170dp"
                 android:layout_height="40dp"
                 android:textColor="?colorOnSecondary"
                 android:background="@drawable/background_chat_input"
                 android:backgroundTint="?colorSecondary"
                 android:text="@string/yes"
                 android:fontFeatureSettings="smcp"
-                android:textAllCaps="false"
-                android:textSize="20sp"/>
+                android:textAllCaps="true"
+                android:textSize="16sp"/>
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/dialogNo"
-                android:layout_width="150dp"
+                android:layout_width="170dp"
                 android:layout_height="40dp"
                 android:text="@string/no"
                 android:textColor="?colorOnSecondary"
                 android:fontFeatureSettings="smcp"
                 android:background="@drawable/background_chat_input"
                 android:backgroundTint="?colorSecondary"
-                android:textAllCaps="false"
-                android:textSize="20sp"/>
+                android:textAllCaps="true"
+                android:textSize="16sp"/>
         </LinearLayout>
 
 
