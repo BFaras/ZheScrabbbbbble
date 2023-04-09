@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { WaitingRoom } from '@app/classes/waiting-room';
 import { RoomVisibility } from '@app/constants/room-visibility';
@@ -22,7 +23,9 @@ export class JoinGameComponent implements OnDestroy {
 
     constructor(private waitingRoomManagerService: WaitingRoomManagerService,
         private router: Router, private dialog: MatDialog,
-        private chatService: ChatService) {}
+        private chatService: ChatService,
+        private snackBar: MatSnackBar
+    ) {}
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
@@ -75,12 +78,12 @@ export class JoinGameComponent implements OnDestroy {
 
     redirectPlayer(message: JoinResponse) {
         if (message.errorCode === 'ROOM-4') {
-            alert('Cette salle de jeu est pleine');
+            this.snackBar.open('Cette salle de jeu est pleine', "Fermer")
             return;
         }
         if (!message.playerNames) {
             // Should never reach here
-            alert('Fatal server error. No player name received');
+            this.snackBar.open('Fatal server error. No player name received', "Fermer")
             return;
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom(message.playerNames);

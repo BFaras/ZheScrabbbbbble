@@ -103,7 +103,7 @@ export class ChatService {
     }
 
     async getChatHistory(chatId: string): Promise<ChatMessage[]> {
-        if (await this.chatGameHistoryService.isGameChat(chatId)) {
+        if (this.chatGameHistoryService.isGameChat(chatId)) {
             return await this.transformChatHistoryForClient(this.chatGameHistoryService.getGameChatHistory(chatId));
         } else {
             return await this.transformChatHistoryForClient(await this.dbService.getChatHistory(chatId));
@@ -113,7 +113,7 @@ export class ChatService {
     async addChatMessageToHistory(userId: string, chatId: string, chatMessage: ChatMessage): Promise<void> {
         const chatMessageDB: ChatMessageDB = this.createChatMessageDB(userId, chatMessage);
 
-        if (await this.chatGameHistoryService.isGameChat(chatId)) {
+        if (this.chatGameHistoryService.isGameChat(chatId)) {
             this.chatGameHistoryService.addMessageToGameChatHistory(chatId, chatMessageDB);
         } else {
             await this.dbService.addMessageToHistory(chatId, chatMessageDB);
@@ -130,8 +130,8 @@ export class ChatService {
         return CHAT_ROOM_BEGINNING + chatId;
     }
 
-    async isGameChat(chatId: string) {
-        return await this.chatGameHistoryService.isGameChat(chatId);
+    isGameChat(chatId: string) {
+        return this.chatGameHistoryService.isGameChat(chatId);
     }
 
     private async createGlobalChat(userId: string): Promise<boolean> {

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AccountAuthenticationService } from '@app/services/account-authentification-service/account-authentication.service';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -18,7 +19,7 @@ export class PasswordLostAreaComponent implements OnInit {
   answerReset: string;
   subscriptionModifyPassword: Subscription;
   subscriptionGetQuestion: Subscription;
-  constructor(private router: Router, private accountAuthenticationService: AccountAuthenticationService) {
+  constructor(private snackBar: MatSnackBar, private router: Router, private accountAuthenticationService: AccountAuthenticationService) {
     this.accountAuthenticationService.setUpSocket();
   }
 
@@ -38,7 +39,7 @@ export class PasswordLostAreaComponent implements OnInit {
         } else {
           this.isQuestionAnswered = false;
           this.questionReset = "";
-          window.alert('Veuillez choisir un nom valide');
+          this.snackBar.open('Veuillez choisir un nom valide', "Fermer")
         }
       });
   }
@@ -49,14 +50,14 @@ export class PasswordLostAreaComponent implements OnInit {
     this.subscriptionModifyPassword = this.accountAuthenticationService.modifyPassword(this.username, this.newPassword, this.answerReset).subscribe(
       (errorCode: string) => {
         if (errorCode === NO_ERROR) {
-          window.alert('Votre mot de passe a été modifié');
+          this.snackBar.open('Votre mot de passe a été modifié', "Fermer")
           this.router.navigate(['login']);
         }
         else if (errorCode === DATABASE_UNAVAILABLE) {
-          window.alert("La base de donnée n'est pas disponible");
+          this.snackBar.open("La base de donnée n'est pas disponible", "Fermer")
         }
         else {
-          window.alert('Veuillez entrer la bonne réponse pour la question de sécurité');
+          this.snackBar.open('Veuillez entrer la bonne réponse pour la question de sécurité', "Fermer")
 
         }
       }

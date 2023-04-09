@@ -10,12 +10,26 @@ ul {
     justify-content: space-between;
 }
 
-ul{
+#popup-btn {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    padding: 0%;
+    top: 10px;
+    right: 25px;
+    background-color: var(--background-quaternary);
+}
+
+mat-icon {
+    color: var(--text-default);
+}
+
+ul {
     display: flex;
     flex-direction: row;
-    gap:5px
+    gap: 5px;
 }
-.avatar{
+.avatar {
     border-radius: 50%;
 }
 input {
@@ -52,7 +66,7 @@ button {
     color: var(--text-default);
 }
 
-.message{
+.message {
     color: var(--button-text-default);
 }
 #chat-box {

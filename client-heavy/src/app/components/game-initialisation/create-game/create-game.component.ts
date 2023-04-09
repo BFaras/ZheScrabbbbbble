@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { RoomVisibility } from '@app/constants/room-visibility';
 import { AccountService } from '@app/services/account-service/account.service';
@@ -18,17 +19,16 @@ export class CreateGameComponent {
     visibility: RoomVisibility = RoomVisibility.PUBLIC;
     IsProtectedRoom: boolean = false;
     passwordRoom: string = "";
-    gameType : string = 'Classic'
+    gameType: string = 'Classic'
 
     constructor(
         private waitingRoomManagerService: WaitingRoomManagerService,
         private accountService: AccountService,
         private router: Router,
         private chatService: ChatService,
-        private avatarInRoomService: AvatarInRoomsService
-    ) {
-        console.log(this.accountService.getProfile())
-    }
+        private avatarInRoomService: AvatarInRoomsService,
+        private snackBar: MatSnackBar
+    ) {}
 
 
     getVisibilityButtonValue(event: MatRadioChange) {
@@ -65,17 +65,17 @@ export class CreateGameComponent {
         }
 
         sessionStorage.clear();
-        this.waitingRoomManagerService.createRoomResponse().subscribe((response)=> this.redirectPlayer(response));
+        this.waitingRoomManagerService.createRoomResponse().subscribe((response) => this.redirectPlayer(response));
         this.waitingRoomManagerService.createMultiRoom(roomNameValue, this.visibility, this.passwordRoom, this.gameType);
     }
 
     alertFalseInput() {
-        alert('Veuillez remplir les champs vides.');
+        this.snackBar.open('Veuillez remplir les champs vides.', "Fermer")
     }
 
     redirectPlayer(message: { codeError: string, roomId: string }) {
         if (message.codeError !== '0') {
-            alert('Erreur dans la création de la salle');
+            this.snackBar.open('Erreur lors de la création de la salle', "Fermer")
             return;
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom([this.accountService.getUsername()])

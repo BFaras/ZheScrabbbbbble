@@ -13,7 +13,10 @@
             {{'LETTERHOLDER.REPLACE' | translate}}
         </button>
         <button *ngIf="!isObserver() && !makingSelection" class="button" id="clueButton" (click)="requestClue()" [disabled]="isDisabled()">{{'LETTERHOLDER.HINT' | translate}}</button>
-        <div cdkDropList [cdkDropListData]="playerHand"id="rack" >
+        <div cdkDropList 
+        cdkDropListSortingDisabled="true"
+        cdkDropListAutoScrollDisabled = "true"
+         [cdkDropListData]="playerHand"id="rack" >
             <div cdkDrag (cdkDragStarted) = "cancelManipulationAndSelection($event)"
             (contextmenu)="clickInside($event,indexOfelement)"
             (click)="clickInside($event,indexOfelement)"
@@ -25,6 +28,12 @@
             [ngClass]="{'red': listTileSelected[indexOfelement+1],'green':listTileManipulated[indexOfelement+1]}"class="tile" >
                 <h1 id="letter">{{getLetterIfNotBlank(tile)}}</h1>
                 <h1 id="point">{{getPointIfNotBlank(playerHandPoints[indexOfelement])}}</h1>
+                <div class = "tile-preview" *cdkDragPreview>
+                    <h1 id="letter">{{getLetterIfNotBlank(tile)}}</h1>
+                    <h1 id="point">{{getPointIfNotBlank(playerHandPoints[indexOfelement])}}</h1>
+                </div>
+                <div class = "placeholder-invisible"  *cdkDragPlaceholder >
+                </div>
             </div>
         </div>
         <button *ngIf="!isObserver()" id="playButton" class="button" [disabled]="isDisabled()" (click)="sendWord()">{{'LETTERHOLDER.PLAY' | translate}}</button>

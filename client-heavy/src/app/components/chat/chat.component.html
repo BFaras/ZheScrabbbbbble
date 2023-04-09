@@ -3,7 +3,10 @@
 </section>
 <section id="chat-messages">
     <div id="chat-box" (click)="isReceiver()">
-        <p id="title-chat">{{'CHATBOX.CHATBOX' | translate}}</p><!--<button (click)="goToLink()">chat</button>-->
+        <button id="popup-btn" type="button" (click)="openPopupChat()">
+            <mat-icon>open_in_new</mat-icon>
+        </button>
+        <p id="title-chat">{{'CHATBOX.CHATBOX' | translate}}</p>
         <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
             <div *ngFor="let message of messageHistory">
                 <ul >
@@ -24,7 +27,7 @@
                 (keyup.enter)="sendMessage()"
                 autofocus
             />
-            <button (click)="sendMessage()">{{'CHATBOX.SEND' | translate}}</button>
+            <button type="submit" (click)="sendMessage()">{{'CHATBOX.SEND' | translate}}</button>
         </div>
     </div>
 </section>

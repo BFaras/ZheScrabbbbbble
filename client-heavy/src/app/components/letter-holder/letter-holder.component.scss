@@ -4,6 +4,14 @@
     flex-direction: column;
     align-items: center;
 }
+/** ceci ne marche pas*/
+.placeholder-invisible {
+    background-color: red !important;
+    width:0px;
+    height:0px;
+    opacity: 0
+}
+  
 
 #rack {
     padding: 10px;
@@ -25,24 +33,48 @@
 }
 
 #letter {
-    font-size: 27px;
+    font-size: 28px;
     margin: 0px;
     text-align: center;
-    font-family: 'Courrier New';
+    font-weight: bold;
+    font-family: "Courier";
+    position: absolute;
+    top: 3.27px;
+    left: 13.24px;
+    vertical-align: text-bottom;
 }
 
-#point{
-    font-size:22px;
-    margin:0px;
+
+.tile-preview {
+    height:49px;
+    width:49px;
+    text-align: center;
+    gap: 0px;
     position: relative;
-    font-family: 'Courrier New';
     font-weight: bold;
+    text-align: center;
+    font-size: 32px;
+    background: var(--tile-on-holder);
+    box-shadow: var(--box-shadow);
+    color: var(--button-text-default);
+    opacity: 100%;
+ }
+
+#point{
+    font-size: 18px;
+    margin: 0px;
+    position: absolute;
+    left: 30px;
+    font-family: "Courier";
+    font-weight: bold;
+    top: 19.8px;
+    vertical-align: text-top;
 }
 
 .tile {
     position: relative;
-    width:50px;
-    height:50px;
+    height:49px;
+    width:49px;
     background: var(--tile-on-holder);
     box-shadow: var(--box-shadow);
     display:grid;
@@ -52,9 +84,6 @@
     text-align: center;
     font-size: 32px;
     color: var(--button-text-default);
-    
-    
-    
 }
 
 .red {

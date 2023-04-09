@@ -25,6 +25,22 @@
     transition-duration: 0.2s;
 }
 
+.locked-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--text-default);
+    font-weight: bolder;
+}
+
+.locked {
+    opacity: 0.4;
+    filter: alpha(opacity=40); 
+    pointer-events: none;
+}
+
 .listAvatars{
     display: grid;
     grid-template-columns: auto auto auto;

@@ -40,4 +40,11 @@ export class ThemesService {
       localStorage.setItem("currentTheme", classic.toString());
     }
   }
+
+  getThemeFromString(themeName: string): Theme | null {
+    for (const theme of this.availableThemes) {
+      if (theme.name.toString() === themeName) return theme;
+    }
+    return null;
+  }
 }
