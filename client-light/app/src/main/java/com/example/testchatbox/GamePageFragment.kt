@@ -187,8 +187,11 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             }
 
             lettersOnBoard = gameState.board
-            moveInfo = gameState.message!!
-            GameHistoryModel.addMoveInfo(moveInfo)
+            if(gameState.message!=null)
+            {
+                moveInfo = gameState.message!!
+                GameHistoryModel.addMoveInfo(moveInfo)
+            }
 
             updatePlayersInfo(gameState.players, playersAvatars)
             clearTurn()
@@ -1235,8 +1238,8 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         Log.i("Update", GameHistoryModel.getList().toString())
         activity?.runOnUiThread {
             updateMoveInfo()
+            if(GameHistoryModel.playRequest!=null) showCoopPlayPrompt()
         }
-        if(GameHistoryModel.playRequest!=null) showCoopPlayPrompt()
     }
 
     //TODO : UI to call GameHistoryModel.sendCoopResponse(accept:boolean)
