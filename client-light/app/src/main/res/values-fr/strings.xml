@@ -2,7 +2,7 @@
 <resources>
 
     <string name="action_settings">Paramètres</string>
-    <string name="tapez_quelque_chose">Tapez quelque chose...</string>
+    <string name="tapez_quelque_chose">Tapez quelque chose…</string>
     <string name="game">Jeu</string>
     <string name="tournois">TOURNOIS</string>
     <string name="classique">CLASSIQUE</string>
@@ -89,7 +89,7 @@
     <string name="detectedJoker">JOKER DÉTECTÉ!</string>
     <string name="blankLetterOnBoard">Une lettre blanche a été placée sur le plateau.</string>
     <string name="blankLetterWarning">Une fois choisies, les lettres ne peuvent plus être changées. Choisissez bien!</string>
-    <string name="registerText">Pas de compte? Inscrivez-vous!</string>
+    <string name="registerText">Nouveau? Créez un compte!</string>
     <string name="forgotPasswordText">Mot de passe oublié?</string>
     <string name="reset_password">Réinitialiser mot de passe</string>
     <string name="register">Inscription</string>
@@ -142,4 +142,29 @@
     <string name="congrats_to_all_players">félicitations à tous les joueurs!</string>
     <string name="tournament_ranking">classement du tournoi</string>
     <string name="pas_besoin_d_indices">PAS BESOIN D\'INDICES</string>
+    <string name="joined_public_chats">chats publics rejoints</string>
+    <string name="pss_you_can_quit_any_room_by_clicking_it">(pss…tu peux quitter un chat en cliquant dessus)</string>
+    <string name="create_a_public_chat">créer un chat public</string>
+    <string name="join_a_public_chat">joindre un chat public</string>
+    <string name="you_can_create_a_public_chat_or_join_one_from_the_list_on_the_right">Vous pouvez créer un chat public ou rejoindre un de la liste de droite.</string>
+    <string name="create">Créer</string>
+    <string name="reload">Rafraîchir</string>
+    <string name="till_next_round">jusqu\'au prochain tour</string>
+    <string name="players_in_game">JOUEURS DANS LA SALLE DE JEU</string>
+    <string name="classicGame">Classique</string>
+    <string name="coopGame">Coop</string>
+    <string name="classicTheme">Classique</string>
+    <string name="invertedTheme">Contraste</string>
+    <string name="greenTheme">Vert</string>
+    <string name="pinkTheme">Rose</string>
+    <string name="blizzardTheme">Blizzard</string>
+    <string name="sorry_nno_hints_have_been_found">Désolé… \\nAucun indice n\'a été trouvé.</string>
+    <string name="join_a_room">joindre une salle</string>
+    <string name="observer">Observateur</string>
+    <string name="player">Joueur</string>
+    <string name="waiting_for_host_approval">EN ATTENTE DE LA PERMISSION DE L\'HÔTE</string>
+    <string name="cancel">Annuler</string>
+    <string name="join">Joindre</string>
+    <string name="start_game">Démarrer</string>
+    <string name="leave">Quitter</string>
 </resources>
