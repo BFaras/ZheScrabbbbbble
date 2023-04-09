@@ -40,7 +40,27 @@ enum class Visibility{
 
 }
 
-class GameRoom(val name:String, val id:String, val visibility: Visibility, var players: Array<String>, var hasStarted : Boolean){
+enum class GameType{
+    Classic,
+    Coop;
+
+    companion object {
+        fun fromInt(value: Int) = GameType.values().first { it.ordinal == value }
+        fun fromViewId(id: Int): GameType {
+            if(id == R.id.coopGame)
+                return GameType.Coop
+            return GameType.Classic
+        }
+        fun fromBool(isCoop:Boolean): GameType {
+            if(isCoop)return GameType.Coop
+            return  GameType.Classic
+        }
+        fun fromNameIgnoreCase(input: String) = values().first { it.name.equals(input, true) }
+    }
+
+}
+
+class GameRoom(val name:String, val id:String, val visibility: Visibility, var players: Array<String>, var hasStarted : Boolean, val gameType: GameType, var nbObservers:Int){
     fun getPlayersNames():String {
         var names = ""
         for (player in players){
@@ -108,7 +128,7 @@ class GameListFragment : Fragment() {
                     for (j in 0 until playersArray.length()){
                         players=players.plus(playersArray.get(j) as String)
                     }
-                    gameList.add(GameRoom(gameRoom.get("name") as String, gameRoom.get("id") as String, Visibility.fromNameIgnoreCase(gameRoom.get("visibility") as String), players , gameRoom.get("isStarted") as Boolean))
+                    gameList.add(GameRoom(gameRoom.get("name") as String, gameRoom.get("id") as String, Visibility.fromNameIgnoreCase(gameRoom.get("visibility") as String), players , gameRoom.get("isStarted") as Boolean, GameType.fromBool(gameRoom.get("isCoop") as Boolean), gameRoom.get("nbObservers") as Int))
                 }
                 activity?.runOnUiThread(Runnable {
                     loadListView();
@@ -256,6 +276,7 @@ class GameListFragment : Fragment() {
 
     private fun createRoom(){
         val roomType =  Visibility.fromViewId(binding.roomType.checkedRadioButtonId);
+        val gameType =  GameType.fromViewId(binding.gameType.checkedRadioButtonId);
         val roomName = binding.name.text.toString().trim();
         val roomPassword = binding.createPassword.text.toString().trim();
         if(roomName.isEmpty() || (roomType==Visibility.Protected && roomPassword.isEmpty())){
@@ -274,7 +295,7 @@ class GameListFragment : Fragment() {
                     }
                     activity?.runOnUiThread(Runnable {
                         if(errorMessage == R.string.NO_ERROR && args[1]!=null){
-                            GameRoomModel.initialise(GameRoom(roomName,args[1] as String, roomType, arrayOf(),false), false)
+                            GameRoomModel.initialise(GameRoom(roomName,args[1] as String, roomType, arrayOf(),false, gameType, 0), false)
                             findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment )
                         }else{
                             val appContext = context?.applicationContext
@@ -283,7 +304,7 @@ class GameListFragment : Fragment() {
                     });
                 }
             }
-            SocketHandler.getSocket().emit("Create Game Room", roomName, roomType, roomPassword.trim())
+            SocketHandler.getSocket().emit("Create Game Room", roomName, roomType, roomPassword.trim(), gameType)
         }
     }
     private fun showPasswordPrompt(gameRoom: GameRoom, observer: Boolean) {

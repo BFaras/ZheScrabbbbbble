@@ -81,7 +81,7 @@ object TournamentModel :Observable{
         GameRoomModel.leaveRoom()
         for(game in gamesData){
             if(game.roomCode==gameId)
-                GameRoomModel.initialise(GameRoom(game.type, gameId, Visibility.Public, game.players, hasStarted = true),observer)
+                GameRoomModel.initialise(GameRoom(game.type, gameId, Visibility.Public, game.players, hasStarted = true, GameType.Classic, 0),observer)
         }
     }
 

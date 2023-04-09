@@ -5,6 +5,7 @@
     <string name="tapez_quelque_chose">Tapez quelque chose…</string>
     <string name="game">Jeu</string>
     <string name="tournois">TOURNOIS</string>
+    <string name="jouer">JOUER</string>
     <string name="classique">CLASSIQUE</string>
     <string name="collaboratif">COLLABORATIF</string>
     <string name="disconnect">DECONNEXION</string>

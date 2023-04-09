@@ -50,7 +50,7 @@
             android:id="@+id/modeClassique"
             android:layout_width="300dp"
             android:layout_height="40dp"
-            android:text="@string/classique"
+            android:text="@string/jouer"
             android:textColor="?colorOnPrimary"
             android:background="@drawable/background_chat_input"
             android:backgroundTint="?colorPrimary"
