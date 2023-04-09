@@ -146,6 +146,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             binding.reserveLength.text = gameState.reserveLength.toString()
             isPlaying = gameState.playerTurnIndex
             isYourTurn = (gameState.players[isPlaying].username == LoggedInUser.getName())
+            if (GameRoomModel.gameRoom?.gameType == GameType.Coop) isYourTurn = true
 
             if (gameState.gameOver) {
                 gameOver = true
@@ -177,11 +178,14 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                     }
                     binding.observedPlayers.addView(btnPlayer)
                 }
+            } else if (GameRoomModel.gameRoom?.gameType == GameType.Coop) {
+                playerHand = gameState.players[0].hand
             } else {
                 for (player in gameState.players) {
                     if (player.username == LoggedInUser.getName()) playerHand = player.hand
                 }
             }
+
             lettersOnBoard = gameState.board
             moveInfo = gameState.message!!
             GameHistoryModel.addMoveInfo(moveInfo)
@@ -272,19 +276,25 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         binding.apply {
 
             emoteNice.setOnClickListener {
-                SocketHandler.getSocket().emit("Send Emote", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "hmm")))
+                var username = LoggedInUser.getName()
+                if (GameRoomModel.gameRoom?.gameType == GameType.Coop) username = ""
+                SocketHandler.getSocket().emit("Send Emote", JSONObject(mapOf("username" to username, "emote" to "hmm")))
                 showEmote("hmm")
                 Log.d("EMOTE SEND", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "ic_good")).toString())
             }
 
             emoteCringe.setOnClickListener {
-                SocketHandler.getSocket().emit("Send Emote", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "cringe")))
+                var username = LoggedInUser.getName()
+                if (GameRoomModel.gameRoom?.gameType == GameType.Coop) username = ""
+                SocketHandler.getSocket().emit("Send Emote", JSONObject(mapOf("username" to username, "emote" to "cringe")))
                 showEmote("cringe")
             Log.d("EMOTE SEND", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "hmm")).toString())
             }
 
             emoteWat.setOnClickListener {
-                SocketHandler.getSocket().emit("Send Emote", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "wat")))
+                var username = LoggedInUser.getName()
+                if (GameRoomModel.gameRoom?.gameType == GameType.Coop) username = ""
+                SocketHandler.getSocket().emit("Send Emote", JSONObject(mapOf("username" to username, "emote" to "wat")))
                 showEmote("wat")
                 Log.d("EMOTE SEND", JSONObject(mapOf("username" to LoggedInUser.getName(), "emote" to "hmm")).toString())
             }
@@ -753,7 +763,9 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
     }
 
     private fun showEmote(emote: String) {
-        when (binding.playersInfoHolder.indexOfChild(binding.playersInfoHolder.findViewWithTag(LoggedInUser.getName()))) {
+        var username = LoggedInUser.getName()
+        if (GameRoomModel.gameRoom?.gameType == GameType.Coop) username = ""
+        when (binding.playersInfoHolder.indexOfChild(binding.playersInfoHolder.findViewWithTag(username))) {
             0 ->
             {
                 val animation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
@@ -905,6 +917,8 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             }
 
             playerName.text = player.username
+            if (player.username == "" && GameRoomModel.gameRoom?.gameType==GameType.Coop) playerName.text = getString(
+                            R.string.team)
             playerPoints.text = player.score.toString()
             playerPoints.typeface = Typeface.DEFAULT_BOLD
 
@@ -1219,7 +1233,9 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
 
     override fun update() {
         Log.i("Update", GameHistoryModel.getList().toString())
-        updateMoveInfo()
+        activity?.runOnUiThread {
+            updateMoveInfo()
+        }
         if(GameHistoryModel.playRequest!=null) showCoopPlayPrompt()
     }
 
