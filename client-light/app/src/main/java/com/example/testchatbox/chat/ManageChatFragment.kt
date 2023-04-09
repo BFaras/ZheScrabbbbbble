@@ -27,6 +27,8 @@ class ManageChatFragment : Fragment(), ObserverChat {
     private var publicChatList = ChatModel.getPublicList();
     private var chatButtons: ArrayList<CardView> = arrayListOf()
     private var publicChatButtons: ArrayList<CardView> = arrayListOf()
+    private var searchJoinHasFocus = false;
+    private var searchLeaveHasFocus = false;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,8 +57,10 @@ class ManageChatFragment : Fragment(), ObserverChat {
                 binding.chatName.clearFocus()
             }
         }
-        binding.searchJoinChat.setOnFocusChangeListener(::onJoinSearchTextFinished)
-        binding.searchLeaveChat.setOnFocusChangeListener(::onLeaveSearchTextFinished)
+
+        binding.searchJoinChatBtn.setOnClickListener { searchChats(publicChatButtons, binding.searchJoinChat.text.toString()) }
+        binding.searchLeaveChatBtn.setOnClickListener { searchChats(chatButtons, binding.searchLeaveChat.text.toString()) }
+
         binding.reloadChats.setOnClickListener {
             ChatModel.updatePublicList()
         }
@@ -72,20 +76,6 @@ class ManageChatFragment : Fragment(), ObserverChat {
     override fun onStop() {
         super.onStop()
         ChatModel.removeObserver(this);
-    }
-
-    fun onJoinSearchTextFinished(view: View, hasFocus: Boolean) {
-        if (!hasFocus)
-        {
-            searchChats(publicChatButtons, binding.searchJoinChat.text.toString())
-        }
-    }
-
-    fun onLeaveSearchTextFinished(view: View, hasFocus: Boolean) {
-        if (!hasFocus)
-        {
-            searchChats(chatButtons, binding.searchLeaveChat.text.toString())
-        }
     }
 
     private fun searchChats(chatRoomButtons: ArrayList<CardView>, chatSearchText: String) {

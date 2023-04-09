@@ -79,6 +79,7 @@
             android:background="@drawable/background_direction_panel"
             android:backgroundTint="?colorPrimaryVariant"
             android:hint="@string/search_a_chat_name"
+            android:layout_marginTop="10dp"
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:includeFontPadding="true"
@@ -88,6 +89,17 @@
             android:textColorHint="?colorOnPrimary"
             android:textSize="15sp"
             android:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/searchLeaveChatBtn"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/background_chat_input"
+            android:backgroundTint="?colorSecondary"
+            android:text="Search"
+            android:textColor="@color/black"
+            android:textSize="12dp" />
 
         <ScrollView
             android:layout_width="300dp"
@@ -231,6 +243,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/background_direction_panel"
             android:backgroundTint="?colorPrimaryVariant"
+            android:layout_marginTop="10dp"
             android:hint="@string/search_a_chat_name"
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
@@ -241,6 +254,17 @@
             android:textColorHint="?colorOnPrimary"
             android:textSize="15sp"
             android:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/searchJoinChatBtn"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/background_chat_input"
+            android:backgroundTint="?colorSecondary"
+            android:text="Search"
+            android:textColor="@color/black"
+            android:textSize="12dp" />
 
         <ScrollView
             android:layout_width="300dp"
