@@ -171,4 +171,5 @@
     <string name="join">Joindre</string>
     <string name="start_game">Démarrer</string>
     <string name="leave">Quitter</string>
+    <string name="team">Équipe</string>
 </resources>

@@ -22,6 +22,7 @@
         android:padding="10dp"
         android:maxWidth="500dp"
         android:text="this is a text message sent as a test"
+        android:textIsSelectable="true"
         android:textSize="25dp"
         app:layout_constraintEnd_toStartOf="@+id/avatarProfile"
         app:layout_constraintTop_toTopOf="parent"

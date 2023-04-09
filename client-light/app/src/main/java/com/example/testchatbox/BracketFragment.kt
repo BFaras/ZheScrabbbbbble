@@ -219,8 +219,8 @@ class BracketFragment : Fragment(), Observer {
         return object : CountDownTimer(timeRemaining, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val f : NumberFormat = DecimalFormat("00")
-                binding.timeMinutes.text = f.format(((millisUntilFinished/60000) % 60).toString())
-                binding.timeSeconds.text = f.format(millisUntilFinished/1000).toString()
+                binding.timeMinutes.text = (f.format((millisUntilFinished/60000) % 60)).toString()
+                binding.timeSeconds.text = (f.format((millisUntilFinished/1000) % 60)).toString()
             }
             override fun onFinish() {
                 cancel()
