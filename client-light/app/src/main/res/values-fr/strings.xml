@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">SCRABBLE</string>
 
     <string name="action_settings">Paramètres</string>
-    <string name="tapez_quelque_chose">Tapez quelque chose...</string>
+    <string name="tapez_quelque_chose">Tapez quelque chose…</string>
     <string name="game">Jeu</string>
+    <string name="jouer">JOUER</string>
     <string name="tournois">TOURNOIS</string>
     <string name="classique">CLASSIQUE</string>
     <string name="collaboratif">COLLABORATIF</string>
@@ -37,6 +37,9 @@
     <string name="friendProfile">Voir le profil</string>
     <string name="friendJoin">Inviter dans une partie</string>
     <string name="friendRemove">Retire de la liste d\'amis</string>
+
+
+    <string name="changeUsername">Changement de votre nom d\'utilisateur </string>
 
 
     <!-- Strings used for fragments for navigation -->
@@ -85,12 +88,12 @@
     <string name="MSG_5"><![CDATA[<b>%1$s</b> s\'est déconnecté et a été remplacé par un JV.]]></string>
     <string name="MSG_6"><![CDATA[<b>%1$s</b> a manqué de temps et a passé son tour.]]></string>
     <string name="MSG_7"><![CDATA[Fin de partie - <b>%1$s</b> lettres restantes]]></string>
-    <string name="scrabbleName">SCRABBLE</string>
+    <string name="scrabbleName">Scrabble</string>
     <string name="info_panel">PANNEAU INFORMATIF</string>
     <string name="detectedJoker">JOKER DÉTECTÉ!</string>
     <string name="blankLetterOnBoard">Une lettre blanche a été placée sur le plateau.</string>
     <string name="blankLetterWarning">Une fois choisies, les lettres ne peuvent plus être changées. Choisissez bien!</string>
-    <string name="registerText">Pas de compte? Inscrivez-vous!</string>
+    <string name="registerText">Nouveau? Créez un compte!</string>
     <string name="forgotPasswordText">Mot de passe oublié?</string>
     <string name="reset_password">Réinitialiser mot de passe</string>
     <string name="register">Inscription</string>
@@ -123,7 +126,7 @@
     <string name="no">non, je reste</string>
     <string name="confirmAbandon">Êtes vous suuuur(e)?</string>
     <string name="confirmButtonText">Êtes-vous sûr(e) de vouloir quitter la partie? Cette action est irréversible.</string>
-    <string name="now_observing_player1"><![CDATA[en train d\'observer %1$s]]></string>
+    <string name="now_observing_player1"><![CDATA[EN TRAIN D\'OBSERVER %1$s]]></string>
     <string name="move_mode">mode placer</string>
     <string name="swap_mode">mode échanger</string>
     <string name="indice">indice</string>
@@ -132,10 +135,41 @@
     <string name="iswinner">gagné</string>
     <string name="isloser">perdu</string>
     <string name="your_friend_code_is">votre code ami est</string>
+    <string name="avatarError">Veuillez choisir un avatar</string>
     <string name="language">langage</string>
     <string name="current_theme">thème actuel</string>
     <string name="vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil">Vous pourrez le changer à nouveau dans votre page de profil.</string>
     <string name="choisissez_votre_avatar">choisissez votre avatar</string>
     <string name="revenez_quand_vous_aurez_fait_des_parties">Revenez quand vous aurez fait des parties!</string>
     <string name="c_est_vide_ici">c\'est vide ici…</string>
+    <string name="host">hôte</string>
+    <string name="congrats_to_all_players">félicitations à tous les joueurs!</string>
+    <string name="tournament_ranking">classement du tournoi</string>
+    <string name="pas_besoin_d_indices">PAS BESOIN D\'INDICES</string>
+    <string name="joined_public_chats">chats publics rejoints</string>
+    <string name="pss_you_can_quit_any_room_by_clicking_it">(pss…tu peux quitter un chat en cliquant dessus)</string>
+    <string name="create_a_public_chat">créer un chat public</string>
+    <string name="join_a_public_chat">joindre un chat public</string>
+    <string name="you_can_create_a_public_chat_or_join_one_from_the_list_on_the_right">Vous pouvez créer un chat public ou rejoindre un de la liste de droite.</string>
+    <string name="create">Créer</string>
+    <string name="reload">Rafraîchir</string>
+    <string name="till_next_round">jusqu\'au prochain tour</string>
+    <string name="players_in_game">JOUEURS DANS LA SALLE DE JEU</string>
+    <string name="classicGame">Classique</string>
+    <string name="coopGame">Coop</string>
+    <string name="classicTheme">Classique</string>
+    <string name="invertedTheme">Contraste</string>
+    <string name="greenTheme">Vert</string>
+    <string name="pinkTheme">Rose</string>
+    <string name="blizzardTheme">Blizzard</string>
+    <string name="sorry_nno_hints_have_been_found">Désolé… \\nAucun indice n\'a été trouvé.</string>
+    <string name="join_a_room">joindre une salle</string>
+    <string name="observer">Observateur</string>
+    <string name="player">Joueur</string>
+    <string name="waiting_for_host_approval">EN ATTENTE DE LA PERMISSION DE L\'HÔTE</string>
+    <string name="cancel">Annuler</string>
+    <string name="join">Joindre</string>
+    <string name="start_game">Démarrer</string>
+    <string name="leave">Quitter</string>
+    <string name="team">Équipe</string>
 </resources>

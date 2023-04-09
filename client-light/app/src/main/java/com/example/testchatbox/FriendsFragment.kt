@@ -13,10 +13,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentFriendsBinding
 import com.example.testchatbox.databinding.FragmentProfilBinding
+import com.google.android.material.imageview.ShapeableImageView
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -51,6 +53,7 @@ class FriendsFragment : Fragment(), ObserverFriend {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         FriendModel.updateFriendList()
+
         binding.friendCode.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 hideKeyboard()
@@ -64,17 +67,33 @@ class FriendsFragment : Fragment(), ObserverFriend {
     }
 
     private fun updateView(){
-        val friendListView = binding.friendList;
+        val friendListView = binding.friendListSection;
         friendListView.removeAllViews()
-        for(friend in friendList){
-            val friendText = Button((activity as MainActivity?)!!)
-            friendText.text = friend.username  +" | " +friend.connectionStatus;
-            friendText.textSize= 18F;
-            friendText.setOnClickListener {
-                showActionMenu(friend.username);
-            }
-            friendListView.addView(friendText)
+        val friends = friendList;
+        Log.i("Friends", friends.toString())
+        for(friend in friends){
+            val friendLayout = layoutInflater.inflate(R.layout.friend_layout, friendListView, false)
+            val friendName = friendLayout.findViewById<TextView>(R.id.friendName)
+            val friendStatus = friendLayout.findViewById<ShapeableImageView>(R.id.friendStatus)
 
+            friendName.text = friend.username
+            when (friend.connectionStatus.name) {
+                "OFFLINE" -> friendStatus.setBackgroundColor(resources.getColor(R.color.white))
+                "ONLINE" -> friendStatus.setBackgroundColor(resources.getColor(R.color.green))
+                "INGAME" -> friendStatus.setBackgroundColor(resources.getColor(R.color.red))
+                else -> {}
+            }
+
+            friendLayout.setOnClickListener {
+                showActionMenu(friend.username)
+            }
+//            val friendText = AppCompatButton((activity as MainActivity?)!!)
+//            friendText.text = friend.username  +" | " +friend.connectionStatus.name;
+//            friendText.textSize= 18F;
+//            friendText.setOnClickListener {
+//                showActionMenu(friend.username);
+//            }
+            friendListView.addView(friendLayout)
         }
     }
 
@@ -162,7 +181,7 @@ class FriendsFragment : Fragment(), ObserverFriend {
             removeFriend(username);
         }
         binding.chatBtn.setOnClickListener {
-            checkChat(username);
+            checkChat(username)
         }
         binding.profileBtn.setOnClickListener {
             val appContext = context?.applicationContext;

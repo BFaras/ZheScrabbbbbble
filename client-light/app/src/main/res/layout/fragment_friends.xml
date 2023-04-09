@@ -76,7 +76,6 @@
         </FrameLayout>
 
         <ScrollView
-            android:id="@+id/friendListSection"
             android:layout_width="400dp"
             android:layout_height="500dp"
             android:layout_gravity="center|right"
@@ -84,7 +83,7 @@
             android:background="@drawable/background_direction_panel">
 
             <LinearLayout
-                android:id="@+id/friendList"
+                android:id="@+id/friendListSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -102,14 +101,14 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/background_direction_panel"
         android:padding="15dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/closeBtn"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginTop="10dp"
             android:layout_gravity="end"
+            android:layout_marginTop="10dp"
             android:background="@drawable/background_chat_input"
             android:backgroundTint="?colorSecondary"
             android:text="X"

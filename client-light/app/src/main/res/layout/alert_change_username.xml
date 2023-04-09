@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="500dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/background_direction_panel">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/shrikhand"
+            android:text="@string/changeUsername"
+            android:textSize="20dp" />
+
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/prompt_username"
+            android:hint="@string/prompt_username"
+            android:inputType="text"
+            android:selectAllOnFocus="true"
+            android:layout_gravity="center" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:divider="@drawable/letters_hand_divider"
+            android:showDividers="middle"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/dialogNo"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:textColor="?colorOnSecondary"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorSecondary"
+                android:text="@string/annuler"
+                android:fontFeatureSettings="smcp"
+                android:textAllCaps="false"
+                android:textSize="20sp"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/dialogYes"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:text="@string/accepter"
+                android:textColor="?colorOnSecondary"
+                android:fontFeatureSettings="smcp"
+                android:background="@drawable/background_chat_input"
+                android:backgroundTint="?colorSecondary"
+                android:textAllCaps="false"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</FrameLayout>
+

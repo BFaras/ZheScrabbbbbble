@@ -6,13 +6,17 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -21,8 +25,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.testchatbox.databinding.FragmentMainMenuBinding
 import com.example.testchatbox.databinding.FragmentProfilBinding
 import com.example.testchatbox.login.model.LoggedInUser
 import com.google.android.material.imageview.ShapeableImageView
@@ -30,7 +34,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.math.RoundingMode
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 enum class ConnectionType {
     CONNECTION,
@@ -88,23 +92,208 @@ class ProfilFragment : Fragment() {
         binding.playerInGameAvatar.setOnClickListener {
             val builder = context?.let { it -> AlertDialog.Builder(it,R.style.CustomAlertDialog).create() }
             val alertView = layoutInflater.inflate(R.layout.alert_choose_avatar, null)
+
+            val sharkLock = alertView.findViewById<ShapeableImageView>(R.id.sharkLock)
+            val pandaLock = alertView.findViewById<ShapeableImageView>(R.id.pandaLock)
+            val skeletonLock = alertView.findViewById<ShapeableImageView>(R.id.skeletonLock)
+            val tigerLock = alertView.findViewById<ShapeableImageView>(R.id.tigerLock)
+            val bunnyLock = alertView.findViewById<ShapeableImageView>(R.id.bunnyLock)
+
             val avatar1 = alertView.findViewById<ShapeableImageView>(R.id.avatar1)
             val avatar2 = alertView.findViewById<ShapeableImageView>(R.id.avatar2)
             val avatar3 = alertView.findViewById<ShapeableImageView>(R.id.avatar3)
+            val avatar4 = alertView.findViewById<ShapeableImageView>(R.id.avatar4)
+            val avatar5 = alertView.findViewById<ShapeableImageView>(R.id.avatar5)
+            val avatar6 = alertView.findViewById<ShapeableImageView>(R.id.avatar6)
+            val avatar7 = alertView.findViewById<ShapeableImageView>(R.id.avatar7)
+            val avatar8 = alertView.findViewById<ShapeableImageView>(R.id.avatar8)
+            val avatar9 = alertView.findViewById<ShapeableImageView>(R.id.avatar9)
+            val avatar10 = alertView.findViewById<ShapeableImageView>(R.id.avatar10)
+            val avatar11 = alertView.findViewById<ShapeableImageView>(R.id.avatar11)
+            val avatar12 = alertView.findViewById<ShapeableImageView>(R.id.avatar12)
+            val avatar13 = alertView.findViewById<ShapeableImageView>(R.id.avatar13)
+            val avatar14 = alertView.findViewById<ShapeableImageView>(R.id.avatar14)
+            val avatar15 = alertView.findViewById<ShapeableImageView>(R.id.avatar15)
+            val avatar16 = alertView.findViewById<ShapeableImageView>(R.id.avatar16)
+            val avatar17 = alertView.findViewById<ShapeableImageView>(R.id.avatar17)
+            val avatar18 = alertView.findViewById<ShapeableImageView>(R.id.avatar18)
+            val avatar19 = alertView.findViewById<ShapeableImageView>(R.id.avatar19)
+            val avatar20 = alertView.findViewById<ShapeableImageView>(R.id.avatar20)
+            val avatar21 = alertView.findViewById<ShapeableImageView>(R.id.avatar21)
+            val avatar22 = alertView.findViewById<ShapeableImageView>(R.id.avatar22)
+            val avatar23 = alertView.findViewById<ShapeableImageView>(R.id.avatar23)
+            val avatar24 = alertView.findViewById<ShapeableImageView>(R.id.avatar24)
+            val avatar25 = alertView.findViewById<ShapeableImageView>(R.id.avatar25)
+            val avatar26 = alertView.findViewById<ShapeableImageView>(R.id.avatar26)
+            val avatar27 = alertView.findViewById<ShapeableImageView>(R.id.avatar27)
+
+
+            //to be unlocked
+            setDisabled(avatar4) //bunny
+            if (profile.tournamentWins[0] >= 2) {
+                avatar4.clearColorFilter()
+                bunnyLock.visibility = View.GONE
+                avatar4.setOnClickListener {
+                    binding.playerInGameAvatar.setImageResource(R.drawable.bunny)
+                    changeAvatar("bunny.png")
+                    builder?.dismiss()
+                }
+            } //bunny
+
+            setDisabled(avatar17)
+            if (profile.level.level >= 2) {
+                avatar17.clearColorFilter()
+                sharkLock.visibility = View.GONE
+                avatar17.setOnClickListener {
+                    binding.playerInGameAvatar.setImageResource(R.drawable.shark)
+                    changeAvatar("shark.png")
+                    builder?.dismiss()
+                }
+            } //shark
+
+            setDisabled(avatar14) //panda
+            if (profile.level.level >= 4) {
+                avatar14.clearColorFilter()
+                pandaLock.visibility = View.GONE
+                avatar14.setOnClickListener {
+                    binding.playerInGameAvatar.setImageResource(R.drawable.panda)
+                    changeAvatar("panda.png")
+                    builder?.dismiss()
+                }
+            } //panda
+
+            setDisabled(avatar18) //skeleton
+            if (profile.tournamentWins[0] >= 1) {
+                avatar18.clearColorFilter()
+                skeletonLock.visibility = View.GONE
+                avatar18.setOnClickListener {
+                    binding.playerInGameAvatar.setImageResource(R.drawable.skeleton)
+                    changeAvatar("skeleton.png")
+                    builder?.dismiss()
+                }
+            }
+
+            setDisabled(avatar19) //tiger
+            if (profile.level.level >= 6) {
+                avatar19.clearColorFilter()
+                tigerLock.visibility = View.GONE
+                avatar19.setOnClickListener {
+                    binding.playerInGameAvatar.setImageResource(R.drawable.tiger)
+                    changeAvatar("tiger.png")
+                    builder?.dismiss()
+                }
+            }
+
             builder?.setView(alertView)
             avatar1.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-                changeAvatar("cat.jpg")
+                changeAvatar("cat.png")
                 builder?.dismiss()
             }
             avatar2.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.dog)
-                changeAvatar("dog.jpg")
+                changeAvatar("dog.png")
                 builder?.dismiss()
             }
             avatar3.setOnClickListener {
-                binding.playerInGameAvatar.setImageResource(R.drawable.flower)
-                changeAvatar("flower.jpg")
+                binding.playerInGameAvatar.setImageResource(R.drawable.bear)
+                changeAvatar("bear.png")
+                builder?.dismiss()
+            }
+            avatar5.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.cow)
+                changeAvatar("cow.png")
+                builder?.dismiss()
+            }
+            avatar6.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.alien)
+                changeAvatar("alien.png")
+                builder?.dismiss()
+            }
+            avatar7.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.fox)
+                changeAvatar("fox.png")
+                builder?.dismiss()
+            }
+            avatar8.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.giraffe)
+                changeAvatar("giraffe.png")
+                builder?.dismiss()
+            }
+            avatar9.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.koala)
+                changeAvatar("koala.png")
+                builder?.dismiss()
+            }
+            avatar10.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.lion)
+                changeAvatar("lion.png")
+                builder?.dismiss()
+            }
+            avatar11.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.monkey)
+                changeAvatar("monkey.png")
+                builder?.dismiss()
+            }
+            avatar12.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.owl)
+                changeAvatar("owl.png")
+                builder?.dismiss()
+            }
+            avatar13.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.mouse)
+                changeAvatar("mouse.png")
+                builder?.dismiss()
+            }
+
+            avatar15.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.pig)
+                changeAvatar("pig.png")
+                builder?.dismiss()
+            }
+            avatar16.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.rooster)
+                changeAvatar("rooster.png")
+                builder?.dismiss()
+            }
+            avatar20.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.unicorn)
+                changeAvatar("unicorn.png")
+                builder?.dismiss()
+            }
+            avatar21.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.arnaud)
+                changeAvatar("arnaud.PNG")
+                builder?.dismiss()
+            }
+            avatar22.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.daria)
+                changeAvatar("daria.PNG")
+                builder?.dismiss()
+            }
+            avatar23.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.imane)
+                changeAvatar("imane.PNG")
+                builder?.dismiss()
+            }
+            avatar24.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.manuel)
+                changeAvatar("manuel.PNG")
+                builder?.dismiss()
+            }
+            avatar25.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.mohamed)
+                changeAvatar("mohamed.PNG")
+                builder?.dismiss()
+            }
+            avatar26.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.raphael)
+                changeAvatar("raphael.PNG")
+                builder?.dismiss()
+            }
+            avatar27.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.ghost)
+                changeAvatar("ghost.png")
                 builder?.dismiss()
             }
             builder?.show()
@@ -209,6 +398,23 @@ class ProfilFragment : Fragment() {
         binding.button2.setOnClickListener {
             findNavController().navigate(R.id.action_profilFragment_to_mainActivity2)
         }
+
+        binding.editName.setOnClickListener {
+            val builder = context?.let { it -> AlertDialog.Builder(it,R.style.CustomAlertDialog).create() }
+            val alertView = layoutInflater.inflate(R.layout.alert_change_username, null)
+            val dialogNo = alertView.findViewById<AppCompatButton>(R.id.dialogNo)
+            val dialogYes = alertView.findViewById<AppCompatButton>(R.id.dialogYes)
+            val username = alertView.findViewById<EditText>(R.id.username)
+            builder?.setView(alertView)
+            dialogNo.setOnClickListener {
+                builder?.dismiss()
+            }
+            dialogYes.setOnClickListener {
+                changeUsername(username.text.toString().trim())
+                builder?.dismiss()
+            }
+            builder?.show()
+        }
     }
 
     private  fun getProfile(username:String){
@@ -271,14 +477,9 @@ class ProfilFragment : Fragment() {
                 }
                 activity?.runOnUiThread(Runnable {
                     if(errorMessage == R.string.NO_ERROR ){
-                        profile.avatar= newAvatar;
-                        when (newAvatar) {
-                            "cat.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-                            "dog.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.dog)
-                            "flower.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.flower)
-                            else -> {}
-                        }
-                    }else{
+                        profile.avatar= newAvatar
+                        binding.playerInGameAvatar.setImageResource(resources.getIdentifier((newAvatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                    } else{
                         val appContext = context?.applicationContext
                         Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
                     }
@@ -323,7 +524,8 @@ class ProfilFragment : Fragment() {
                     if(errorMessage == R.string.NO_ERROR ){
                         Log.d("THEME ", newTheme)
                         LoggedInUser.setTheme(newTheme)
-                        binding.theme.text= newTheme.lowercase()
+                        context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
+                        binding.theme.text= newTheme
                     }else{
                         val appContext = context?.applicationContext
                         Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
@@ -373,12 +575,8 @@ class ProfilFragment : Fragment() {
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorPrimary, notSelectedColor, true)
 
         binding.playerName.text = LoggedInUser.getName()
-        when (profile.avatar) {
-            "cat.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-            "dog.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.dog)
-            "flower.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.flower)
-            else -> {}
-        }
+        binding.playerInGameAvatar.setImageResource(resources.getIdentifier((profile.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+
         if (LoggedInUser.getLang() == "fr") {
             binding.frLangue.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
             binding.enLangue.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
@@ -386,8 +584,17 @@ class ProfilFragment : Fragment() {
             binding.frLangue.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
             binding.enLangue.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
         }
+
+        when (LoggedInUser.getTheme()) {
+            "pink" -> binding.pink.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            "green" -> binding.green.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            "blizzard" -> binding.blizzard.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            "classic" -> binding.lightTheme.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            "inverted" -> binding.darkTheme.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            else -> {}
+        }
+
         binding.theme.text= LoggedInUser.getTheme()
-        Log.d("USER THEME ", LoggedInUser.getTheme())
         binding.level.text= "${profile.level.level}"
 
         binding.tournamentFirst.text = profile.tournamentWins[0].toString()
@@ -451,7 +658,12 @@ class ProfilFragment : Fragment() {
             binding.connectionLog.addView(connectionHolder)
             binding.connectionScroll.post { binding.connectionScroll.fullScroll(View.FOCUS_DOWN) }
         }
-        binding.friendcode.text= profile.userCode;
+        binding.friendcode.text= profile.userCode
+    }
+    fun setDisabled(imageView: ShapeableImageView) {
+        val grayscaleMatrix = ColorMatrix()
+        grayscaleMatrix.setSaturation(0f)
+        imageView.colorFilter = ColorMatrixColorFilter(grayscaleMatrix)
     }
 
     private fun setLocale(lang:String){

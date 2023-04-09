@@ -24,9 +24,12 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/friendAvatar"
+                android:id="@+id/friendStatus"
                 android:layout_height="35dp"
                 android:layout_width="35dp"
+                card_view:strokeColor="@color/DarkSunset"
+                card_view:strokeWidth="2dp"
+                android:padding="5dp"
                 card_view:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                 android:background="@color/white">
             </com.google.android.material.imageview.ShapeableImageView>
@@ -35,17 +38,16 @@
                 android:id="@+id/friendName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:text="NAME"
                 android:textColor="?colorOnPrimary"
                 android:textSize="20dp" />
         </LinearLayout>
         <TextView
-            android:id="@+id/friendStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="OFFLINE"
+            android:text="•••"
             android:textSize="20dp"
             android:textColor="?colorOnPrimary"
             android:layout_alignParentRight="true">

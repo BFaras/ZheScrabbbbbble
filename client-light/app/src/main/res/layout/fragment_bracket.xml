@@ -42,23 +42,39 @@
         android:backgroundTint="?colorSecondary"
         android:layout_marginTop="100dp"
         >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top">
+            <TextView
+                android:id="@+id/timeMinutes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:text="00"
+                android:textColor="?colorPrimary"
+                android:textSize="35sp" />
+            <TextView
+                android:id="@+id/timeSeconds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:text="00"
+                android:textColor="?colorOnSecondary"
+                android:textSize="35sp" />
+        </LinearLayout>
+
         <TextView
-            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|top"
             android:textAlignment="center"
             android:textStyle="bold"
-            android:text="TIME"
-            android:textColor="?colorOnSecondary"
-            android:textSize="35sp" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|top"
-            android:textAlignment="center"
-            android:textStyle="bold"
-            android:text="till next round"
+            android:text="@string/till_next_round"
             android:textColor="?colorOnSecondary"
             android:fontFeatureSettings="smcp"
             android:textSize="25dp" />
@@ -89,13 +105,14 @@
                 android:padding="10dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/background_direction_panel">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="- semi a -"
                     android:fontFeatureSettings="smcp"
                     android:textStyle="bold"
-                    android:textSize="25dp"></TextView>
+                    android:textSize="25dp" />
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
