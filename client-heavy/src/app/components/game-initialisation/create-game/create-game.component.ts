@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { RoomVisibility } from '@app/constants/room-visibility';
 import { AccountService } from '@app/services/account-service/account.service';
@@ -25,7 +26,8 @@ export class CreateGameComponent {
         private accountService: AccountService,
         private router: Router,
         private chatService: ChatService,
-        private avatarInRoomService: AvatarInRoomsService
+        private avatarInRoomService: AvatarInRoomsService,
+        private snackBar: MatSnackBar
     ) {}
 
 
@@ -68,12 +70,12 @@ export class CreateGameComponent {
     }
 
     alertFalseInput() {
-        alert('Veuillez remplir les champs vides.');
+        this.snackBar.open('Veuillez remplir les champs vides.', "Fermer")
     }
 
     redirectPlayer(message: { codeError: string, roomId: string }) {
         if (message.codeError !== '0') {
-            alert('Erreur dans la création de la salle');
+            this.snackBar.open('Erreur lors de la création de la salle', "Fermer")
             return;
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom([this.accountService.getUsername()])
