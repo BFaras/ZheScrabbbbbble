@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Friend } from '@app/classes/friend-info';
 import { ProfileInfo } from '@app/classes/profileInfo';
@@ -19,8 +20,12 @@ export class FriendsPageComponent {
   username: string = "";
   redirect: boolean = false;
 
-  constructor(private friendsService: FriendsService, private account: AccountService, private router: Router) {
+  constructor(private snackBar: MatSnackBar, private friendsService: FriendsService, private account: AccountService, private router: Router) {
     this.updateFriendsList();
+    this.friendsService.getFriendListUpdateObservable().subscribe(() => {
+      console.log('FRIEND REMOVED SOCKET TEST');
+      this.updateFriendsList();
+    })
     this.usercode = this.account.getProfile().userCode;
   }
 
@@ -45,13 +50,15 @@ export class FriendsPageComponent {
         this.updateFriendsList();
         console.log(errorCode);
       });
-    } else alert("bruh make real friends");
+    } else
+      this.snackBar.open("bruh make real friends", "Fermer");
 
     (document.getElementById('friendCode') as HTMLInputElement).value = "";
   }
 
   updateFriendsList() {
     this.subscriptions.push(this.friendsService.getFriendsListObservable().subscribe((friendsList: Friend[]) => {
+      console.log('FRIEND LIST UPDATED');
       this.friends = friendsList;
     }));
     this.friendsService.getFriendsList();

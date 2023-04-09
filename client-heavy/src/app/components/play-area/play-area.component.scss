@@ -1,3 +1,70 @@
+canvas{
+    position: absolute;
+}
+
+.placeholder-invisible {
+    background-color: blue !important;
+    width:0px;
+    height:0px;
+    opacity: 0
+  }
+  
+.tile-preview {
+    height:49px;
+    width:49px;
+    text-align: center;
+    gap: 0px;
+    position: relative;
+    font-weight: bold;
+    text-align: center;
+    font-size: 32px;
+    background: var(--tile-on-holder);
+    box-shadow: var(--box-shadow);
+    color: var(--button-text-default);
+    opacity: 100%;
+ }
+.tile{
+    height:49px;
+    width:49px;
+    position:absolute;
+    text-align: center;
+    gap: 0px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 32px;
+    background: var(--tile-on-board);
+    color: var(--button-text-default);
+}
+
+#container{
+    height: 800px;
+    width: 800px;
+    position: absolute;
+}
+
+.letter {
+    font-size: 28px;
+    margin: 0px;
+    text-align: center;
+    font-weight: bold;
+    font-family: "Courier";
+    position: absolute;
+    top: 3.27px;
+    left: 13.24px;
+    vertical-align: text-bottom;
+}
+
+
+.point{
+    font-size: 18px;
+    margin: 0px;
+    position: absolute;
+    left: 30px;
+    font-family: "Courier";
+    font-weight: bold;
+    top: 19.8px;
+    vertical-align: text-top;
+}
 .container-blank-letter{
     background-color: var(--background-tertiary) !important;
     box-shadow: var(--box-shadow);

@@ -24,6 +24,7 @@ export class UsersStatusService {
     }
 
     removeOnlineUser(userId: string) {
+        this.removeUserFromInGameList(userId);
         this.onlineUsers.delete(userId);
         this.statusUpdater.next({ userId, status: ConnectivityStatus.OFFLINE });
     }

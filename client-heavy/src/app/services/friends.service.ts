@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Friend } from '@app/classes/friend-info';
 import { ProfileInfo } from '@app/classes/profileInfo';
 import { Observable, Observer } from 'rxjs';
+import { Socket } from 'socket.io-client/build/esm/socket';
 import { SocketManagerService } from './socket-manager-service/socket-manager.service';
 
 @Injectable({
@@ -11,7 +12,18 @@ export class FriendsService {
   friendProfile: ProfileInfo;
   mode: boolean = true;
   username: string;
-  constructor(private socketManagerService: SocketManagerService) {}
+  private socket: Socket;
+
+  private friendListUpdateObservable : Observable<void>;
+  private friendListUpdateObserver: Observer<void>;
+
+  constructor(private socketManagerService: SocketManagerService) {
+    this.refreshSocketRequests();
+    this.friendListUpdateObservable = new Observable((observer: Observer<void>) => {
+      if (!this.socket.active) this.refreshSocketRequests();
+      this.friendListUpdateObserver = observer;
+    });
+  }
 
   getFriendsListObservable(): Observable<Friend[]> {
     return new Observable((observer: Observer<Friend[]>) => {
@@ -54,6 +66,24 @@ export class FriendsService {
 
   inviteFriend(username: string){
     this.socketManagerService.getSocket().emit('Invite Friend To Game', username);
+  }
+  
+  refreshSocketRequests() {
+    this.socket = this.socketManagerService.getSocket();
+    this.socket.on('Friend Username Updated', () => {
+        this.friendListUpdateObserver.next();
+    });
+    this.socket.on('Update friend status', () => {
+        this.friendListUpdateObserver.next();
+    });
+    this.socket.on('Friend removed you as friend', () => {
+      console.log('FRIEND REMOVED SOCKET');
+      this.friendListUpdateObserver.next();
+    });
+  }
+
+  getFriendListUpdateObservable(): Observable<void> {
+    return this.friendListUpdateObservable
   }
 
   setUpProfile(profileInfo: ProfileInfo) {
