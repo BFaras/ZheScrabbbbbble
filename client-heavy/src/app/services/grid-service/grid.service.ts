@@ -6,7 +6,6 @@ import { blizzard, classic, green, inverted, pink } from '@app/constants/themes'
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { PreviewPlayersActionService } from '../preview-players-action-service/preview-players-action.service';
 import { ThemesService } from '../themes-service/themes-service';
 
 const isCoordinateOf = (colourCoords: number[][], coord: number[]): boolean => {
@@ -42,15 +41,8 @@ export class GridService implements OnDestroy {
     private subscriptionRemovePreview: Subscription;
     constructor(private size: FontSizeService,
         private theme: ThemesService,
-        public translate: TranslateService,
-        private previewPlayerActionService: PreviewPlayersActionService
+        public translate: TranslateService
     ) {
-
-        this.subscriptionAddPreview = this.previewPlayerActionService.getActivePlayerFirstTile().subscribe(
-            (activeSquare) => { this.showActivePlayerFirstTile(activeSquare) })
-
-        this.subscriptionRemovePreview = this.previewPlayerActionService.getSelectedTileStatus().subscribe(
-            (activeSquare) => { this.deleteActivePlayerFirstTile(activeSquare) })
     }
 
     ngOnDestroy(): void {
@@ -81,15 +73,17 @@ export class GridService implements OnDestroy {
 
     /**monter la position firstTile */
     showActivePlayerFirstTile(activeSquare: { x: string, y: number }) {
-        console.log('received add preview: ')
-        console.log(activeSquare);
         this.gridContext.strokeStyle = 'orange';
         this.gridContext.lineWidth = 3;
         this.gridContext.strokeRect(COLUMNS[activeSquare.y], ROWS[activeSquare.x], GRID_CONSTANTS.defaultSide, GRID_CONSTANTS.defaultSide);
     }
 
-    deleteActivePlayerFirstTile(activeSquare: { x: string, y: number }) {
-        this.deleteAndRedraw();
+    deleteActivePlayerFirstTile(activeSquare: { x: string, y: number }, addedLettersLog?: Map<string, string>) {
+        if (addedLettersLog) {
+            this.deleteAndRedraw(addedLettersLog)
+        } else {
+            this.deleteAndRedraw();
+        }
     }
     drawIdentificators() {
         this.setGrids();
@@ -181,22 +175,19 @@ export class GridService implements OnDestroy {
             const checkedRow: string = this.validRowColumn(column, row);
             const letterPoint: number = LETTER_POINTS[blankHandledLetter.points as keyof typeof LETTER_POINTS];
             this.gridContext.beginPath();
-
             this.gridContext.font = `bold ${this.size.getFontSize().get('gridLettersSize')}px Courier`;
             this.gridContext.textBaseline = 'bottom';
             this.gridContext.textAlign = 'center';
             this.gridContext.fillStyle = this.GRID_COLOURS.defaultBackground;
-            this.gridContext.fillRect(COLUMNS[column], ROWS[checkedRow], GRID_CONSTANTS.defaultSide - 1, GRID_CONSTANTS.defaultSide - 1);
 
+
+            this.gridContext.fillRect(COLUMNS[column], ROWS[checkedRow], GRID_CONSTANTS.defaultSide - 1, GRID_CONSTANTS.defaultSide - 1);
             this.gridContext.fillStyle = this.GRID_COLOURS.defaultBlack;
             this.gridContext.fillText(
                 blankHandledLetter.letter,
                 COLUMNS[column] + GRID_CONSTANTS.defaultSide / GRID_OFFSETS.letterOffsetH,
                 ROWS[checkedRow] + GRID_CONSTANTS.defaultSide / GRID_OFFSETS.letterOffsetV,
             );
-            console.log(COLUMNS[column])
-            console.log(ROWS[checkedRow])
-
 
             this.gridContext.textBaseline = 'top';
             this.gridContext.font = `bold ${this.size.getFontSize().get('gridPointSize')}px Courier`;

@@ -5,6 +5,7 @@
     <string name="tapez_quelque_chose">Tapez quelque chose…</string>
     <string name="game">Jeu</string>
     <string name="tournois">TOURNOIS</string>
+    <string name="jouer">JOUER</string>
     <string name="classique">CLASSIQUE</string>
     <string name="collaboratif">COLLABORATIF</string>
     <string name="disconnect">DECONNEXION</string>
@@ -30,6 +31,8 @@
     <string name="friendProfile">Voir le profil</string>
     <string name="friendJoin">Inviter dans une partie</string>
     <string name="friendRemove">Retire de la liste d\'amis</string>
+
+    <string name="changeUsername">Changement de votre nom d\'utilisateur </string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>

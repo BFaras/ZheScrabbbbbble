@@ -14,6 +14,8 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -85,7 +87,7 @@ class ProfilFragment : Fragment() {
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
         getProfile(LoggedInUser.getName())
-        //changeAvatar(")
+
         binding.playerInGameAvatar.setOnClickListener {
             val builder = context?.let { it -> AlertDialog.Builder(it,R.style.CustomAlertDialog).create() }
             val alertView = layoutInflater.inflate(R.layout.alert_choose_avatar, null)
@@ -395,6 +397,23 @@ class ProfilFragment : Fragment() {
         binding.button2.setOnClickListener {
             findNavController().navigate(R.id.action_profilFragment_to_mainActivity2)
         }
+
+        binding.editName.setOnClickListener {
+            val builder = context?.let { it -> AlertDialog.Builder(it,R.style.CustomAlertDialog).create() }
+            val alertView = layoutInflater.inflate(R.layout.alert_change_username, null)
+            val dialogNo = alertView.findViewById<AppCompatButton>(R.id.dialogNo)
+            val dialogYes = alertView.findViewById<AppCompatButton>(R.id.dialogYes)
+            val username = alertView.findViewById<EditText>(R.id.username)
+            builder?.setView(alertView)
+            dialogNo.setOnClickListener {
+                builder?.dismiss()
+            }
+            dialogYes.setOnClickListener {
+                changeUsername(username.text.toString().trim())
+                builder?.dismiss()
+            }
+            builder?.show()
+        }
     }
 
     private  fun getProfile(username:String){
@@ -459,14 +478,7 @@ class ProfilFragment : Fragment() {
                     if(errorMessage == R.string.NO_ERROR ){
                         profile.avatar= newAvatar
                         binding.playerInGameAvatar.setImageResource(resources.getIdentifier((newAvatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
-
-//                        when (newAvatar) {
-//                            "cat.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-//                            "dog.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.dog)
-//                            "flower.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.flower)
-//                            else -> {}
-//                        }
-                    }else{
+                    } else{
                         val appContext = context?.applicationContext
                         Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
                     }

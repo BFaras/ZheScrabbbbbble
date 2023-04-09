@@ -13,10 +13,14 @@ export class AccountService {
   private socket: Socket;
   private profile: ProfileInfo;
   private usercode: string;
+  private avatars: string[] = ['daria.PNG', 'arnaud.PNG', 'imane.PNG', 'raphael.PNG', 'manuel.PNG', 'mohamed.PNG', 'cow.png', 'mouse.png', 'giraffe.png',
+    'owl.png', 'monkey.png', 'cat.png', 'dog.png', 'alien.png', 'fox.png', 'pig.png', 'rooster.png', 'unicorn.png', 'lion.png', 'bear.png', 'koala.png', 'ghost.png',
+    'shark.png', 'panda.png', 'tiger.png', 'skeleton.png', 'bunny.png'];
+  private lockedAvatars: string[] = ['shark.png', 'panda.png', 'tiger.png', 'skeleton.png', 'bunny.png'];
   private language: string = 'fr';
 
   constructor(private socketManagerService: SocketManagerService, private themeService: ThemesService) {
-    this.setUpSocket()
+    this.setUpSocket();
   }
 
   setUpSocket() {
@@ -151,7 +155,31 @@ export class AccountService {
     });
   }
 
+  updateAvatars() {
+    let unlockedAvatars: string[] = [];
 
+    if (this.profile.tournamentWins[0] >= 2) unlockedAvatars.push('bunny.png');
+    if (this.profile.tournamentWins[0] >= 1) unlockedAvatars.push('skeleton.png');
+    if (this.profile.levelInfo.level >= 6) unlockedAvatars.push('tiger.png');
+    if (this.profile.levelInfo.level >= 4) unlockedAvatars.push('panda.png');
+    if (this.profile.levelInfo.level >= 2) unlockedAvatars.push('shark.png');
 
+    unlockedAvatars.forEach(avatar => {
+      if (this.lockedAvatars.includes(avatar)) this.lockedAvatars.splice(this.lockedAvatars.indexOf(avatar), 1);
+    });
+  }
+
+  getAvatars() {
+    return this.avatars;
+  }
+
+  getLockedAvatars() {
+    return this.lockedAvatars;
+  }
+
+  getDefaultAvatars() {
+    return ['daria.PNG', 'arnaud.PNG', 'imane.PNG', 'raphael.PNG', 'manuel.PNG', 'mohamed.PNG', 'cow.png', 'mouse.png', 'giraffe.png',
+      'owl.png', 'monkey.png', 'cat.png', 'dog.png', 'alien.png', 'fox.png', 'pig.png', 'rooster.png', 'unicorn.png', 'lion.png', 'bear.png', 'koala.png', 'ghost.png'];
+  }
 
 }

@@ -4,6 +4,7 @@
     <string name="action_settings">Paramètres</string>
     <string name="tapez_quelque_chose">Tapez quelque chose…</string>
     <string name="game">Jeu</string>
+    <string name="jouer">JOUER</string>
     <string name="tournois">TOURNOIS</string>
     <string name="classique">CLASSIQUE</string>
     <string name="collaboratif">COLLABORATIF</string>
@@ -36,6 +37,9 @@
     <string name="friendProfile">Voir le profil</string>
     <string name="friendJoin">Inviter dans une partie</string>
     <string name="friendRemove">Retire de la liste d\'amis</string>
+
+
+    <string name="changeUsername">Changement de votre nom d\'utilisateur </string>
 
 
     <!-- Strings used for fragments for navigation -->

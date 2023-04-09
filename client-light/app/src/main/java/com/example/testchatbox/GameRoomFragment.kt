@@ -2,6 +2,8 @@ package com.example.testchatbox
 
 import SocketHandler
 import android.annotation.SuppressLint
+import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -30,6 +32,8 @@ class GameRoomFragment : Fragment(), Observer {
 
     private var _binding: FragmentGameRoomBinding? = null
     private val binding get() = _binding!!
+    private var isChatIconChanged = false;
+    private var notifSound: MediaPlayer? = null;
 
     var avatars = mutableMapOf<String, String>()
 
@@ -49,7 +53,10 @@ class GameRoomFragment : Fragment(), Observer {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupChatNotifs(view.context)
         update();
+
+
         binding.leave.setOnClickListener {
             GameRoomModel.leaveRoom();
             SocketHandler.getSocket().emit("Leave Game Room")
@@ -73,6 +80,8 @@ class GameRoomFragment : Fragment(), Observer {
 
     override fun onStop() {
         super.onStop()
+        NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        notifSound?.release()
         GameRoomModel.removeObserver(this);
     }
 
@@ -162,5 +171,27 @@ class GameRoomFragment : Fragment(), Observer {
         if (GameRoomModel.joinRequest.isNotEmpty()) showJoinSection()
     }
 
+    fun setupChatNotifs(context: Context) {
+        isChatIconChanged = false;
+        NotificationInfoHolder.startObserverChat();
+        NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
+        notifSound = MediaPlayer.create(context, R.raw.ding)
 
+        notifSound?.setOnCompletionListener { notifSound?.release() }
+
+        if(NotificationInfoHolder.areChatsUnread())
+            changeToNotifChatIcon();
+    }
+
+    fun playNotifSoundAndChangeIcon() {
+        if (!isChatIconChanged) {
+            changeToNotifChatIcon()
+            notifSound?.start()
+        }
+    }
+
+    fun changeToNotifChatIcon() {
+        binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+        isChatIconChanged = true;
+    }
 }

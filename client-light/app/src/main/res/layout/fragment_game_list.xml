@@ -120,12 +120,36 @@
                     android:text="@string/create_a_room" />
 
                 <RadioGroup
+                    android:id="@+id/gameType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center"
+                    android:checkedButton="@+id/classicGame"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/classicGame"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="?colorSecondary"
+                        android:text="@string/classique" />
+
+                    <RadioButton
+                        android:id="@+id/coopGame"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="?colorSecondary"
+                        android:text="@string/collaboratif" />
+                </RadioGroup>
+
+                <RadioGroup
                     android:id="@+id/roomType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_gravity="center"
-
+                    android:checkedButton="@+id/publicRoom"
                     android:orientation="horizontal">
 
                     <RadioButton

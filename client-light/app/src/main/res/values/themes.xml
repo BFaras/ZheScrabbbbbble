@@ -35,6 +35,7 @@
         <item name="backgroundProfile">@color/lightBeige</item>
         <item name="profileAccentColor">#679089</item>
         <item name="chatIconNotif">#38683A</item>
+        <item name="chatCanalNotif">#EEE6A3</item>
     </style>
 
     <style name="Theme.TestChatBox.NoActionBar">
@@ -69,6 +70,7 @@
         <item name="backgroundProfile">@color/LightBabyPink</item>
         <item name="profileAccentColor">#a75c8c</item>
         <item name="chatIconNotif">#f7dfed</item>
+        <item name="chatCanalNotif">#DFB2CC</item>
     </style>
 
     <style name="EclipseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -97,6 +99,7 @@
         <item name="backgroundProfile">#050a0e</item>
         <item name="profileAccentColor">#986f76</item>
         <item name="chatIconNotif">@color/clearSea</item>
+        <item name="chatCanalNotif">#2A5B9C</item>
     </style>
 
     <style name="BlizzardTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -155,6 +158,7 @@
         <item name="backgroundProfile">#0b1c09</item>
         <item name="profileAccentColor">#89b034</item>
         <item name="chatIconNotif">#D8BDBB</item>
+        <item name="chatCanalNotif">@color/BrightSunset</item>
     </style>
 
 

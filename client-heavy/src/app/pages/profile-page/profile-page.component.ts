@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { connectionHistory } from '@app/classes/connection-history';
 import { ProfileInfo } from '@app/classes/profileInfo';
@@ -38,7 +39,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private themeService: ThemesService,
     private router: Router,
-    private friends: FriendsService) { this.profileMode = this.friends.getMode(); }
+    private friends: FriendsService,
+    private snackBar: MatSnackBar) { this.profileMode = this.friends.getMode(); }
 
   ngOnDestroy() {
     this.subscriptionChangeAvatar.unsubscribe();
@@ -86,19 +88,19 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     this.subscriptionChangeAvatar = this.accountService.getAvatarChangeStatus()
       .subscribe((errorCode: string) => {
         if (errorCode === NO_ERROR) {
-          window.alert("Changement d'avatar réussi!")
+          this.snackBar.open("Changement d'avatar réussi!", "Fermer")
         } else {
-          window.alert("La base de données est inacessible!")
+          this.snackBar.open("La base de données est inacessible!", "Fermer")
         }
       })
     this.subscriptionUsername = this.accountService.getChangeUserNameResponse().subscribe((errorCode: string) => {
       this.errorCodeUsername = errorCode;
       if (errorCode === NO_ERROR) {
-        window.alert("Changement du nom de l'utilisateur réussi!")
+        this.snackBar.open("Changement du nom de l'utilisateur réussi!", "Fermer")
       } else if (errorCode === USERNAME_TAKEN) {
-        window.alert("Le nom choisi n'est pas disponible!")
+        this.snackBar.open("Le nom choisi n'est pas disponible!", "Fermer")
       } else {
-        window.alert("La base de données est inacessible!")
+        this.snackBar.open("La base de données est inacessible!", "Fermer")
       }
     })
 
