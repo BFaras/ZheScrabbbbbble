@@ -100,6 +100,7 @@ class GameListFragment : Fragment() {
         setupChatNotifs(view.context)
         updateGameList();
         binding.roomType.check(R.id.publicRoom)
+        binding.gameType.check(R.id.classicGame)
         binding.roomType.setOnCheckedChangeListener { radioGroup, i ->
             Log.i("Radio", i.toString())
             when (radioGroup.checkedRadioButtonId) {

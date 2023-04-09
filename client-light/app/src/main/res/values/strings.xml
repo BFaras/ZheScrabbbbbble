@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">SCRABBLE</string>
+    <string name="app_name" translatable="false"> <font family="@font/shrikhand" >Scrabble</font></string>
 
     <string name="action_settings">Paramètres</string>
     <string name="tapez_quelque_chose">Tapez quelque chose…</string>
@@ -87,7 +87,7 @@
     <string name="MSG_5"><![CDATA[<b>%1$s</b> s\'est déconnecté et a été remplacé par un JV.]]></string>
     <string name="MSG_6"><![CDATA[<b>%1$s</b> a manqué de temps et a passé son tour.]]></string>
     <string name="MSG_7"><![CDATA[Fin de partie - <b>%1$s</b> lettres restantes]]></string>
-    <string name="scrabbleName">SCRABBLE</string>
+    <string name="scrabbleName">Scrabble</string>
     <string name="info_panel">PANNEAU INFORMATIF</string>
     <string name="detectedJoker">JOKER DÉTECTÉ!</string>
     <string name="blankLetterOnBoard">Une lettre blanche a été placée sur le plateau.</string>
@@ -127,7 +127,7 @@
     <string name="no">Non</string>
     <string name="confirmAbandon">ARE YOU SUUUUURE?</string>
     <string name="confirmButtonText">Êtes-vous sûr(e) de vouloir quitter la partie?</string>
-    <string name="now_observing_player1"><![CDATA[now observing %1$s]]></string>
+    <string name="now_observing_player1"><![CDATA[NOW OBSERVING %1$s]]></string>
     <string name="move_mode">move mode</string>
     <string name="swap_mode">swap mode</string>
     <string name="indice">Indice</string>
@@ -136,16 +136,43 @@
     <string name="iswinner">won</string>
     <string name="isloser">lost</string>
     <string name="your_friend_code_is">your friend code is</string>
+    <string name="avatarError">Veuillez choisir un avatar.</string>
     <string name="language">language</string>
     <string name="current_theme">current theme</string>
     <string name="vous_pourrez_le_changer_nouveau_dans_votre_page_de_profil">Vous pourrez le changer à nouveau dans votre page de profil.</string>
     <string name="choisissez_votre_avatar">choisissez votre avatar</string>
     <string name="revenez_quand_vous_aurez_fait_des_parties">Revenez quand vous aurez fait des parties!</string>
     <string name="c_est_vide_ici">c\'est vide ici…</string>
-    <string name="host" translatable="false">host</string>
+    <string name="host">host</string>
     <string name="numberPlayers" translatable="false"><![CDATA[%1$s / 4]]></string>
     <string name="congrats_to_all_players">congrats to all players!</string>
     <string name="tournament_ranking">tournament ranking</string>
     <string name="pas_besoin_d_indices">PAS BESOIN D\'INDICES</string>
+    <string name="joined_public_chats">joined public chats</string>
+    <string name="pss_you_can_quit_any_room_by_clicking_it">(pss…you can quit any room by clicking it)</string>
+    <string name="create_a_public_chat">create a public chat</string>
+    <string name="join_a_public_chat">join a public chat</string>
+    <string name="you_can_create_a_public_chat_or_join_one_from_the_list_on_the_right">You can create a public chat or join one from the list on the right</string>
+    <string name="create">Create</string>
+    <string name="reload">Reload</string>
+    <string name="till_next_round">till next round</string>
+    <string name="players_in_game">PLAYERS IN GAME</string>
+    <string name="classicGame">Classique</string>
+    <string name="coopGame">Coop</string>
+    <string name="classicTheme">Classique</string>
+    <string name="invertedTheme">Contraste</string>
+    <string name="greenTheme">Vert</string>
+    <string name="pinkTheme">Rose</string>
+    <string name="blizzardTheme">Blizzard</string>
+    <string name="sorry_nno_hints_have_been_found">Sorry… \nNo hints have been found.</string>
+    <string name="join_a_room">join a room</string>
+    <string name="observer">Observer</string>
+    <string name="player">Player</string>
+    <string name="waiting_for_host_approval">waiting for host approval</string>
+    <string name="cancel">Cancel</string>
+    <string name="join">Join</string>
+    <string name="start_game">Start game</string>
+    <string name="leave">Leave</string>
+    <string name="team">Équipe</string>
 
 </resources>

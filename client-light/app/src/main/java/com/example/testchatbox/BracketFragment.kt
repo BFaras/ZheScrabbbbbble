@@ -1,9 +1,13 @@
 package com.example.testchatbox
 
 import SocketHandler
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,12 +20,15 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentBracketBinding
 import com.example.testchatbox.databinding.FragmentQueueBinding
+import java.text.DecimalFormat
+import java.text.NumberFormat
 
 
 class BracketFragment : Fragment(), Observer {
 
     private var _binding: FragmentBracketBinding? = null
     private val binding get() = _binding!!
+    private lateinit var timer: CountDownTimer
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -115,37 +122,44 @@ class BracketFragment : Fragment(), Observer {
             if(TournamentModel.tournamentTimer.phase==2)
                 findNavController().navigate(R.id.action_bracketFragment_to_rankingFragment)
             //TODO : Update UI
-            binding.time.text = TournamentModel.tournamentTimer.timeRemaning.toString()
+            timer = setTimer(TournamentModel.tournamentTimer.timeRemaning.toLong()*1000)
+            Log.d("TIME TOURNAMENT", TournamentModel.tournamentTimer.timeRemaning.toString())
+            timer.start()
             for (game in TournamentModel.gamesData) {
+                Log.d("GAME TOURNAMENT", game.toString())
                 when (game.type) {
                     "Semi1" -> {
                         binding.semi1player1.text = game.players[0]
                         binding.semi1player2.text = game.players[1]
-                        when (game.winnerIndex) {
-                            0 -> {
-                                binding.semi1player1.typeface = Typeface.DEFAULT_BOLD
-                                binding.semi1player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                        if (game.status == GameStatus.FINISHED) {
+                            when (game.winnerIndex) {
+                                0 -> {
+                                    binding.semi1player1.typeface = Typeface.DEFAULT_BOLD
+                                    binding.semi1player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                                }
+                                1 -> {
+                                    binding.semi1player2.typeface = Typeface.DEFAULT_BOLD
+                                    binding.semi1player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                                }
+                                else -> {}
                             }
-                            1 -> {
-                                binding.semi1player2.typeface = Typeface.DEFAULT_BOLD
-                                binding.semi1player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-                            }
-                            else -> {}
                         }
                     }
                     "Semi2" -> {
                         binding.semi2player1.text = game.players[0]
                         binding.semi2player2.text = game.players[1]
-                        when (game.winnerIndex) {
-                            0 -> {
-                                binding.semi1player1.typeface = Typeface.DEFAULT_BOLD
-                                binding.semi1player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                        if (game.status == GameStatus.FINISHED){
+                            when (game.winnerIndex) {
+                                0 -> {
+                                    binding.semi1player1.typeface = Typeface.DEFAULT_BOLD
+                                    binding.semi1player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                                }
+                                1 -> {
+                                    binding.semi1player2.typeface = Typeface.DEFAULT_BOLD
+                                    binding.semi1player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                                }
+                                else -> {}
                             }
-                            1 -> {
-                                binding.semi1player2.typeface = Typeface.DEFAULT_BOLD
-                                binding.semi1player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-                            }
-                            else -> {}
                         }
                     }
                     "Final1" -> {
@@ -153,16 +167,18 @@ class BracketFragment : Fragment(), Observer {
                         binding.final1player1.text = game.players[0]
                         if(game.players.size==2)
                             binding.final1player2.text = game.players[1]
-                        when (game.winnerIndex) {
-                            0 -> {
-                                binding.final1player1.typeface = Typeface.DEFAULT_BOLD
-                                binding.final1player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                        if (game.status == GameStatus.FINISHED) {
+                            when (game.winnerIndex) {
+                                0 -> {
+                                    binding.final1player1.typeface = Typeface.DEFAULT_BOLD
+                                    binding.final1player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                                }
+                                1 -> {
+                                    binding.final1player2.typeface = Typeface.DEFAULT_BOLD
+                                    binding.final1player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                                }
+                                else -> {}
                             }
-                            1 -> {
-                                binding.final1player2.typeface = Typeface.DEFAULT_BOLD
-                                binding.final1player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-                            }
-                            else -> {}
                         }
                     }
                     "Final2" -> {
@@ -170,16 +186,18 @@ class BracketFragment : Fragment(), Observer {
                         binding.final2player1.text = game.players[0]
                         if(game.players.size==2)
                             binding.final2player2.text = game.players[1]
-                        when (game.winnerIndex) {
-                            0 -> {
-                                binding.final2player1.typeface = Typeface.DEFAULT_BOLD
-                                binding.final2player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                        if (game.status == GameStatus.FINISHED) {
+                            when (game.winnerIndex) {
+                                0 -> {
+                                    binding.final2player1.typeface = Typeface.DEFAULT_BOLD
+                                    binding.final2player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                                }
+                                1 -> {
+                                    binding.final2player2.typeface = Typeface.DEFAULT_BOLD
+                                    binding.final2player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                                }
+                                else -> {}
                             }
-                            1 -> {
-                                binding.final2player2.typeface = Typeface.DEFAULT_BOLD
-                                binding.final2player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-                            }
-                            else -> {}
                         }
                     }
                     else -> {}
@@ -196,6 +214,18 @@ class BracketFragment : Fragment(), Observer {
     override fun onStop() {
         super.onStop()
         TournamentModel.removeObserver(this);
+    }
+    private fun setTimer(timeRemaining: Long): CountDownTimer {
+        return object : CountDownTimer(timeRemaining, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val f : NumberFormat = DecimalFormat("00")
+                binding.timeMinutes.text = (f.format((millisUntilFinished/60000) % 60)).toString()
+                binding.timeSeconds.text = (f.format((millisUntilFinished/1000) % 60)).toString()
+            }
+            override fun onFinish() {
+                cancel()
+            }
+        }
     }
 
 }

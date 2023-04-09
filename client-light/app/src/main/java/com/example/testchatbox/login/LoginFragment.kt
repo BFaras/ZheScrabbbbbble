@@ -70,61 +70,6 @@ class LoginFragment : Fragment() {
             }
         }
 
-        binding.darkTheme.setOnClickListener {
-            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "inverted") };
-            activity?.let { it1 ->
-                ThemeManager.setCustomizedThemes(
-                    it1.applicationContext,
-                    "inverted"
-                )
-            };
-            activity?.let { it1 -> ActivityCompat.recreate(it1) }
-        }
-
-        binding.blizzard.setOnClickListener {
-            activity?.applicationContext?.let { it1 -> ThemeStorage.setThemeColor(it1, "blizzard") };
-            activity?.let { it1 ->
-                ThemeManager.setCustomizedThemes(
-                    it1.applicationContext,
-                    "blizzard"
-                )
-            };
-            activity?.let { it1 -> ActivityCompat.recreate(it1) }
-        }
-
-        binding.lightTheme.setOnClickListener {
-            activity?.applicationContext?.let { it1 ->
-                ThemeStorage.setThemeColor(
-                    it1,
-                    "classic"
-                )
-            };
-            activity?.let { it1 ->
-                ThemeManager.setCustomizedThemes(
-                    it1.applicationContext,
-                    "classic"
-                )
-            };
-            activity?.let { it1 -> ActivityCompat.recreate(it1) }
-        }
-
-        binding.astro.setOnClickListener {
-            activity?.applicationContext?.let { it1 ->
-                ThemeStorage.setThemeColor(
-                    it1,
-                    "pink"
-                )
-            };
-            activity?.let { it1 ->
-                ThemeManager.setCustomizedThemes(
-                    it1.applicationContext,
-                    "pink"
-                )
-            };
-            activity?.let { it1 -> ActivityCompat.recreate(it1) }
-        }
-
-
         WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
             // Hide both the status bar and the navigation bar
             hide(WindowInsetsCompat.Type.systemBars())
