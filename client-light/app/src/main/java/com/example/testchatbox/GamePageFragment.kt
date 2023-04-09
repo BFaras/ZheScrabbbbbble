@@ -43,7 +43,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class GamePageFragment : Fragment() {
+class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
     private val hideHandler = Handler(Looper.myLooper()!!)
 
     private val gameModel: GameStateModel by viewModels()
@@ -177,7 +177,7 @@ class GamePageFragment : Fragment() {
             }
             lettersOnBoard = gameState.board
             moveInfo = gameState.message!!
-            updateMoveInfo(moveInfo)
+            GameHistoryModel.addMoveInfo(moveInfo)
 
             SocketHandler.getSocket().on("Avatars from Usernames Response") { args ->
                 val avatarListJSON = args[0] as JSONObject
@@ -487,15 +487,6 @@ class GamePageFragment : Fragment() {
                 clearTurn()
             }
 
-            SocketHandler.getSocket().on("Message Action History"){ args->
-                val messageJSON = args[0] as JSONObject
-                val messageArray = messageJSON.get("values") as JSONArray
-                val messages = arrayListOf<String>()
-                for (i in 0 until messageArray.length()) {
-                    messages.add(messageArray.get(i) as String)
-                }
-                updateMoveInfo(PlayerMessage(messageJSON.get("messageType") as String, messages))
-            }
         }
 
         val dragListener = OnDragListener { view, event ->
@@ -679,7 +670,13 @@ class GamePageFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
+        GameHistoryModel.removeObserver(this)
         timer.cancel()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        GameHistoryModel.addObserver(this)
     }
 
     private fun hide() {
@@ -970,8 +967,10 @@ class GamePageFragment : Fragment() {
         isInside = false
     }
 
-    private fun updateMoveInfo(moveInfo: PlayerMessage?) {
-        if (moveInfo != null) {
+    private fun updateMoveInfo() {
+        val messages = GameHistoryModel.getList()
+        binding.moveInfoPanel.removeAllViews()
+        for(moveInfo in messages) {
             when (moveInfo.messageType) {
                 "MSG-1" -> {
                     val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
@@ -1017,8 +1016,8 @@ class GamePageFragment : Fragment() {
                 }
                 else -> {}
             }
-            binding.scrollMoveInfo.post { binding.scrollMoveInfo.fullScroll(FOCUS_DOWN) }
         }
+        binding.scrollMoveInfo.post { binding.scrollMoveInfo.fullScroll(FOCUS_DOWN) }
     }
 
 
@@ -1152,4 +1151,13 @@ class GamePageFragment : Fragment() {
         binding.replaceLetterInput.setText("")
         binding.replaceLetterInput.clearFocus()
     }
+
+    override fun update() {
+        Log.i("Update", GameHistoryModel.getList().toString())
+        updateMoveInfo()
+        if(GameHistoryModel.playRequest!=null) showCoopPlayPrompt()
+    }
+
+    //TODO : UI to call GameHistoryModel.sendCoopResponse(accept:boolean)
+    private fun showCoopPlayPrompt() {}
 }
