@@ -367,7 +367,7 @@ export class LetterAdderService {
                 return
             }
             if (!this.verifyLettersAreLinked()) {
-                window.alert(window.alert("les lettres placées doivent être relier les unes aux autres"))
+                window.alert("les lettres placées doivent être relier les unes aux autres")
                 this.getLetterNotAcceptedObservable().next(true);
                 this.removeAll();
                 return;

@@ -1,5 +1,5 @@
-import { CdkDragDrop, CdkDragEnd } from '@angular/cdk/drag-drop';
-import { AfterViewInit, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Vec2 } from '@app/classes/vec2';
 import { COLUMNS, GRID_CONSTANTS, ROWS } from '@app/constants/grid-constants';
@@ -39,7 +39,6 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         private readonly gameStateService: GameStateService,
         private readonly letterAdderService: LetterAdderService,
         public readonly dialogBlankTile: MatDialog,
-        private renderer: Renderer2,
         private previewFirstTileService: PreviewPlayersActionService,
         private GameStateService: GameStateService
     ) {
@@ -97,12 +96,6 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         this.addField({ ...tile }, event.currentIndex);
     }
 
-    public dragEnded(event: CdkDragEnd, field: { top: string; left: string; text: string }): void {
-        console.log("-------------start Drag Ended-----------------------")
-        this.renderer.setStyle(event.source.element.nativeElement, 'opacity', '100%');
-        console.log("-------------------------finish Drag Endede----------------------------")
-
-    }
     changePosition(event: CdkDragDrop<string>, field: { top: string; left: string; text: string }) {
         this.setReceiver('playarea');
         const leftBoard = document.getElementById("canvas")?.getBoundingClientRect().left as number;
@@ -122,8 +115,6 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         if (!out) {
             if (this.letterAdderService.onDropLetterSpot(coordinateClick)) {
                 const tile = this.letterAdderService.getDroppedSpot(coordinateClick.x, coordinateClick.y);
-                console.log("nouvelle position on veut etre:")
-                console.log(tile);
                 let newField: { top: string; left: string; text: string } = {
                     top: ROWS[tile.row] + "px",
                     left: COLUMNS[tile.column] + "px",
@@ -132,8 +123,6 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
                 }
                 this.changeTilePositionLastMovedTile(field, newField)
                 this.letterAdderService.moveLetterInBoard(field.text)
-                //field.left = left + "px"
-                //field.top = top + "px"
                 /*il faut que e soit dans cet ordre pour enlever les dessin quand je bouge */
                 this.letterAdderService.removeDrawingBeforeDragWithinCanvas()
 
