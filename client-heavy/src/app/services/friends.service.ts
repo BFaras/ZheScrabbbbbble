@@ -16,6 +16,7 @@ export class FriendsService {
 
   private friendListUpdateObservable : Observable<void>;
   private friendListUpdateObserver: Observer<void>;
+  private friendToInvite: string = '';
 
   constructor(private socketManagerService: SocketManagerService) {
     this.refreshSocketRequests();
@@ -64,6 +65,11 @@ export class FriendsService {
     });
   }
 
+  inviteFriend(){
+    this.socketManagerService.getSocket().emit('Invite Friend To Game', this.friendToInvite);
+    this.friendToInvite = '';
+  }
+
   refreshSocketRequests() {
     this.socket = this.socketManagerService.getSocket();
     this.socket.on('Friend Username Updated', () => {
@@ -104,5 +110,13 @@ export class FriendsService {
 
   getUsername() {
     return this.username;
+  }
+
+  setFriendToInvite(username: string){
+    this.friendToInvite = username;
+}
+
+  getFriendToInvite(): string{
+    return this.friendToInvite;
   }
 }

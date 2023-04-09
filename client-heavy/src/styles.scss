@@ -70,6 +70,10 @@ $indigo-pink-theme: mat.define-light-theme(
 
 @import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
 
+html{
+    background: var(--background-default);
+}
+
 html,
 body {
     margin: 0;

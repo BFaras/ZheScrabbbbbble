@@ -18,7 +18,6 @@ export class FriendsPageComponent {
   subscriptions: Subscription[] = [];
   profile: ProfileInfo;
   username: string = "";
-  friend: Friend = { username: 'cat', status: ConnectivityStatus.ONLINE };
   redirect: boolean = false;
 
   constructor(private snackBar: MatSnackBar, private friendsService: FriendsService, private account: AccountService, private router: Router) {
@@ -78,11 +77,9 @@ export class FriendsPageComponent {
     });
   }
 
-  /*
-  openChat(friend: Friend) {
-    //this.friend = friend;
-    //this.redirect = true;
-    this.router.navigate(['/chat']);
+  createGameWithInvite(friend: Friend){
+    if(friend.status !== ConnectivityStatus.ONLINE) return;
+    this.friendsService.setFriendToInvite(friend.username);
+    this.router.navigate(['/create-game']);
   }
-  */
 }

@@ -130,7 +130,8 @@
         "OBSERVE": " souhaite pouvoir observer la partie.",
         "ACCEPT": "Accepter",
         "DECLINE": "Refuser",
-        "START": "Démarrer"
+        "START": "Démarrer",
+        "INVITE-FRIENDS": "Inviter des amis"
     },
     "JOIN-GAME": {
         "HOST": "Hôte",

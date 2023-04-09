@@ -19,6 +19,7 @@ export class WaitingRoomComponent implements OnDestroy {
     subscriptionJoinRoomRequest: Subscription;
     subscriptionStartGame: Subscription;
     subscriptionGetRoomPlayer: Subscription;
+    
     constructor(private waitingRoomManagerService: WaitingRoomManagerService,
         private accountService: AccountService,
         private router: Router,
@@ -28,21 +29,13 @@ export class WaitingRoomComponent implements OnDestroy {
         this.avatarInRoomService.setUpSocket()
         this.subscriptionAvatar = this.avatarInRoomService.getUsersInRoomAvatarObservable().subscribe((avatars) => {
             this.avatarOfPlayers = avatars;
-            console.log("in waiting-room after added player")
-            console.log(this.playersInRoom);
-            console.log(this.avatarOfPlayers);
         })
         /**debut à modifier quand on recoit avatar avec usernames */
         this.playersInRoom = this.waitingRoomManagerService.getDefaultPlayersInRoom();
         this.avatarInRoomService.setUsersInRoom(this.playersInRoom)
-        console.log(this.playersInRoom)
-        console.log(this.avatarInRoomService.getAvatarOfUsers())
         /** */
         this.avatarInRoomService.askAllUsersAvatar();
         this.avatarOfPlayers = this.avatarInRoomService.getAvatarOfUsers();
-        console.log("in waiting-room when created")
-        console.log(this.playersInRoom);
-        console.log(this.avatarOfPlayers);
         this.subscriptionJoinRoomRequest = this.waitingRoomManagerService.getJoinRoomRequestObservable().subscribe(this.newJoinRequest.bind(this));
         this.subscriptionStartGame = this.waitingRoomManagerService.getStartGameObservable().subscribe(this.goToGame.bind(this));
         this.subscriptionGetRoomPlayer = this.waitingRoomManagerService.getRoomPlayerObservable().subscribe((playersInRoom) => {

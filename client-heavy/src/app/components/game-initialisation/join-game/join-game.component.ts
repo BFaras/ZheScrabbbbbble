@@ -52,12 +52,14 @@ export class JoinGameComponent implements OnDestroy {
     }
 
     joinGame(room: WaitingRoom, observer: boolean) {
+        this.waitingRoomManagerService.setRoomToJoinId(room.id);
         this.waitingRoomManagerService.setObserver(observer);
         if (room.visibility === RoomVisibility.PROTECTED) {
             const passwordDialog = this.dialog.open(PasswordInputComponent, { data: room.id, width: '30%', height: '200px' });
             passwordDialog.afterClosed().subscribe(result => {
                 if (!result) return;
                 this.waitingRoomManagerService.setDefaultPlayersInRoom(result);
+                this.chatService.setChatInGameRoom(this.waitingRoomManagerService.getRoomToJoinId());
                 if (this.waitingRoomManagerService.isObserver()) {
                     this.router.navigate(['/observer-room']);
                 } else {
@@ -65,12 +67,10 @@ export class JoinGameComponent implements OnDestroy {
                 }
             });
         } else if (room.visibility === RoomVisibility.PRIVATE) {
-            this.chatService.setChatInGameRoom(room.id);
             this.waitingRoomManagerService.joinRoom(room.id);
             this.waitingRoomManagerService.setRequestPending(true);
             this.router.navigate(['/pending-room']);
         } else {
-            this.chatService.setChatInGameRoom(room.id);
             this.waitingRoomManagerService.joinRoomResponse().pipe(first()).subscribe(this.redirectPlayer.bind(this));
             this.waitingRoomManagerService.joinRoom(room.id);
         }
@@ -87,6 +87,7 @@ export class JoinGameComponent implements OnDestroy {
             return;
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom(message.playerNames);
+        this.chatService.setChatInGameRoom(this.waitingRoomManagerService.getRoomToJoinId());
         if (this.waitingRoomManagerService.isObserver()) {
             this.router.navigate(['/observer-room']);
         } else {

@@ -6,6 +6,7 @@ import { RoomVisibility } from '@app/constants/room-visibility';
 import { AccountService } from '@app/services/account-service/account.service';
 import { AvatarInRoomsService } from '@app/services/avatar-in-rooms.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { FriendsService } from '@app/services/friends.service';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 
 @Component({
@@ -27,7 +28,8 @@ export class CreateGameComponent {
         private router: Router,
         private chatService: ChatService,
         private avatarInRoomService: AvatarInRoomsService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private friendsService: FriendsService
     ) {}
 
 
@@ -78,8 +80,11 @@ export class CreateGameComponent {
             this.snackBar.open('Erreur lors de la création de la salle', "Fermer")
             return;
         }
-        this.waitingRoomManagerService.setDefaultPlayersInRoom([this.accountService.getUsername()])
-        this.avatarInRoomService.setAvatarOfUsers([this.accountService.getProfile().avatar])
+        this.waitingRoomManagerService.setDefaultPlayersInRoom([this.accountService.getUsername()]);
+        this.avatarInRoomService.setAvatarOfUsers([this.accountService.getProfile().avatar]);
+        if(this.friendsService.getFriendToInvite()){
+            this.friendsService.inviteFriend();
+        }
         this.chatService.setChatInGameRoom(message.roomId);
         this.router.navigate(['/waiting-room']);
     }

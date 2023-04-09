@@ -5,7 +5,7 @@
         <section id="pick-a-mode">
             <h1 class="header-item">{{ 'SOLO-MULTI.MESSAGE' | translate }}</h1>
             <div class="mode-buttons">
-                <button class="button" routerLink="/create-game">{{ 'SOLO-MULTI.CREATE' | translate }}</button><br />
+                <button class="button" routerLink="/create-game" (click)="resetFriendInvite()">{{ 'SOLO-MULTI.CREATE' | translate }}</button><br />
                 <button class="button" routerLink="/join-game">{{ 'SOLO-MULTI.JOIN' | translate }}</button><br />
             </div>
         </section>
