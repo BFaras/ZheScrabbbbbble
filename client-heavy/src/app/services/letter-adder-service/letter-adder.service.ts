@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Vec2 } from '@app/classes/vec2';
 import { DIRECTION, GRID_CONSTANTS } from '@app/constants/grid-constants';
 import { ChatService } from '@app/services/chat-service/chat.service';
@@ -27,7 +28,8 @@ export class LetterAdderService {
     constructor(private letterHolderService: LetterHolderService,
         private gridService: GridService,
         private chatService: ChatService,
-        private previewPlayerActionService: PreviewPlayersActionService) {
+        private previewPlayerActionService: PreviewPlayersActionService,
+        private snackBar: MatSnackBar) {
 
     }
 
@@ -367,7 +369,7 @@ export class LetterAdderService {
                 return
             }
             if (!this.verifyLettersAreLinked()) {
-                window.alert("les lettres placées doivent être relier les unes aux autres")
+                this.snackBar.open("les lettres placées doivent être relier les unes aux autres", "Fermer")
                 this.getLetterNotAcceptedObservable().next(true);
                 this.removeAll();
                 return;
@@ -483,7 +485,7 @@ export class LetterAdderService {
         const keys = Array.from(this.orderedAddedLetterLog.keys());
         if (this.arrowDirection) {
             if (!this.isHorizontal(keys)) {
-                window.alert("le mot place n'est pas sur la même direction")
+                this.snackBar.open("le mot place n'est pas sur la même direction", "Fermer");
                 this.getLetterNotAcceptedObservable().next(true)
                 this.removeAll()
                 return "wrongMove"
@@ -493,7 +495,7 @@ export class LetterAdderService {
         }
         else {
             if (!this.isVertical(keys)) {
-                window.alert("le mot place n'est pas sur la même direction")
+                this.snackBar.open("le mot place n'est pas sur la même direction", "Fermer")
                 this.getLetterNotAcceptedObservable().next(true)
                 this.removeAll()
                 return "wrongMove"

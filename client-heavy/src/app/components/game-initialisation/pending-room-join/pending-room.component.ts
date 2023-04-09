@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AvatarInRoomsService } from '@app/services/avatar-in-rooms.service';
 import { JoinResponse, WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
@@ -9,7 +10,7 @@ import { JoinResponse, WaitingRoomManagerService } from '@app/services/waiting-r
     styleUrls: ['./pending-room.component.scss'],
 })
 export class PendingRoomComponent {
-    constructor(private waitingRoomManagerService: WaitingRoomManagerService, private router: Router, private avatarInRoomService: AvatarInRoomsService) {
+    constructor(private snackBar: MatSnackBar, private waitingRoomManagerService: WaitingRoomManagerService, private router: Router, private avatarInRoomService: AvatarInRoomsService) {
         this.waitingRoomManagerService.joinRoomResponse().subscribe(this.receiveResponse.bind(this));
     }
 
@@ -29,7 +30,7 @@ export class PendingRoomComponent {
         }
         if (!message.playerNames) {
             // Should never reach here
-            alert('Fatal server error. No player name received');
+            this.snackBar.open('Fatal server error. No player name received', "Fermer")
             return;
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom(message.playerNames);

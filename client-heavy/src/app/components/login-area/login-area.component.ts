@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Account } from '@app/classes/account';
 import { VISIBILITY_CONSTANTS } from '@app/constants/visibility-constants';
 import { AccountAuthenticationService } from '@app/services/account-authentification-service/account-authentication.service';
 import { AccountService } from '@app/services/account-service/account.service';
 import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-login-area',
   templateUrl: './login-area.component.html',
@@ -22,7 +24,9 @@ export class LoginAreaComponent {
   hide: boolean = true;
   isConnected: boolean = false;
 
-  constructor(private accountAuthenticationService: AccountAuthenticationService, private router: Router, private account: AccountService) {
+  constructor(private accountAuthenticationService: AccountAuthenticationService,
+    private router: Router, private account: AccountService,
+    private snackBar: MatSnackBar) {
     this.accountAuthenticationService.setUpSocket()
   }
 
@@ -47,7 +51,7 @@ export class LoginAreaComponent {
       this.account.setUsername(this.userAccount.username);
       this.router.navigate(['/home']);
     } else {
-      alert("Échec de l'authentification");
+      this.snackBar.open("Échec de l'authentification", "Fermer")
     }
   }
 

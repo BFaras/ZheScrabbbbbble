@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Account } from '@app/classes/account';
 import { VISIBILITY_CONSTANTS } from '@app/constants/visibility-constants';
@@ -26,7 +27,7 @@ export class SignUpAreaComponent implements OnInit {
   isFormFinished: boolean = false;
   avatarSrc: string;
 
-  constructor(private accountCreationService: AccountCreationService, public dialogAvatar: MatDialog, private router: Router, private accountService: AccountService) {
+  constructor(private snackBar: MatSnackBar, private accountCreationService: AccountCreationService, public dialogAvatar: MatDialog, private router: Router, private accountService: AccountService) {
     this.accountCreationService.setUpSocket()
   }
 
@@ -89,7 +90,7 @@ export class SignUpAreaComponent implements OnInit {
       this.accountService.setUsername(this.newAccount.username);
       this.router.navigate(['home'])
     } else {
-      alert('Échec de la Création de compte')
+      this.snackBar.open('Échec de la Création de compte', "Fermer")
     }
   }
 

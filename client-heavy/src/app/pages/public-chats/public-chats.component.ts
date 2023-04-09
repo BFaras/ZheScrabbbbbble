@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ChatInfo, ChatType } from '@app/classes/chat-info';
 import { ChatService } from '@app/services/chat-service/chat.service';
 
@@ -12,7 +13,7 @@ export class PublicChatsComponent implements OnInit {
   presentChatList: ChatInfo[] = [];
   activeInput: number;
 
-  constructor(private chatService: ChatService) {
+  constructor(private chatService: ChatService, private snackBar: MatSnackBar) {
     this.updateChats();
   }
 
@@ -59,7 +60,7 @@ export class PublicChatsComponent implements OnInit {
         console.log(errorCode);
       });
     }
-    else alert("Le nom du chat est trop long. Il ne doit pas dépasser 35 caractères.");
+    else this.snackBar.open("Le nom du chat est trop long. Il ne doit pas dépasser 35 caractères.", "Fermer");
     (document.getElementById('chat-name') as HTMLInputElement).value = "";
   }
 
