@@ -39,7 +39,6 @@ class ChatFragment : Fragment(), ObserverChat {
     private val binding get() = _binding!!
     private var selectedChatIndex : Int = 0;
     private var chatsList = ChatModel.getList();
-    private var avatarProfil = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -123,8 +122,6 @@ class ChatFragment : Fragment(), ObserverChat {
                 usernameMessage.text = message.username
                 timeStampMessage.text = message.timestamp
 
-                Log.d("message AVATAR", message.avatar)
-
                 if (resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
                     Log.d("AVATAR", message.avatar)
                     avatar.setImageResource(resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
@@ -133,9 +130,6 @@ class ChatFragment : Fragment(), ObserverChat {
                 }
 
                 activity?.runOnUiThread(java.lang.Runnable {
-                    if (messageArray.length() == 0) {
-                        binding.chatProgress.visibility = View.GONE
-                    }
                     binding.chatProgress.visibility = View.GONE
                     messagesBox.addView(messageContainer)
                     binding.scrollView.post { binding.scrollView.fullScroll(View.FOCUS_DOWN) }
@@ -146,6 +140,7 @@ class ChatFragment : Fragment(), ObserverChat {
                 messagesBox.requestLayout();
             });
         }
+        binding.chatProgress.visibility = View.GONE
         SocketHandler.getSocket().emit("Get Chat History", chatsList[selectedChatIndex]._id)
     }
 
@@ -184,9 +179,8 @@ class ChatFragment : Fragment(), ObserverChat {
         usernameMessage.text = message.username
         timeStampMessage.text = message.timestamp
 
-        if (resources.getIdentifier((avatarProfil.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
-            Log.d("AVATARPROFIL", message.avatar)
-            avatar.setImageResource(resources.getIdentifier((avatarProfil.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+        if (resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+            avatar.setImageResource(resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
         } else {
             avatar.setImageResource(R.drawable.robot)
         }
@@ -204,13 +198,7 @@ class ChatFragment : Fragment(), ObserverChat {
 
     override fun updateMessage(chatCode: String, message: Message) {
         if(chatsList[selectedChatIndex]._id == chatCode) {
-            SocketHandler.getSocket().emit("Get Avatar from Username", message.username)
-            SocketHandler.getSocket().once("Avatar from Username Response") { args ->
-                if (args[0] != null) {
-                    avatarProfil = args[0] as String
-                }
-                addMessage(message);
-            }
+            addMessage(message)
         }
 
 
