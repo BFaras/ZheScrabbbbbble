@@ -61,12 +61,7 @@ export class SignUpAreaComponent implements OnInit {
 
   verifyIfFirstPageFormFinished(): boolean {
     console.log(this.newAccount.avatar)
-    if (this.newAccount.username === "" || this.newAccount.password === "" || this.newAccount.email === "" || this.newAccount.avatar === "") {
-      return true
-    }
-    else {
-      return false
-    }
+    return this.newAccount.username === "" || this.newAccount.password === "" || this.newAccount.email === "" || this.newAccount.avatar === "";
   }
 
   verifyIfSecondPageFormFinished(): boolean {
@@ -95,8 +90,8 @@ export class SignUpAreaComponent implements OnInit {
   }
 
   goToCreateQuestion(): void {
-    this.isFormFinished = !this.isFormFinished
+    if (this.newAccount.username.length > 20) alert("The username cannot be over 20 characters.");
+    else this.isFormFinished = !this.isFormFinished;
   }
-
 
 }

@@ -194,7 +194,7 @@ describe('Chat History Tests', async () => {
 
     it('should recognize that it is a game chat on isGameChat()', async () => {
         const testGameId = ROOM_ID_BEGINNING + 'Hello';
-        expect(await chatGameHistoryService.isGameChat(testGameId)).to.be.true;
+        expect(chatGameHistoryService.isGameChat(testGameId)).to.be.true;
     });
 
     it('add the message to the game chatHistory if it is a game chat on addChatMessageToHistory()', async () => {

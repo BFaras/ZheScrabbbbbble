@@ -12,7 +12,10 @@ export class ChatGameHistoryService {
     }
 
     isGameChat(chatId: string): boolean {
-        return chatId.includes(ROOM_ID_BEGINNING);
+        if (chatId) {
+            return chatId.includes(ROOM_ID_BEGINNING);
+        }
+        return false;
     }
 
     addMessageToGameChatHistory(gameId: string, messageDB: ChatMessageDB) {

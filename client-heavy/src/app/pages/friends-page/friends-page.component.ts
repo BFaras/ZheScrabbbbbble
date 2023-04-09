@@ -23,6 +23,10 @@ export class FriendsPageComponent {
 
   constructor(private snackBar: MatSnackBar, private friendsService: FriendsService, private account: AccountService, private router: Router) {
     this.updateFriendsList();
+    this.friendsService.getFriendListUpdateObservable().subscribe(() => {
+      console.log('FRIEND REMOVED SOCKET TEST');
+      this.updateFriendsList();
+    })
     this.usercode = this.account.getProfile().userCode;
   }
 
@@ -55,6 +59,7 @@ export class FriendsPageComponent {
 
   updateFriendsList() {
     this.subscriptions.push(this.friendsService.getFriendsListObservable().subscribe((friendsList: Friend[]) => {
+      console.log('FRIEND LIST UPDATED');
       this.friends = friendsList;
     }));
     this.friendsService.getFriendsList();

@@ -1,6 +1,8 @@
 package com.example.testchatbox
 
 import SocketHandler
+import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,6 +24,8 @@ class QueueFragment : Fragment(), Observer {
 
     private var _binding: FragmentQueueBinding? = null
     private val binding get() = _binding!!
+    private var isChatIconChanged = false;
+    private var notifSound: MediaPlayer? = null;
 
 
     override fun onCreateView(
@@ -34,6 +38,8 @@ class QueueFragment : Fragment(), Observer {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupChatNotifs(view.context)
+
         WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
             // Hide both the status bar and the navigation bar
             hide(WindowInsetsCompat.Type.systemBars())
@@ -68,7 +74,33 @@ class QueueFragment : Fragment(), Observer {
 
     override fun onStop() {
         super.onStop()
+        NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        notifSound?.release()
         TournamentModel.removeObserver(this);
+    }
+
+    fun setupChatNotifs(context: Context) {
+        isChatIconChanged = false;
+        NotificationInfoHolder.startObserverChat();
+        NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
+        notifSound = MediaPlayer.create(context, R.raw.ding)
+
+        notifSound?.setOnCompletionListener { notifSound?.release() }
+
+        if(NotificationInfoHolder.areChatsUnread())
+            changeToNotifChatIcon();
+    }
+
+    fun playNotifSoundAndChangeIcon() {
+        if (!isChatIconChanged) {
+            changeToNotifChatIcon()
+            notifSound?.start()
+        }
+    }
+
+    fun changeToNotifChatIcon() {
+        binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+        isChatIconChanged = true;
     }
 
 }
