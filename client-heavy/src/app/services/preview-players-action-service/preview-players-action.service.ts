@@ -26,7 +26,6 @@ export class PreviewPlayersActionService {
   }
 
   addPreviewTile(tilePosition: { x: string; y: number }) {
-    console.log('on ecrit avec le clavier ')
     console.log(tilePosition)
     this.previewTilesPosition.push(tilePosition);
     console.log(this.previewTilesPosition)
