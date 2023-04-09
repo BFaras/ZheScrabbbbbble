@@ -457,6 +457,9 @@ class GamePageFragment : Fragment() {
                                 }
                                 hintHolder.addView(hintButton)
                         }
+                            if (hintList.size == 0) {
+                                binding.noHintFound.visibility = VISIBLE
+                            }
                     }
                     }
                 }
