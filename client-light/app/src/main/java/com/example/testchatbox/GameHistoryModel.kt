@@ -22,14 +22,12 @@ object GameHistoryModel : Observable {
             val messageType = messageJSON.get("messageType") as String
             if(messageType=="MSG-13") playRequest = PlayerMessage(messageType, messages);
             else actionMessages.add(PlayerMessage(messageType, messages));
-            if(messageType=="MSG-12" || messageType=="MSG014") clearPlayRequest();
+            if(messageType=="MSG-12" || messageType=="MSG-14") clearPlayRequest();
             notifyObserver();
         }
     }
 
     fun addMoveInfo(moveInfo:PlayerMessage){
-        Log.i("Update", moveInfo.toString())
-        Log.i("Update", observers.toString())
         actionMessages.add(moveInfo)
         notifyObserver();
     }

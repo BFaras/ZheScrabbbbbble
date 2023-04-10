@@ -117,6 +117,7 @@ class GameStateModel: ViewModel() {
                     gameStateTemp.message = PlayerMessage(messageJSON.get("messageType") as String, messages)
                 }catch (e:Exception){
                     Log.e("Game State", e.toString())
+                    gameStateTemp.message = null
                 }
                 _gameState.postValue(gameStateTemp);
             }
