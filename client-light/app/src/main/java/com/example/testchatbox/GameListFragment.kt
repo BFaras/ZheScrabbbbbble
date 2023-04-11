@@ -98,7 +98,12 @@ class GameListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupChatNotifs(view.context)
-        updateGameList();
+        binding.buttonchat.setOnClickListener {
+            findNavController().navigate(R.id.action_gameListFragment_to_ChatFragment)
+        }
+        binding.buttonfriends.setOnClickListener {
+            findNavController().navigate(R.id.action_gameListFragment_to_friendsFragment)
+        }
         binding.roomType.check(R.id.publicRoom)
         binding.gameType.check(R.id.classicGame)
         binding.roomType.setOnCheckedChangeListener { radioGroup, i ->
@@ -109,31 +114,36 @@ class GameListFragment : Fragment() {
                 R.id.protectedRoom -> binding.createPassword.visibility=View.VISIBLE
             }
         }
-        binding.createBtn.setOnClickListener{
-            createRoom();
-        }
-        binding.buttonchat.setOnClickListener {
-            findNavController().navigate(R.id.action_gameListFragment_to_ChatFragment)
-        }
-        binding.buttonfriends.setOnClickListener {
-            findNavController().navigate(R.id.action_gameListFragment_to_friendsFragment)
-        }
-        SocketHandler.getSocket().on("Game Room List Response"){ args ->
-            if(args[0] != null){
-                val list = args[0] as JSONArray;
-                gameList= arrayListOf();
-                for (i in 0 until list.length()) {
-                    val gameRoom = list.getJSONObject(i)
-                    val playersArray = gameRoom.get("players") as JSONArray
-                    var players = arrayOf<String>()
-                    for (j in 0 until playersArray.length()){
-                        players=players.plus(playersArray.get(j) as String)
+        val username = arguments?.getString("username");
+        if(username!=null){
+            binding.gameListSection.visibility=View.GONE;
+            binding.createBtn.setOnClickListener{
+                createRoom();
+                SocketHandler.getSocket().emit("Invite Friend To Game", username);
+            }
+        }else{
+
+            binding.createBtn.setOnClickListener{
+                createRoom();
+            }
+            updateGameList();
+            SocketHandler.getSocket().on("Game Room List Response"){ args ->
+                if(args[0] != null){
+                    val list = args[0] as JSONArray;
+                    gameList= arrayListOf();
+                    for (i in 0 until list.length()) {
+                        val gameRoom = list.getJSONObject(i)
+                        val playersArray = gameRoom.get("players") as JSONArray
+                        var players = arrayOf<String>()
+                        for (j in 0 until playersArray.length()){
+                            players=players.plus(playersArray.get(j) as String)
+                        }
+                        gameList.add(GameRoom(gameRoom.get("name") as String, gameRoom.get("id") as String, Visibility.fromNameIgnoreCase(gameRoom.get("visibility") as String), players , gameRoom.get("isStarted") as Boolean, GameType.fromBool(gameRoom.get("isCoop") as Boolean), gameRoom.get("nbObservers") as Int))
                     }
-                    gameList.add(GameRoom(gameRoom.get("name") as String, gameRoom.get("id") as String, Visibility.fromNameIgnoreCase(gameRoom.get("visibility") as String), players , gameRoom.get("isStarted") as Boolean, GameType.fromBool(gameRoom.get("isCoop") as Boolean), gameRoom.get("nbObservers") as Int))
+                    activity?.runOnUiThread(Runnable {
+                        loadListView();
+                    });
                 }
-                activity?.runOnUiThread(Runnable {
-                    loadListView();
-                });
             }
         }
     }

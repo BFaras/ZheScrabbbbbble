@@ -164,7 +164,10 @@ class FriendsFragment : Fragment(), ObserverFriend {
     }
 
     private fun inviteToGame(username: String){
-        //TODO
+        if(FriendModel.isAvailable(username)){
+            val bundle = bundleOf("username" to username)
+            findNavController().navigate(R.id.action_friendsFragment_to_gameListFragment, bundle)
+        }
     }
 
     private fun showActionMenu(username: String){
@@ -174,9 +177,7 @@ class FriendsFragment : Fragment(), ObserverFriend {
             hideActionMenu();
         }
         binding.joinBtn.setOnClickListener {
-            val appContext = context?.applicationContext;
-            Toast.makeText(appContext, "NOT IMPLEMENTED", Toast.LENGTH_LONG).show();
-            hideActionMenu();
+            inviteToGame(username);
         }
         binding.removeBtn.setOnClickListener {
             removeFriend(username);
@@ -227,4 +228,5 @@ class FriendsFragment : Fragment(), ObserverFriend {
         val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
     }
+
 }

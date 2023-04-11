@@ -124,6 +124,9 @@
         <action
             android:id="@+id/action_friendsFragment_to_profilFriendFragment"
             app:destination="@id/profilFriendFragment" />
+        <action
+            android:id="@+id/action_friendsFragment_to_gameListFragment"
+            app:destination="@id/gameListFragment" />
     </fragment>
     <activity
         android:id="@+id/profileActivity"

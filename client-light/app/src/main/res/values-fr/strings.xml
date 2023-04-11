@@ -32,7 +32,7 @@
     <string name="FriendCode">Entrez le code se trouvant sur le profil de votre ami pour l\'ajouter </string>
 
     <string name="friendModified"> a remplacé son nom par </string>
-    <string name="friendRemoved"> vous a retiré de sa liste d\'amis</string>
+    <string name="friendRemoved"> n\'est plus votre ami</string>
     <string name="friendChat">Voir clavardage</string>
     <string name="friendProfile">Voir le profil</string>
     <string name="friendJoin">Inviter dans une partie</string>

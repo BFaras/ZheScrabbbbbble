@@ -17,7 +17,7 @@
     <string name="queueMessage">In search of a tournament</string>
 
     <string name="friendModified"> replaced is username with </string>
-    <string name="friendRemoved"> removed you from his friend list</string>
+    <string name="friendRemoved"> isn\'t your friend anymore</string>
     <string name="friendChat">Chat</string>
     <string name="friendProfile">Profile</string>
     <string name="friendJoin">Invite to a game</string>

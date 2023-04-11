@@ -101,4 +101,12 @@ object FriendModel : ObservableFriend{
         notifyObserver()
     }
 
+    fun isAvailable(username: String):Boolean{
+        for(friend in friendList){
+            if(friend.username==username)
+                return friend.connectionStatus==ConnectionStatus.ONLINE
+        }
+        return false
+    }
+
 }
