@@ -111,6 +111,7 @@
     <string name="create_a_room">create a room</string>
     <string name="enter_a_room_name"><i>Enter a room name</i></string>
     <string name="enter_a_chat_name"><i>Enter a chat name</i></string>
+    <string name="search_a_chat_name"><i>Search a chat name</i></string>
     <string name="needHelp">NEED HELP?</string>
     <string name="voici_quelques_indices_pour_vous_aider">Here\'re some hints to help you.</string>
     <string name="vous_pouvez_cliquer_sur_n_importe_lequel_pour_le_pr_visualiser_sur_le_plateau">You can click on any hint and previsualize it on the board.</string>
@@ -140,6 +141,7 @@
     <string name="pas_besoin_d_indices">no need for hints</string>
     <string name="joined_public_chats">joined public chats</string>
     <string name="pss_you_can_quit_any_room_by_clicking_it">(pss…you can quit any room by clicking it)</string>
+    <string name="pss_you_can_join_any_room_by_clicking_it">(pss…you can join any room by clicking it)</string>
     <string name="create_a_public_chat">create a public chat</string>
     <string name="join_a_public_chat">join a public chat</string>
     <string name="you_can_create_a_public_chat_or_join_one_from_the_list_on_the_right">You can create a public chat or join one from the list on the right</string>

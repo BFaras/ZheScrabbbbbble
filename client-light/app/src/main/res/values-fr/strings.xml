@@ -119,6 +119,7 @@
     <string name="create_a_room">créer une salle</string>
     <string name="enter_a_room_name"><i>Entrez le nom de la salle</i></string>
     <string name="enter_a_chat_name"><i>Entrez le nom du chat</i></string>
+    <string name="search_a_chat_name"><i>Rechercher un chat</i></string>
     <string name="needHelp">BESOIN D\'AIDE?</string>
     <string name="voici_quelques_indices_pour_vous_aider">Voici quelques indices pour vous aider.</string>
     <string name="vous_pouvez_cliquer_sur_n_importe_lequel_pour_le_pr_visualiser_sur_le_plateau">Vous pouvez cliquer sur n\'importe lequel pour le prévisualiser sur le plateau.</string>
@@ -148,6 +149,7 @@
     <string name="pas_besoin_d_indices">PAS BESOIN D\'INDICES</string>
     <string name="joined_public_chats">chats publics rejoints</string>
     <string name="pss_you_can_quit_any_room_by_clicking_it">(pss…tu peux quitter un chat en cliquant dessus)</string>
+    <string name="pss_you_can_join_any_room_by_clicking_it">(pss…tu peux rejoindre un chat en cliquant dessus)</string>
     <string name="create_a_public_chat">créer un chat public</string>
     <string name="join_a_public_chat">joindre un chat public</string>
     <string name="you_can_create_a_public_chat_or_join_one_from_the_list_on_the_right">Vous pouvez créer un chat public ou rejoindre un de la liste de droite.</string>
