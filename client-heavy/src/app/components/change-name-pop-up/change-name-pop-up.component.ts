@@ -17,10 +17,8 @@ export class ChangeNamePopUpComponent implements OnInit {
 
   closeDialog() {
     if (this.newUsername !== "") {
-      console.log(this.newUsername)
       this.account.accountService.changeUsername(this.newUsername);
     }
-    console.log(this.newUsername);
     this.dialogRef.close({ name: this.newUsername })
 
   }

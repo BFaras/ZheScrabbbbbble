@@ -74,13 +74,14 @@ input:-webkit-autofill:active {
     color: var(--button-text-default);
     transition: color 0.5s linear;
     -webkit-transition: color 0.2s linear;
+    
 }
 
 #back {
     margin-top: 5%;
 }
 
-.button:hover {
+.button:hover:enabled {
     color: var(--button-text-hover);
     cursor: pointer;
     background: var(--button-primary-hover);

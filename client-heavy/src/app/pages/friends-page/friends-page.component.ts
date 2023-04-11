@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ConnectivityStatus, Friend } from '@app/classes/friend-info';
 import { ProfileInfo } from '@app/classes/profileInfo';
@@ -17,11 +18,14 @@ export class FriendsPageComponent {
   subscriptions: Subscription[] = [];
   profile: ProfileInfo;
   username: string = "";
-  friend: Friend = { username: 'cat', status: ConnectivityStatus.ONLINE };
   redirect: boolean = false;
 
-  constructor(private friendsService: FriendsService, private account: AccountService, private router: Router) {
+  constructor(private snackBar: MatSnackBar, private friendsService: FriendsService, private account: AccountService, private router: Router) {
     this.updateFriendsList();
+    this.friendsService.getFriendListUpdateObservable().subscribe(() => {
+      console.log('FRIEND REMOVED SOCKET TEST');
+      this.updateFriendsList();
+    })
     this.usercode = this.account.getProfile().userCode;
   }
 
@@ -46,13 +50,15 @@ export class FriendsPageComponent {
         this.updateFriendsList();
         console.log(errorCode);
       });
-    } else alert("bruh make real friends");
+    } else
+      this.snackBar.open("bruh make real friends", "Fermer");
 
     (document.getElementById('friendCode') as HTMLInputElement).value = "";
   }
 
   updateFriendsList() {
     this.subscriptions.push(this.friendsService.getFriendsListObservable().subscribe((friendsList: Friend[]) => {
+      console.log('FRIEND LIST UPDATED');
       this.friends = friendsList;
     }));
     this.friendsService.getFriendsList();
@@ -71,11 +77,9 @@ export class FriendsPageComponent {
     });
   }
 
-  /*
-  openChat(friend: Friend) {
-    //this.friend = friend;
-    //this.redirect = true;
-    this.router.navigate(['/chat']);
+  createGameWithInvite(friend: Friend){
+    if(friend.status !== ConnectivityStatus.ONLINE) return;
+    this.friendsService.setFriendToInvite(friend.username);
+    this.router.navigate(['/create-game']);
   }
-  */
 }

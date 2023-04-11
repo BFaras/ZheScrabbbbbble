@@ -66,8 +66,8 @@ object FriendModel : ObservableFriend{
                     val friend = friends.get(i) as JSONObject
                     friendList.add(Friend(friend.get("username") as String, ConnectionStatus.fromInt(friend.get("status") as Int)))
                 }
-            }catch(e:Exception){
                 notifyObserver()
+            }catch(e:Exception){
             }
         }
         SocketHandler.getSocket().emit("Get Friend List")

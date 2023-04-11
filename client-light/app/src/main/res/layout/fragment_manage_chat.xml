@@ -7,34 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".chat.ManageChatFragment">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="12dp"
-        android:background="@drawable/background_side_panel"
-        android:backgroundTint="?colorSecondary"
-        android:layout_gravity="center|end">
-
-        <ImageButton
-            android:id="@+id/buttonprofil"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/ic_profil"
-            android:layout_gravity="center_vertical" />
-
-        <ImageButton
-            android:id="@+id/buttonchat"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/ic_chat"
-            android:layout_gravity="center_vertical" />
-    </LinearLayout>
-
-
-
 <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="500dp"
@@ -56,12 +28,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:fontFeatureSettings="smcp"
+            android:textAllCaps="true"
             android:textStyle="bold"
             android:textSize="20sp"
             android:layout_marginTop="10dp"
-            android:text="joined public chats"></TextView>
-
+            android:text="@string/joined_public_chats"></TextView>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,7 +41,7 @@
             android:textStyle="bold|italic"
             android:textSize="12sp"
             android:textColor="?colorSecondary"
-            android:text="(pss...you can quit any room by clicking it)"></TextView>
+            android:text="@string/pss_you_can_quit_any_room_by_clicking_it"></TextView>
 
         <EditText
             android:id="@+id/searchLeaveChat"
@@ -89,7 +60,6 @@
             android:textColorHint="?colorOnPrimary"
             android:textSize="15sp"
             android:visibility="visible" />
-
         <ScrollView
             android:layout_width="300dp"
             android:layout_height="match_parent"
@@ -123,8 +93,8 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:layout_marginBottom="50dp"
-        android:text="you can create a public chat or join one from the list on the right"
-        android:fontFeatureSettings="smcp"
+        android:text="@string/you_can_create_a_public_chat_or_join_one_from_the_list_on_the_right"
+        android:textAllCaps="true"
         android:textAlignment="center"
         android:textSize="18dp" />
 
@@ -143,11 +113,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:fontFeatureSettings="smcp"
+            android:textAllCaps="true"
             android:textStyle="bold"
             android:textSize="20sp"
             android:layout_marginBottom="10dp"
-            android:text="create a public chat" />
+            android:text="@string/create_a_public_chat" />
 
         <EditText
             android:id="@+id/chatName"
@@ -178,7 +148,7 @@
                 android:background="@drawable/background_chat_input"
                 android:backgroundTint="?colorSecondary"
                 android:textColor="@color/black"
-                android:text="Create"
+                android:text="@string/create"
                 android:textSize="12dp" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -189,7 +159,7 @@
                 android:background="@drawable/background_chat_input"
                 android:backgroundTint="?colorSecondary"
                 android:textColor="@color/black"
-                android:text="Reload"
+                android:text="@string/reload"
                 android:textSize="12dp"/>
         </LinearLayout>
     </LinearLayout>
@@ -209,18 +179,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:fontFeatureSettings="smcp"
+            android:textAllCaps="true"
             android:textStyle="bold"
             android:textSize="20sp"
             android:layout_marginTop="10dp"
-            android:text="join a public chat"></TextView>
+            android:text="@string/join_a_public_chat"></TextView>
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFeatureSettings="smcp"
-            android:text="(pss...you can join any room by clicking it)"
+            android:text="@string/pss_you_can_join_any_room_by_clicking_it"
             android:textAlignment="center"
             android:textColor="?colorSecondary"
             android:textSize="12sp"

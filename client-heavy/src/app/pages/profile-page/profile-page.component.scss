@@ -24,10 +24,10 @@
 }
 
 .avatarSquare{
-    width: 180px;
-    height: 180px;
+    width: 220px;
+    height: 220px;
     position: relative;
-    bottom: 2vh;
+    bottom: 0.2vh;
 }
 
 .avatarSection{
@@ -103,6 +103,16 @@
     margin:0;
 }
 
+.progress-level {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 500px;
+    white-space: nowrap;
+    margin: 15px 0px;
+}
+
 #stats-list{
     display: flex;
     height: 100%;
@@ -128,11 +138,19 @@
     font-size: 50px;
     font-family: 'Shrikhand';
     font-weight: lighter;
-    margin-bottom: 30px;
+    margin: 10px 0px 25px;
 }
 
 .data {
-    margin-bottom: 15px;
+    margin: 0px 15px 0px 0px;
+}
+
+.level {
+    font-size: 25px;
+}
+
+.next {
+    margin-left: 15px;
 }
 
 #id {

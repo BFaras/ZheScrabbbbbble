@@ -48,6 +48,7 @@ object GameRoomModel :Observable{
                 notifyObserver()
             }
         }
+        GameHistoryModel.initialise();
         SocketHandler.getSocket().once("Game Started") {
             gameRoom.hasStarted=true;
             notifyObserver()
@@ -66,6 +67,7 @@ object GameRoomModel :Observable{
         gameRoom=null;
         joinRequest= arrayListOf()
         observers = arrayListOf();
+        GameHistoryModel.reset();
     }
 
 

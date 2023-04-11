@@ -92,7 +92,7 @@ class GameBoardView : RelativeLayout {
 
 
         val redTile = TypedValue()
-        context.theme.resolveAttribute(com.google.android.material.R.attr.colorPrimaryVariant, redTile, true)
+        context.theme.resolveAttribute(com.google.android.material.R.attr.colorSecondaryVariant, redTile, true)
 
         val pinkTile = TypedValue()
         context.theme.resolveAttribute(R.attr.doubleWord, pinkTile, true)

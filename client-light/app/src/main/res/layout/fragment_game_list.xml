@@ -55,10 +55,10 @@
         >
         <LinearLayout
             android:id="@+id/gameListSection"
-            android:layout_width="700dp"
+            android:layout_width="750dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="5dp"
             android:padding="8dp"
             android:background="@drawable/background_direction_panel"
             android:gravity="center">
@@ -67,11 +67,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:fontFeatureSettings="smcp"
+                android:textAllCaps="true"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
                 android:textSize="20sp"
-                android:text="join a room">
+                android:text="@string/join_a_room">
 
             </TextView>
             <ScrollView
@@ -94,8 +94,8 @@
 
         <FrameLayout
             android:id="@+id/createSection"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
+            android:layout_width="350dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center|end"
             android:background="@drawable/background_direction_panel"
             android:visibility="visible"
@@ -114,10 +114,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:fontFeatureSettings="smcp"
+                    android:textAllCaps="true"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:text="@string/create_a_room" />
+
+                <RadioGroup
+                    android:id="@+id/gameType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center"
+                    android:checkedButton="@+id/classicGame"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/classicGame"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="?colorSecondary"
+                        android:text="@string/classique" />
+
+                    <RadioButton
+                        android:id="@+id/coopGame"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="?colorSecondary"
+                        android:text="@string/collaboratif" />
+                </RadioGroup>
 
                 <RadioGroup
                     android:id="@+id/roomType"
@@ -125,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_gravity="center"
-
+                    android:checkedButton="@+id/publicRoom"
                     android:orientation="horizontal">
 
                     <RadioButton
@@ -133,13 +157,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:buttonTint="?colorSecondary"
+                        android:textColor="?colorOnPrimary"
                         android:text="@string/privateRoom" />
 
                     <RadioButton
                         android:id="@+id/publicRoom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
+                        android:textColor="?colorOnPrimary"
                         android:buttonTint="?colorSecondary"
                         android:text="@string/publicRoom" />
 
@@ -148,6 +173,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:buttonTint="?colorSecondary"
+                        android:textColor="?colorOnPrimary"
                         android:text="@string/protectedRoom" />
                 </RadioGroup>
                 <EditText
@@ -157,6 +183,7 @@
                     android:autofillHints="Room name"
                     android:background="@drawable/background_direction_panel"
                     android:backgroundTint="?colorPrimaryVariant"
+                    android:layout_marginTop="15dp"
                     android:padding="8dp"
                     android:hint="@string/enter_a_room_name"
                     android:imeOptions="actionDone"
@@ -192,11 +219,11 @@
                     android:id="@+id/createBtn"
                     android:layout_width="150dp"
                     android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="25dp"
                     android:background="@drawable/background_chat_input"
                     android:backgroundTint="?colorSecondary"
                     android:textColor="@color/black"
-                    android:text="Create" />
+                    android:text="@string/create" />
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>
@@ -251,7 +278,7 @@
                     android:background="@drawable/background_chat_input"
                     android:backgroundTint="?colorPrimary"
                     android:textStyle="bold"
-                    android:text="Player" />
+                    android:text="@string/player" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/observer_button"
@@ -260,7 +287,7 @@
                     android:background="@drawable/background_chat_input"
                     android:backgroundTint="?colorPrimary"
                     android:textStyle="bold"
-                    android:text="Observer" />
+                    android:text="@string/observer" />
             </LinearLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </FrameLayout>
@@ -286,7 +313,7 @@
                 android:textSize="18dp"
                 android:fontFeatureSettings="smcp"
                 android:layout_marginBottom="8dp"
-                android:text="waiting for host approval" />
+                android:text="@string/waiting_for_host_approval" />
             <ProgressBar
                 android:layout_weight="1"
                 android:id="@+id/progressBar_cyclic"
@@ -304,7 +331,7 @@
                 android:layout_height="35dp"
                 android:background="@drawable/background_chat_input"
                 android:backgroundTint="?colorPrimary"
-                android:text="Cancel" />
+                android:text="@string/cancel" />
         </LinearLayout>
     </FrameLayout>
 
@@ -366,7 +393,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/background_chat_input"
                 android:backgroundTint="?colorPrimary"
-                android:text="Join" />
+                android:text="@string/join" />
         </LinearLayout>
 
     </FrameLayout>

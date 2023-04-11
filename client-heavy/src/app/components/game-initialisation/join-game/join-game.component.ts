@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { WaitingRoom } from '@app/classes/waiting-room';
 import { RoomVisibility } from '@app/constants/room-visibility';
@@ -22,7 +23,9 @@ export class JoinGameComponent implements OnDestroy {
 
     constructor(private waitingRoomManagerService: WaitingRoomManagerService,
         private router: Router, private dialog: MatDialog,
-        private chatService: ChatService) {}
+        private chatService: ChatService,
+        private snackBar: MatSnackBar
+    ) {}
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
@@ -49,12 +52,14 @@ export class JoinGameComponent implements OnDestroy {
     }
 
     joinGame(room: WaitingRoom, observer: boolean) {
+        this.waitingRoomManagerService.setRoomToJoinId(room.id);
         this.waitingRoomManagerService.setObserver(observer);
         if (room.visibility === RoomVisibility.PROTECTED) {
             const passwordDialog = this.dialog.open(PasswordInputComponent, { data: room.id, width: '30%', height: '200px' });
             passwordDialog.afterClosed().subscribe(result => {
                 if (!result) return;
                 this.waitingRoomManagerService.setDefaultPlayersInRoom(result);
+                this.chatService.setChatInGameRoom(this.waitingRoomManagerService.getRoomToJoinId());
                 if (this.waitingRoomManagerService.isObserver()) {
                     this.router.navigate(['/observer-room']);
                 } else {
@@ -62,12 +67,10 @@ export class JoinGameComponent implements OnDestroy {
                 }
             });
         } else if (room.visibility === RoomVisibility.PRIVATE) {
-            this.chatService.setChatInGameRoom(room.id);
             this.waitingRoomManagerService.joinRoom(room.id);
             this.waitingRoomManagerService.setRequestPending(true);
             this.router.navigate(['/pending-room']);
         } else {
-            this.chatService.setChatInGameRoom(room.id);
             this.waitingRoomManagerService.joinRoomResponse().pipe(first()).subscribe(this.redirectPlayer.bind(this));
             this.waitingRoomManagerService.joinRoom(room.id);
         }
@@ -75,15 +78,16 @@ export class JoinGameComponent implements OnDestroy {
 
     redirectPlayer(message: JoinResponse) {
         if (message.errorCode === 'ROOM-4') {
-            alert('Cette salle de jeu est pleine');
+            this.snackBar.open('Cette salle de jeu est pleine', "Fermer")
             return;
         }
         if (!message.playerNames) {
             // Should never reach here
-            alert('Fatal server error. No player name received');
+            this.snackBar.open('Fatal server error. No player name received', "Fermer")
             return;
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom(message.playerNames);
+        this.chatService.setChatInGameRoom(this.waitingRoomManagerService.getRoomToJoinId());
         if (this.waitingRoomManagerService.isObserver()) {
             this.router.navigate(['/observer-room']);
         } else {

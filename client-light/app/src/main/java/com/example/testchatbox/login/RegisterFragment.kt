@@ -150,26 +150,155 @@ class RegisterFragment : Fragment() {
                 )
             }
         }
+
         binding.playerInGameAvatar.setOnClickListener {
             val builder = context?.let { it -> AlertDialog.Builder(it,R.style.CustomAlertDialog).create() }
             val alertView = layoutInflater.inflate(R.layout.alert_choose_avatar, null)
             val avatar1 = alertView.findViewById<ShapeableImageView>(R.id.avatar1)
             val avatar2 = alertView.findViewById<ShapeableImageView>(R.id.avatar2)
             val avatar3 = alertView.findViewById<ShapeableImageView>(R.id.avatar3)
+            val avatar4 = alertView.findViewById<ShapeableImageView>(R.id.avatar4)
+            val avatar5 = alertView.findViewById<ShapeableImageView>(R.id.avatar5)
+            val avatar6 = alertView.findViewById<ShapeableImageView>(R.id.avatar6)
+            val avatar7 = alertView.findViewById<ShapeableImageView>(R.id.avatar7)
+            val avatar8 = alertView.findViewById<ShapeableImageView>(R.id.avatar8)
+            val avatar9 = alertView.findViewById<ShapeableImageView>(R.id.avatar9)
+            val avatar10 = alertView.findViewById<ShapeableImageView>(R.id.avatar10)
+            val avatar11 = alertView.findViewById<ShapeableImageView>(R.id.avatar11)
+            val avatar12 = alertView.findViewById<ShapeableImageView>(R.id.avatar12)
+            val avatar13 = alertView.findViewById<ShapeableImageView>(R.id.avatar13)
+            val avatar14 = alertView.findViewById<ShapeableImageView>(R.id.avatar14)
+            val avatar15 = alertView.findViewById<ShapeableImageView>(R.id.avatar15)
+            val avatar16 = alertView.findViewById<ShapeableImageView>(R.id.avatar16)
+            val avatar17 = alertView.findViewById<ShapeableImageView>(R.id.avatar17)
+            val avatar18 = alertView.findViewById<ShapeableImageView>(R.id.avatar18)
+            val avatar19 = alertView.findViewById<ShapeableImageView>(R.id.avatar19)
+            val avatar20 = alertView.findViewById<ShapeableImageView>(R.id.avatar20)
+            val avatar21 = alertView.findViewById<ShapeableImageView>(R.id.avatar21)
+            val avatar22 = alertView.findViewById<ShapeableImageView>(R.id.avatar22)
+            val avatar23 = alertView.findViewById<ShapeableImageView>(R.id.avatar23)
+            val avatar24 = alertView.findViewById<ShapeableImageView>(R.id.avatar24)
+            val avatar25 = alertView.findViewById<ShapeableImageView>(R.id.avatar25)
+            val avatar26 = alertView.findViewById<ShapeableImageView>(R.id.avatar26)
+            val avatar27 = alertView.findViewById<ShapeableImageView>(R.id.avatar27)
+
+            //to be unlocked after
+            avatar17.visibility = View.GONE //shark
+            avatar14.visibility = View.GONE //panda
+            avatar18.visibility = View.GONE //skeleton
+            avatar19.visibility = View.GONE //tiger
+            avatar4.visibility = View.GONE //bunny
+
             builder?.setView(alertView)
             avatar1.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-                choosenAvatar = "cat.jpg"
+                choosenAvatar = "cat.png"
                 builder?.dismiss()
             }
             avatar2.setOnClickListener {
                 binding.playerInGameAvatar.setImageResource(R.drawable.dog)
-                choosenAvatar = "dog.jpg"
+                choosenAvatar = "dog.png"
                 builder?.dismiss()
             }
             avatar3.setOnClickListener {
-                binding.playerInGameAvatar.setImageResource(R.drawable.flower)
-                choosenAvatar = "flower.jpg"
+                binding.playerInGameAvatar.setImageResource(R.drawable.bear)
+                choosenAvatar = "bear.png"
+                builder?.dismiss()
+            }
+            avatar5.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.cow)
+                choosenAvatar = "cow.png"
+                builder?.dismiss()
+            }
+            avatar6.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.alien)
+                choosenAvatar = "alien.png"
+                builder?.dismiss()
+            }
+            avatar7.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.fox)
+                choosenAvatar = "fox.png"
+                builder?.dismiss()
+            }
+            avatar8.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.giraffe)
+                choosenAvatar = "giraffe.png"
+                builder?.dismiss()
+            }
+            avatar9.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.koala)
+                choosenAvatar = "koala.png"
+                builder?.dismiss()
+            }
+            avatar10.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.lion)
+                choosenAvatar = "lion.png"
+                builder?.dismiss()
+            }
+            avatar11.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.monkey)
+                choosenAvatar = "monkey.png"
+                builder?.dismiss()
+            }
+            avatar12.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.owl)
+                choosenAvatar = "owl.png"
+                builder?.dismiss()
+            }
+            avatar13.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.mouse)
+                choosenAvatar = "mouse.png"
+                builder?.dismiss()
+            }
+
+            avatar15.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.pig)
+                choosenAvatar = "pig.png"
+                builder?.dismiss()
+            }
+            avatar16.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.rooster)
+                choosenAvatar = "rooster.png"
+                builder?.dismiss()
+            }
+            avatar20.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.unicorn)
+                choosenAvatar = "unicorn.png"
+                builder?.dismiss()
+            }
+            avatar21.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.arnaud)
+                choosenAvatar = "arnaud.PNG"
+                builder?.dismiss()
+            }
+            avatar22.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.daria)
+                choosenAvatar = "daria.PNG"
+                builder?.dismiss()
+            }
+            avatar23.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.imane)
+                choosenAvatar = "imane.PNG"
+                builder?.dismiss()
+            }
+            avatar24.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.manuel)
+                choosenAvatar = "manuel.PNG"
+                builder?.dismiss()
+            }
+            avatar25.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.mohamed)
+                choosenAvatar = "mohamed.PNG"
+                builder?.dismiss()
+            }
+            avatar26.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.raphael)
+                choosenAvatar = "raphael.PNG"
+                builder?.dismiss()
+            }
+            avatar27.setOnClickListener {
+                binding.playerInGameAvatar.setImageResource(R.drawable.ghost)
+                choosenAvatar = "ghost.png"
                 builder?.dismiss()
             }
             builder?.show()
@@ -192,16 +321,21 @@ class RegisterFragment : Fragment() {
             }
             false
         }
+
         registerButton.setOnClickListener {
-            loadingProgressBar.visibility = View.VISIBLE
-            registerViewModel.register(
-                usernameEditText.text.toString(),
-                emailEditText.text.toString(),
-                choosenAvatar,
-                passwordEditText.text.toString(),
-                questionEditText.text.toString(),
-                answerEditText.text.toString()
-            )
+            if (choosenAvatar != "") {
+                loadingProgressBar.visibility = View.VISIBLE
+                registerViewModel.register(
+                    usernameEditText.text.toString(),
+                    emailEditText.text.toString(),
+                    choosenAvatar,
+                    passwordEditText.text.toString(),
+                    questionEditText.text.toString(),
+                    answerEditText.text.toString()
+                )
+            } else {
+                Toast.makeText(context, getString(R.string.avatarError), Toast.LENGTH_LONG).show()
+            }
         }
     }
 

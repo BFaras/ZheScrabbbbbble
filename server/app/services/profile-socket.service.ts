@@ -30,20 +30,17 @@ export class ProfileSocketService {
             if (usernames !== null && usernames !== undefined) {
                 for (const username of usernames) {
                     if (username !== '' && username !== undefined && username !== null) {
-                        console.log('test1');
                         avatars.push((await this.profileService.getProfileInformation(username)).avatar);
                     } else {
-                        console.log('test2');
                         socket.emit('Get All Users Avatar Information Response', DATABASE_UNAVAILABLE);
                     }
                 }
-                console.log('test3');
-                console.log(avatars);
                 socket.emit('Get All Users Avatar Information Response', avatars);
             }
         });
 
-        socket.on('Get Avatar from Username', async (username: string) => { //for light client
+        socket.on('Get Avatar from Username', async (username: string) => {
+            // for light client
             if (username !== '' && username !== undefined && username !== null) {
                 console.log(username);
                 const avatar = (await this.profileService.getProfileInformation(username)).avatar;
@@ -52,7 +49,8 @@ export class ProfileSocketService {
             }
         });
 
-        socket.on('Get Avatars from Usernames', async (usernames: string[]) => { //for light client
+        socket.on('Get Avatars from Usernames', async (usernames: string[]) => {
+            // for light client
             const avatarsUsername = {};
             for (const username of usernames) {
                 if (username !== '' && username !== undefined && username !== null) {

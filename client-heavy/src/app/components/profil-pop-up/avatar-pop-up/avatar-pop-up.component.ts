@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AccountService } from '@app/services/account-service/account.service';
 import { Subscription } from 'rxjs';
@@ -7,26 +7,26 @@ import { Subscription } from 'rxjs';
   templateUrl: './avatar-pop-up.component.html',
   styleUrls: ['./avatar-pop-up.component.scss']
 })
-export class AvatarPopUpComponent implements OnInit, OnDestroy {
+export class AvatarPopUpComponent {
   colorChosen: string = "";
-  allAvatars: string[] = ['Daria.PNG', 'Arnaud.PNG', 'Imane.PNG', 'Raphaël.PNG', 'Manuel.PNG', 'Mohamed.PNG', 'cow.png', 'mouse.png', 'giraffe.png',
-    'shark.png', 'owl.png', 'monkey.png', 'robot.png', 'cat.png', 'dog.png', 'alien.png', 'fox.png', 'pig.png', 'panda.png',
-    'bunny.png', 'rooster.png', 'unicorn.png', 'lion.png', 'skeleton.png', 'bear.png', 'tiger.png', 'koala.png', 'ghost.png'];
+  allAvatars: string[] = [];
+  lockedAvatars: string[] = [];
   subscription: Subscription;
-  constructor(private dialogRef: MatDialogRef<AvatarPopUpComponent>, @Inject(MAT_DIALOG_DATA) public account: { accountService: AccountService }) {
-
-  }
-
-  ngOnDestroy(): void {
-  }
-
-  ngOnInit(): void {
+  constructor(private dialogRef: MatDialogRef<AvatarPopUpComponent>,
+    @Inject(MAT_DIALOG_DATA) public account: { accountService: AccountService },
+    private accountService: AccountService) {
+    this.accountService.updateAvatars();
+    this.allAvatars = this.accountService.getAvatars();
+    this.lockedAvatars = this.accountService.getLockedAvatars();
   }
 
   changeAvatar(event: Event, value: string) {
     this.colorChosen = value;
     this.setActive(event);
+  }
 
+  isLocked(avatar: string) {
+    return this.lockedAvatars.includes(avatar);
   }
 
   closeDialog() {

@@ -130,7 +130,8 @@
         "OBSERVE": " wants to spectate the game.",
         "ACCEPT": "Accept",
         "DECLINE": "Decline",
-        "START": "Start"
+        "START": "Start",
+        "INVITE-FRIENDS": "Invite friends"
     },
     "JOIN-GAME": {
         "HOST": "Host",
@@ -195,7 +196,8 @@
         "INPUT": "Please enter your friend's code: ",
         "ADD": "Add",
         "FRIENDS": "Friends list",
-        "UNFRIEND": "Unfriend"
+        "UNFRIEND": "Unfriend",
+        "INVITE": "Invite"
     },
     "PROFILE-PAGE": {
         "FRIENDS": "Manage friends",
@@ -235,5 +237,13 @@
     "TOURNAMENT-RESULT": {
         "TITLE": "Tournament results",
         "RETURN": "Return to main menu"
+    },
+    "UNLOCK-AVATAR": {
+        "SHARK": "Level 2",
+        "BUNNY": "2 gold medals",
+        "PANDA": "Level 4",
+        "TIGER": "Level 6",
+        "SKELETON": "1 gold medal",
+        "UNLOCKED": "Unlocked!"
     }
 }
