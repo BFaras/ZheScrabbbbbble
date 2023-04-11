@@ -92,7 +92,7 @@ export class SignUpAreaComponent implements OnInit {
 
   goToCreateQuestion(): void {
     this.accountService.setMessages();
-    if (this.newAccount.username.length > 20) alert(this.accountService.messageNameLength);
+    if (this.newAccount.username.length > 20) this.snackBar.open(this.accountService.messageNameLength, this.accountService.closeMessage);
     else this.isFormFinished = !this.isFormFinished;
   }
 

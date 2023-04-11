@@ -37,7 +37,7 @@ export class PublicChatsComponent implements OnInit {
   }
 
   alert(chat: ChatInfo) {
-    const text = 'Êtes-vous sûr(e) de vouloir quitter ce chat?';
+    const text = this.account.getLanguage() === 'fr' ? 'Êtes-vous sûr(e) de vouloir quitter ce chat?' : 'Are you sure you want to leave this chat?';
     if (confirm(text)) {
       this.chatService.leaveChat(chat).subscribe((errorCode: string) => {
         this.updateChats();

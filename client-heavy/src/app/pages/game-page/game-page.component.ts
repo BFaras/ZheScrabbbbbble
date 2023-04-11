@@ -89,7 +89,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
     }
 
     alert() {
-        const text = 'Êtes-vous sûr(e) de vouloir quitter la partie? Tout votre progrès sera perdu.';
+        const text = this.accountService.getLanguage() === 'fr' ? 'Êtes-vous sûr(e) de vouloir quitter la partie? Tout votre progrès sera perdu.' : 'Are you sure you want to quit? All progress will be lost.';
         if (confirm(text)) {
             this.gameStateService.sendAbandonRequest();
             if (this.gameStateService.isTournamentGame()) {
