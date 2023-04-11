@@ -35,12 +35,15 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     connections: [],
     disconnections: [],
   };
+
   constructor(private accountService: AccountService,
     public dialog: MatDialog,
     private themeService: ThemesService,
     private router: Router,
     private friends: FriendsService,
-    private snackBar: MatSnackBar) { this.profileMode = this.friends.getMode(); }
+    private snackBar: MatSnackBar) {
+    this.profileMode = this.friends.getMode();
+  }
 
   ngOnDestroy() {
     this.subscriptionChangeAvatar.unsubscribe();
@@ -87,20 +90,22 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscriptionChangeAvatar = this.accountService.getAvatarChangeStatus()
       .subscribe((errorCode: string) => {
+        this.accountService.setMessages();
         if (errorCode === NO_ERROR) {
-          this.snackBar.open("Changement d'avatar réussi!", "Fermer")
+          this.snackBar.open(this.accountService.messageAvatar, this.accountService.closeMessage)
         } else {
-          this.snackBar.open("La base de données est inacessible!", "Fermer")
+          this.snackBar.open(this.accountService.messageBD, this.accountService.closeMessage)
         }
       })
     this.subscriptionUsername = this.accountService.getChangeUserNameResponse().subscribe((errorCode: string) => {
       this.errorCodeUsername = errorCode;
+      this.accountService.setMessages();
       if (errorCode === NO_ERROR) {
-        this.snackBar.open("Changement du nom de l'utilisateur réussi!", "Fermer")
+        this.snackBar.open(this.accountService.messageName, this.accountService.closeMessage)
       } else if (errorCode === USERNAME_TAKEN) {
-        this.snackBar.open("Le nom choisi n'est pas disponible!", "Fermer")
+        this.snackBar.open(this.accountService.messageNA, this.accountService.closeMessage)
       } else {
-        this.snackBar.open("La base de données est inacessible!", "Fermer")
+        this.snackBar.open(this.accountService.messageBD, this.accountService.closeMessage)
       }
     })
 
