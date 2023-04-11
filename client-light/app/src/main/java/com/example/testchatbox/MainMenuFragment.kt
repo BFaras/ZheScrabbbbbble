@@ -20,9 +20,10 @@ import com.example.testchatbox.chat.Message
 import com.example.testchatbox.chat.ObserverChat
 import com.example.testchatbox.databinding.FragmentMainMenuBinding
 import com.example.testchatbox.login.model.LoggedInUser
+import org.json.JSONArray
 
 
-class MainMenuFragment : Fragment() {
+class MainMenuFragment : Fragment(), ObserverInvite {
 
 private var _binding: FragmentMainMenuBinding? = null
     // This property is only valid between onCreateView and
@@ -43,7 +44,7 @@ private var _binding: FragmentMainMenuBinding? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupChatNotifs(view.context)
-
+        verifyIfInviteRequest();
         WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
             // Hide both the status bar and the navigation bar
             hide(WindowInsetsCompat.Type.systemBars())
@@ -88,9 +89,15 @@ private var _binding: FragmentMainMenuBinding? = null
         _binding = null
     }
 
+    override fun onStart() {
+        super.onStart()
+        InviteService.addObserver(this);
+    }
+
     override fun onStop() {
         super.onStop()
         NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        InviteService.removeObserver(this);
         notifSound?.release()
     }
 
@@ -116,5 +123,38 @@ private var _binding: FragmentMainMenuBinding? = null
     fun changeToNotifChatIcon() {
         binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
         isChatIconChanged = true;
+    }
+
+    private fun verifyIfInviteRequest(){
+        val request = InviteService.getFirst() ?: return;
+        if(binding.inviteSection.visibility==View.VISIBLE) return;
+        binding.invitePrompt.text= request.username+ binding.invitePrompt.text;
+        binding.inviteSection.visibility=View.VISIBLE;
+        binding.rejectInvite.setOnClickListener {
+            InviteService.rejectRequest();
+            binding.inviteSection.visibility=View.GONE;
+            verifyIfInviteRequest();
+        }
+        binding.acceptInvite.setOnClickListener {
+            binding.inviteSection.visibility=View.GONE;
+            SocketHandler.getSocket().emit("Join Friend Game")
+            InviteService.acceptRequest();
+            SocketHandler.getSocket().once("Join Room Response"){args->
+                if(args[1]!=null){
+                    var players= arrayOf<String>()
+                    val playersArray = args[1] as JSONArray
+                    for(i in 0 until playersArray.length()){
+                        players=players.plus(playersArray.getString(i))
+                    }
+                    GameRoomModel.initialise(GameRoom("Name", request.roomId, Visibility.Public, players, hasStarted = false, request.gameType ,-1), false);
+                    findNavController().navigate(R.id.action_MainMenuFragment_to_gameRoomFragment)
+                }
+            }
+
+        }
+    }
+
+    override fun updateInvite() {
+        verifyIfInviteRequest();
     }
 }

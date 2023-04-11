@@ -25,6 +25,7 @@
     <string name="queueMessage">À la recherche d\'un tournoi</string>
     <string name="FriendCode">Entrez le code se trouvant sur le profil de votre ami pour l\'ajouter </string>
 
+    <string name ="InvitePrompt"> vous a invité à joindre sa partie</string>
     <string name="friendModified"> a remplacé son nom par </string>
     <string name="friendRemoved"> n\'est plus votre ami</string>
     <string name="friendChat">Voir clavardage</string>

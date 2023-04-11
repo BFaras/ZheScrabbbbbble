@@ -19,8 +19,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.testchatbox.MainActivity
-import com.example.testchatbox.R
+import com.example.testchatbox.*
 import com.example.testchatbox.databinding.FragmentChatBinding
 import com.example.testchatbox.login.model.LoggedInUser
 import com.google.android.material.imageview.ShapeableImageView
@@ -34,7 +33,7 @@ import kotlin.collections.LinkedHashMap
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class ChatFragment : Fragment(), ObserverChat {
+class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
 
     private var _binding: FragmentChatBinding? = null
 
@@ -59,6 +58,7 @@ class ChatFragment : Fragment(), ObserverChat {
         super.onViewCreated(view, savedInstanceState);
         notifSound = MediaPlayer.create(view.context, R.raw.ding)
         loadList();
+        verifyIfInviteRequest();
         selectedChatIndex = if(arguments?.getString("username")!=null){ findIndexByUsername(arguments?.getString("username")!!) } else 0;
         binding.inputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -95,12 +95,14 @@ class ChatFragment : Fragment(), ObserverChat {
     override fun onStart() {
         super.onStart()
         ChatModel.addObserver(this);
+        InviteService.addObserver(this);
         NotificationInfoHolder.changeSelectedChatCode(chatsList[selectedChatIndex]._id);
     }
 
     override fun onStop() {
         super.onStop()
         ChatModel.removeObserver(this);
+        InviteService.removeObserver(this);
         notifSound?.release()
         NotificationInfoHolder.changeSelectedChatCode("");
     }
@@ -254,4 +256,36 @@ class ChatFragment : Fragment(), ObserverChat {
         return 0;
     }
 
+    private fun verifyIfInviteRequest(){
+        val request = InviteService.getFirst() ?: return;
+        if(binding.inviteSection.visibility==View.VISIBLE) return;
+        binding.invitePrompt.text= request.username+ binding.invitePrompt.text;
+        binding.inviteSection.visibility=View.VISIBLE;
+        binding.rejectInvite.setOnClickListener {
+            InviteService.rejectRequest();
+            binding.inviteSection.visibility=View.GONE;
+            verifyIfInviteRequest();
+        }
+        binding.acceptInvite.setOnClickListener {
+            binding.inviteSection.visibility=View.GONE;
+            SocketHandler.getSocket().emit("Join Friend Game")
+            InviteService.acceptRequest();
+            SocketHandler.getSocket().once("Join Room Response"){args->
+                if(args[1]!=null){
+                    var players= arrayOf<String>()
+                    val playersArray = args[1] as JSONArray
+                    for(i in 0 until playersArray.length()){
+                        players=players.plus(playersArray.getString(i))
+                    }
+                    GameRoomModel.initialise(GameRoom("Name", request.roomId, Visibility.Public, players, hasStarted = false, request.gameType ,-1), false);
+                    findNavController().navigate(R.id.action_ChatFragment_to_gameRoomFragment)
+                }
+            }
+
+        }
+    }
+
+    override fun updateInvite() {
+        verifyIfInviteRequest();
+    }
 }

@@ -16,6 +16,7 @@
     <string name="FriendCode">"Enter your friend's code to add them "</string>
     <string name="queueMessage">In search of a tournament</string>
 
+    <string name ="InvitePrompt"> invited you to his/her game</string>
     <string name="friendModified"> replaced is username with </string>
     <string name="friendRemoved"> isn\'t your friend anymore</string>
     <string name="friendChat">Chat</string>

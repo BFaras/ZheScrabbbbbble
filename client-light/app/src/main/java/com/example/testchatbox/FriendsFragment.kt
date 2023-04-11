@@ -35,7 +35,7 @@ enum class  ConnectionStatus{
 data class Friend(var username:String, var connectionStatus: ConnectionStatus)
 
 
-class FriendsFragment : Fragment(), ObserverFriend {
+class FriendsFragment : Fragment(), ObserverFriend, ObserverInvite {
 
     private val friendList get() = FriendModel.friendList
 
@@ -53,7 +53,7 @@ class FriendsFragment : Fragment(), ObserverFriend {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         FriendModel.updateFriendList()
-
+        verifyIfInviteRequest();
         binding.friendCode.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 hideKeyboard()
@@ -99,11 +99,13 @@ class FriendsFragment : Fragment(), ObserverFriend {
 
     override fun onStart() {
         super.onStart()
+        InviteService.addObserver(this);
         FriendModel.addObserver(this);
     }
 
     override fun onStop() {
         super.onStop()
+        InviteService.removeObserver(this);
         FriendModel.removeObserver(this);
     }
 
@@ -227,6 +229,39 @@ class FriendsFragment : Fragment(), ObserverFriend {
     private fun hideKeyboard() {
         val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+    }
+
+    private fun verifyIfInviteRequest(){
+        val request = InviteService.getFirst() ?: return;
+        if(binding.inviteSection.visibility==View.VISIBLE) return;
+        binding.invitePrompt.text= request.username+ binding.invitePrompt.text;
+        binding.inviteSection.visibility=View.VISIBLE;
+        binding.rejectInvite.setOnClickListener {
+            InviteService.rejectRequest();
+            binding.inviteSection.visibility=View.GONE;
+            verifyIfInviteRequest();
+        }
+        binding.acceptInvite.setOnClickListener {
+            binding.inviteSection.visibility=View.GONE;
+            SocketHandler.getSocket().emit("Join Friend Game")
+            InviteService.acceptRequest();
+            SocketHandler.getSocket().once("Join Room Response"){args->
+                if(args[1]!=null){
+                    var players= arrayOf<String>()
+                    val playersArray = args[1] as JSONArray
+                    for(i in 0 until playersArray.length()){
+                        players=players.plus(playersArray.getString(i))
+                    }
+                    GameRoomModel.initialise(GameRoom("Name", request.roomId, Visibility.Public, players, hasStarted = false, request.gameType ,-1), false);
+                    findNavController().navigate(R.id.action_friendsFragment_to_gameRoomFragment);
+                }
+            }
+
+        }
+    }
+
+    override fun updateInvite() {
+        verifyIfInviteRequest();
     }
 
 }

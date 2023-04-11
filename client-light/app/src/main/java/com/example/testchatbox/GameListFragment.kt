@@ -71,7 +71,7 @@ class GameRoom(val name:String, val id:String, val visibility: Visibility, var p
 }
 
 
-class GameListFragment : Fragment() {
+class GameListFragment : Fragment(), ObserverInvite {
 
     private var _binding: FragmentGameListBinding? = null
     private val binding get() = _binding!!
@@ -98,6 +98,7 @@ class GameListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupChatNotifs(view.context)
+        verifyIfInviteRequest();
         binding.buttonchat.setOnClickListener {
             findNavController().navigate(R.id.action_gameListFragment_to_ChatFragment)
         }
@@ -357,8 +358,14 @@ class GameListFragment : Fragment() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        InviteService.addObserver(this);
+    }
+
     override fun onStop() {
         super.onStop()
+        InviteService.addObserver(this);
         NotificationInfoHolder.setFunctionOnMessageReceived(null);
         notifSound?.release()
     }
@@ -385,5 +392,38 @@ class GameListFragment : Fragment() {
     fun changeToNotifChatIcon() {
         binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
         isChatIconChanged = true;
+    }
+
+    private fun verifyIfInviteRequest(){
+        val request = InviteService.getFirst() ?: return;
+        if(binding.inviteSection.visibility==View.VISIBLE) return;
+        binding.invitePrompt.text= request.username+ binding.invitePrompt.text;
+        binding.inviteSection.visibility=View.VISIBLE;
+        binding.rejectInvite.setOnClickListener {
+            InviteService.rejectRequest();
+            binding.inviteSection.visibility=View.GONE;
+            verifyIfInviteRequest();
+        }
+        binding.acceptInvite.setOnClickListener {
+            binding.inviteSection.visibility=View.GONE;
+            SocketHandler.getSocket().emit("Join Friend Game")
+            InviteService.acceptRequest();
+            SocketHandler.getSocket().once("Join Room Response"){args->
+                if(args[1]!=null){
+                    var players= arrayOf<String>()
+                    val playersArray = args[1] as JSONArray
+                    for(i in 0 until playersArray.length()){
+                        players=players.plus(playersArray.getString(i))
+                    }
+                    GameRoomModel.initialise(GameRoom("Name", request.roomId, Visibility.Public, players, hasStarted = false, request.gameType ,-1), false);
+                    findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment)
+                }
+            }
+
+        }
+    }
+
+    override fun updateInvite() {
+        verifyIfInviteRequest();
     }
 }
