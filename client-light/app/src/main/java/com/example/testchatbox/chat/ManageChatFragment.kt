@@ -2,6 +2,8 @@ package com.example.testchatbox.chat
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.widget.addTextChangedListener
 import com.example.testchatbox.MainActivity
 import com.example.testchatbox.R
 import com.example.testchatbox.databinding.FragmentManageChatBinding
@@ -27,8 +30,8 @@ class ManageChatFragment : Fragment(), ObserverChat {
     private var publicChatList = ChatModel.getPublicList();
     private var chatButtons: ArrayList<CardView> = arrayListOf()
     private var publicChatButtons: ArrayList<CardView> = arrayListOf()
-    private var searchJoinHasFocus = false;
-    private var searchLeaveHasFocus = false;
+    private var searchJoinTextWatcher: TextWatcher? = null
+    private var searchLeaveTextWatcher: TextWatcher? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,9 +61,7 @@ class ManageChatFragment : Fragment(), ObserverChat {
             }
         }
 
-        binding.searchJoinChatBtn.setOnClickListener { searchChats(publicChatButtons, binding.searchJoinChat.text.toString()) }
-        binding.searchLeaveChatBtn.setOnClickListener { searchChats(chatButtons, binding.searchLeaveChat.text.toString()) }
-
+        initializeSearchBars()
         binding.reloadChats.setOnClickListener {
             ChatModel.updatePublicList()
         }
@@ -75,30 +76,8 @@ class ManageChatFragment : Fragment(), ObserverChat {
 
     override fun onStop() {
         super.onStop()
+        freeSearchBarsResources()
         ChatModel.removeObserver(this);
-    }
-
-    private fun searchChats(chatRoomButtons: ArrayList<CardView>, chatSearchText: String) {
-        for (chatRoomButton in chatRoomButtons) {
-            val chatRoomName = chatRoomButton.findViewById<TextView>(R.id.chatbutton)
-            val chatName: String = chatRoomName.text.toString()
-
-            if (chatName.contains(chatSearchText))
-            {
-                chatRoomButton.visibility = View.VISIBLE
-            }
-            else
-            {
-                chatRoomButton.visibility = View.GONE
-            }
-        }
-    }
-
-    fun resetSearchBoxes() {
-        binding.searchJoinChat.setText("")
-        binding.searchJoinChat.clearFocus()
-        binding.searchLeaveChat.setText("")
-        binding.searchLeaveChat.clearFocus()
     }
 
     @SuppressLint("MissingInflatedId")
@@ -161,6 +140,69 @@ class ManageChatFragment : Fragment(), ObserverChat {
 //                chatListView.addView(btn)
             }
         }
+    }
+
+    private fun initializeSearchBars() {
+        searchJoinTextWatcher = createSearchJoinTextWatcher()
+        searchLeaveTextWatcher = createSearchLeaveTextWatcher()
+        binding.searchJoinChat.addTextChangedListener(searchJoinTextWatcher)
+        binding.searchLeaveChat.addTextChangedListener(searchLeaveTextWatcher)
+    }
+
+    private fun freeSearchBarsResources() {
+        binding.searchJoinChat.removeTextChangedListener(searchJoinTextWatcher)
+        binding.searchLeaveChat.removeTextChangedListener(searchLeaveTextWatcher)
+        searchJoinTextWatcher = null
+        searchLeaveTextWatcher = null
+    }
+
+    private fun createSearchJoinTextWatcher(): TextWatcher {
+        return object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchChats(publicChatButtons, binding.searchJoinChat.text.toString())
+            }
+        }
+    }
+
+    private fun createSearchLeaveTextWatcher(): TextWatcher {
+        return object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchChats(chatButtons, binding.searchLeaveChat.text.toString())
+            }
+        }
+    }
+
+    private fun searchChats(chatRoomButtons: ArrayList<CardView>, chatSearchText: String) {
+        val lowerCaseSearchText = chatSearchText.lowercase()
+        
+        for (chatRoomButton in chatRoomButtons) {
+            val chatRoomName = chatRoomButton.findViewById<TextView>(R.id.chatbutton)
+            val chatName: String = chatRoomName.text.toString().lowercase()
+
+            if (chatName.contains(lowerCaseSearchText))
+            {
+                chatRoomButton.visibility = View.VISIBLE
+            }
+            else
+            {
+                chatRoomButton.visibility = View.GONE
+            }
+        }
+    }
+
+    fun resetSearchBoxes() {
+        binding.searchJoinChat.setText("")
+        binding.searchJoinChat.clearFocus()
+        binding.searchLeaveChat.setText("")
+        binding.searchLeaveChat.clearFocus()
     }
 
     override fun updateMessage(chatCode: String, message: Message) {}

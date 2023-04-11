@@ -90,17 +90,6 @@
             android:textSize="15sp"
             android:visibility="visible" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/searchLeaveChatBtn"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/background_chat_input"
-            android:backgroundTint="?colorSecondary"
-            android:text="Search"
-            android:textColor="@color/black"
-            android:textSize="12dp" />
-
         <ScrollView
             android:layout_width="300dp"
             android:layout_height="match_parent"
@@ -254,17 +243,6 @@
             android:textColorHint="?colorOnPrimary"
             android:textSize="15sp"
             android:visibility="visible" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/searchJoinChatBtn"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/background_chat_input"
-            android:backgroundTint="?colorSecondary"
-            android:text="Search"
-            android:textColor="@color/black"
-            android:textSize="12dp" />
 
         <ScrollView
             android:layout_width="300dp"
