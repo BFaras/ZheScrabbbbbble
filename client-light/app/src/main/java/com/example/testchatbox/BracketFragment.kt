@@ -57,20 +57,41 @@ class BracketFragment : Fragment(), Observer {
              leaveTournament()
         }
         binding.Semi1.setOnClickListener {
-            if(TournamentModel.gamesData[0].status==GameStatus.IN_PROGRESS)
-                observeGame(TournamentModel.gamesData[0].roomCode)
+            for(game in TournamentModel.gamesData){
+                if(game.type=="Semi1"){
+                    if(game.status==GameStatus.IN_PROGRESS)
+                        observeGame(game.roomCode)
+                    break;
+                }
+            }
         }
         binding.Semi2.setOnClickListener {
-            if(TournamentModel.gamesData[1].status==GameStatus.IN_PROGRESS)
-                observeGame(TournamentModel.gamesData[1].roomCode)
+            for(game in TournamentModel.gamesData){
+                if(game.type=="Semi2"){
+                    if(game.status==GameStatus.IN_PROGRESS)
+                        observeGame(game.roomCode)
+                    break;
+                }
+            }
         }
+
         binding.Final1.setOnClickListener {
-            if(TournamentModel.gamesData[2].status==GameStatus.IN_PROGRESS)
-                observeGame(TournamentModel.gamesData[2].roomCode)
+            for(game in TournamentModel.gamesData){
+                if(game.type=="Final1"){
+                    if(game.status==GameStatus.IN_PROGRESS)
+                        observeGame(game.roomCode)
+                    break;
+                }
+            }
         }
         binding.Final2.setOnClickListener {
-            if(TournamentModel.gamesData[3].status==GameStatus.IN_PROGRESS)
-                observeGame(TournamentModel.gamesData[3].roomCode)
+            for(game in TournamentModel.gamesData){
+                if(game.type=="Final2"){
+                    if(game.status==GameStatus.IN_PROGRESS)
+                        observeGame(game.roomCode)
+                    break;
+                }
+            }
         }
         SocketHandler.getSocket().emit("Get Tournament Data")
     }

@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import com.example.testchatbox.chat.ChatModel
 import com.example.testchatbox.databinding.FragmentFriendsBinding
 import com.example.testchatbox.databinding.FragmentProfilBinding
 import com.google.android.material.imageview.ShapeableImageView
@@ -121,6 +122,7 @@ class FriendsFragment : Fragment(), ObserverFriend, ObserverInvite {
                 activity?.runOnUiThread(Runnable {
                     if(errorMessage == R.string.NO_ERROR ){
                         FriendModel.updateFriendList()
+                        ChatModel.updateList();
                         binding.friendCode.setText("")
                         binding.friendCode.clearFocus()
                     }else{

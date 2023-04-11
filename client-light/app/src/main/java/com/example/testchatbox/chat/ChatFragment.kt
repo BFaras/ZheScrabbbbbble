@@ -110,47 +110,49 @@ class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
     private fun loadChatMessages(){
         binding.chatProgress.visibility = View.VISIBLE
         SocketHandler.getSocket().once("Chat History Response"){ args ->
-            val messageArray= args[0] as JSONArray
-            val messagesBox = binding.textView
-            activity?.runOnUiThread(java.lang.Runnable {
-                messagesBox.removeAllViews()
-            })
-            for(i in 0 until messageArray.length()){
-                val messageJSON = messageArray.get(i) as JSONObject
-                val message = Message(messageJSON.get("username") as String, messageJSON.get("timestamp") as String, messageJSON.get("message") as String, messageJSON.get("avatar") as String)
-
-                val messageContainer : View = if (message.username == LoggedInUser.getName()) {
-                    layoutInflater.inflate(R.layout.sent_message, messagesBox, false)
-                } else {
-                    layoutInflater.inflate(R.layout.received_message, messagesBox, false)
-                }
-
-                val messageText: TextView = messageContainer.findViewById(R.id.textMessage)
-                val usernameMessage: TextView = messageContainer.findViewById(R.id.usernameMessage)
-                val timeStampMessage: TextView = messageContainer.findViewById(R.id.textDateTime)
-                val avatar = messageContainer.findViewById<ShapeableImageView>(R.id.avatarProfile)
-
-                messageText.text = message.message
-                usernameMessage.text = message.username
-                timeStampMessage.text = message.timestamp
-
-                if (resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
-                    Log.d("AVATAR", message.avatar)
-                    avatar.setImageResource(resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
-                } else {
-                    avatar.setImageResource(R.drawable.robot)
-                }
-
+            if(args[0]!=null){
+                val messageArray= args[0] as JSONArray
+                val messagesBox = binding.textView
                 activity?.runOnUiThread(java.lang.Runnable {
-                    binding.chatProgress.visibility = View.GONE
-                    messagesBox.addView(messageContainer)
-                    binding.scrollView.post { binding.scrollView.fullScroll(View.FOCUS_DOWN) }
+                    messagesBox.removeAllViews()
                 })
+                for(i in 0 until messageArray.length()){
+                    val messageJSON = messageArray.get(i) as JSONObject
+                    val message = Message(messageJSON.get("username") as String, messageJSON.get("timestamp") as String, messageJSON.get("message") as String, messageJSON.get("avatar") as String)
+
+                    val messageContainer : View = if (message.username == LoggedInUser.getName()) {
+                        layoutInflater.inflate(R.layout.sent_message, messagesBox, false)
+                    } else {
+                        layoutInflater.inflate(R.layout.received_message, messagesBox, false)
+                    }
+
+                    val messageText: TextView = messageContainer.findViewById(R.id.textMessage)
+                    val usernameMessage: TextView = messageContainer.findViewById(R.id.usernameMessage)
+                    val timeStampMessage: TextView = messageContainer.findViewById(R.id.textDateTime)
+                    val avatar = messageContainer.findViewById<ShapeableImageView>(R.id.avatarProfile)
+
+                    messageText.text = message.message
+                    usernameMessage.text = message.username
+                    timeStampMessage.text = message.timestamp
+
+                    if (resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                        Log.d("AVATAR", message.avatar)
+                        avatar.setImageResource(resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                    } else {
+                        avatar.setImageResource(R.drawable.robot)
+                    }
+
+                    activity?.runOnUiThread(java.lang.Runnable {
+                        binding.chatProgress.visibility = View.GONE
+                        messagesBox.addView(messageContainer)
+                        binding.scrollView.post { binding.scrollView.fullScroll(View.FOCUS_DOWN) }
+                    })
+                }
+                activity?.runOnUiThread(Runnable {
+                    messagesBox.invalidate();
+                    messagesBox.requestLayout();
+                });
             }
-            activity?.runOnUiThread(Runnable {
-                messagesBox.invalidate();
-                messagesBox.requestLayout();
-            });
         }
         binding.chatProgress.visibility = View.GONE
         SocketHandler.getSocket().emit("Get Chat History", chatsList[selectedChatIndex]._id)

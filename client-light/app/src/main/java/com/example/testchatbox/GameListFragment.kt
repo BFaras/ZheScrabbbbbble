@@ -275,8 +275,12 @@ class GameListFragment : Fragment(), ObserverInvite {
                         GameRoomModel.initialise(gameRoom, observer)
                         findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment)
                     }else{
-                    val appContext = context?.applicationContext
-                    Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
+                        binding.cancelSection.visibility=View.GONE;
+                        binding.cancelPrivateButton.setOnClickListener(null);
+                        binding.gameListSection.visibility=View.VISIBLE;
+                        binding.createSection.visibility=View.VISIBLE;
+                        val appContext = context?.applicationContext
+                        Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
                     }
                 });
             }

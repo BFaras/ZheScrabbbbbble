@@ -91,6 +91,7 @@ class ResetPasswordFragment : Fragment() {
         }
 
         registerButton.setOnClickListener {
+            val username= usernameEditText.text.toString()
             val answer= answerEditText.text.toString()
             val password = passwordEditText.text.toString()
             if(!isTextValid(answer)) {
@@ -121,7 +122,7 @@ class ResetPasswordFragment : Fragment() {
                             });
                         }
                     }
-                    SocketHandler.getSocket().emit("Account Question Answer", answer.trim(), password.trim())
+                    SocketHandler.getSocket().emit("Account Question Answer", username.trim(),answer.trim(), password.trim())
                 }
                 catch (e: java.lang.Exception){
                     val appContext = context?.applicationContext
