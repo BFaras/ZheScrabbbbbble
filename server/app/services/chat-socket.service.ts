@@ -1,5 +1,5 @@
-import { NO_ERROR } from '@app/constants/error-code-constants';
-import { ChatType } from '@app/interfaces/chat-info';
+import { INVALID_DATA_SENT, NO_ERROR } from '@app/constants/error-code-constants';
+import { ChatCreationResponse, ChatInfo, ChatType } from '@app/interfaces/chat-info';
 import { ChatMessage } from '@app/interfaces/chat-message';
 import * as io from 'socket.io';
 import Container, { Service } from 'typedi';
@@ -28,54 +28,92 @@ export class ChatSocketService {
     handleChatSockets(socket: io.Socket) {
         socket.on('New Chat Message', async (message: string, chatCode: string) => {
             const userId: string = this.accountInfoService.getUserId(socket);
-            const chatMessage: ChatMessage = {
-                message,
-                username: this.accountInfoService.getUsername(socket),
-                avatar: await this.dbService.getUserAvatar(userId),
-                timestamp: this.timeFormatterService.getTimeStampString(),
-            };
-            await this.chatService.addChatMessageToHistory(userId, chatCode, chatMessage);
+            if (message && chatCode && userId) {
+                const chatMessage: ChatMessage = {
+                    message,
+                    username: this.accountInfoService.getUsername(socket),
+                    avatar: await this.dbService.getUserAvatar(userId),
+                    timestamp: this.timeFormatterService.getTimeStampString(),
+                };
+                await this.chatService.addChatMessageToHistory(userId, chatCode, chatMessage);
 
-            socket.emit('New Chat Message', chatCode, chatMessage);
+                socket.emit('New Chat Message', chatCode, chatMessage);
 
-            if (this.chatService.isGameChat(chatCode)) {
-                socket.to(chatCode).emit('New Chat Message', chatCode, chatMessage);
-            } else {
-                socket.to(this.chatService.getChatRoomName(chatCode)).emit('New Chat Message', chatCode, chatMessage);
+                if (this.chatService.isGameChat(chatCode)) {
+                    socket.to(chatCode).emit('New Chat Message', chatCode, chatMessage);
+                } else {
+                    socket.to(this.chatService.getChatRoomName(chatCode)).emit('New Chat Message', chatCode, chatMessage);
+                }
+
+                // eslint-disable-next-line no-console
+                new Date().toLocaleTimeString() + ' | New Message : ' + message;
             }
-
-            // eslint-disable-next-line no-console
-            (new Date().toLocaleTimeString() + ' | New Message : ' + message);
         });
 
         socket.on('Create New Chat', async (chatName: string, chatType: ChatType) => {
-            const chatCreationResponse = await this.chatService.createChat(this.accountInfoService.getUserId(socket), chatName, chatType);
-            if (chatCreationResponse.errorCode === NO_ERROR) {
-                socket.join(chatCreationResponse.chatId);
+            if (chatName && chatType) {
+                const chatCreationResponse: ChatCreationResponse = await this.chatService.createChat(
+                    this.accountInfoService.getUserId(socket),
+                    chatName,
+                    chatType,
+                );
+                if (chatCreationResponse.errorCode === NO_ERROR) {
+                    socket.join(chatCreationResponse.chatId);
+                }
+                socket.emit('Chat Creation Response', chatCreationResponse);
+            } else {
+                const chatCreationResponse: ChatCreationResponse = { chatId: '', errorCode: INVALID_DATA_SENT };
+                socket.emit('Chat Creation Response', chatCreationResponse);
             }
-            socket.emit('Chat Creation Response', chatCreationResponse);
         });
 
         socket.on('Get Public Chat List', async () => {
-            socket.emit('Public Chat List Response', await this.chatService.getPublicChatsUserCanJoin(this.accountInfoService.getUserId(socket)));
+            const userId = this.accountInfoService.getUserId(socket);
+            if (userId) {
+                socket.emit('Public Chat List Response', await this.chatService.getPublicChatsUserCanJoin(userId));
+            } else {
+                const emptyChats: ChatInfo[] = [];
+                socket.emit('Public Chat List Response', emptyChats);
+            }
         });
 
         socket.on('Join Public Chat', async (chatCode: string) => {
-            const errorMessage = await this.chatService.joinChat(this.accountInfoService.getUserId(socket), chatCode);
-            socket.emit('Join Chat Response', errorMessage);
+            const userId = this.accountInfoService.getUserId(socket);
+            if (chatCode && userId) {
+                const errorMessage = await this.chatService.joinChat(userId, chatCode);
+                socket.emit('Join Chat Response', errorMessage);
+            } else {
+                socket.emit('Join Chat Response', INVALID_DATA_SENT);
+            }
         });
 
         socket.on('Leave Public Chat', async (chatCode: string) => {
-            const errorMessage = await this.chatService.leaveChat(this.accountInfoService.getUserId(socket), chatCode);
-            socket.emit('Leave Chat Response', errorMessage);
+            const userId = this.accountInfoService.getUserId(socket);
+            if (chatCode && userId) {
+                const errorMessage = await this.chatService.leaveChat(userId, chatCode);
+                socket.emit('Leave Chat Response', errorMessage);
+            } else {
+                socket.emit('Leave Chat Response', INVALID_DATA_SENT);
+            }
         });
 
         socket.on('Get User Chat List', async () => {
-            socket.emit('User Chat List Response', await this.chatService.getUserChats(this.accountInfoService.getUserId(socket)));
+            const userId = this.accountInfoService.getUserId(socket);
+            if (userId) {
+                socket.emit('User Chat List Response', await this.chatService.getUserChats(userId));
+            } else {
+                const emptyChats: ChatInfo[] = [];
+                socket.emit('User Chat List Response', emptyChats);
+            }
         });
 
         socket.on('Get Chat History', async (chatId: string) => {
-            socket.emit('Chat History Response', await this.chatService.getChatHistory(chatId));
+            if (chatId) {
+                socket.emit('Chat History Response', await this.chatService.getChatHistory(chatId));
+            } else {
+                const emptyChatHistory: ChatMessage[] = [];
+                socket.emit('Chat History Response', emptyChatHistory);
+            }
         });
 
         socket.on('Link Socket Username', async (username: string) => {
