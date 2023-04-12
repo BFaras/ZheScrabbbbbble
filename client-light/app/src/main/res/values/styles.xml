@@ -19,4 +19,12 @@
         <item name="android:windowBackground">@drawable/background_direction_panel</item>
     </style>
 
+    <style name="MaterialButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/color_button_disabled</item>
+    </style>
+
+    <style name="MaterialButtonStyleInGame" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/color_button_disabled_ingame</item>
+    </style>
+
 </resources>

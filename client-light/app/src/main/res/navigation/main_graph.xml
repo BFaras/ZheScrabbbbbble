@@ -47,12 +47,16 @@
     <fragment
         android:id="@+id/manageChatFragment"
         android:name="com.example.testchatbox.chat.ManageChatFragment"
-        android:label="fragment_manage_chat"
-        tools:layout="@layout/fragment_manage_chat" />
+        android:label="@string/manage_chat_label"
+        tools:layout="@layout/fragment_manage_chat" >
+        <action
+            android:id="@+id/action_manageChatFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+    </fragment>
     <fragment
         android:id="@+id/fullscreenFragment"
         android:name="com.example.testchatbox.GamePageFragment"
-        android:label="fragment_fullscreen"
+        android:label="@string/game_page_label"
         tools:layout="@layout/fragment_fullscreen" >
         <action
             android:id="@+id/action_fullscreenFragment_to_ChatFragment"
@@ -73,7 +77,7 @@
     <fragment
         android:id="@+id/gameListFragment"
         android:name="com.example.testchatbox.GameListFragment"
-        android:label="fragment_game_list"
+        android:label="@string/game_list_label"
         tools:layout="@layout/fragment_game_list" >
         <action
             android:id="@+id/action_gameListFragment_to_gameRoomFragment"
@@ -93,7 +97,7 @@
     <fragment
         android:id="@+id/gameRoomFragment"
         android:name="com.example.testchatbox.GameRoomFragment"
-        android:label="fragment_game_room"
+        android:label="@string/game_room_label"
         tools:layout="@layout/fragment_game_room" >
         <action
             android:id="@+id/action_gameRoomFragment_to_MainMenuFragment"
@@ -116,7 +120,7 @@
     <fragment
         android:id="@+id/friendsFragment"
         android:name="com.example.testchatbox.FriendsFragment"
-        android:label="fragment_friends"
+        android:label="@string/friends_label"
         tools:layout="@layout/fragment_friends" >
         <action
             android:id="@+id/action_friendsFragment_to_ChatFragment"
@@ -135,7 +139,7 @@
     <fragment
         android:id="@+id/queueFragment"
         android:name="com.example.testchatbox.QueueFragment"
-        android:label="fragment_queue"
+        android:label="@string/waiting_for_tournament_label"
         tools:layout="@layout/fragment_queue" >
         <action
             android:id="@+id/action_queueFragment_to_bracketFragment"
@@ -153,7 +157,7 @@
     <fragment
         android:id="@+id/bracketFragment"
         android:name="com.example.testchatbox.BracketFragment"
-        android:label="fragment_bracket"
+        android:label="@string/bracket_label"
         tools:layout="@layout/fragment_bracket" >
         <action
             android:id="@+id/action_bracketFragment_to_fullscreenFragment"
@@ -174,7 +178,7 @@
     <fragment
         android:id="@+id/rankingFragment"
         android:name="com.example.testchatbox.RankingFragment"
-        android:label="fragment_ranking"
+        android:label="@string/ranking"
         tools:layout="@layout/fragment_ranking" >
         <action
             android:id="@+id/action_rankingFragment_to_MainMenuFragment"
