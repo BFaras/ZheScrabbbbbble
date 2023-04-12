@@ -27,7 +27,7 @@ export class LoginAreaComponent {
   constructor(private accountAuthenticationService: AccountAuthenticationService,
     private router: Router, private account: AccountService,
     private snackBar: MatSnackBar) {
-    this.accountAuthenticationService.setUpSocket()
+    this.accountAuthenticationService.setUpSocket();
   }
 
   changePasswordVisibility(): string {
@@ -51,7 +51,8 @@ export class LoginAreaComponent {
       this.account.setUsername(this.userAccount.username);
       this.router.navigate(['/home']);
     } else {
-      this.snackBar.open("Échec de l'authentification", "Fermer")
+      this.account.setMessages();
+      this.snackBar.open(this.account.messageAuth, this.account.closeMessage)
     }
   }
 

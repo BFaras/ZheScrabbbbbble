@@ -20,7 +20,7 @@ export class CreateGameComponent {
     visibility: RoomVisibility = RoomVisibility.PUBLIC;
     IsProtectedRoom: boolean = false;
     passwordRoom: string = "";
-    gameType: string = 'Classic'
+    gameType: string = 'Classic';
 
     constructor(
         private waitingRoomManagerService: WaitingRoomManagerService,
@@ -72,17 +72,19 @@ export class CreateGameComponent {
     }
 
     alertFalseInput() {
-        this.snackBar.open('Veuillez remplir les champs vides.', "Fermer")
+        this.accountService.setMessages();
+        this.snackBar.open(this.accountService.messageSalle, this.accountService.closeMessage)
     }
 
     redirectPlayer(message: { codeError: string, roomId: string }) {
+        this.accountService.setMessages();
         if (message.codeError !== '0') {
-            this.snackBar.open('Erreur lors de la création de la salle', "Fermer")
+            this.snackBar.open(this.accountService.messageEmpty, this.accountService.closeMessage)
             return;
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom([this.accountService.getUsername()]);
         this.avatarInRoomService.setAvatarOfUsers([this.accountService.getProfile().avatar]);
-        if(this.friendsService.getFriendToInvite()){
+        if (this.friendsService.getFriendToInvite()) {
             this.friendsService.inviteFriend();
         }
         this.chatService.setChatInGameRoom(message.roomId);

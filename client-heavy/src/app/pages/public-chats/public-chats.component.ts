@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ChatInfo, ChatType } from '@app/classes/chat-info';
+import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
 
 @Component({
@@ -13,7 +14,7 @@ export class PublicChatsComponent implements OnInit {
   presentChatList: ChatInfo[] = [];
   activeInput: number;
 
-  constructor(private chatService: ChatService, private snackBar: MatSnackBar) {
+  constructor(private chatService: ChatService, private snackBar: MatSnackBar, private account: AccountService) {
     this.updateChats();
   }
 
@@ -36,7 +37,7 @@ export class PublicChatsComponent implements OnInit {
   }
 
   alert(chat: ChatInfo) {
-    const text = 'Êtes-vous sûr(e) de vouloir quitter ce chat?';
+    const text = this.account.getLanguage() === 'fr' ? 'Êtes-vous sûr(e) de vouloir quitter ce chat?' : 'Are you sure you want to leave this chat?';
     if (confirm(text)) {
       this.chatService.leaveChat(chat).subscribe((errorCode: string) => {
         this.updateChats();
@@ -53,6 +54,7 @@ export class PublicChatsComponent implements OnInit {
   }
 
   addChat() {
+    this.account.setMessages();
     const chatName = (document.getElementById('chat-name') as HTMLInputElement).value;
     if (chatName.length < 35) {
       this.chatService.createChat(chatName).subscribe((errorCode: string) => {
@@ -60,7 +62,7 @@ export class PublicChatsComponent implements OnInit {
         console.log(errorCode);
       });
     }
-    else this.snackBar.open("Le nom du chat est trop long. Il ne doit pas dépasser 35 caractères.", "Fermer");
+    else this.snackBar.open(this.account.messageChat, this.account.closeMessage);
     (document.getElementById('chat-name') as HTMLInputElement).value = "";
   }
 

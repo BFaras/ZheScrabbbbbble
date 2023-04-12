@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
+import { AccountService } from '../account-service/account.service';
 
 export const NAME_DELAY = 1000;
 
@@ -12,16 +13,17 @@ export class NameValidatorService {
     guestPlayerNameIsValid: boolean = false;
     virtualPlayerNameList: string[] = ['Alex', 'Rebecca', 'Damien'];
 
-    constructor(private snackBar: MatSnackBar) {
+    constructor(private snackBar: MatSnackBar, private account: AccountService) {
 
     }
     validateGuestPlayerName(hostPlayerName: string, guestPlayerName: string): boolean {
+        this.account.setMessages();
         if (guestPlayerName.trim() === '') {
-            this.snackBar.open("Veuillez vous assurer que votre nom n'est pas vide.", "Fermer")
+            this.snackBar.open(this.account.messageNameEmpty, this.account.closeMessage);
             return this.guestPlayerNameIsValid;
         }
         this.guestPlayerNameIsValid = this.namesNotEqual(hostPlayerName, guestPlayerName);
-        if (!this.guestPlayerNameIsValid) this.snackBar.open("Échec de l'authentification", "Fermer");
+        if (!this.guestPlayerNameIsValid) this.snackBar.open(this.account.messageAuth, this.account.closeMessage);
         return this.guestPlayerNameIsValid;
     }
 

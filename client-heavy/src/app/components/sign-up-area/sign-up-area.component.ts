@@ -28,7 +28,7 @@ export class SignUpAreaComponent implements OnInit {
   avatarSrc: string;
 
   constructor(private snackBar: MatSnackBar, private accountCreationService: AccountCreationService, public dialogAvatar: MatDialog, private router: Router, private accountService: AccountService) {
-    this.accountCreationService.setUpSocket()
+    this.accountCreationService.setUpSocket();
   }
 
   ngOnInit(): void {
@@ -81,16 +81,18 @@ export class SignUpAreaComponent implements OnInit {
   }
 
   showStatus(status: string) {
+    this.accountService.setMessages();
     if (status == "0") {
       this.accountService.setUsername(this.newAccount.username);
       this.router.navigate(['home'])
     } else {
-      this.snackBar.open('Échec de la Création de compte', "Fermer")
+      this.snackBar.open(this.accountService.messageAcc, this.accountService.closeMessage)
     }
   }
 
   goToCreateQuestion(): void {
-    if (this.newAccount.username.length > 20) alert("The username cannot be over 20 characters.");
+    this.accountService.setMessages();
+    if (this.newAccount.username.length > 20) this.snackBar.open(this.accountService.messageNameLength, this.accountService.closeMessage);
     else this.isFormFinished = !this.isFormFinished;
   }
 

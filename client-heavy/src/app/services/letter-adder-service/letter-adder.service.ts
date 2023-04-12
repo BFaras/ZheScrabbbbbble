@@ -6,6 +6,7 @@ import { ChatService } from '@app/services/chat-service/chat.service';
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
 import { Subject } from 'rxjs';
+import { AccountService } from '../account-service/account.service';
 import { PreviewPlayersActionService } from '../preview-players-action-service/preview-players-action.service';
 @Injectable({
     providedIn: 'root',
@@ -29,7 +30,8 @@ export class LetterAdderService {
         private gridService: GridService,
         private chatService: ChatService,
         private previewPlayerActionService: PreviewPlayersActionService,
-        private snackBar: MatSnackBar) {
+        private snackBar: MatSnackBar,
+        private account: AccountService) {
 
     }
 
@@ -363,13 +365,14 @@ export class LetterAdderService {
     }
 
     makeMove() {
+        this.account.setMessages();
         if (this.addedLettersLog.size) {
             const placedLetters = this.formatAddedLetters()
             if (placedLetters === "wrongMove") {
                 return
             }
             if (!this.verifyLettersAreLinked()) {
-                this.snackBar.open("les lettres placées doivent être relier les unes aux autres", "Fermer")
+                this.snackBar.open(this.account.messageLetters, this.account.closeMessage)
                 this.getLetterNotAcceptedObservable().next(true);
                 this.removeAll();
                 return;
@@ -481,11 +484,12 @@ export class LetterAdderService {
     }
 
     formatAddedLetters(): string {
+        this.account.setMessages();
         this.orderAddedLetterLog();
         const keys = Array.from(this.orderedAddedLetterLog.keys());
         if (this.arrowDirection) {
             if (!this.isHorizontal(keys)) {
-                this.snackBar.open("le mot place n'est pas sur la même direction", "Fermer");
+                this.snackBar.open(this.account.messageDir, this.account.closeMessage);
                 this.getLetterNotAcceptedObservable().next(true)
                 this.removeAll()
                 return "wrongMove"
@@ -495,7 +499,7 @@ export class LetterAdderService {
         }
         else {
             if (!this.isVertical(keys)) {
-                this.snackBar.open("le mot place n'est pas sur la même direction", "Fermer")
+                this.snackBar.open(this.account.messageDir, this.account.closeMessage);
                 this.getLetterNotAcceptedObservable().next(true)
                 this.removeAll()
                 return "wrongMove"
