@@ -1,6 +1,7 @@
 package com.example.testchatbox
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -46,13 +47,15 @@ class RankingFragment : Fragment() {
     }
 
     fun getRank():Array<String>{
-        val players = arrayOf<String>("","","","")
+        val players = arrayOf<String>("N/A","N/A","N/A","N/A")
         for(game in TournamentModel.gamesData){
             if(game.type=="Final1"){
+                Log.i("Game players", game.players.toString())
                 players[0]= game.players[game.winnerIndex]
                 players[1]=game.players[if(game.winnerIndex==1)0 else 1]
             }
             else if(game.type=="Final2"){
+                Log.i("Game players", game.players.toString())
                 players[2]= game.players[game.winnerIndex]
                 players[3]=game.players[if(game.winnerIndex==1)0 else 1]
             }

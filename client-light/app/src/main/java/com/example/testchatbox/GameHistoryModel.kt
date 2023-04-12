@@ -36,8 +36,8 @@ object GameHistoryModel : Observable {
         SocketHandler.getSocket().emit("Respond Coop Action", accept)
     }
 
-    fun getList():ArrayList<PlayerMessage>{
-        return actionMessages;
+    fun getList(): Array<PlayerMessage> {
+        return actionMessages.toArray() as Array<PlayerMessage>;
     }
 
     fun reset(){
