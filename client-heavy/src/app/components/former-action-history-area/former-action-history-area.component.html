@@ -1,19 +1,23 @@
 <mat-card id="former-actions">
     <mat-card-header class="title">
         {{ 'PROFILE-PAGE.GAMEHISTORY' | translate }}
-    </mat-card-header>
-    <div id="table-container">
-        <table id="data-list">
+    </mat-card-header >
+    <div id="table-container" #scroll>
+        <table id="data-list"  >
             <tr>
                 <th><span>{{ 'PROFILE-PAGE.DATE' | translate }}</span></th>
                 <th>{{ 'PROFILE-PAGE.TIME' | translate }}</th>
                 <th>{{ 'PROFILE-PAGE.GAMESTATE' | translate }}</th>
             </tr>
-            <tr *ngFor = "action of formerActionsHistory;let indexAction = index" >
+            <tr *ngFor = "action of formerActionsHistory;let indexAction = index">
                 <td>{{formerActionsHistory[indexAction].date}}</td>
                 <td>{{formerActionsHistory[indexAction].time}}</td>
                 <td>{{ checkStatus(indexAction) | translate}}</td>
             </tr>
         </table>
+    </div>
+    <div class="auto-scroll">
+        <p class="tabs scroll-button" (click) = 'scrollBottom()' >Bottom</p>
+        <p class="tabs scroll-button" (click) = 'scrollToTop()' >Top</p>
     </div>
 </mat-card>
