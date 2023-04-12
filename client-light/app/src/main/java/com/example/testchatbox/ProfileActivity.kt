@@ -64,4 +64,7 @@ class ProfileActivity : AppCompatActivity() {
             baseContext.resources.displayMetrics
         )
     }
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+    }
 }

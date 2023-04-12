@@ -2,6 +2,7 @@ package com.example.testchatbox
 
 import SocketHandler
 import android.util.Log
+import com.example.testchatbox.login.model.LoggedInUser
 import org.json.JSONArray
 import org.json.JSONObject
 import java.net.Socket
@@ -22,7 +23,7 @@ object GameHistoryModel : Observable {
             val messageType = messageJSON.get("messageType") as String
             if(messageType=="MSG-13") playRequest = PlayerMessage(messageType, messages);
             else actionMessages.add(PlayerMessage(messageType, messages));
-            if(messageType=="MSG-12" || messageType=="MSG014") clearPlayRequest();
+            if (messageType=="MSG-12" || messageType=="MSG-14" || (messages[0] == LoggedInUser.getName() && messageType=="MSG-11")) clearPlayRequest();
             notifyObserver();
         }
     }
@@ -46,7 +47,7 @@ object GameHistoryModel : Observable {
         actionMessages = arrayListOf<PlayerMessage>()
     }
 
-    private fun clearPlayRequest(){
+    fun clearPlayRequest(){
         playRequest=null;
     }
 }

@@ -88,6 +88,31 @@ class ProfilFragment : Fragment() {
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
         getProfile(LoggedInUser.getName())
+        context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
+        context?.theme?.resolveAttribute(R.attr.buttonColor, notSelectedColor, true)
+
+        binding.buttonConnectionLog.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+        binding.connectionScroll.visibility = View.VISIBLE
+        binding.disconnectionScroll.visibility = View.GONE
+        binding.buttonDisconnectionLog.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
+
+        binding.buttonConnectionLog.setOnClickListener {
+            context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
+            context?.theme?.resolveAttribute(R.attr.buttonColor, notSelectedColor, true)
+            binding.connectionScroll.visibility = View.VISIBLE
+            binding.buttonConnectionLog.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            binding.disconnectionScroll.visibility = View.GONE
+            binding.buttonDisconnectionLog.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
+        }
+
+        binding.buttonDisconnectionLog.setOnClickListener {
+            context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
+            context?.theme?.resolveAttribute(R.attr.buttonColor, notSelectedColor, true)
+            binding.connectionScroll.visibility = View.GONE
+            binding.buttonConnectionLog.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
+            binding.disconnectionScroll.visibility = View.VISIBLE
+            binding.buttonDisconnectionLog.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+        }
 
         binding.playerInGameAvatar.setOnClickListener {
             val builder = context?.let { it -> AlertDialog.Builder(it,R.style.CustomAlertDialog).create() }
@@ -98,6 +123,12 @@ class ProfilFragment : Fragment() {
             val skeletonLock = alertView.findViewById<ShapeableImageView>(R.id.skeletonLock)
             val tigerLock = alertView.findViewById<ShapeableImageView>(R.id.tigerLock)
             val bunnyLock = alertView.findViewById<ShapeableImageView>(R.id.bunnyLock)
+
+            val condShark = alertView.findViewById<TextView>(R.id.condShark)
+            val condPanda = alertView.findViewById<TextView>(R.id.condPanda)
+            val condSkeleton = alertView.findViewById<TextView>(R.id.condSkeleton)
+            val condTiger = alertView.findViewById<TextView>(R.id.condTiger)
+            val condBunny = alertView.findViewById<TextView>(R.id.condBunny)
 
             val avatar1 = alertView.findViewById<ShapeableImageView>(R.id.avatar1)
             val avatar2 = alertView.findViewById<ShapeableImageView>(R.id.avatar2)
@@ -133,6 +164,7 @@ class ProfilFragment : Fragment() {
             if (profile.tournamentWins[0] >= 2) {
                 avatar4.clearColorFilter()
                 bunnyLock.visibility = View.GONE
+                condBunny.visibility = View.GONE
                 avatar4.setOnClickListener {
                     binding.playerInGameAvatar.setImageResource(R.drawable.bunny)
                     changeAvatar("bunny.png")
@@ -144,6 +176,7 @@ class ProfilFragment : Fragment() {
             if (profile.level.level >= 2) {
                 avatar17.clearColorFilter()
                 sharkLock.visibility = View.GONE
+                condShark.visibility = View.GONE
                 avatar17.setOnClickListener {
                     binding.playerInGameAvatar.setImageResource(R.drawable.shark)
                     changeAvatar("shark.png")
@@ -155,6 +188,7 @@ class ProfilFragment : Fragment() {
             if (profile.level.level >= 4) {
                 avatar14.clearColorFilter()
                 pandaLock.visibility = View.GONE
+                condPanda.visibility = View.GONE
                 avatar14.setOnClickListener {
                     binding.playerInGameAvatar.setImageResource(R.drawable.panda)
                     changeAvatar("panda.png")
@@ -166,6 +200,7 @@ class ProfilFragment : Fragment() {
             if (profile.tournamentWins[0] >= 1) {
                 avatar18.clearColorFilter()
                 skeletonLock.visibility = View.GONE
+                condSkeleton.visibility = View.GONE
                 avatar18.setOnClickListener {
                     binding.playerInGameAvatar.setImageResource(R.drawable.skeleton)
                     changeAvatar("skeleton.png")
@@ -177,6 +212,7 @@ class ProfilFragment : Fragment() {
             if (profile.level.level >= 6) {
                 avatar19.clearColorFilter()
                 tigerLock.visibility = View.GONE
+                condTiger.visibility = View.GONE
                 avatar19.setOnClickListener {
                     binding.playerInGameAvatar.setImageResource(R.drawable.tiger)
                     changeAvatar("tiger.png")
@@ -548,7 +584,7 @@ class ProfilFragment : Fragment() {
                 activity?.runOnUiThread(Runnable {
                     if(errorMessage == R.string.NO_ERROR ){
                         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
-                        context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorPrimary, selectedColor, true)
+                        context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorPrimary, notSelectedColor, true)
                         //binding.language.text= "Language : $newLang";
                         if (newLang == "fr") {
                             binding.frLangue.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
@@ -571,6 +607,16 @@ class ProfilFragment : Fragment() {
     //TODO:Change for real UI
     @SuppressLint("MissingInflatedId")
     private fun updateView(){
+        binding.profilHolder.visibility = View.VISIBLE
+        binding.loadingProfil.visibility = View.GONE
+        context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
+        context?.theme?.resolveAttribute(R.attr.buttonColor, notSelectedColor, true)
+        binding.buttonConnectionLog.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+        binding.connectionScroll.visibility = View.VISIBLE
+        binding.disconnectionScroll.visibility = View.GONE
+        binding.buttonDisconnectionLog.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
+
+
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorPrimary, notSelectedColor, true)
 
@@ -614,10 +660,18 @@ class ProfilFragment : Fragment() {
             gameInfoDate.text = game.date
             gameInfoTime.text = game.time
             if (game.isWinner) {
-                gameInfoWinner.text = activity?.getString(R.string.iswinner)
+                if (LoggedInUser.getLang() == "en") {
+                    gameInfoWinner.text = "Win"
+                } else {
+                    gameInfoWinner.text = "Victoire"
+                }
                 gameInfoWinner.setTextColor(Color.GREEN)
             } else {
-                gameInfoWinner.text = activity?.getString(R.string.isloser)
+                if (LoggedInUser.getLang() == "en") {
+                    gameInfoWinner.text = "Loss"
+                } else {
+                    gameInfoWinner.text = "Défaite"
+                }
                 gameInfoWinner.setTextColor(Color.RED)
             }
             binding.gameLog.addView(gameInfoHolder)
@@ -648,15 +702,14 @@ class ProfilFragment : Fragment() {
         }
         Log.i("GAME stats", profile.stats.toString())
         for (connection in profile.connectionHistory) {
-            val connectionHolder = layoutInflater.inflate(R.layout.game_connection, binding.connectionLog, false)
-            val connectionType =  connectionHolder.findViewById<TextView>(R.id.connectionType)
+            val connectionHolder = layoutInflater.inflate(R.layout.game_connection, if (connection.connectionType == ConnectionType.CONNECTION) binding.connectionLog else binding.disconnectionLog, false)
             val connectionTime = connectionHolder.findViewById<TextView>(R.id.timeConnection)
             val connectionDate = connectionHolder.findViewById<TextView>(R.id.dateConnection)
-            connectionType.text = connection.connectionType.name
             connectionTime.text = connection.time
             connectionDate.text = connection.date
-            binding.connectionLog.addView(connectionHolder)
+            if (connection.connectionType == ConnectionType.CONNECTION) binding.connectionLog.addView(connectionHolder) else binding.disconnectionLog.addView(connectionHolder)
             binding.connectionScroll.post { binding.connectionScroll.fullScroll(View.FOCUS_DOWN) }
+            binding.disconnectionScroll.post { binding.disconnectionScroll.fullScroll(View.FOCUS_DOWN) }
         }
         binding.friendcode.text= profile.userCode
     }

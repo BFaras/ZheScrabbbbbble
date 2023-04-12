@@ -47,6 +47,7 @@ class BracketFragment : Fragment(), Observer {
             // Behavior of system bars
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
+
         binding.buttonchat.setOnClickListener {
             findNavController().navigate(R.id.action_bracketFragment_to_ChatFragment)
         }
@@ -121,9 +122,8 @@ class BracketFragment : Fragment(), Observer {
                 findNavController().navigate(R.id.action_bracketFragment_to_fullscreenFragment);
             if(TournamentModel.tournamentTimer.phase==2)
                 findNavController().navigate(R.id.action_bracketFragment_to_rankingFragment)
-            //TODO : Update UI
             timer = setTimer(TournamentModel.tournamentTimer.timeRemaning.toLong()*1000)
-            Log.d("TIME TOURNAMENT", TournamentModel.tournamentTimer.timeRemaning.toString())
+            timer.cancel()
             timer.start()
             for (game in TournamentModel.gamesData) {
                 Log.d("GAME TOURNAMENT", game.toString())
