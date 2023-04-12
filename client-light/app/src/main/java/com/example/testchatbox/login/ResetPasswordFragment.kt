@@ -52,6 +52,7 @@ class ResetPasswordFragment : Fragment() {
         val answerEditText = binding.answer
         val resetButton = binding.reset
         var registerButton = binding.registerNewPassword
+        val cancelReset = binding.cancelReset
 
         WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
             // Hide both the status bar and the navigation bar
@@ -59,6 +60,10 @@ class ResetPasswordFragment : Fragment() {
             hide(WindowInsetsCompat.Type.statusBars())
             // Behavior of system bars
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+
+        cancelReset.setOnClickListener {
+            findNavController().navigate(R.id.action_resetFragment_to_loginFragment)
         }
 
         resetButton.setOnClickListener {

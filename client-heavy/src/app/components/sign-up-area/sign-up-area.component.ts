@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Account } from '@app/classes/account';
 import { VISIBILITY_CONSTANTS } from '@app/constants/visibility-constants';
 import { AccountCreationService } from '@app/services/account-creation-service/account-creation.service';
 import { AccountService } from '@app/services/account-service/account.service';
+import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 import { Subscription } from 'rxjs';
 import { SignUpAvatarPopUpComponent } from '../sign-up-avatar-pop-up/sign-up-avatar-pop-up.component';
 
@@ -14,7 +14,7 @@ import { SignUpAvatarPopUpComponent } from '../sign-up-avatar-pop-up/sign-up-ava
   templateUrl: './sign-up-area.component.html',
   styleUrls: ['./sign-up-area.component.scss']
 })
-export class SignUpAreaComponent implements OnInit {
+export class SignUpAreaComponent implements OnInit, OnDestroy {
   newAccount: Account = {
     username: "",
     email: "",
@@ -27,8 +27,12 @@ export class SignUpAreaComponent implements OnInit {
   isFormFinished: boolean = false;
   avatarSrc: string;
 
-  constructor(private snackBar: MatSnackBar, private accountCreationService: AccountCreationService, public dialogAvatar: MatDialog, private router: Router, private accountService: AccountService) {
-    this.accountCreationService.setUpSocket()
+  constructor(private snackBarHandler: SnackBarHandlerService, private accountCreationService: AccountCreationService, public dialogAvatar: MatDialog, private router: Router, private accountService: AccountService) {
+    this.accountCreationService.setUpSocket();
+  }
+
+  ngOnDestroy() {
+    this.snackBarHandler.closeAlert()
   }
 
   ngOnInit(): void {
@@ -81,16 +85,18 @@ export class SignUpAreaComponent implements OnInit {
   }
 
   showStatus(status: string) {
+    this.accountService.setMessages();
     if (status == "0") {
       this.accountService.setUsername(this.newAccount.username);
       this.router.navigate(['home'])
     } else {
-      this.snackBar.open('Échec de la Création de compte', "Fermer")
+      this.snackBarHandler.makeAnAlert(this.accountService.messageAcc, this.accountService.closeMessage)
     }
   }
 
   goToCreateQuestion(): void {
-    if (this.newAccount.username.length > 20) alert("The username cannot be over 20 characters.");
+    this.accountService.setMessages();
+    if (this.newAccount.username.length > 20) this.snackBarHandler.makeAnAlert(this.accountService.messageNameLength, this.accountService.closeMessage);
     else this.isFormFinished = !this.isFormFinished;
   }
 

@@ -86,8 +86,6 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
     private var toBeObserved = 0
     private var playersAvatars = mutableMapOf<String, String>()
 
-    private var isFirstRound = true
-
     private lateinit var playerHand: ArrayList<String>
     private lateinit var lettersOnBoard: Array<Array<String>>
     private lateinit var gameObserver: Observer<GameState>
@@ -116,7 +114,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Coordinates.setCoordinates()
-
+        gameModel.getAvatars()
         timer = setTimer()
 
         avatarsObserver = Observer<MutableMap<String,String>> { avatarsList ->
@@ -135,17 +133,20 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             }
         }
 
+        if (GameRoomModel.gameRoom?.gameType == GameType.Coop) binding.timerHolder.visibility = GONE
+
         SocketHandler.getSocket().on("Game Started"){
             gameOver=false
         }
 
-
         gameObserver = Observer<GameState> { gameState ->
             timer.start()
+            gameModel.getAvatars()
             binding.gameWinnerHolder.visibility = GONE
             binding.reserveLength.text = gameState.reserveLength.toString()
             isPlaying = gameState.playerTurnIndex
             isYourTurn = (gameState.players[isPlaying].username == LoggedInUser.getName())
+            binding.coopHolder.visibility = GONE
             if (GameRoomModel.gameRoom?.gameType == GameType.Coop) isYourTurn = true
 
             if (gameState.gameOver) {
@@ -235,7 +236,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                                 val handler = Handler()
                                 handler.postDelayed({
                                     binding.emotePlayer1.visibility = INVISIBLE
-                                }, 2000)
+                                }, 5000)
                             }
                             1 ->
                             {
@@ -246,7 +247,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                                 val handler = Handler()
                                 handler.postDelayed({
                                     binding.emotePlayer2.visibility = INVISIBLE
-                                }, 2000)
+                                }, 5000)
                             }
                             2 ->
                             {
@@ -257,7 +258,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                                 val handler = Handler()
                                 handler.postDelayed({
                                     binding.emotePlayer3.visibility = INVISIBLE
-                                }, 2000)
+                                }, 5000)
                             }
                             3 ->
                             {
@@ -268,7 +269,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                                 val handler = Handler()
                                 handler.postDelayed({
                                     binding.emotePlayer4.visibility = INVISIBLE
-                                }, 2000)
+                                }, 5000)
                             }
                         }
                     }
@@ -884,6 +885,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         }
     }
 
+    @SuppressLint("MissingInflatedId")
     private fun updatePlayersInfo(playersList: ArrayList<PlayersState>, listOfAvatars: MutableMap<String, String>) {
         val isYouColor = TypedValue()
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, isYouColor, true)
@@ -903,6 +905,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         for (player in playersList) {
             val playerInfo =
                 layoutInflater.inflate(R.layout.player_info, binding.playersInfoHolder, false)
+            val playerBackground = playerInfo.findViewById<CardView>(R.id.playerBackground)
             val playerName: TextView = playerInfo.findViewById(R.id.playerName)
             val playerPoints: TextView = playerInfo.findViewById(R.id.playerPoints)
             val playerTurn: RelativeLayout = playerInfo.findViewById(R.id.playerInfoHolder)
@@ -920,8 +923,11 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             }
 
             playerName.text = player.username
-            if (player.username == "" && GameRoomModel.gameRoom?.gameType==GameType.Coop) playerName.text = getString(
-                            R.string.team)
+            if (player.username == "" && GameRoomModel.gameRoom?.gameType==GameType.Coop) {
+                playerAvatar.visibility = GONE
+                playerName.text = getString(
+                    R.string.team)
+            }
             playerPoints.text = player.score.toString()
             playerPoints.typeface = Typeface.DEFAULT_BOLD
 
@@ -936,7 +942,9 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             } else {
                 if (player.score == isHigher) isWinner = player
                 if (player == isWinner) {
-                    playerTurn.setBackgroundColor(isYouColor.data)
+                    playerBackground.setCardBackgroundColor(isYouColor.data)
+                    playerName.setTextColor(Color.BLACK)
+                    playerPoints.setTextColor(Color.BLACK)
                     binding.gameWinnerHolder.visibility = VISIBLE
                     binding.gameWinner.setText(HtmlCompat.fromHtml(getString(R.string.winnerName, player.username), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
                 }
@@ -1053,49 +1061,92 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
 
     private fun updateMoveInfo() {
         val messages = GameHistoryModel.getList()
+        Log.d("MESSAGES", messages.toString())
         binding.moveInfoPanel.removeAllViews()
-        for(moveInfo in messages) {
+        for (moveInfo in messages) {
             when (moveInfo.messageType) {
                 "MSG-1" -> {
                     val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
                     val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
-                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_1, moveInfo.values[0], moveInfo.values[1], moveInfo.values[2]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_1, if (moveInfo.values[0] == "") getString(R.string.team) else moveInfo.values[0], moveInfo.values[1], moveInfo.values[2]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
                     binding.moveInfoPanel.addView(moveInfoLayout)
                 }
                 "MSG-2" -> {
                     val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
                     val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
-                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_2, moveInfo.values[0]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_2, if (moveInfo.values[0] == "") getString(R.string.team) else moveInfo.values[0]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
                     binding.moveInfoPanel.addView(moveInfoLayout)
                 }
                 "MSG-3" -> {
                     val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
                     val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
-                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_3, moveInfo.values[0], moveInfo.values[1]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_3, if (moveInfo.values[0] == "") getString(R.string.team) else moveInfo.values[0], moveInfo.values[1]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
                     binding.moveInfoPanel.addView(moveInfoLayout)
                 }
                 "MSG-4" -> {
                     val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
                     val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
-                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_4, moveInfo.values[0]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_4, if (moveInfo.values[0] == "") getString(R.string.team) else moveInfo.values[0]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
                     binding.moveInfoPanel.addView(moveInfoLayout)
                 }
                 "MSG-5" -> {
                     val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
                     val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
-                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_5, moveInfo.values[0]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_5, if (moveInfo.values[0] == "") getString(R.string.team) else moveInfo.values[0]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
                     binding.moveInfoPanel.addView(moveInfoLayout)
                 }
                 "MSG-6" -> {
                     val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
                     val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
-                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_6, moveInfo.values[0]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_6, if (moveInfo.values[0] == "") getString(R.string.team) else moveInfo.values[0]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
                     binding.moveInfoPanel.addView(moveInfoLayout)
                 }
                 "MSG-7" -> {
                     val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
                     val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
                     displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_7, moveInfo.values[0]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                    binding.moveInfoPanel.addView(moveInfoLayout)
+                }
+                "MSG-8" -> {
+                    val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
+                    val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
+                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_8), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                    binding.moveInfoPanel.addView(moveInfoLayout)
+                }
+                "MSG-9" -> {
+                    val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
+                    val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
+                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_9, moveInfo.values[0]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                    binding.moveInfoPanel.addView(moveInfoLayout)
+                }
+                "MSG-10" -> {
+                    val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
+                    val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
+                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_10, if (moveInfo.values[0] == "") getString(R.string.team) else moveInfo.values[0]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                    binding.moveInfoPanel.addView(moveInfoLayout)
+                }
+                "MSG-11" -> {
+                    val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
+                    val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
+                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_11, if (moveInfo.values[0] == "") getString(R.string.team) else moveInfo.values[0]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                    binding.moveInfoPanel.addView(moveInfoLayout)
+                }
+                "MSG-12" -> {
+                    val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
+                    val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
+                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_12, if (moveInfo.values[0] == "") getString(R.string.team) else moveInfo.values[0]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                    binding.moveInfoPanel.addView(moveInfoLayout)
+                }
+                "MSG-13" -> {
+                    val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
+                    val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
+                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_13, if (moveInfo.values[0] == "") getString(R.string.team) else moveInfo.values[0], moveInfo.values[1]), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                    binding.moveInfoPanel.addView(moveInfoLayout)
+                }
+                "MSG-14" -> {
+                    val moveInfoLayout = layoutInflater.inflate(R.layout.move_info, binding.moveInfoPanel, false)
+                    val displayedMessage: TextView = moveInfoLayout.findViewById(R.id.displayedMoveMessage)
+                    displayedMessage.setText(HtmlCompat.fromHtml(getString(R.string.MSG_14), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
                     binding.moveInfoPanel.addView(moveInfoLayout)
                 }
                 else -> {}
@@ -1236,12 +1287,56 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
 
     override fun update() {
         Log.i("Update", GameHistoryModel.getList().toString())
+
         activity?.runOnUiThread {
             updateMoveInfo()
-            if(GameHistoryModel.playRequest!=null) showCoopPlayPrompt()
+            if(GameHistoryModel.playRequest!=null) {
+                showCoopPlayPrompt()
+            } else {
+                isYourTurn = true
+                binding.buttonPass.isEnabled = true
+                binding.buttonHint.isEnabled = true
+                binding.coopHolder.visibility = GONE
+                binding.teamApproval.visibility = GONE
+            }
         }
     }
 
     //TODO : UI to call GameHistoryModel.sendCoopResponse(accept:boolean)
-    private fun showCoopPlayPrompt() {}
+    private fun showCoopPlayPrompt() {
+        if (GameHistoryModel.playRequest != null) {
+            if (GameHistoryModel.playRequest!!.values[0] != LoggedInUser.getName()) {
+                binding.coopHolder.visibility = VISIBLE
+                clearTurn()
+            }
+            else {
+                binding.teamApproval.visibility = VISIBLE
+            }
+
+            binding.buttonPass.isEnabled = false
+            binding.buttonHint.isEnabled = false
+            isYourTurn = false
+
+            binding.proposedAction.setText(
+                HtmlCompat.fromHtml(
+                    getString(
+                        R.string.MSG_13,
+                        GameHistoryModel.playRequest!!.values[0],
+                        GameHistoryModel.playRequest!!.values[1],
+                    ), HtmlCompat.FROM_HTML_MODE_LEGACY
+                ), TextView.BufferType.SPANNABLE
+            )
+
+            binding.acceptAction.setOnClickListener {
+                GameHistoryModel.sendCoopResponse(true)
+                Log.d("PLAYER REQUEST", GameHistoryModel.playRequest.toString())
+
+            }
+            binding.refuseAction.setOnClickListener {
+                GameHistoryModel.sendCoopResponse(false)
+                Log.d("PLAYER REQUEST", GameHistoryModel.playRequest.toString())
+
+            }
+        }
+    }
 }

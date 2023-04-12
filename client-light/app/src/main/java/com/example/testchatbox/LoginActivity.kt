@@ -49,4 +49,8 @@ class LoginActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
             || super.onSupportNavigateUp()
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+    }
 }

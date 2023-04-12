@@ -18,6 +18,26 @@ export class AccountService {
     'shark.png', 'panda.png', 'tiger.png', 'skeleton.png', 'bunny.png'];
   private lockedAvatars: string[] = ['shark.png', 'panda.png', 'tiger.png', 'skeleton.png', 'bunny.png'];
   private language: string = 'fr';
+  messageAvatar: string;
+  messageBD: string;
+  messageName: string;
+  messageNA: string;
+  messageSalle: string;
+  messageEmpty: string;
+  closeMessage: string;
+  messageFull: string;
+  messageAuth: string;
+  messageQ: string;
+  messagePW: string;
+  messageUnvalid: string;
+  messageFriend: string;
+  messageUnfriend: string;
+  messageChat: string;
+  messageAcc: string;
+  messageNameLength: string;
+  messageDir: string;
+  messageNameEmpty: string;
+  messageLetters: string;
 
   constructor(private socketManagerService: SocketManagerService, private themeService: ThemesService) {
     this.setUpSocket();
@@ -57,6 +77,29 @@ export class AccountService {
 
   setLanguage(language: string) {
     this.language = language;
+  }
+
+  setMessages() {
+    this.messageAvatar = this.language === 'fr' ? "Changement d'avatar réussi!" : 'Avatar was successfully changed!';
+    this.messageBD = this.language === 'fr' ? "La base de données est inacessible!" : 'The database is not currently available.';
+    this.messageName = this.language === 'fr' ? "Changement du nom de l'utilisateur réussi!" : 'The username has been successfully updated.';
+    this.messageNA = this.language === 'fr' ? "Le nom choisi n'est pas disponible!" : 'This username is not available.';
+    this.messageUnvalid = this.language === 'fr' ? 'Veuillez choisir un nom valide' : 'Please choose a valid username.';
+    this.messageSalle = this.language === 'fr' ? 'Erreur lors de la création de la salle' : 'Error : room was not created';
+    this.messageEmpty = this.language === 'fr' ? 'Veuillez remplir les champs vides.' : 'Please fill in all inputs.';
+    this.messageFull = this.language === 'fr' ? 'Cette salle de jeu est pleine' : 'This game room is full';
+    this.messageAuth = this.language === 'fr' ? 'Échec de l\'authentification' : 'Authentication failed.';
+    this.messageQ = this.language === 'fr' ? 'Veuillez entrer la bonne réponse pour la question de sécurité' : 'Please enter the right answer.';
+    this.messagePW = this.language === 'fr' ? 'Votre mot de passe a été modifié' : 'Your password was successfully changed.';
+    this.messageFriend = this.language === 'fr' ? 'Vous ne pouvez pas vous ajouter en tant qu\'ami' : 'You cannot add yourself as a friend.';
+    this.messageUnfriend = this.language === 'fr' ? 'Êtes-vous sûr(e) de vouloir retirer cet ami?' : 'Are you sure you want to remove this friend?';
+    this.messageChat = this.language === 'fr' ? "Le nom du chat ne doit pas dépasser 35 caractères." : "The chat name cannot be longer than 35 characters."
+    this.messageAcc = this.language === 'fr' ? 'Échec de la Création de compte' : 'The account could not be created.';
+    this.messageNameLength = this.language === 'fr' ? 'Le nom d\'utilisateur ne peut dépasser 20 caractères.' : "The username cannot be over 20 characters.";
+    this.messageDir = this.language === 'fr' ? "le mot place n'est pas dans la même direction" : "The word is not all in the same direction.";
+    this.messageNameEmpty = this.language === 'fr' ? "Veuillez vous assurer que votre nom n'est pas vide." : "The username cannot be be empty.";
+    this.messageLetters = this.language === 'fr' ? "les lettres placées doivent être reliées les unes aux autres" : "The letters need to be next to one another.";
+    this.closeMessage = this.language === 'fr' ? 'Fermer' : 'Close';
   }
 
   getFullAccountInfo(): { username: string, profile: ProfileInfo, usercode: string } {

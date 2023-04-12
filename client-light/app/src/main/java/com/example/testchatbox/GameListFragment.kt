@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentGameListBinding
 import com.example.testchatbox.login.model.LoggedInUser
 import org.json.JSONArray
+import org.w3c.dom.Text
 
 enum class Visibility{
     Private,
@@ -167,20 +168,16 @@ class GameListFragment : Fragment(), ObserverInvite {
             val roomStatus: TextView = gameRoomInfo.findViewById(R.id.roomStatus)
             val roomHost: TextView = gameRoomInfo.findViewById(R.id.hostName)
             val numberOfPlayers: TextView = gameRoomInfo.findViewById(R.id.numberPlayers)
+            val numberOfObservers: TextView = gameRoomInfo.findViewById(R.id.numberObservers)
+            val gameType: TextView = gameRoomInfo.findViewById(R.id.gameType)
 
             roomName.text = gameRoom.name.lowercase()
             roomVisibiliy.text = gameRoom.visibility.toString().lowercase()
-            when (roomVisibiliy.text) {
-                "public" -> { roomVisibiliy.setTextColor(Color.GREEN) }
-                "private" -> { roomVisibiliy.setTextColor(Color.RED) }
-                "protected" -> { roomVisibiliy.setTextColor(Color.YELLOW) }
-                else -> {}
-            }
-            when (LoggedInUser.getLang()) {
-                "fr" -> roomStatus.text = if(gameRoom.hasStarted) "commencé" else "en attente de joueurs"
-                "en" -> roomStatus.text = if(gameRoom.hasStarted) "started" else "waiting for players"
-                else -> {}
-            }
+            numberOfObservers.text = gameRoom.nbObservers.toString()
+            gameType.text = if (gameRoom.gameType == GameType.Coop) getString(R.string.coopGame) else getString(R.string.classicGame)
+
+            roomStatus.text = if(gameRoom.hasStarted) getString(R.string.started) else getString(R.string.waiting_for_players)
+
             val players = gameRoom.getPlayersNames().split(",".toRegex()).toTypedArray()
             roomHost.text = players[0]
             Log.d("ROOM ", players.toString())
@@ -188,28 +185,12 @@ class GameListFragment : Fragment(), ObserverInvite {
                 if (player != " ") countPlayers++
             }
             numberOfPlayers.setText(HtmlCompat.fromHtml(getString(R.string.numberPlayers, countPlayers.toString()), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
-//            for (playerInRoom in players){
-//                if (playerInRoom != " ") {
-//                    val player = TextView(context)
-//                    player.text = playerInRoom
-//                    roomPlayersList.addView(player)
-//                }
-//            }
 
             gameRoomInfo.id = i
             gameRoomInfo.setOnClickListener{
                 askObserver(gameRoom)
             }
             gameListView.addView(gameRoomInfo)
-//            val btn = Button((activity as MainActivity?)!!)
-//            val status = if(gameRoom.hasStarted) "Started" else "Waiting for players"
-//            btn.text = gameRoom.name +" | "+gameRoom.visibility + " | "+ gameRoom.getPlayersNames()+ " | " + status;
-//            btn.id = i;
-//            btn.textSize= 18F;
-//            btn.setOnClickListener{
-//                askObserver(gameRoom)
-//            }
-//            gameListView.addView(btn)
         }
     }
 
@@ -217,7 +198,10 @@ class GameListFragment : Fragment(), ObserverInvite {
     private fun askObserver(gameRoom: GameRoom){
         binding.createSection.visibility = View.GONE
         binding.gameListSection.visibility = View.GONE;
+        binding.buttonchat.isEnabled = false
+        binding.buttonfriends.isEnabled = false
         binding.observerSection.visibility = View.VISIBLE;
+
         if(gameRoom.hasStarted){
             binding.playerButton.visibility=View.GONE
         }
@@ -225,6 +209,8 @@ class GameListFragment : Fragment(), ObserverInvite {
             binding.playerButton.visibility=View.VISIBLE
             binding.playerButton.setOnClickListener{
                 binding.observerSection.visibility = View.GONE;
+                binding.buttonchat.isEnabled = true
+                binding.buttonfriends.isEnabled = true
                 binding.cancelObserverButton.setOnClickListener(null);
                 binding.observerButton.setOnClickListener(null);
                 binding.playerButton.setOnClickListener(null);
@@ -243,6 +229,8 @@ class GameListFragment : Fragment(), ObserverInvite {
             binding.observerButton.setOnClickListener(null);
             binding.playerButton.setOnClickListener(null);
             binding.gameListSection.visibility = View.VISIBLE;
+            binding.buttonchat.isEnabled = true
+            binding.buttonfriends.isEnabled = true
             binding.createSection.visibility = View.VISIBLE;
         }
         binding.observerButton.setOnClickListener {
@@ -251,6 +239,8 @@ class GameListFragment : Fragment(), ObserverInvite {
             binding.observerButton.setOnClickListener(null);
             binding.playerButton.setOnClickListener(null);
             binding.gameListSection.visibility = View.VISIBLE;
+            binding.buttonchat.isEnabled = true
+            binding.buttonfriends.isEnabled = true
             binding.createSection.visibility = View.VISIBLE;
             if(gameRoom.visibility!=Visibility.Protected) {
                 joinRoom(gameRoom, true,null)

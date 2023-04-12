@@ -16,6 +16,7 @@ import { ProfilePageComponent } from '../profile-page/profile-page.component';
 })
 export class MainPageComponent {
     subscriptions: Subscription[] = [];
+    name: string = '';
 
     constructor(
         private dialog: MatDialog,
@@ -23,6 +24,7 @@ export class MainPageComponent {
         private accountService: AccountService,
         private profile: ProfilePageComponent,
         private language: LanguageComponent) {
+        this.name = this.accountService.getUsername();
         this.accountService.setUpSocket();
         this.subscriptions.push(this.accountService.getUserProfileInformation().subscribe((userProfile) => {
             this.accountService.setUpProfile(userProfile);

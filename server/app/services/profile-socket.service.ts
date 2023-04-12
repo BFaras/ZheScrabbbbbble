@@ -1,4 +1,5 @@
-import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
+import { DATABASE_UNAVAILABLE, INVALID_DATA_SENT, NO_ERROR } from '@app/constants/error-code-constants';
+import { DEFAULT_LANGUAGE, DEFAULT_THEME } from '@app/constants/profile-constants';
 import * as io from 'socket.io';
 import { Container, Service } from 'typedi';
 import { AccountInfoService } from './account-info.service';
@@ -18,18 +19,14 @@ export class ProfileSocketService {
 
     handleProfileSockets(socket: io.Socket) {
         socket.on('Get Profile Information', async (username: string) => {
-            if (username !== '' && username !== undefined && username !== null) {
-                socket.emit('User Profile Response', await this.profileService.getProfileInformation(username));
-            } else {
-                socket.emit('User Profile Response', DATABASE_UNAVAILABLE);
-            }
+            socket.emit('User Profile Response', await this.profileService.getProfileInformation(username));
         });
         /* Ajouter tous les avatars à enlever quand on pourra envoyer les avatars */
         socket.on('Get All Users Avatar Information', async (usernames: string[]) => {
             const avatars: string[] = [];
             if (usernames !== null && usernames !== undefined) {
                 for (const username of usernames) {
-                    if (username !== '' && username !== undefined && username !== null) {
+                    if (username) {
                         avatars.push((await this.profileService.getProfileInformation(username)).avatar);
                     } else {
                         socket.emit('Get All Users Avatar Information Response', DATABASE_UNAVAILABLE);
@@ -41,10 +38,8 @@ export class ProfileSocketService {
 
         socket.on('Get Avatar from Username', async (username: string) => {
             // for light client
-            if (username !== '' && username !== undefined && username !== null) {
-                console.log(username);
+            if (username) {
                 const avatar = (await this.profileService.getProfileInformation(username)).avatar;
-                console.log(avatar);
                 socket.emit('Avatar from Username Response', avatar);
             }
         });
@@ -62,45 +57,64 @@ export class ProfileSocketService {
         });
 
         socket.on('Change Avatar', async (newAvatar: string) => {
-            socket.emit('Avatar Change Response', await this.profileService.changeAvatar(this.accountInfoService.getUserId(socket), newAvatar));
+            const userId = this.accountInfoService.getUserId(socket);
+            if (newAvatar && userId) {
+                socket.emit('Avatar Change Response', await this.profileService.changeAvatar(userId, newAvatar));
+            } else {
+                socket.emit('Avatar Change Response', INVALID_DATA_SENT);
+            }
         });
 
         socket.on('Change Language', async (newLanguage: string) => {
-            socket.emit(
-                'Language Change Response',
-                await this.profileService.changeUserSettings(this.accountInfoService.getUserId(socket), newLanguage, false, true),
-            );
+            const userId = this.accountInfoService.getUserId(socket);
+            if (newLanguage && userId) {
+                socket.emit('Language Change Response', await this.profileService.changeUserSettings(userId, newLanguage, false, true));
+            } else {
+                socket.emit('Language Change Response', INVALID_DATA_SENT);
+            }
         });
 
         socket.on('Change Theme', async (newTheme: string) => {
-            socket.emit(
-                'Theme Change Response',
-                await this.profileService.changeUserSettings(this.accountInfoService.getUserId(socket), newTheme, true),
-            );
+            const userId = this.accountInfoService.getUserId(socket);
+            if (newTheme && userId) {
+                socket.emit('Theme Change Response', await this.profileService.changeUserSettings(userId, newTheme, true));
+            } else {
+                socket.emit('Theme Change Response', INVALID_DATA_SENT);
+            }
         });
 
         socket.on('Change Language', async (newLanguage: string) => {
-            socket.emit(
-                'Language Change Response',
-                await this.profileService.changeUserSettings(this.accountInfoService.getUserId(socket), newLanguage, false, true),
-            );
+            const userId = this.accountInfoService.getUserId(socket);
+            if (newLanguage && userId) {
+                socket.emit('Language Change Response', await this.profileService.changeUserSettings(userId, newLanguage, false, true));
+            } else {
+                socket.emit('Language Change Response', INVALID_DATA_SENT);
+            }
         });
 
         socket.on('Change Username', async (newUsername: string) => {
             const oldUsername = this.accountInfoService.getUsername(socket);
             const userId = this.accountInfoService.getUserId(socket);
-            const usernameChangeError = await this.profileService.changeUsername(userId, newUsername);
+            let usernameChangeError = INVALID_DATA_SENT;
+            if (newUsername && oldUsername && userId) {
+                usernameChangeError = await this.profileService.changeUsername(userId, newUsername);
 
-            if (usernameChangeError === NO_ERROR) {
-                this.accountInfoService.setUsername(socket, newUsername);
-                this.friendSocketService.updateFriendsWithNewUsername(oldUsername, newUsername, userId);
+                if (usernameChangeError === NO_ERROR) {
+                    this.accountInfoService.setUsername(socket, newUsername);
+                    this.friendSocketService.updateFriendsWithNewUsername(oldUsername, newUsername, userId);
+                }
             }
             socket.emit('Username Change Response', usernameChangeError);
         });
 
         socket.on('Get Theme and Language', async () => {
-            const userSettings = await this.profileService.getUserSettings(this.accountInfoService.getUserId(socket));
-            socket.emit('Theme and Language Response', userSettings.theme, userSettings.language);
+            const userId = this.accountInfoService.getUserId(socket);
+            if (userId) {
+                const userSettings = await this.profileService.getUserSettings(userId);
+                socket.emit('Theme and Language Response', userSettings.theme, userSettings.language);
+            } else {
+                socket.emit('Theme and Language Response', DEFAULT_THEME, DEFAULT_LANGUAGE);
+            }
         });
         /*
         socket.on('Get All Avatars', async () => {

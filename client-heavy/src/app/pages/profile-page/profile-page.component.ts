@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { connectionHistory } from '@app/classes/connection-history';
 import { ProfileInfo } from '@app/classes/profileInfo';
@@ -10,6 +9,7 @@ import { NO_ERROR, USERNAME_TAKEN } from '@app/constants/error-codes';
 import { Theme } from '@app/constants/themes';
 import { AccountService } from '@app/services/account-service/account.service';
 import { FriendsService } from '@app/services/friends.service';
+import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 import { ThemesService } from '@app/services/themes-service/themes-service';
 import { Subscription } from 'rxjs';
 
@@ -35,16 +35,20 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     connections: [],
     disconnections: [],
   };
+
   constructor(private accountService: AccountService,
     public dialog: MatDialog,
     private themeService: ThemesService,
     private router: Router,
     private friends: FriendsService,
-    private snackBar: MatSnackBar) { this.profileMode = this.friends.getMode(); }
+    private snackBarHandler: SnackBarHandlerService) {
+    this.profileMode = this.friends.getMode();
+  }
 
   ngOnDestroy() {
     this.subscriptionChangeAvatar.unsubscribe();
     this.subscriptionUsername.unsubscribe()
+    this.snackBarHandler.closeAlert()
   }
 
   openDialogChangeName(): void {
@@ -87,20 +91,22 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscriptionChangeAvatar = this.accountService.getAvatarChangeStatus()
       .subscribe((errorCode: string) => {
+        this.accountService.setMessages();
         if (errorCode === NO_ERROR) {
-          this.snackBar.open("Changement d'avatar réussi!", "Fermer")
+          this.snackBarHandler.makeAnAlert(this.accountService.messageAvatar, this.accountService.closeMessage)
         } else {
-          this.snackBar.open("La base de données est inacessible!", "Fermer")
+          this.snackBarHandler.makeAnAlert(this.accountService.messageBD, this.accountService.closeMessage)
         }
       })
     this.subscriptionUsername = this.accountService.getChangeUserNameResponse().subscribe((errorCode: string) => {
       this.errorCodeUsername = errorCode;
+      this.accountService.setMessages();
       if (errorCode === NO_ERROR) {
-        this.snackBar.open("Changement du nom de l'utilisateur réussi!", "Fermer")
+        this.snackBarHandler.makeAnAlert(this.accountService.messageName, this.accountService.closeMessage)
       } else if (errorCode === USERNAME_TAKEN) {
-        this.snackBar.open("Le nom choisi n'est pas disponible!", "Fermer")
+        this.snackBarHandler.makeAnAlert(this.accountService.messageNA, this.accountService.closeMessage)
       } else {
-        this.snackBar.open("La base de données est inacessible!", "Fermer")
+        this.snackBarHandler.makeAnAlert(this.accountService.messageBD, this.accountService.closeMessage)
       }
     })
 

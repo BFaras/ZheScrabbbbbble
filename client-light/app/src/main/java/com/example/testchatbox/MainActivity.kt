@@ -69,6 +69,10 @@ class MainActivity : AppCompatActivity() {
             baseContext.resources.displayMetrics
         )
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+    }
 }
 
 object ThemeStorage {
