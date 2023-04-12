@@ -19,6 +19,11 @@ export class FormerActionHistoryAreaComponent implements OnInit {
 
   }
 
+  ngAfterViewInit() {
+    this.scrollBottom()
+  }
+
+
   public scrollBottom() {
     console.log(this.scroll.nativeElement.scrollTop);
     this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;

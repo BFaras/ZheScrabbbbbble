@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
 import { ChatMessage } from '@app/classes/chat-info';
 import { Message } from '@app/classes/message';
 import { AccountService } from '@app/services/account-service/account.service';
@@ -16,6 +16,7 @@ const LIMIT_OF_CHARACTERS = 512;
 })
 
 export class ChatComponent implements OnDestroy {
+    @ViewChild('scroll', { read: ElementRef }) public scroll: ElementRef;
     @Output() receiver = new EventEmitter();
     switch = false;
 
@@ -42,9 +43,13 @@ export class ChatComponent implements OnDestroy {
         });
     }
 
+    public scrollBottom() {
+        this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
 
+    }
     updateMessageHistory(chatMessage: ChatMessage) {
         this.messageHistory.push(chatMessage);
+        this.scrollBottom()
         sessionStorage.setItem('chat', JSON.stringify(this.messageHistory));
     }
 

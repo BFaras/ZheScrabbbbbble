@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ChatInfo, ChatMessage, ChatType, MessageInfo } from '@app/classes/chat-info';
 import { AccountService } from '@app/services/account-service/account.service';
 //import { AccountService } from '@app/services/account-service/account.service';
@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./chat-page.component.scss'],
 })
 export class ChatPageComponent implements OnInit, AfterViewInit, ViewChildren {
+    @ViewChild('scroll', { read: ElementRef }) public scroll: ElementRef;
     @ViewChildren('chat-button') chatItems: QueryList<ElementRef>;
 
     chatText: string = '';
@@ -86,6 +87,11 @@ export class ChatPageComponent implements OnInit, AfterViewInit, ViewChildren {
                 this.chatLog.push(messageInfo.message);
             }
         }));
+    }
+
+    public scrollBottom() {
+        this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
+
     }
 
     updateGameRoomChat() {
