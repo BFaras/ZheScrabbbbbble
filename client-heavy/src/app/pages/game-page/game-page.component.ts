@@ -97,14 +97,11 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
     alert() {
         const text = this.accountService.getLanguage() === 'fr' ? 'Êtes-vous sûr(e) de vouloir quitter la partie? Tout votre progrès sera perdu.' : 'Are you sure you want to quit? All progress will be lost.';
-
         const dialogRef = this.dialog.open(ConfrimPopUpComponent, {
             width: '450px',
             height: '230px',
             data: { notification: text }
         });
-
-        console.log("I sent deamnde to open dialog")
 
         dialogRef.afterClosed().subscribe(result => {
             console.log("subscription works")
@@ -112,14 +109,12 @@ export class GamePageComponent implements OnInit, OnDestroy {
             if (result === undefined) {
                 this.dialogResponse(false)
             } else {
-                console.log("I clicked on Ok or No")
                 this.dialogResponse(result.status);
             }
         });
     }
 
     dialogResponse(status: boolean) {
-        console.log("I am in dialogRespnse ")
         if (status) {
             this.gameStateService.sendAbandonRequest();
             if (this.gameStateService.isTournamentGame()) {
