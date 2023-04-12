@@ -10,7 +10,7 @@
                 </mat-form-field>
                 <mat-form-field class="pasword input-field" appearance="fill">
                     <mat-label>{{'USERDATA.PASSWORD' | translate}}</mat-label>
-                    <input matInput [type]="changePasswordVisibility()" (keydown.enter)="$event.preventDefault()" name = "password" [(ngModel)]="userAccount.password"> 
+                    <input matInput  (keyup.enter) = "loginToAccount()" [type]="changePasswordVisibility()" (keydown.enter)="$event.preventDefault()" name = "password" [(ngModel)]="userAccount.password"> 
                     <button type="button" title="{{'SIGNUP.SHOWPASS' | translate}}" class = "button-login" mat-icon-button matSuffix (click)="hide = !hide" >
                         <mat-icon >{{changeIconVisibility()}}</mat-icon>
                     </button>

@@ -51,7 +51,7 @@ export class FriendService {
 
             errorCode = DATABASE_UNAVAILABLE;
 
-            if (friendUserId !== '') {
+            if (friendUserId !== '' && friendUserId !== userId) {
                 errorCode = await this.dbService.addFriend(userId, friendUserId);
                 errorCode = await this.dbService.addFriend(friendUserId, userId);
                 if (errorCode === NO_ERROR) {
