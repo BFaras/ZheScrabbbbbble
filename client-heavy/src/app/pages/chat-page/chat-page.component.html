@@ -23,7 +23,7 @@
     </div>
     <div id="chat-messages">
         <div id="chat-box">
-            <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+            <div id="history-container" #scroll #scrollMe [scrollTop]="scrollMe.scrollHeight">
                 <div class="message-bubble" *ngFor="let message of chatLog">
                     <div id="name-time-avatar">
                         <img src="assets/avatar/{{message.avatar}}" height = "30" width= "30" alt="image" class="message image">

@@ -24,3 +24,7 @@ export const ILLEGAL_COMMAND = 'GAME-5';
 
 // Friends error codes
 export const WRONG_FRIEND_CODE = 'FRIEND-1';
+
+// General errors
+export const INVALID_DATA_SENT = 'GEN-1';
+export const NO_USER_CONNECTED = 'GEN-2';

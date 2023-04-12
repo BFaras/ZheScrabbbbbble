@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DATABASE_UNAVAILABLE, NO_ERROR } from '@app/constants/error-code-constants';
-import { CHAT_ROOM_BEGINNING, ChatCreationResponse, ChatInfo, ChatInfoDB, ChatType, PRIVATE_CHAT_IDS_SEPARATOR } from '@app/interfaces/chat-info';
+import {
+    CHAT_ROOM_BEGINNING,
+    ChatCreationResponse,
+    ChatInfo,
+    ChatInfoDB,
+    ChatType,
+    GLOBAL_CHAT_NAME,
+    PRIVATE_CHAT_IDS_SEPARATOR,
+} from '@app/interfaces/chat-info';
 import { ChatMessage, ChatMessageDB, ChatUserInfo } from '@app/interfaces/chat-message';
 import { Container, Service } from 'typedi';
 import { ChatGameHistoryService } from './chat-game-history.service';
@@ -136,7 +144,7 @@ export class ChatService {
 
     private async createGlobalChat(userId: string): Promise<boolean> {
         if (!(await this.dbService.isGlobalChatExistant())) {
-            await this.createChat(userId, 'Global Chat', ChatType.GLOBAL);
+            await this.createChat(userId, GLOBAL_CHAT_NAME, ChatType.GLOBAL);
             return true;
         }
         return false;
