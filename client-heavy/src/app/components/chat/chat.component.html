@@ -7,7 +7,7 @@
             <mat-icon>open_in_new</mat-icon>
         </button>
         <p id="title-chat">{{'CHATBOX.CHATBOX' | translate}}</p>
-        <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+        <div id="history-container" #scrollMe [scrollTop]="scrollMe.scrollHeight" #scroll>
             <div *ngFor="let message of messageHistory">
                 <ul >
                     <img class = "avatar" src = "assets/avatar/{{message.avatar}}" height="20" width="20">
