@@ -149,6 +149,7 @@
         <item name="activeTile">@color/purple_700</item>
         <item name="backgroundProfile">@color/WhiteSmoke</item>
         <item name="profileAccentColor">#b7c1cc</item>
+        <item name="chatCanalNotif">#DDDABC</item>
         <item name="chatIconNotif">#D8BDBB</item>
         <item name="appBar">#cbc6c5</item>
         <item name="buttonColor">#e9e9e9</item>
@@ -185,8 +186,8 @@
         <item name="activeTile">@color/Gold</item>
         <item name="backgroundProfile">#0b1c09</item>
         <item name="profileAccentColor">#89b034</item>
-        <item name="chatIconNotif">#D8BDBB</item>
-        <item name="chatCanalNotif">@color/BrightSunset</item>
+        <item name="chatIconNotif">#A2D82D</item>
+        <item name="chatCanalNotif">#6AC16E</item>
         <item name="appBar">#37582c</item>
         <item name="buttonColor">#5a7b4f</item>
         <item name="logBackground">#1f321f</item>

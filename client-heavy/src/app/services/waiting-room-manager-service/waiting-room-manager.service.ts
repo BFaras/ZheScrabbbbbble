@@ -38,8 +38,12 @@ export class WaitingRoomManagerService {
     private roomPlayerObservable: Observable<string[]>;
     private roomPlayerObserver: Observer<string[]>;
 
+    private friendInviteObservable: Observable<{username: string, gameID: string}>;
+    private friendInviteObserver: Observer<{username: string, gameID: string}>;
+
     private socket: Socket;
     private observer: boolean;
+    private roomToJoinId : string = '';
 
     constructor(private socketManagerService: SocketManagerService, private chatService: ChatService) {
         this.socket = this.socketManagerService.getSocket();
@@ -65,7 +69,10 @@ export class WaitingRoomManagerService {
             if (!this.socket.active) this.refreshSocketRequests();
             this.roomPlayerObserver = observer;
         });
-
+        this.friendInviteObservable = new Observable((observer: Observer<{username: string, gameID: string}>) => {
+            if (!this.socket.active) this.refreshSocketRequests();
+            this.friendInviteObserver = observer;
+        });
     }
 
     refreshSocketRequests() {
@@ -85,6 +92,17 @@ export class WaitingRoomManagerService {
         this.socket.on('Room Player Update', (playerNames) => {
             this.roomPlayerObserver.next(playerNames);
         });
+        this.socket.on('Game Invite Request', (username: string, gameID: string) => {
+            this.friendInviteObserver.next({username, gameID});
+        });
+    }
+
+    setRoomToJoinId(id: string){
+        this.roomToJoinId = id;
+    }
+
+    getRoomToJoinId(): string{
+        return this.roomToJoinId;
     }
 
     setDefaultPlayersInRoom(defaultPlayers: string[]) {
@@ -111,6 +129,10 @@ export class WaitingRoomManagerService {
         this.socketManagerService.getSocket().emit('Join Game Room', id, this.observer, password);
     }
 
+    joinFriendRoom(id: string): void {
+        this.socketManagerService.getSocket().emit('Join Friend Game', id);
+    }
+
     leaveRoom(): void {
         this.chatService.setChatInGameRoom('');
         this.socketManagerService.getSocket().emit('Leave Game Room');
@@ -126,6 +148,10 @@ export class WaitingRoomManagerService {
 
     getStartGameObservable(): Observable<{ isCoop: boolean, roomCode?: string }> {
         return this.gameStartObservable;
+    }
+
+    getFriendInviteObservable(): Observable<{username: string, gameID: string}>{
+        return this.friendInviteObservable;
     }
 
     getRoomPlayerObservable(): Observable<string[]> {

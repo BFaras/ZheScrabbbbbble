@@ -90,7 +90,7 @@
         "QUIT": "Quitter"
     },
     "HOMEPAGE": {
-        "MESSAGE": "Choisissez un mode de jeu!",
+        "MESSAGE": "Bonjour ",
         "CLASSIC": "Jouer",
         "TOURNAMENT": "Tournois",
         "COLLABORATIVE": "Collaboratif"
@@ -130,7 +130,8 @@
         "OBSERVE": " souhaite pouvoir observer la partie.",
         "ACCEPT": "Accepter",
         "DECLINE": "Refuser",
-        "START": "Démarrer"
+        "START": "Démarrer",
+        "INVITE-FRIENDS": "Inviter des amis"
     },
     "JOIN-GAME": {
         "HOST": "Hôte",

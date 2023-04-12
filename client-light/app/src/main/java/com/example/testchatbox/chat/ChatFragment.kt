@@ -217,7 +217,10 @@ class ChatFragment : Fragment(), ObserverChat {
 
 
     override fun updateMessage(chatCode: String, message: Message) {
-        notifSound?.start()
+        if (message.username != LoggedInUser.getName()) {
+            notifSound?.start()
+        }
+
         if(chatsList[selectedChatIndex]._id == chatCode)
         {
             addMessage(message);

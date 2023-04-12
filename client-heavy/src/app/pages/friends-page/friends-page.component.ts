@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ConnectivityStatus, Friend } from '@app/classes/friend-info';
 import { ProfileInfo } from '@app/classes/profileInfo';
+import { ConfrimPopUpComponent } from '@app/components/confrim-pop-up/confrim-pop-up.component';
 import { AccountService } from '@app/services/account-service/account.service';
 import { FriendsService } from '@app/services/friends.service';
+import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -12,16 +14,15 @@ import { Subscription } from 'rxjs';
   templateUrl: './friends-page.component.html',
   styleUrls: ['./friends-page.component.scss']
 })
-export class FriendsPageComponent {
+export class FriendsPageComponent implements OnDestroy {
   friends: Friend[] = [];
   usercode: string = "";
   subscriptions: Subscription[] = [];
   profile: ProfileInfo;
   username: string = "";
-  friend: Friend = { username: 'cat', status: ConnectivityStatus.ONLINE };
   redirect: boolean = false;
 
-  constructor(private snackBar: MatSnackBar, private friendsService: FriendsService, private account: AccountService, private router: Router) {
+  constructor(public dialog: MatDialog, private snackBarHandler: SnackBarHandlerService, private friendsService: FriendsService, private account: AccountService, private router: Router) {
     this.updateFriendsList();
     this.friendsService.getFriendListUpdateObservable().subscribe(() => {
       console.log('FRIEND REMOVED SOCKET TEST');
@@ -30,9 +31,28 @@ export class FriendsPageComponent {
     this.usercode = this.account.getProfile().userCode;
   }
 
+
   alert(username: string) {
-    const text = 'Êtes-vous sûr(e) de vouloir retirer cet ami?';
-    if (confirm(text)) {
+    this.account.setMessages();
+
+    const dialogRef = this.dialog.open(ConfrimPopUpComponent, {
+      width: '450px',
+      height: '230px',
+      data: { notification: this.account.messageUnfriend }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result)
+      if (result === undefined) {
+        this.dialogResponse(false, username)
+      } else {
+        this.dialogResponse(result.status, username);
+      }
+    });
+  }
+
+  dialogResponse(status: boolean, username: string) {
+    if (status) {
       this.friendsService.removeFriend(username).subscribe((errorCode: string) => {
         this.updateFriendsList();
         console.log(errorCode);
@@ -42,9 +62,11 @@ export class FriendsPageComponent {
 
   ngOnDestroy(): void {
     for (const subscription of this.subscriptions) subscription.unsubscribe();
+    this.snackBarHandler.closeAlert();
   }
 
   addFriend() {
+    this.account.setMessages();
     const friendCode = (document.getElementById('friendCode') as HTMLInputElement).value;
     if (friendCode !== this.usercode) {
       this.friendsService.addFriend(friendCode).subscribe((errorCode: string) => {
@@ -52,14 +74,13 @@ export class FriendsPageComponent {
         console.log(errorCode);
       });
     } else
-      this.snackBar.open("bruh make real friends", "Fermer");
+      this.snackBarHandler.makeAnAlert(this.account.messageFriend, this.account.closeMessage);
 
     (document.getElementById('friendCode') as HTMLInputElement).value = "";
   }
 
   updateFriendsList() {
     this.subscriptions.push(this.friendsService.getFriendsListObservable().subscribe((friendsList: Friend[]) => {
-      console.log('FRIEND LIST UPDATED');
       this.friends = friendsList;
     }));
     this.friendsService.getFriendsList();
@@ -78,11 +99,9 @@ export class FriendsPageComponent {
     });
   }
 
-  /*
-  openChat(friend: Friend) {
-    //this.friend = friend;
-    //this.redirect = true;
-    this.router.navigate(['/chat']);
+  createGameWithInvite(friend: Friend) {
+    if (friend.status !== ConnectivityStatus.ONLINE) return;
+    this.friendsService.setFriendToInvite(friend.username);
+    this.router.navigate(['/create-game']);
   }
-  */
 }

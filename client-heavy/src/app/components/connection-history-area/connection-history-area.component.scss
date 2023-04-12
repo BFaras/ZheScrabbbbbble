@@ -25,6 +25,20 @@
     background: var(--scroll-hover);
 }
 
+.auto-scroll{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width:100%;
+}
+
+.scroll-button{
+    margin-top:2%;
+    
+}
+
+
+
 .connection-history{
     height: 43.5vh;
     display: flex;

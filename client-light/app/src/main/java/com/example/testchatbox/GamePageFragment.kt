@@ -188,9 +188,11 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             }
 
             lettersOnBoard = gameState.board
-
-            moveInfo = gameState.message!!
-            GameHistoryModel.addMoveInfo(moveInfo)
+            if(gameState.message!=null)
+            {
+                moveInfo = gameState.message!!
+                GameHistoryModel.addMoveInfo(moveInfo)
+            }
 
             updatePlayersInfo(gameState.players, playersAvatars)
             clearTurn()
@@ -1288,15 +1290,9 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
 
         activity?.runOnUiThread {
             updateMoveInfo()
-            binding.coopHolder.visibility = GONE
-            binding.teamApproval.visibility = GONE
-        }
-        if (GameHistoryModel.playRequest!=null) {
-            activity?.runOnUiThread {
+            if(GameHistoryModel.playRequest!=null) {
                 showCoopPlayPrompt()
-            }
-        } else {
-            activity?.runOnUiThread {
+            } else {
                 isYourTurn = true
                 binding.buttonPass.isEnabled = true
                 binding.buttonHint.isEnabled = true

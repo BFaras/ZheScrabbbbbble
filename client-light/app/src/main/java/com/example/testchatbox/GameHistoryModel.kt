@@ -29,8 +29,6 @@ object GameHistoryModel : Observable {
     }
 
     fun addMoveInfo(moveInfo:PlayerMessage){
-        Log.i("Update", moveInfo.toString())
-        Log.i("Update", observers.toString())
         actionMessages.add(moveInfo)
         notifyObserver();
     }

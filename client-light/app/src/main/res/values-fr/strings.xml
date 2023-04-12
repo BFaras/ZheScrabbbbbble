@@ -126,6 +126,7 @@
     <string name="create_a_room">Créer une salle</string>
     <string name="enter_a_room_name"><i>Nom de la salle</i></string>
     <string name="enter_a_chat_name"><i>Entrez le nom du chat</i></string>
+    <string name="search_a_chat_name"><i>Rechercher un chat</i></string>
     <string name="needHelp">BESOIN D\'AIDE?</string>
     <string name="voici_quelques_indices_pour_vous_aider">Voici quelques indices pour vous aider.</string>
     <string name="vous_pouvez_cliquer_sur_n_importe_lequel_pour_le_pr_visualiser_sur_le_plateau">Vous pouvez cliquer sur n\'importe lequel pour le prévisualiser sur le plateau.</string>

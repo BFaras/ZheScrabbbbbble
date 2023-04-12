@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { RoomVisibility } from '@app/constants/room-visibility';
 import { AccountService } from '@app/services/account-service/account.service';
 import { AvatarInRoomsService } from '@app/services/avatar-in-rooms.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { FriendsService } from '@app/services/friends.service';
+import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 
 @Component({
@@ -13,13 +14,13 @@ import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-se
     templateUrl: './create-game.component.html',
     styleUrls: ['./create-game.component.scss'],
 })
-export class CreateGameComponent {
+export class CreateGameComponent implements OnDestroy {
 
     randomName: string;
     visibility: RoomVisibility = RoomVisibility.PUBLIC;
     IsProtectedRoom: boolean = false;
     passwordRoom: string = "";
-    gameType: string = 'Classic'
+    gameType: string = 'Classic';
 
     constructor(
         private waitingRoomManagerService: WaitingRoomManagerService,
@@ -27,9 +28,13 @@ export class CreateGameComponent {
         private router: Router,
         private chatService: ChatService,
         private avatarInRoomService: AvatarInRoomsService,
-        private snackBar: MatSnackBar
+        private snackBarHandler: SnackBarHandlerService,
+        private friendsService: FriendsService
     ) {}
 
+    ngOnDestroy(): void {
+        this.snackBarHandler.closeAlert();
+    }
 
     getVisibilityButtonValue(event: MatRadioChange) {
         this.visibility = event.value;
@@ -70,16 +75,21 @@ export class CreateGameComponent {
     }
 
     alertFalseInput() {
-        this.snackBar.open('Veuillez remplir les champs vides.', "Fermer")
+        this.accountService.setMessages();
+        this.snackBarHandler.makeAnAlert(this.accountService.messageSalle, this.accountService.closeMessage)
     }
 
     redirectPlayer(message: { codeError: string, roomId: string }) {
+        this.accountService.setMessages();
         if (message.codeError !== '0') {
-            this.snackBar.open('Erreur lors de la création de la salle', "Fermer")
+            this.snackBarHandler.makeAnAlert(this.accountService.messageEmpty, this.accountService.closeMessage)
             return;
         }
-        this.waitingRoomManagerService.setDefaultPlayersInRoom([this.accountService.getUsername()])
-        this.avatarInRoomService.setAvatarOfUsers([this.accountService.getProfile().avatar])
+        this.waitingRoomManagerService.setDefaultPlayersInRoom([this.accountService.getUsername()]);
+        this.avatarInRoomService.setAvatarOfUsers([this.accountService.getProfile().avatar]);
+        if (this.friendsService.getFriendToInvite()) {
+            this.friendsService.inviteFriend();
+        }
         this.chatService.setChatInGameRoom(message.roomId);
         this.router.navigate(['/waiting-room']);
     }
