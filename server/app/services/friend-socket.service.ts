@@ -1,4 +1,4 @@
-import { NO_ERROR } from '@app/constants/error-code-constants';
+import { INVALID_DATA_SENT, NO_ERROR, NO_USER_CONNECTED } from '@app/constants/error-code-constants';
 import { UserStatus } from '@app/interfaces/friend-info';
 import * as io from 'socket.io';
 import { Container, Service } from 'typedi';
@@ -32,23 +32,38 @@ export class FriendSocketService {
 
     handleFriendSockets(socket: io.Socket) {
         socket.on('Get Friend List', async () => {
-            socket.emit('Friend List Response', await this.friendService.getFriendList(this.accountInfoService.getUserId(socket)));
+            const userId = this.accountInfoService.getUserId(socket);
+            if (userId) {
+                socket.emit('Friend List Response', await this.friendService.getFriendList(userId));
+            } else {
+                socket.emit('Friend List Response', NO_USER_CONNECTED);
+            }
         });
 
         socket.on('Send Friend Request', async (friendCode: string) => {
-            const errorCode: string = await this.friendService.addFriend(this.accountInfoService.getUserId(socket), friendCode);
-            socket.emit('Send Request Response', errorCode);
+            const userId = this.accountInfoService.getUserId(socket);
+            if (friendCode && userId) {
+                const errorCode: string = await this.friendService.addFriend(userId, friendCode);
+                socket.emit('Send Request Response', errorCode);
+            } else {
+                socket.emit('Send Request Response', INVALID_DATA_SENT);
+            }
         });
 
         socket.on('Remove Friend', async (friendUsername: string) => {
+            const userId = this.accountInfoService.getUserId(socket);
             const friendUserId = await this.dbService.getUserId(friendUsername);
-            const errorCode: string = await this.friendService.removeFriend(this.accountInfoService.getUserId(socket), friendUserId);
+            if (userId && friendUserId) {
+                const errorCode: string = await this.friendService.removeFriend(userId, friendUserId);
 
-            if (errorCode === NO_ERROR) {
-                this.updateFriendRemovedAsFriend(friendUserId, this.accountInfoService.getUsername(socket));
+                if (errorCode === NO_ERROR) {
+                    this.updateFriendRemovedAsFriend(friendUserId, this.accountInfoService.getUsername(socket));
+                }
+
+                socket.emit('Remove Friend Response', errorCode);
+            } else {
+                socket.emit('Remove Friend Response', INVALID_DATA_SENT);
             }
-
-            socket.emit('Remove Friend Response', errorCode);
         });
     }
 
