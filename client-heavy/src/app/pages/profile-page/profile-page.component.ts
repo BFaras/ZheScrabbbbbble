@@ -59,6 +59,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(this.errorCodeUsername)
+      console.log(result)
       if (result.name && this.errorCodeUsername === "0") {
         this.accountService.setUsername(result.name);
         this.getUserName();
