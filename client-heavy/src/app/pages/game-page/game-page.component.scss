@@ -14,7 +14,10 @@
     background-color: var(--background-default);
     height: 100%;
 }
-
+app-play-area{
+    width:800px;
+    height: 800px;
+}
 .side-components {
     display: flex;
     align-items: center;
@@ -26,7 +29,7 @@
     width: 400px;
     margin-top: 12%;
     margin-bottom: 5%;
-    font-family: "Shrikhand";
+    font-family: 'Shrikhand';
     font-size: 85px;
     color: var(--text-default);
 }
@@ -37,8 +40,8 @@ select {
     -webkit-padding-end: 20px;
     -webkit-padding-start: 2px;
     padding-top: 2px;
-    padding-bottom: 2px; 
-    border: 1px solid #AAA;
+    padding-bottom: 2px;
+    border: 1px solid #aaa;
     color: #555;
     font-size: inherit;
     margin-top: 5%;
@@ -47,7 +50,7 @@ select {
     white-space: nowrap;
 }
 
-.ghost-chat  {
+.ghost-chat {
     height: 570px;
     width: 350px;
 }
@@ -95,7 +98,8 @@ select {
     outline: none;
 }
 
-#abandonner, #quitter{
+#abandonner,
+#quitter {
     margin-bottom: 8%;
 }
 
@@ -104,7 +108,7 @@ a.hint {
     margin-left: 12px;
 }
 
-a.hint:hover{
+a.hint:hover {
     color: var(--button-tertiary-hover);
     cursor: pointer;
     text-decoration: underline;
@@ -157,8 +161,12 @@ img {
     margin-top: 6%;
 }
 
-body {font-family: Arial, Helvetica, sans-serif;}
-    * {box-sizing: border-box;}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+* {
+    box-sizing: border-box;
+}
 
 /* Button used to open the chat form - fixed at the bottom of the page */
 .open-button {
@@ -169,13 +177,13 @@ body {font-family: Arial, Helvetica, sans-serif;}
     height: 40px;
     background: var(--button-primary);
     box-shadow: var(--box-shadow);
-    z-index:15;
+    z-index: 15;
     border-radius: 7px 7px 0px 0px;
     transform: rotate(-90deg);
-    -moz-transform:rotate(-90deg);
-    -ms-transform:rotate(-90deg);
-    -o-transform:rotate(-90deg);
-    -webkit-transform:rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
     font-size: 20px;
     font-weight: bolder;
     font-family: 'Courier New', Courier, monospace;
@@ -198,7 +206,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
 /* The popup chat - hidden by default */
 .chat-popup {
-    display: none;
     position: fixed;
     bottom: 195px;
     right: 55px;

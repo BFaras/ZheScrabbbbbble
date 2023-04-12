@@ -1,7 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ConfrimPopUpComponent } from '@app/components/confrim-pop-up/confrim-pop-up.component';
 import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
+//import { ConfirmationDialogHandlerService } from '@app/services/confirmation-dialog-handler.service';
 import { FontSizeService } from '@app/services/font-size-service/font-size.service';
 import { GameStateService, PlayerMessage } from '@app/services/game-state-service/game-state.service';
 import { GridService } from '@app/services/grid-service/grid.service';
@@ -36,8 +39,15 @@ export class GamePageComponent implements OnInit, OnDestroy {
         private readonly letterAdderService: LetterAdderService,
         private readonly accountService: AccountService,
         private readonly translate: TranslateService,
-        private readonly chatService: ChatService
-    ) {}
+        private readonly chatService: ChatService,
+        private readonly changeDetector: ChangeDetectorRef,
+        //private readonly confirmationHandler: ConfirmationDialogHandlerService,
+        public dialog: MatDialog
+    ) {
+        this.chatService.setChangeDetector(this.changeDetector);
+    }
+
+
 
     ngOnInit() {
         this.hasPendingAction = false;
@@ -77,13 +87,35 @@ export class GamePageComponent implements OnInit, OnDestroy {
         }
     }
 
+    isPopupOpen(): boolean {
+        return this.chatService.isPopupOpen();
+    }
+
     ngOnDestroy(): void {
         for (const subscription of this.subscriptions) subscription.unsubscribe();
     }
 
     alert() {
-        const text = 'Êtes-vous sûr(e) de vouloir quitter la partie? Tout votre progrès sera perdu.';
-        if (confirm(text)) {
+        const text = this.accountService.getLanguage() === 'fr' ? 'Êtes-vous sûr(e) de vouloir quitter la partie? Tout votre progrès sera perdu.' : 'Are you sure you want to quit? All progress will be lost.';
+        const dialogRef = this.dialog.open(ConfrimPopUpComponent, {
+            width: '450px',
+            height: '230px',
+            data: { notification: text }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log("subscription works")
+            console.log(result)
+            if (result === undefined) {
+                this.dialogResponse(false)
+            } else {
+                this.dialogResponse(result.status);
+            }
+        });
+    }
+
+    dialogResponse(status: boolean) {
+        if (status) {
             this.gameStateService.sendAbandonRequest();
             if (this.gameStateService.isTournamentGame()) {
                 this.router.navigate(['/tournament-bracket']);

@@ -1,7 +1,24 @@
 <div class="container">
     <p>{{ 'PROFILE-PAGE.AVATAR' | translate }}</p>
     <div class="listAvatars">
-        <img (click)="changeAvatar($event, avatarSrc)"*ngFor="let avatarSrc of allAvatars" class='avatar' alt="image" src= "assets/avatar/{{avatarSrc}}"/> 
+        <div *ngFor="let avatarSrc of allAvatars">
+            <div class="locked-avatar" *ngIf="!isLocked(avatarSrc)"> 
+                <img (click)="changeAvatar($event, avatarSrc)" class='avatar' alt="image" src= "assets/avatar/{{avatarSrc}}"/> 
+                <span *ngIf="avatarSrc === 'shark.png'">{{ 'UNLOCK-AVATAR.UNLOCKED' | translate }}</span> 
+                <span *ngIf="avatarSrc === 'bunny.png'">{{ 'UNLOCK-AVATAR.UNLOCKED' | translate }}</span> 
+                <span *ngIf="avatarSrc === 'panda.png'">{{ 'UNLOCK-AVATAR.UNLOCKED' | translate }}</span> 
+                <span *ngIf="avatarSrc === 'tiger.png'">{{ 'UNLOCK-AVATAR.UNLOCKED' | translate }}</span> 
+                <span *ngIf="avatarSrc === 'skeleton.png'">{{ 'UNLOCK-AVATAR.UNLOCKED' | translate }}</span> 
+            </div>
+            <div class="locked-avatar" *ngIf="isLocked(avatarSrc)">
+                <img (click)="changeAvatar($event, avatarSrc)" class='avatar locked' alt="image" src= "assets/avatar/{{avatarSrc}}"/>
+                <span *ngIf="avatarSrc === 'shark.png'">{{ 'UNLOCK-AVATAR.SHARK' | translate }} 🔒</span> 
+                <span *ngIf="avatarSrc === 'bunny.png'">{{ 'UNLOCK-AVATAR.BUNNY' | translate }} 🔒</span> 
+                <span *ngIf="avatarSrc === 'panda.png'">{{ 'UNLOCK-AVATAR.PANDA' | translate }} 🔒</span> 
+                <span *ngIf="avatarSrc === 'tiger.png'">{{ 'UNLOCK-AVATAR.TIGER' | translate }} 🔒</span> 
+                <span *ngIf="avatarSrc === 'skeleton.png'">{{ 'UNLOCK-AVATAR.SKELETON' | translate }} 🔒</span> 
+            </div>
+        </div>
     </div>
     <button class="button" [mat-dialog-close]="colorChosen" (click) = "closeDialog()">{{ 'PROFILE-PAGE.CONFIRM' | translate }}</button>
 </div>

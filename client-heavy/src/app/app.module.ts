@@ -51,6 +51,7 @@ import { BracketPageComponent } from './pages/tournament-pages/bracket-page/brac
 import { QueuePageComponent } from './pages/tournament-pages/queue-page/queue-page.component';
 import { ResultPageComponent } from './pages/tournament-pages/result-page/result-page.component';
 import { ChatService } from './services/chat-service/chat.service';
+import { ConfrimPopUpComponent } from './components/confrim-pop-up/confrim-pop-up.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -108,6 +109,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         ConnectionHistoryAreaComponent,
         FormerActionHistoryAreaComponent,
         ChangeNamePopUpComponent,
+        ConfrimPopUpComponent
     ],
     imports: [
         AppMaterialModule,

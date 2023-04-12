@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { Observable, Observer } from 'rxjs';
 import { Socket } from 'socket.io-client';
+import { ChatService } from '../chat-service/chat.service';
 
 export interface GameState {
     board: string[][];
@@ -28,20 +29,20 @@ export interface PlayerState {
 })
 export class GameStateService {
     private socket: Socket;
-    
+
     private gameStateObservable: Observable<GameState>;
     private gameStateObservers: Observer<GameState>[] = [];
     private actionMessageObservable: Observable<PlayerMessage>;
     private actionMessageObserver: Observer<PlayerMessage>;
     private clueObservable: Observable<string[]>;
     private clueObserver: Observer<string[]>;
-    
+
     private observerIndex: number;
     private tournamentGame: boolean;
     private coop: boolean;
-    private pendingAction : boolean = false;
+    private pendingAction: boolean = false;
 
-    constructor(private socketManagerService: SocketManagerService) {
+    constructor(private socketManagerService: SocketManagerService, private chatService: ChatService) {
         this.gameStateObservable = new Observable((observer: Observer<GameState>) => {
             if (!this.socket.active) this.refreshSocket();
             this.gameStateObservers.push(observer);
@@ -68,7 +69,7 @@ export class GameStateService {
         this.socket.on('Message Action History', (msg: PlayerMessage) => {
             this.actionMessageObserver.next(msg);
         });
-        this.socket.on('Clue Response', (clues : string[]) =>{
+        this.socket.on('Clue Response', (clues: string[]) => {
             this.clueObserver.next(clues);
         });
     }
@@ -80,7 +81,7 @@ export class GameStateService {
     getClueObservable(): Observable<string[]> {
         return this.clueObservable;
     }
-    
+
     getGameStateObservable(): Observable<GameState> {
         return this.gameStateObservable;
     }
@@ -94,10 +95,11 @@ export class GameStateService {
     }
 
     sendAbandonRequest() {
+        this.chatService.setChatInGameRoom('');
         this.socketManagerService.getSocket().emit('Abandon');
     }
 
-    respondCoopAction(response: boolean){
+    respondCoopAction(response: boolean) {
         this.socketManagerService.getSocket().emit('Respond Coop Action', response);
     }
 
@@ -109,11 +111,11 @@ export class GameStateService {
         this.observerIndex = observerindex;
     }
 
-    setCoop(isCoop: boolean){
+    setCoop(isCoop: boolean) {
         this.coop = isCoop;
     }
 
-    isCoop(): boolean{
+    isCoop(): boolean {
         return this.coop;
     }
 
@@ -125,7 +127,7 @@ export class GameStateService {
         this.tournamentGame = tournamentGame;
     }
 
-    setPendingAction(pendingAction : boolean){
+    setPendingAction(pendingAction: boolean) {
         this.pendingAction = pendingAction;
     }
 

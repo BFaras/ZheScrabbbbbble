@@ -6,15 +6,19 @@
         <p class="tabs active" (click)="changeToConnection($event)">{{ 'PROFILE-PAGE.LOGIN' | translate }}</p>
         <p class="tabs" (click)="changeToDisconnection($event)">{{ 'PROFILE-PAGE.LOGOUT' | translate }}</p>
     </div>
-    <div *ngIf="connectionMode === true" class="data-container">
+    <div *ngIf="connectionMode === true" class="data-container" #scroll>
         <mat-card-content *ngFor = "let connection of connectionHistory.connections" class="connection-content">
             <span>{{ 'PROFILE-PAGE.DATE' | translate }}{{connection.date}}  {{ 'PROFILE-PAGE.TIME' | translate }}{{connection.time}}</span>
         </mat-card-content>
     </div>
-    <div *ngIf="connectionMode === false" class="data-container">
+    <div *ngIf="connectionMode === false" class="data-container" #scroll>
         <mat-card-content *ngFor = "let disconnection of connectionHistory.disconnections" class="connection-content">
             <span>{{ 'PROFILE-PAGE.DATE' | translate }}{{disconnection.date}}  {{ 'PROFILE-PAGE.TIME' | translate }}{{disconnection.time}}</span>
         </mat-card-content>
+    </div>
+    <div class="auto-scroll">
+        <p class="tabs scroll-button" (click) = 'scrollBottom()' >Bottom</p>
+        <p class="tabs scroll-button" (click) = 'scrollToTop()' >Top</p>
     </div>
 
 </mat-card>

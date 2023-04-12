@@ -1,17 +1,23 @@
 package com.example.testchatbox
 
+import NotificationInfoHolder
 import SocketHandler
+import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
+import androidx.fragment.app.Fragment
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.chat.ChatModel
+import com.example.testchatbox.chat.Message
+import com.example.testchatbox.chat.ObserverChat
 import com.example.testchatbox.databinding.FragmentMainMenuBinding
 import com.example.testchatbox.login.model.LoggedInUser
 
@@ -22,6 +28,8 @@ private var _binding: FragmentMainMenuBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private var isChatIconChanged = false;
+    private var notifSound: MediaPlayer? = null;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +42,8 @@ private var _binding: FragmentMainMenuBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupChatNotifs(view.context)
+
         WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
             // Hide both the status bar and the navigation bar
             hide(WindowInsetsCompat.Type.systemBars())
@@ -66,14 +76,45 @@ private var _binding: FragmentMainMenuBinding? = null
         binding.buttonDisconnect.setOnClickListener {
             SocketHandler.closeConnection();
             LoggedInUser.disconnectUser();
+            NotificationInfoHolder.resetChatNotifs();
             ChatModel.resetChat()
             SocketHandler.establishConnection();
             findNavController().navigate(R.id.action_MainMenuFragment_to_loginActivity2)
         }
     }
 
-override fun onDestroyView() {
+    override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onStop() {
+        super.onStop()
+        NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        notifSound?.release()
+    }
+
+    fun setupChatNotifs(context: Context) {
+        isChatIconChanged = false;
+        NotificationInfoHolder.startObserverChat();
+        NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
+        notifSound = MediaPlayer.create(context, R.raw.ding)
+
+        notifSound?.setOnCompletionListener { notifSound?.release() }
+
+        if(NotificationInfoHolder.areChatsUnread())
+            changeToNotifChatIcon();
+    }
+
+    fun playNotifSoundAndChangeIcon() {
+        if (!isChatIconChanged) {
+            changeToNotifChatIcon()
+            notifSound?.start()
+        }
+    }
+
+    fun changeToNotifChatIcon() {
+        binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+        isChatIconChanged = true;
     }
 }

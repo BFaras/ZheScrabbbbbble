@@ -90,7 +90,7 @@
         "QUIT": "Quitter"
     },
     "HOMEPAGE": {
-        "MESSAGE": "Choisissez un mode de jeu!",
+        "MESSAGE": "Bonjour ",
         "CLASSIC": "Jouer",
         "TOURNAMENT": "Tournois",
         "COLLABORATIVE": "Collaboratif"
@@ -130,7 +130,8 @@
         "OBSERVE": " souhaite pouvoir observer la partie.",
         "ACCEPT": "Accepter",
         "DECLINE": "Refuser",
-        "START": "Démarrer"
+        "START": "Démarrer",
+        "INVITE-FRIENDS": "Inviter des amis"
     },
     "JOIN-GAME": {
         "HOST": "Hôte",
@@ -195,7 +196,8 @@
         "INPUT": "Veuillez entrer le code d'amitié: ",
         "ADD": "Ajouter",
         "FRIENDS": "Liste d'amis",
-        "UNFRIEND": "Enlever"
+        "UNFRIEND": "Enlever",
+        "INVITE": "Inviter"
     },
     "PROFILE-PAGE": {
         "FRIENDS": "Gérer ses amis",
@@ -235,5 +237,13 @@
     "TOURNAMENT-RESULT": {
         "TITLE": "Résultats du tournois",
         "RETURN": "Retourner au menu principal"
+    },
+    "UNLOCK-AVATAR": {
+        "SHARK": "Niveau 2",
+        "BUNNY": "2 médailles d'or",
+        "PANDA": "Niveau 4",
+        "TIGER": "Niveau 6",
+        "SKELETON": "1 médaille d'or",
+        "UNLOCKED": "Déverrouillé!"
     }
 }

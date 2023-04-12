@@ -4,9 +4,10 @@ import { DIRECTION, GRID_CONSTANTS } from '@app/constants/grid-constants';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
+import { Subject } from 'rxjs';
+import { AccountService } from '../account-service/account.service';
 import { PreviewPlayersActionService } from '../preview-players-action-service/preview-players-action.service';
-
-const ONE_LETTER_IN_LOGGER = 1;
+import { SnackBarHandlerService } from '../snack-bar-handler.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -14,6 +15,8 @@ export class LetterAdderService {
     arrowDirection: boolean = true;
     activeSquare: { x: string; y: number } = { x: 'P', y: 0 };
     prevActiveSquare: { x: string; y: number } = { x: 'P', y: 0 };
+    pervForDrag: { x: string; y: number; text: string } = { x: 'P', y: 0, text: "" };
+    droppedSpotDrag: { x: string; y: number } = { x: 'P', y: 0 };
     addedLettersLog = new Map<string, string>();
     orderedAddedLetterLog = new Map<string, string>();
     playerHand: string[];
@@ -22,16 +25,30 @@ export class LetterAdderService {
     key: string;
     canPlay: boolean;
     letterAdderMode: string = '';
+    letterNotAccepted: Subject<boolean> = new Subject()
     constructor(private letterHolderService: LetterHolderService,
         private gridService: GridService,
         private chatService: ChatService,
-        private previewPlayerActionService: PreviewPlayersActionService) {
+        private previewPlayerActionService: PreviewPlayersActionService,
+        private snackBarHandler: SnackBarHandlerService,
+        private account: AccountService) {
 
+    }
+
+    getLetterNotAcceptedObservable(): Subject<boolean> {
+        return this.letterNotAccepted;
+    }
+
+    getDroppedSpot(pixelX: number, pixelY: number) {
+        return this.findCoords(pixelX, pixelY)
     }
 
     onLeftClick(coords: Vec2) {
         if (this.canClick(coords)) {
             this.gridService.deleteAndRedraw();
+            if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
+                this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+            }
             if (this.prevActiveSquare.x === this.activeSquare.x && this.prevActiveSquare.y === this.activeSquare.y)
                 this.arrowDirection = !this.arrowDirection;
             else this.arrowDirection = true;
@@ -48,46 +65,16 @@ export class LetterAdderService {
         } else return false
     }
 
-    isFormerTileUsed(row: string, column: number) {
-        if (this.arrowDirection) {
-            const foundLetter = this.mappedBoardState.get(row + (column - 1));
-            const isDirectionLeftToRight = this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row;
-            return Boolean(foundLetter) && isDirectionLeftToRight;
-        }
-        else {
-            const foundLetter = this.mappedBoardState.get((String.fromCharCode(row.charCodeAt(0) - 1)) + column);
-            const isDirectionTopToBottom = this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row;
-            return Boolean(foundLetter) && isDirectionTopToBottom;
-        }
-    }
-
     findDirectionOfDrop(row: string, column: number) {
-        if (this.addedLettersLog.size === ONE_LETTER_IN_LOGGER) {
-            if (this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row) {
-                this.arrowDirection = false;
-            } else if (this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row) {
-                this.arrowDirection = true;
-            }
+        if (this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row) {
+            this.arrowDirection = false;
+        } else if (this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row) {
+            this.arrowDirection = true;
         }
     }
 
-    isTileAround(xIndex: string, yIndex: number): boolean {
-        if (this.addedLettersLog.size === 0 || this.isFormerTileUsed(xIndex, yIndex) || (yIndex !== this.prevActiveSquare.y && xIndex == this.prevActiveSquare.x) || (xIndex.charCodeAt(0) !== this.prevActiveSquare.x.charCodeAt(0) && yIndex === this.prevActiveSquare.y)) {
-            this.activeSquare = { x: xIndex, y: yIndex }
-            return true;
-        }
-        return false;
-    }
-
-    isRightDirection(row: string, column: number): boolean {
-        if (this.addedLettersLog.size >= 1) {
-            if (this.arrowDirection == true && this.prevActiveSquare.y === column)
-                return false
-            else if (this.arrowDirection == false && this.prevActiveSquare.x === row)
-                return false
-        } else {
-            return true
-        }
+    setActiveSquare(xIndex: string, yIndex: number): boolean {
+        this.activeSquare = { x: xIndex, y: yIndex }
         return true;
     }
 
@@ -95,7 +82,7 @@ export class LetterAdderService {
     canDrop(coords: Vec2): boolean {
         const foundCoords = this.findCoords(coords.x, coords.y);
         this.findDirectionOfDrop(foundCoords.row, foundCoords.column)
-        return this.canPlay && foundCoords.valid && this.isTileAround(foundCoords.row, foundCoords.column) && !this.isPositionTaken() && this.isRightDirection(foundCoords.row, foundCoords.column);
+        return this.canPlay && foundCoords.valid && this.setActiveSquare(foundCoords.row, foundCoords.column) && !this.isPositionTakenDragAndDrop();
     }
 
     canClick(coords: Vec2): boolean {
@@ -131,15 +118,16 @@ export class LetterAdderService {
         if (this.inPlayerHand() && this.isInBounds()) {
             if (!this.isPositionTaken()) {
                 this.addToHand(false);
-                /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty ecrie lettre*/
-                console.log(this.playerHand)
-                console.log(this.activeSquare)
-                if (this.playerHand.length === 6) {
-                    console.log('sent first Tile')
-                    this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
-                }
+                /**active square change rapidement le temps que je l utilise dans preview , c est d/ja devenu une autre valeur a cause de this.activeChangePostion
+                 * c est pour cela que je fais une deepcopy de l object.Cela est seulement affect/ dans prevuiew
+                 */
+                const deepCopyActiveSquare = JSON.parse(JSON.stringify(this.activeSquare));
+                this.previewPlayerActionService.addPreviewTile(deepCopyActiveSquare)
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
+                if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
+                    this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+                }
                 this.changeActivePosition(1);
                 this.letterAdderMode = 'keyPress';
             }
@@ -149,19 +137,39 @@ export class LetterAdderService {
             this.addArrowSquare();
         }
     }
+    /**crrer double poujr quand on deplace une piuece dans le board */
+    moveLetterInBoard(key: string) {
+
+        this.key = this.isLetterBlank(key) ? this.isLetterBlank(key) : this.simplifyLetter(key);
+        if (this.isInBounds()) {
+
+            if (!this.isPositionTaken()) {
+
+                this.updateDragLetterLog()
+                this.previewPlayerActionService.movePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y }, this.activeSquare)
+                this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
+                this.gridService.deleteAndRedraw(this.addedLettersLog);
+                this.letterAdderMode = 'dragAndDrop';
+            }
+        }
+    }
 
     addLettersOnDrop(key: string) {
         this.key = this.isLetterBlank(key) ? this.isLetterBlank(key) : this.simplifyLetter(key);
         if (this.inPlayerHand() && this.isInBounds()) {
             if (!this.isPositionTaken()) {
                 this.addToHand(false);
-                /**emit pour montrer aux autres joueurs ici c est best endroit car on peut send lettre pour next difficulty poser lettre*/
-                if (this.playerHand.length === 6) {
-                    console.log('sent first Tile')
+                /**On va mettre cela en commentaire */
+                /*
+                if (this.addedLettersLog.size === 0) {
                     this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
-                }
+                }*/
+                this.previewPlayerActionService.addPreviewTile(this.activeSquare)
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
+                if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
+                    this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+                }
                 this.letterAdderMode = 'dragAndDrop';
             }
         }
@@ -177,16 +185,43 @@ export class LetterAdderService {
         }
     }
 
+    removeDrawingBeforeDragWithinCanvas() {
+        this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
+        this.gridService.deleteAndRedraw(this.addedLettersLog);
+        if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
+            this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+        }
+        this.previewPlayerActionService.removePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y });
+    }
+
+    removeDrawingBeforeDragOutsideCanvasOrNotValidSpot() {
+        const remainingLettersDrag: string[] = this.playerHand;
+        const lastDraggedItem = this.addedLettersLog.get(this.pervForDrag.x + this.pervForDrag.y);
+        if (lastDraggedItem!.length === 1) this.playerHand.push(lastDraggedItem!);
+        else this.playerHand.push(lastDraggedItem!.slice(0, GRID_CONSTANTS.lastLetter));
+        this.playerHand = remainingLettersDrag;
+        this.letterHolderService.drawTypedLetters(this.playerHand);
+        this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
+        if (this.addedLettersLog.size === 1) this.setAdderMode('')
+        this.gridService.deleteAndRedraw(this.addedLettersLog);
+        if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
+            this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+        }
+        this.previewPlayerActionService.removePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y });
+
+    }
     removeLetters() {
         const decrement = -1;
         if (this.addedLettersLog.size === 1) {
             this.letterAdderMode = "";
-            this.previewPlayerActionService.removeSelectedTile(this.activeSquare);
         }
         if (!this.addedLettersLog.size) return;
         if (!this.isPositionTaken()) {
             this.addToHand(true);
             this.gridService.deleteAndRedraw(this.addedLettersLog);
+            if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
+                this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+            }
             this.changeActivePosition(decrement);
         }
         while (this.isPositionTaken()) {
@@ -217,6 +252,13 @@ export class LetterAdderService {
         this.gridService.deleteAndRedraw();
     }
 
+    updateDragLetterLog() {
+        if (!this.key) return;
+        let key = this.key;
+        this.addedLettersLog.set(this.activeSquare.x + this.activeSquare.y, key);
+        if (this.key.length > 1) key = this.key.slice(0, GRID_CONSTANTS.lastLetter);
+    }
+
     addToHand(addOrDel: boolean) {
         if (!this.key) return;
         let key = this.key;
@@ -224,10 +266,10 @@ export class LetterAdderService {
         const lastAddedLetter = Array.from(this.addedLettersLog)[this.addedLettersLog.size - 1];
         if (addOrDel) {
             this.addedLettersLog.delete(lastAddedLetter[0]);
+            this.previewPlayerActionService.removePreviewTile({ x: lastAddedLetter[0][0], y: Number(lastAddedLetter[0].substring(1)) });
             if (lastAddedLetter[1].length === 1) this.playerHand.push(lastAddedLetter[1]);
             else this.playerHand.push(lastAddedLetter[1].slice(0, GRID_CONSTANTS.lastLetter));
         } else {
-            console.log(this.activeSquare.x + this.activeSquare.y);
             this.addedLettersLog.set(this.activeSquare.x + this.activeSquare.y, key);
             if (this.key.length > 1) key = this.key.slice(0, GRID_CONSTANTS.lastLetter);
             const letterIndex = this.playerHand.indexOf(key);
@@ -277,6 +319,13 @@ export class LetterAdderService {
         return Boolean(foundLetter);
     }
 
+    isPositionTakenDragAndDrop(): boolean {
+        this.mapBoardState();
+        const foundLetter = this.mappedBoardState.get(this.activeSquare.x + this.activeSquare.y);
+        const foundLetterPutThisTurn = this.addedLettersLog.get(this.activeSquare.x + this.activeSquare.y);
+        return Boolean(foundLetter) || Boolean(foundLetterPutThisTurn);
+    }
+
     isInBounds(): boolean {
         return (
             this.activeSquare.y !== 0 &&
@@ -302,11 +351,96 @@ export class LetterAdderService {
     }
 
     makeMove() {
+        this.account.setMessages();
         if (this.addedLettersLog.size) {
-            console.log(this.formatAddedLetters())
-            this.chatService.sendCommand(this.formatAddedLetters(), 'Place');
+            const placedLetters = this.formatAddedLetters()
+            if (placedLetters === "wrongMove") {
+                return
+            }
+            if (!this.verifyLettersAreLinked()) {
+                this.snackBarHandler.makeAnAlert(this.account.messageLetters, this.account.closeMessage)
+                this.getLetterNotAcceptedObservable().next(true);
+                this.removeAll();
+                return;
+            }
+            this.chatService.sendCommand(placedLetters, 'Place');
             this.removeAll();
         }
+    }
+    verifyLettersAreLinked() {
+        let LettersOnOneDirection = new Map<string, string>();
+        const arrayOfOrderedAddedLog: string[] = Array.from(this.orderedAddedLetterLog.keys());
+        const firstValuePosition: string = arrayOfOrderedAddedLog[0];
+        const lastValuePosition: string = arrayOfOrderedAddedLog[arrayOfOrderedAddedLog.length - 1];
+        this.orderedAddedLetterLog.forEach((value, key) =>
+            LettersOnOneDirection.set(key, value)
+        );
+        this.mappedBoardState.forEach((value, key) => {
+            if (this.arrowDirection) {
+                if (key[0] === firstValuePosition[0]) {
+                    LettersOnOneDirection.set(key, value)
+                }
+            } else {
+                if (key[1] === firstValuePosition[1]) {
+                    LettersOnOneDirection.set(key, value)
+                }
+
+            }
+        })
+        console.log("mappedBoardState: " + Array.from(this.mappedBoardState));
+        console.log("firstValue: " + firstValuePosition);
+        console.log("lastValue: " + lastValuePosition);
+        if (!this.arrowDirection) {
+            LettersOnOneDirection = new Map<string, string>([...LettersOnOneDirection.entries()].sort());
+            let LettersOnOneDirectionArray = Array.from(LettersOnOneDirection.keys())
+            LettersOnOneDirectionArray = LettersOnOneDirectionArray.filter((value) => value.charCodeAt(0) >= firstValuePosition.charCodeAt(0))
+            console.log("V direction :" + LettersOnOneDirectionArray)
+            let positionLetter = LettersOnOneDirectionArray[0][0].charCodeAt(0)
+            console.log("Position Letter" + positionLetter);
+            for (const position of LettersOnOneDirectionArray) {
+                if (position[0].charCodeAt(0) === positionLetter) {
+                    if (position === lastValuePosition) {
+                        console.log(position)
+                        return true
+                    }
+                    positionLetter += 1
+                } else {
+                    console.log(position)
+                    return false
+                }
+            }
+        } else {
+            LettersOnOneDirection = new Map([...LettersOnOneDirection.entries()].sort(
+                (leftLetter, rightLetter) => {
+                    return leftLetter[0].substring(1, leftLetter[0].length).
+                        localeCompare(rightLetter[0].substring(1, rightLetter[0].length), undefined, { numeric: true })
+                }));
+            let LettersOnOneDirectionArray = Array.from(LettersOnOneDirection.keys())
+            console.log("H direction before:" + LettersOnOneDirectionArray)
+            LettersOnOneDirectionArray = LettersOnOneDirectionArray.filter((value) => Number(value.substring(1)) >= Number(firstValuePosition.substring(1)))
+            console.log("H direction after:" + LettersOnOneDirectionArray)
+            let positionLetter = LettersOnOneDirectionArray[0].substring(1);
+            console.log(positionLetter);
+
+            for (const position of LettersOnOneDirectionArray) {
+                if (position.substring(1) === positionLetter) {
+                    if (position === lastValuePosition) {
+                        console.log(position)
+                        return true
+                    }
+                    positionLetter = (Number(positionLetter) + 1).toString();
+                } else {
+                    console.log(position)
+                    return false
+                }
+
+            }
+
+        }
+        console.log('je devrais jamais venir la');
+        return true
+
+
     }
 
     orderAddedLetterLog() {
@@ -319,17 +453,65 @@ export class LetterAdderService {
         }
     }
 
+    isHorizontal(keys: string[]): boolean {
+        console.log(keys)
+        const expectedValue = keys[0][0];
+        for (const element of keys) {
+            if (element[0] === expectedValue) {
+                continue
+            }
+            else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    isVertical(keys: string[]): boolean {
+        const expectedValue = keys[0].substring(1)
+        for (const element of keys) {
+
+            if (element.substring(1) === expectedValue) {
+                continue
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
+    }
+
     formatAddedLetters(): string {
+        this.account.setMessages();
         this.orderAddedLetterLog();
         const keys = Array.from(this.orderedAddedLetterLog.keys());
+        if (this.arrowDirection) {
+            if (!this.isHorizontal(keys)) {
+                this.snackBarHandler.makeAnAlert(this.account.messageDir, this.account.closeMessage);
+                this.getLetterNotAcceptedObservable().next(true)
+                this.removeAll()
+                return "wrongMove"
+                /**ajouter enelveer les lettres du fields dans component*/
+
+            };
+        }
+        else {
+            if (!this.isVertical(keys)) {
+                this.snackBarHandler.makeAnAlert(this.account.messageDir, this.account.closeMessage);
+                this.getLetterNotAcceptedObservable().next(true)
+                this.removeAll()
+                return "wrongMove"
+                /**ajouter enelveer les lettres du fields dans component*/
+            }
+        }
+        /**no space between letters notificiation else notification and remove all letters */
         keys.forEach((key) => {
             const value = this.orderedAddedLetterLog.get(key);
             if (value && value?.length > 1) this.orderedAddedLetterLog.set(key, value?.substring(value.length - 1).toUpperCase() as string);
         });
-        console.log(keys);
-        console.log(Array.from(this.orderedAddedLetterLog.values()))
+
         const letters = Array.from(this.orderedAddedLetterLog.values()).join('');
-        console.log(keys[0].toLowerCase() + this.formatDirection() + ' ' + letters);
         return keys[0].toLowerCase() + this.formatDirection() + ' ' + letters;
     }
 
