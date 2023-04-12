@@ -14,7 +14,7 @@
         
         <app-play-area class="play-area" tabindex="0" [receiver]="isReceiver"></app-play-area>
 
-        <section class="side-components">
+        <section class="side-components" id="abandon-langage">
             <button *ngIf="!endGame && !isObserver(); else other_content" (click)="alert()" class="button" id="abandonner">{{'GIVEUP.GIVEUP' | translate}}</button>
             <app-language></app-language>
             <ng-template #other_content><button class="button" (click)="goHome()" id="quitter">{{'GIVEUP.QUIT' | translate}}</button></ng-template>
