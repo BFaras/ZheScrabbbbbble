@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { connectionHistory } from '@app/classes/connection-history';
 import { ConnectionInfo } from '@app/classes/profileInfo';
 
@@ -8,7 +8,7 @@ import { ConnectionInfo } from '@app/classes/profileInfo';
   styleUrls: ['./connection-history-area.component.scss']
 })
 export class ConnectionHistoryAreaComponent implements OnInit {
-
+  @ViewChild('scroll', { read: ElementRef }) public scroll: ElementRef;
   @Input() connectionInformation: ConnectionInfo[];
   connectionMode = true;
   connectionHistory: connectionHistory = {
@@ -16,6 +16,16 @@ export class ConnectionHistoryAreaComponent implements OnInit {
     disconnections: [],
   };
   constructor() {
+  }
+
+  public scrollBottom() {
+    console.log(this.scroll.nativeElement.scrollTop);
+    this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
+
+  }
+
+  public scrollToTop() {
+    this.scroll.nativeElement.scrollTop = 0;
   }
 
   ngOnInit(): void {
@@ -27,6 +37,7 @@ export class ConnectionHistoryAreaComponent implements OnInit {
       }
     })
   }
+
 
   changeToConnection(event: Event) {
     this.connectionMode = true;

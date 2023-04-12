@@ -10,6 +10,7 @@ import { GameState, GameStateService } from '@app/services/game-state-service/ga
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
 import { PreviewPlayersActionService } from '@app/services/preview-players-action-service/preview-players-action.service';
+import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 import { Subscription } from 'rxjs';
 import { BlankTilePopUpComponent } from '../blank-tile-pop-up/blank-tile-pop-up.component';
 @Component({
@@ -40,7 +41,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         private readonly letterAdderService: LetterAdderService,
         public readonly dialogBlankTile: MatDialog,
         private previewFirstTileService: PreviewPlayersActionService,
-        private GameStateService: GameStateService
+        private GameStateService: GameStateService,
+        private snackBackHandler: SnackBarHandlerService
     ) {
         this.initializePreviewTileIfCoop()
         this.subscription = this.gameStateService.getGameStateObservable().subscribe(async (gameState) => {
@@ -240,6 +242,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         this.subscription.unsubscribe();
         this.addTilePreviewSubscription.unsubscribe()
         this.removeTilePreviewSubscription.unsubscribe()
+        this.snackBackHandler.closeAlert();
     }
 
     get width(): number {

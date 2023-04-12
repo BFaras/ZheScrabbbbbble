@@ -4,6 +4,34 @@
     color: var(--text-default);
 }
 
+.tabs {
+    color: var(--button-text-default);
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--button-primary);
+    border-radius: 7px;
+    padding: 10px 20px;
+}
+
+.tabs:hover {
+    background-color: var(--button-primary-hover);
+    color: var(--button-text-hover);
+    font-weight: bold;
+}
+
+.auto-scroll{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width:100%;
+}
+
+.scroll-button{
+    margin-top:2%;
+    
+}
+
+
 #former-actions{
     display: flex;
     height: 100%;

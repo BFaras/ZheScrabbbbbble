@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AccountService } from '@app/services/account-service/account.service';
@@ -7,6 +8,7 @@ import { FriendsService } from '@app/services/friends.service';
 import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { JoinResponse, WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 import { first } from 'rxjs/operators';
+import { ConfrimPopUpComponent } from '../confrim-pop-up/confrim-pop-up.component';
 @Component({
   selector: 'app-navigation-bar',
   templateUrl: './navigation-bar.component.html',
@@ -21,13 +23,37 @@ export class NavigationBarComponent {
     private chatService: ChatService,
     private changeDetector: ChangeDetectorRef,
     private waitingRoomManagerService: WaitingRoomManagerService,
-    private account: AccountService) {
+    private account: AccountService,
+    public dialog: MatDialog) {
     this.chatService.setChangeDetector(this.changeDetector);
     this.waitingRoomManagerService.getFriendInviteObservable().subscribe((data: { username: string, gameID: string }) => {
-      if (!confirm('Do you want to join ' + data.username + ' in a game of Scrabble ?')) return;
+      const text = 'Do you want to join ' + data.username + ' in a game of Scrabble ?';
+      this.alertJoinFriendGame(text, data)
+    });
+  }
+
+  alertJoinFriendGame(text: string, data: { username: string, gameID: string }) {
+    const dialogRef = this.dialog.open(ConfrimPopUpComponent, {
+      width: '450px',
+      height: '230px',
+      data: { notification: text }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result)
+      if (result === undefined) {
+        this.dialogResponse(false, data)
+      } else {
+        this.dialogResponse(result.status, data);
+      }
+    });
+  }
+
+  dialogResponse(status: boolean, data: { username: string, gameID: string }) {
+    if (status) {
       this.waitingRoomManagerService.joinRoomResponse().pipe(first()).subscribe(this.joinFriendRoom.bind(this));
       this.waitingRoomManagerService.joinFriendRoom(data.gameID);
-    });
+    }
   }
 
   joinFriendRoom(message: JoinResponse) {

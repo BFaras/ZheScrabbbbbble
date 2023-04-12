@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { AccountService } from '../account-service/account.service';
+import { SnackBarHandlerService } from '../snack-bar-handler.service';
 
 export const NAME_DELAY = 1000;
 
@@ -13,17 +13,17 @@ export class NameValidatorService {
     guestPlayerNameIsValid: boolean = false;
     virtualPlayerNameList: string[] = ['Alex', 'Rebecca', 'Damien'];
 
-    constructor(private snackBar: MatSnackBar, private account: AccountService) {
+    constructor(private snackBarHandler: SnackBarHandlerService, private account: AccountService) {
 
     }
     validateGuestPlayerName(hostPlayerName: string, guestPlayerName: string): boolean {
         this.account.setMessages();
         if (guestPlayerName.trim() === '') {
-            this.snackBar.open(this.account.messageNameEmpty, this.account.closeMessage);
+            this.snackBarHandler.makeAnAlert(this.account.messageNameEmpty, this.account.closeMessage);
             return this.guestPlayerNameIsValid;
         }
         this.guestPlayerNameIsValid = this.namesNotEqual(hostPlayerName, guestPlayerName);
-        if (!this.guestPlayerNameIsValid) this.snackBar.open(this.account.messageAuth, this.account.closeMessage);
+        if (!this.guestPlayerNameIsValid) this.snackBarHandler.makeAnAlert(this.account.messageAuth, this.account.closeMessage);
         return this.guestPlayerNameIsValid;
     }
 

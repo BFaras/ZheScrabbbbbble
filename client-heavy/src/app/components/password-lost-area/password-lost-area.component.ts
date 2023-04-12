@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountAuthenticationService } from '@app/services/account-authentification-service/account-authentication.service';
 import { AccountService } from '@app/services/account-service/account.service';
+import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 
@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
   templateUrl: './password-lost-area.component.html',
   styleUrls: ['./password-lost-area.component.scss']
 })
-export class PasswordLostAreaComponent implements OnInit {
+export class PasswordLostAreaComponent implements OnInit, OnDestroy {
   username: string;
   newPassword: string;
   newPasswordConfirmed: string;
@@ -21,8 +21,12 @@ export class PasswordLostAreaComponent implements OnInit {
   subscriptionModifyPassword: Subscription;
   subscriptionGetQuestion: Subscription;
 
-  constructor(private snackBar: MatSnackBar, private router: Router, private accountAuthenticationService: AccountAuthenticationService, private account: AccountService) {
+  constructor(private snackBarHandler: SnackBarHandlerService, private router: Router, private accountAuthenticationService: AccountAuthenticationService, private account: AccountService) {
     this.accountAuthenticationService.setUpSocket();
+  }
+
+  ngOnDestroy(): void {
+    this.snackBarHandler.closeAlert()
   }
 
   ngOnInit(): void {
@@ -43,7 +47,7 @@ export class PasswordLostAreaComponent implements OnInit {
         } else {
           this.isQuestionAnswered = false;
           this.questionReset = "";
-          this.snackBar.open(this.account.messageUnvalid, this.account.closeMessage);
+          this.snackBarHandler.makeAnAlert(this.account.messageUnvalid, this.account.closeMessage);
         }
       });
   }
@@ -56,14 +60,14 @@ export class PasswordLostAreaComponent implements OnInit {
       (errorCode: string) => {
         this.account.setMessages();
         if (errorCode === NO_ERROR) {
-          this.snackBar.open(this.account.messagePW, this.account.closeMessage);
+          this.snackBarHandler.makeAnAlert(this.account.messagePW, this.account.closeMessage);
           this.router.navigate(['login']);
         }
         else if (errorCode === DATABASE_UNAVAILABLE) {
-          this.snackBar.open(this.account.messageBD, this.account.closeMessage);
+          this.snackBarHandler.makeAnAlert(this.account.messageBD, this.account.closeMessage);
         }
         else {
-          this.snackBar.open(this.account.messageQ, this.account.closeMessage);
+          this.snackBarHandler.makeAnAlert(this.account.messageQ, this.account.closeMessage);
 
         }
       }

@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ConnectivityStatus, Friend } from '@app/classes/friend-info';
 import { ProfileInfo } from '@app/classes/profileInfo';
+import { ConfrimPopUpComponent } from '@app/components/confrim-pop-up/confrim-pop-up.component';
 import { AccountService } from '@app/services/account-service/account.service';
 import { FriendsService } from '@app/services/friends.service';
+import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -12,7 +14,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './friends-page.component.html',
   styleUrls: ['./friends-page.component.scss']
 })
-export class FriendsPageComponent {
+export class FriendsPageComponent implements OnDestroy {
   friends: Friend[] = [];
   usercode: string = "";
   subscriptions: Subscription[] = [];
@@ -20,7 +22,7 @@ export class FriendsPageComponent {
   username: string = "";
   redirect: boolean = false;
 
-  constructor(private snackBar: MatSnackBar, private friendsService: FriendsService, private account: AccountService, private router: Router) {
+  constructor(public dialog: MatDialog, private snackBarHandler: SnackBarHandlerService, private friendsService: FriendsService, private account: AccountService, private router: Router) {
     this.updateFriendsList();
     this.friendsService.getFriendListUpdateObservable().subscribe(() => {
       console.log('FRIEND REMOVED SOCKET TEST');
@@ -29,9 +31,28 @@ export class FriendsPageComponent {
     this.usercode = this.account.getProfile().userCode;
   }
 
+
   alert(username: string) {
     this.account.setMessages();
-    if (confirm(this.account.messageUnfriend)) {
+
+    const dialogRef = this.dialog.open(ConfrimPopUpComponent, {
+      width: '450px',
+      height: '230px',
+      data: { notification: this.account.messageUnfriend }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result)
+      if (result === undefined) {
+        this.dialogResponse(false, username)
+      } else {
+        this.dialogResponse(result.status, username);
+      }
+    });
+  }
+
+  dialogResponse(status: boolean, username: string) {
+    if (status) {
       this.friendsService.removeFriend(username).subscribe((errorCode: string) => {
         this.updateFriendsList();
         console.log(errorCode);
@@ -41,6 +62,7 @@ export class FriendsPageComponent {
 
   ngOnDestroy(): void {
     for (const subscription of this.subscriptions) subscription.unsubscribe();
+    this.snackBarHandler.closeAlert();
   }
 
   addFriend() {
@@ -52,7 +74,7 @@ export class FriendsPageComponent {
         console.log(errorCode);
       });
     } else
-      this.snackBar.open(this.account.messageFriend, this.account.closeMessage);
+      this.snackBarHandler.makeAnAlert(this.account.messageFriend, this.account.closeMessage);
 
     (document.getElementById('friendCode') as HTMLInputElement).value = "";
   }
