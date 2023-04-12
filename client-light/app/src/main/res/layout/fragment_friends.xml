@@ -109,7 +109,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
+        android:clipToPadding="false"
+        android:clipChildren="false"
         android:background="@drawable/background_direction_panel"
+        android:backgroundTint="?colorSecondary"
         android:padding="15dp"
         android:visibility="gone">
 
@@ -119,9 +122,8 @@
             android:layout_height="30dp"
             android:layout_gravity="end"
             android:layout_marginTop="10dp"
-            android:background="@drawable/background_chat_input"
-            android:backgroundTint="?colorSecondary"
-            android:text="X"
+            android:background="@drawable/ic_cancel"
+            android:backgroundTint="?colorPrimary"
             android:textColor="@color/black" />
 
         <LinearLayout
@@ -140,48 +142,53 @@
                 android:fontFeatureSettings="smcp"
                 android:text=""
                 android:textAlignment="center"
+                android:layout_marginBottom="20dp"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/profileBtn"
-                android:layout_width="150dp"
+                android:layout_width="220dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/background_chat_input"
-                android:backgroundTint="?colorSecondary"
+                android:textAllCaps="false"
+                android:backgroundTint="?buttonColor"
                 android:text="@string/friendProfile"
-                android:textColor="@color/black" />
+                android:textColor="?colorOnPrimary" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/chatBtn"
-                android:layout_width="150dp"
+                android:layout_width="220dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/background_chat_input"
-                android:backgroundTint="?colorSecondary"
+                android:textAllCaps="false"
+                android:backgroundTint="?buttonColor"
                 android:text="@string/friendChat"
-                android:textColor="@color/black" />
+                android:textColor="?colorOnPrimary" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/joinBtn"
-                android:layout_width="150dp"
+                android:layout_width="220dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/background_chat_input"
-                android:backgroundTint="?colorSecondary"
+                android:textAllCaps="false"
+                android:backgroundTint="?buttonColor"
                 android:text="@string/friendJoin"
-                android:textColor="@color/black" />
+                android:textColor="?colorOnPrimary" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/removeBtn"
-                android:layout_width="150dp"
+                android:layout_width="220dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/background_chat_input"
-                android:backgroundTint="?colorSecondary"
+                android:textAllCaps="false"
+                android:backgroundTint="?buttonColor"
                 android:text="@string/friendRemove"
-                android:textColor="@color/black" />
+                android:textColor="?colorOnPrimary" />
         </LinearLayout>
     </FrameLayout>
 

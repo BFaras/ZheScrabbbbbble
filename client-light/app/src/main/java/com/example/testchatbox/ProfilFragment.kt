@@ -103,6 +103,7 @@ class ProfilFragment : Fragment() {
             binding.buttonConnectionLog.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
             binding.disconnectionScroll.visibility = View.GONE
             binding.buttonDisconnectionLog.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
+            binding.connectionScroll.post { binding.connectionScroll.fullScroll(View.FOCUS_DOWN) }
         }
 
         binding.buttonDisconnectionLog.setOnClickListener {
@@ -112,6 +113,7 @@ class ProfilFragment : Fragment() {
             binding.buttonConnectionLog.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
             binding.disconnectionScroll.visibility = View.VISIBLE
             binding.buttonDisconnectionLog.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            binding.disconnectionScroll.post { binding.disconnectionScroll.fullScroll(View.FOCUS_DOWN) }
         }
 
         binding.playerInGameAvatar.setOnClickListener {
@@ -675,6 +677,7 @@ class ProfilFragment : Fragment() {
                 gameInfoWinner.setTextColor(Color.RED)
             }
             binding.gameLog.addView(gameInfoHolder)
+            binding.gameLogScroll.post { binding.gameLogScroll.fullScroll(View.FOCUS_DOWN) }
         }
         if (binding.gameLog.childCount <= 0)binding.gameLogText.visibility = View.VISIBLE else  binding.gameLogText.visibility = View.GONE
 

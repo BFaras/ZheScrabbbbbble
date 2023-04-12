@@ -55,10 +55,11 @@
             android:id="@+id/annulerBtn"
             android:layout_width="300dp"
             android:layout_height="40dp"
+            android:textAllCaps="false"
             android:text="@string/annuler"
             android:textColor="?colorOnPrimary"
             android:background="@drawable/background_chat_input"
-            android:backgroundTint="?colorPrimary"
+            android:backgroundTint="?buttonColor"
             android:layout_gravity="center"
             android:textSize="18dp"/>
     </LinearLayout>

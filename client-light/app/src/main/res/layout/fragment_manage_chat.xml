@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_direction_panel"
-            android:backgroundTint="?colorPrimaryVariant"
+            android:backgroundTint="?editBackgroundColor"
             android:hint="@string/search_a_chat_name"
             android:layout_marginTop="10dp"
             android:imeOptions="actionDone"
@@ -197,23 +197,12 @@
             android:layout_marginTop="10dp"
             android:text="@string/join_a_public_chat"></TextView>
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFeatureSettings="smcp"
-            android:text="@string/pss_you_can_quit_any_room_by_clicking_it"
-            android:textAlignment="center"
-            android:textColor="?colorSecondary"
-            android:textSize="12sp"
-            android:textStyle="bold|italic"></TextView>
-
         <EditText
             android:id="@+id/searchJoinChat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_direction_panel"
-            android:backgroundTint="?colorPrimaryVariant"
+            android:backgroundTint="?editBackgroundColor"
             android:layout_marginTop="10dp"
             android:hint="@string/search_a_chat_name"
             android:imeOptions="actionDone"

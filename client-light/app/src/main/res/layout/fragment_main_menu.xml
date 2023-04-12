@@ -14,7 +14,6 @@
         android:layout_gravity="center|top"
         android:fontFamily="@font/shrikhand"
         android:text="@string/scrabbleName"
-        android:textColor="?colorOnSecondary"
         android:layout_marginTop="70dp"
         android:textSize="70dp">
 

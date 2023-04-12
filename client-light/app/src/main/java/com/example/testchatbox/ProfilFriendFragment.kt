@@ -74,6 +74,34 @@ class ProfilFriendFragment : Fragment() {
             findNavController().navigate(R.id.action_profilFriendFragment_to_MainMenuFragment)
         }
 
+        context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
+        context?.theme?.resolveAttribute(R.attr.buttonColor, notSelectedColor, true)
+
+        binding.buttonConnectionLog.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+        binding.connectionScroll.visibility = View.VISIBLE
+        binding.disconnectionScroll.visibility = View.GONE
+        binding.buttonDisconnectionLog.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
+
+        binding.buttonConnectionLog.setOnClickListener {
+            context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
+            context?.theme?.resolveAttribute(R.attr.buttonColor, notSelectedColor, true)
+            binding.connectionScroll.visibility = View.VISIBLE
+            binding.buttonConnectionLog.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            binding.disconnectionScroll.visibility = View.GONE
+            binding.buttonDisconnectionLog.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
+            binding.connectionScroll.post { binding.connectionScroll.fullScroll(View.FOCUS_DOWN) }
+        }
+
+        binding.buttonDisconnectionLog.setOnClickListener {
+            context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
+            context?.theme?.resolveAttribute(R.attr.buttonColor, notSelectedColor, true)
+            binding.connectionScroll.visibility = View.GONE
+            binding.buttonConnectionLog.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
+            binding.disconnectionScroll.visibility = View.VISIBLE
+            binding.buttonDisconnectionLog.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+            binding.disconnectionScroll.post { binding.disconnectionScroll.fullScroll(View.FOCUS_DOWN) }
+        }
+
     }
 
     private  fun getProfile(username:String){
@@ -129,18 +157,22 @@ class ProfilFriendFragment : Fragment() {
     //TODO:Change for real UI
     @SuppressLint("MissingInflatedId")
     private fun updateView(){
+
+        context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
+        context?.theme?.resolveAttribute(R.attr.buttonColor, notSelectedColor, true)
+        binding.buttonConnectionLog.backgroundTintList = ColorStateList.valueOf(selectedColor.data)
+        binding.connectionScroll.visibility = View.VISIBLE
+        binding.disconnectionScroll.visibility = View.GONE
+        binding.buttonDisconnectionLog.backgroundTintList = ColorStateList.valueOf(notSelectedColor.data)
+
+
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorPrimary, notSelectedColor, true)
 
-        binding.playerName.text = username;
-        when (profile.avatar) {
-            "cat.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.cat)
-            "dog.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.dog)
-            "flower.jpg" -> binding.playerInGameAvatar.setImageResource(R.drawable.flower)
-            else -> {}
-        }
-        binding.level.text= "${profile.level.level}"
+        binding.playerName.text = LoggedInUser.getName()
+        binding.playerInGameAvatar.setImageResource(resources.getIdentifier((profile.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
 
+        binding.level.text= "${profile.level.level}"
         binding.tournamentFirst.text = profile.tournamentWins[0].toString()
         binding.tournamentSecond.text = profile.tournamentWins[1].toString()
         binding.tournamentThird.text = profile.tournamentWins[2].toString()
@@ -158,10 +190,18 @@ class ProfilFriendFragment : Fragment() {
             gameInfoDate.text = game.date
             gameInfoTime.text = game.time
             if (game.isWinner) {
-                gameInfoWinner.text = activity?.getString(R.string.iswinner)
+                if (LoggedInUser.getLang() == "en") {
+                    gameInfoWinner.text = "Win"
+                } else {
+                    gameInfoWinner.text = "Victoire"
+                }
                 gameInfoWinner.setTextColor(Color.GREEN)
             } else {
-                gameInfoWinner.text = activity?.getString(R.string.isloser)
+                if (LoggedInUser.getLang() == "en") {
+                    gameInfoWinner.text = "Loss"
+                } else {
+                    gameInfoWinner.text = "Défaite"
+                }
                 gameInfoWinner.setTextColor(Color.RED)
             }
             binding.gameLog.addView(gameInfoHolder)
@@ -192,16 +232,15 @@ class ProfilFriendFragment : Fragment() {
         }
         Log.i("GAME stats", profile.stats.toString())
         for (connection in profile.connectionHistory) {
-            val connectionHolder = layoutInflater.inflate(R.layout.game_connection, binding.connectionLog, false)
-            val connectionType =  connectionHolder.findViewById<TextView>(R.id.connectionType)
+            val connectionHolder = layoutInflater.inflate(R.layout.game_connection, if (connection.connectionType == ConnectionType.CONNECTION) binding.connectionLog else binding.disconnectionLog, false)
             val connectionTime = connectionHolder.findViewById<TextView>(R.id.timeConnection)
             val connectionDate = connectionHolder.findViewById<TextView>(R.id.dateConnection)
-            connectionType.text = connection.connectionType.name
             connectionTime.text = connection.time
             connectionDate.text = connection.date
-            binding.connectionLog.addView(connectionHolder)
+            if (connection.connectionType == ConnectionType.CONNECTION) binding.connectionLog.addView(connectionHolder) else binding.disconnectionLog.addView(connectionHolder)
             binding.connectionScroll.post { binding.connectionScroll.fullScroll(View.FOCUS_DOWN) }
+            binding.disconnectionScroll.post { binding.disconnectionScroll.fullScroll(View.FOCUS_DOWN) }
         }
-        binding.friendcode.text= profile.userCode;
+        binding.friendcode.text= profile.userCode
     }
 }
