@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConnectivityStatus, Friend } from '@app/classes/friend-info';
 import { ProfileInfo } from '@app/classes/profileInfo';
 import { AccountService } from '@app/services/account-service/account.service';
 import { FriendsService } from '@app/services/friends.service';
+import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './friends-page.component.html',
   styleUrls: ['./friends-page.component.scss']
 })
-export class FriendsPageComponent {
+export class FriendsPageComponent implements OnDestroy {
   friends: Friend[] = [];
   usercode: string = "";
   subscriptions: Subscription[] = [];
@@ -20,7 +20,7 @@ export class FriendsPageComponent {
   username: string = "";
   redirect: boolean = false;
 
-  constructor(private snackBar: MatSnackBar, private friendsService: FriendsService, private account: AccountService, private router: Router) {
+  constructor(private snackBarHandler: SnackBarHandlerService, private friendsService: FriendsService, private account: AccountService, private router: Router) {
     this.updateFriendsList();
     this.friendsService.getFriendListUpdateObservable().subscribe(() => {
       console.log('FRIEND REMOVED SOCKET TEST');
@@ -28,6 +28,7 @@ export class FriendsPageComponent {
     })
     this.usercode = this.account.getProfile().userCode;
   }
+
 
   alert(username: string) {
     this.account.setMessages();
@@ -41,6 +42,7 @@ export class FriendsPageComponent {
 
   ngOnDestroy(): void {
     for (const subscription of this.subscriptions) subscription.unsubscribe();
+    this.snackBarHandler.closeAlert();
   }
 
   addFriend() {
@@ -52,7 +54,7 @@ export class FriendsPageComponent {
         console.log(errorCode);
       });
     } else
-      this.snackBar.open(this.account.messageFriend, this.account.closeMessage);
+      this.snackBarHandler.makeAnAlert(this.account.messageFriend, this.account.closeMessage);
 
     (document.getElementById('friendCode') as HTMLInputElement).value = "";
   }

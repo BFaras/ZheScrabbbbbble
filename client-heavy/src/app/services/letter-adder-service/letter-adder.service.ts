@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Vec2 } from '@app/classes/vec2';
 import { DIRECTION, GRID_CONSTANTS } from '@app/constants/grid-constants';
 import { ChatService } from '@app/services/chat-service/chat.service';
@@ -8,6 +7,7 @@ import { LetterHolderService } from '@app/services/letter-holder-service/letter-
 import { Subject } from 'rxjs';
 import { AccountService } from '../account-service/account.service';
 import { PreviewPlayersActionService } from '../preview-players-action-service/preview-players-action.service';
+import { SnackBarHandlerService } from '../snack-bar-handler.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -30,7 +30,7 @@ export class LetterAdderService {
         private gridService: GridService,
         private chatService: ChatService,
         private previewPlayerActionService: PreviewPlayersActionService,
-        private snackBar: MatSnackBar,
+        private snackBarHandler: SnackBarHandlerService,
         private account: AccountService) {
 
     }
@@ -64,20 +64,6 @@ export class LetterAdderService {
             return true
         } else return false
     }
-    /*
-    isFormerTileUsed(row: string, column: number) {
-        if (this.arrowDirection) {
-            const foundLetter = this.mappedBoardState.get(row + (column - 1));
-            const isDirectionLeftToRight = this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row;
-            return Boolean(foundLetter) && isDirectionLeftToRight;
-        }
-        else {
-            const foundLetter = this.mappedBoardState.get((String.fromCharCode(row.charCodeAt(0) - 1)) + column);
-            const isDirectionTopToBottom = this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row;
-            return Boolean(foundLetter) && isDirectionTopToBottom;
-        }
-    }
-*/
 
     findDirectionOfDrop(row: string, column: number) {
         if (this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row) {
@@ -372,7 +358,7 @@ export class LetterAdderService {
                 return
             }
             if (!this.verifyLettersAreLinked()) {
-                this.snackBar.open(this.account.messageLetters, this.account.closeMessage)
+                this.snackBarHandler.makeAnAlert(this.account.messageLetters, this.account.closeMessage)
                 this.getLetterNotAcceptedObservable().next(true);
                 this.removeAll();
                 return;
@@ -489,7 +475,7 @@ export class LetterAdderService {
         const keys = Array.from(this.orderedAddedLetterLog.keys());
         if (this.arrowDirection) {
             if (!this.isHorizontal(keys)) {
-                this.snackBar.open(this.account.messageDir, this.account.closeMessage);
+                this.snackBarHandler.makeAnAlert(this.account.messageDir, this.account.closeMessage);
                 this.getLetterNotAcceptedObservable().next(true)
                 this.removeAll()
                 return "wrongMove"
@@ -499,7 +485,7 @@ export class LetterAdderService {
         }
         else {
             if (!this.isVertical(keys)) {
-                this.snackBar.open(this.account.messageDir, this.account.closeMessage);
+                this.snackBarHandler.makeAnAlert(this.account.messageDir, this.account.closeMessage);
                 this.getLetterNotAcceptedObservable().next(true)
                 this.removeAll()
                 return "wrongMove"

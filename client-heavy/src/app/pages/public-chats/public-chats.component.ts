@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ChatInfo, ChatType } from '@app/classes/chat-info';
 import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 
 @Component({
   selector: 'app-public-chats',
   templateUrl: './public-chats.component.html',
   styleUrls: ['./public-chats.component.scss']
 })
-export class PublicChatsComponent implements OnInit {
+export class PublicChatsComponent implements OnInit, OnDestroy {
   absentChatList: ChatInfo[];
   presentChatList: ChatInfo[] = [];
   activeInput: number;
 
-  constructor(private chatService: ChatService, private snackBar: MatSnackBar, private account: AccountService) {
+  constructor(private chatService: ChatService, private snackBarHandler: SnackBarHandlerService, private account: AccountService) {
     this.updateChats();
   }
 
@@ -30,6 +30,10 @@ export class PublicChatsComponent implements OnInit {
         this.presentChatList = newChats;
       });
     })
+  }
+
+  ngOnDestroy(): void {
+    this.snackBarHandler.closeAlert()
   }
 
   ngOnInit(): void {
@@ -62,7 +66,7 @@ export class PublicChatsComponent implements OnInit {
         console.log(errorCode);
       });
     }
-    else this.snackBar.open(this.account.messageChat, this.account.closeMessage);
+    else this.snackBarHandler.makeAnAlert(this.account.messageChat, this.account.closeMessage);
     (document.getElementById('chat-name') as HTMLInputElement).value = "";
   }
 

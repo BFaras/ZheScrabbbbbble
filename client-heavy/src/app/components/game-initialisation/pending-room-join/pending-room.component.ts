@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AvatarInRoomsService } from '@app/services/avatar-in-rooms.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 import { JoinResponse, WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 import { first } from 'rxjs/operators';
 
@@ -11,9 +11,13 @@ import { first } from 'rxjs/operators';
     templateUrl: './pending-room.component.html',
     styleUrls: ['./pending-room.component.scss'],
 })
-export class PendingRoomComponent {
-    constructor(private snackBar: MatSnackBar, private waitingRoomManagerService: WaitingRoomManagerService, private router: Router, private avatarInRoomService: AvatarInRoomsService, private chatService : ChatService) {
+export class PendingRoomComponent implements OnDestroy {
+    constructor(private snackBarHandler: SnackBarHandlerService, private waitingRoomManagerService: WaitingRoomManagerService, private router: Router, private avatarInRoomService: AvatarInRoomsService, private chatService: ChatService) {
         this.waitingRoomManagerService.joinRoomResponse().pipe(first()).subscribe(this.receiveResponse.bind(this));
+    }
+
+    ngOnDestroy(): void {
+        this.snackBarHandler.closeAlert();
     }
 
     cancelDemand() {
@@ -32,7 +36,7 @@ export class PendingRoomComponent {
         }
         if (!message.playerNames) {
             // Should never reach here
-            this.snackBar.open('Fatal server error. No player name received', "Fermer")
+            this.snackBarHandler.makeAnAlert('Fatal server error. No player name received', "Fermer")
             return;
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom(message.playerNames);
