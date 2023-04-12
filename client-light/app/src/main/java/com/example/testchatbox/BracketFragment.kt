@@ -20,6 +20,8 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.findNavController
 import com.example.testchatbox.databinding.FragmentBracketBinding
 import com.example.testchatbox.databinding.FragmentQueueBinding
+import org.json.JSONArray
+import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
@@ -29,6 +31,7 @@ class BracketFragment : Fragment(), Observer {
     private var _binding: FragmentBracketBinding? = null
     private val binding get() = _binding!!
     private lateinit var timer: CountDownTimer
+    var avatars = mutableMapOf<String, String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +50,8 @@ class BracketFragment : Fragment(), Observer {
             // Behavior of system bars
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
+
+
 
         binding.buttonchat.setOnClickListener {
             findNavController().navigate(R.id.action_bracketFragment_to_ChatFragment)
@@ -117,11 +122,25 @@ class BracketFragment : Fragment(), Observer {
     }
 
     override fun update() {
+        for (game in TournamentModel.gamesData) {
+            SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray(game.players))
+            SocketHandler.getSocket().on("Avatars from Usernames Response") { args ->
+                val avatarListJSON = args[0] as JSONObject
+                Log.d("AVATARS JSON IN ROOM", args[0].toString())
+
+                for (i in 0 until avatarListJSON.length()) {
+                    avatars[avatarListJSON.names()?.getString(i) as String] = (avatarListJSON.names()?.getString(i)?.let { avatarListJSON.get(it) }) as String
+                }
+            }
+        }
+        Log.d("AVATARS IN TOURNAMENT", avatars.toString())
+
         activity?.runOnUiThread(Runnable {
             if(GameRoomModel.gameRoom!=null && GameRoomModel.gameRoom!!.hasStarted)
                 findNavController().navigate(R.id.action_bracketFragment_to_fullscreenFragment);
             if(TournamentModel.tournamentTimer.phase==2)
                 findNavController().navigate(R.id.action_bracketFragment_to_rankingFragment)
+
             timer = setTimer(TournamentModel.tournamentTimer.timeRemaning.toLong()*1000)
             timer.cancel()
             timer.start()
@@ -131,6 +150,20 @@ class BracketFragment : Fragment(), Observer {
                     "Semi1" -> {
                         binding.semi1player1.text = game.players[0]
                         binding.semi1player2.text = game.players[1]
+
+                        for ((name, avatar) in avatars) {
+                            if (name ==  game.players[0]) {
+                                if (resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                                    binding.playerSemi1.setImageResource(resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                                }
+                            }
+                            if (name == game.players[1]) {
+                                if (resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                                    binding.player2Semi1.setImageResource(resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                                }
+                            }
+                        }
+
                         if (game.status == GameStatus.FINISHED) {
                             when (game.winnerIndex) {
                                 0 -> {
@@ -148,6 +181,21 @@ class BracketFragment : Fragment(), Observer {
                     "Semi2" -> {
                         binding.semi2player1.text = game.players[0]
                         binding.semi2player2.text = game.players[1]
+
+                        for ((name, avatar) in avatars) {
+                            if (name ==  game.players[0]) {
+                                if (resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                                    binding.player1Semi2.setImageResource(resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                                }
+                            }
+                            if (name == game.players[1]) {
+                                if (resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                                    binding.player2Semi2.setImageResource(resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                                }
+                            }
+                        }
+
+
                         if (game.status == GameStatus.FINISHED){
                             when (game.winnerIndex) {
                                 0 -> {
@@ -165,8 +213,24 @@ class BracketFragment : Fragment(), Observer {
                     "Final1" -> {
                         binding.finals.visibility = View.VISIBLE
                         binding.final1player1.text = game.players[0]
-                        if(game.players.size==2)
+                        for ((name, avatar) in avatars) {
+                            if (name ==  game.players[0]) {
+                                if (resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                                    binding.player1Final1.setImageResource(resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                                }
+                            }
+                        }
+                        if(game.players.size==2) {
                             binding.final1player2.text = game.players[1]
+                            for ((name, avatar) in avatars) {
+                                if (name ==  game.players[0]) {
+                                    if (resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                                        binding.player2Final1.setImageResource(resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                                    }
+                                }
+                            }
+                        }
+
                         if (game.status == GameStatus.FINISHED) {
                             when (game.winnerIndex) {
                                 0 -> {
@@ -184,8 +248,23 @@ class BracketFragment : Fragment(), Observer {
                     "Final2" -> {
                         binding.finals.visibility = View.VISIBLE
                         binding.final2player1.text = game.players[0]
-                        if(game.players.size==2)
+                        for ((name, avatar) in avatars) {
+                            if (name ==  game.players[0]) {
+                                if (resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                                    binding.player1Final2.setImageResource(resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                                }
+                            }
+                        }
+                        if(game.players.size==2) {
                             binding.final2player2.text = game.players[1]
+                            for ((name, avatar) in avatars) {
+                                if (name ==  game.players[0]) {
+                                    if (resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                                        binding.player2Final2.setImageResource(resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                                    }
+                                }
+                            }
+                        }
                         if (game.status == GameStatus.FINISHED) {
                             when (game.winnerIndex) {
                                 0 -> {
