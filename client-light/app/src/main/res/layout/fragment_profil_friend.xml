@@ -15,13 +15,15 @@
         android:layout_gravity="center">
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="570dp"
+            android:layout_height="600dp"
             android:layout_gravity="center|top"
             android:background="@drawable/background_profile"
             >
 
             <RelativeLayout
                 android:layout_width="match_parent"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:layout_height="569dp">
 
                 <LinearLayout
@@ -36,19 +38,18 @@
                         android:id="@+id/playerInGameAvatar"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
-                        android:background="@color/BabyPink"
                         android:scaleType="centerCrop"
                         app:shapeAppearance="@style/roundedImageViewRounded"></com.google.android.material.imageview.ShapeableImageView>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFeatureSettings="smcp"
-                        android:text="@string/your_friend_code_is"
+                        android:text="@string/friend_code"
+                        android:textAllCaps="true"
                         android:textAlignment="center"
                         android:textColor="?colorSecondary"
                         android:textSize="16dp"
-                        android:textStyle="bold"></TextView>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/friendcode"
@@ -76,9 +77,9 @@
                             android:orientation="horizontal">
 
                             <androidx.appcompat.widget.AppCompatImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/ic_medal_first"></androidx.appcompat.widget.AppCompatImageView>
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/first_place"></androidx.appcompat.widget.AppCompatImageView>
 
                             <TextView
                                 android:id="@+id/tournamentFirst"
@@ -103,7 +104,7 @@
                                 <androidx.appcompat.widget.AppCompatImageView
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
-                                    android:background="@drawable/ic_medal_second"></androidx.appcompat.widget.AppCompatImageView>
+                                    android:background="@drawable/second_place"></androidx.appcompat.widget.AppCompatImageView>
 
                                 <TextView
                                     android:id="@+id/tournamentSecond"
@@ -123,7 +124,7 @@
                                 <androidx.appcompat.widget.AppCompatImageView
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
-                                    android:background="@drawable/ic_medal_third"></androidx.appcompat.widget.AppCompatImageView>
+                                    android:background="@drawable/third_place"/>
 
                                 <TextView
                                     android:id="@+id/tournamentThird"
@@ -148,6 +149,7 @@
 
                     <TextView
                         android:id="@+id/playerName"
+                        android:fontFamily="@font/shrikhand"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="PLAYER NAME"
@@ -181,8 +183,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFeatureSettings="smcp"
                                 android:includeFontPadding="false"
+                                android:textAllCaps="true"
                                 android:text="@string/lvl"
                                 android:textColor="?colorOnSecondary"
                                 android:textSize="35dp"></TextView>
@@ -206,47 +208,47 @@
                             android:layout_gravity="right"
                             android:fontFeatureSettings="smcp"
                             android:includeFontPadding="false"
-                            android:text="42"
+                            android:text="  "
                             android:textColor="?colorOnSecondary"
                             android:textSize="65dp"></TextView>
 
                     </LinearLayout>
-
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/levelProgress"
-                        android:layout_width="320dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:layout_gravity="left"
                         android:background="?colorSecondary"
                         android:max="500"
                         android:progress="100"
-                        app:indicatorColor="@color/DarkForestGreen"
+                        app:indicatorColor="?colorOnPrimary"
                         app:trackThickness="10dp">
-
                     </com.google.android.material.progressindicator.LinearProgressIndicator>
                 </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="175dp"
-                    android:layout_marginEnd="520dp"
-                    android:fontFeatureSettings="smcp"
-                    android:text="game log"
-                    android:textColor="?colorSecondary"
-                    android:textSize="25dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="186dp"
+                    android:layout_marginStart="265dp"
+                    android:textAllCaps="true"
+                    android:text="@string/game_history"
+                    android:textColor="?profileAccentColor"
+                    android:textSize="20dp"
                     android:textStyle="bold"></TextView>
 
                 <LinearLayout
                     android:layout_width="620dp"
-                    android:layout_height="330dp"
+                    android:layout_height="450dp"
+                    android:elevation="5dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true"
                     android:layout_marginEnd="30dp"
-                    android:layout_marginBottom="35dp"
+                    android:layout_marginTop="205dp"
                     android:background="@drawable/background_direction_panel"
-                    android:backgroundTint="?colorSecondary"
+                    android:backgroundTint="?profileAccentColor"
                     android:divider="@drawable/letters_hand_divider"
                     android:orientation="horizontal"
                     android:padding="5dp"
@@ -291,11 +293,35 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="160dp"
+                            android:layout_height="match_parent"
                             android:background="@drawable/background_direction_panel"
                             android:backgroundTint="?backgroundProfile"
                             android:orientation="vertical">
-
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center">
+                                <androidx.appcompat.widget.AppCompatButton
+                                    android:id="@+id/buttonConnectionLog"
+                                    android:layout_width="120dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginEnd="20dp"
+                                    android:text="@string/connexion"
+                                    android:textAllCaps="false"
+                                    android:background="@drawable/background_direction_panel"
+                                    android:backgroundTint="?buttonColor"></androidx.appcompat.widget.AppCompatButton>
+                                <androidx.appcompat.widget.AppCompatButton
+                                    android:id="@+id/buttonDisconnectionLog"
+                                    android:layout_width="120dp"
+                                    android:layout_height="30dp"
+                                    android:text="@string/deconnexion"
+                                    android:textAllCaps="false"
+                                    android:background="@drawable/background_direction_panel"
+                                    android:backgroundTint="?buttonColor">
+                                </androidx.appcompat.widget.AppCompatButton>
+                            </LinearLayout>
                             <androidx.core.widget.NestedScrollView
                                 android:id="@+id/connectionScroll"
                                 android:layout_width="match_parent"
@@ -307,7 +333,22 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:orientation="vertical"
-                                    android:padding="10dp"></LinearLayout>
+                                    android:padding="10dp" />
+                            </androidx.core.widget.NestedScrollView>
+
+                            <androidx.core.widget.NestedScrollView
+                                android:id="@+id/disconnectionScroll"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:visibility="gone"
+                                android:padding="10dp">
+
+                                <LinearLayout
+                                    android:id="@+id/disconnectionLog"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:padding="10dp" />
                             </androidx.core.widget.NestedScrollView>
                         </LinearLayout>
                     </LinearLayout>

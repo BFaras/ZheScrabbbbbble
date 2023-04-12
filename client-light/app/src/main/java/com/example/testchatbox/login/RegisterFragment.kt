@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
@@ -61,6 +62,7 @@ class RegisterFragment : Fragment() {
         val answerEditText = binding.answer
         val registerButton = binding.register
         val loadingProgressBar = binding.loading
+        val cancelRegister = binding.cancelRegister
 
         WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
             // Hide both the status bar and the navigation bar
@@ -68,6 +70,10 @@ class RegisterFragment : Fragment() {
             hide(WindowInsetsCompat.Type.statusBars())
             // Behavior of system bars
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+
+        cancelRegister.setOnClickListener {
+            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
         }
 
         usernameEditText.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
@@ -182,12 +188,34 @@ class RegisterFragment : Fragment() {
             val avatar26 = alertView.findViewById<ShapeableImageView>(R.id.avatar26)
             val avatar27 = alertView.findViewById<ShapeableImageView>(R.id.avatar27)
 
+            val sharkLock = alertView.findViewById<ShapeableImageView>(R.id.sharkLock)
+            val pandaLock = alertView.findViewById<ShapeableImageView>(R.id.pandaLock)
+            val skeletonLock = alertView.findViewById<ShapeableImageView>(R.id.skeletonLock)
+            val tigerLock = alertView.findViewById<ShapeableImageView>(R.id.tigerLock)
+            val bunnyLock = alertView.findViewById<ShapeableImageView>(R.id.bunnyLock)
+
+            val condShark = alertView.findViewById<TextView>(R.id.condShark)
+            val condPanda = alertView.findViewById<TextView>(R.id.condPanda)
+            val condSkeleton = alertView.findViewById<TextView>(R.id.condSkeleton)
+            val condTiger = alertView.findViewById<TextView>(R.id.condTiger)
+            val condBunny = alertView.findViewById<TextView>(R.id.condBunny)
+
             //to be unlocked after
             avatar17.visibility = View.GONE //shark
+            sharkLock.visibility = View.GONE
+            condShark.visibility = View.GONE
             avatar14.visibility = View.GONE //panda
+            pandaLock.visibility = View.GONE
+            condPanda.visibility = View.GONE
             avatar18.visibility = View.GONE //skeleton
+            skeletonLock.visibility = View.GONE
+            condSkeleton.visibility = View.GONE
             avatar19.visibility = View.GONE //tiger
+            tigerLock.visibility = View.GONE
+            condTiger.visibility = View.GONE
             avatar4.visibility = View.GONE //bunny
+            bunnyLock.visibility = View.GONE
+            condBunny.visibility = View.GONE
 
             builder?.setView(alertView)
             avatar1.setOnClickListener {

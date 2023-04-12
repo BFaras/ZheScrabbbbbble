@@ -36,6 +36,13 @@
         <item name="profileAccentColor">#679089</item>
         <item name="chatIconNotif">#38683A</item>
         <item name="chatCanalNotif">#EEE6A3</item>
+        <item name="appBar">@color/lightCorail</item>
+        <item name="buttonColor">#cce0b7</item>
+        <item name="logBackground">#d8e0ce</item>
+        <item name="editBackgroundColor">#cfd7c5</item>
+        <item name="secondaryTextColor">#001d7e</item>
+        <item name="inGameBoardColor">#faf5f1</item>
+        <item name="moveColor">#fffbfb</item>
     </style>
 
     <style name="Theme.TestChatBox.NoActionBar">
@@ -70,7 +77,14 @@
         <item name="backgroundProfile">@color/LightBabyPink</item>
         <item name="profileAccentColor">#a75c8c</item>
         <item name="chatIconNotif">#f7dfed</item>
-        <item name="chatCanalNotif">#DFB2CC</item>
+        <item name="chatCanalNotif">#8e2975</item>
+        <item name="appBar">#d3a7bc</item>
+        <item name="buttonColor">#e0b7ce</item>
+        <item name="logBackground">#e0cddc</item>
+        <item name="editBackgroundColor">#d7c5d3</item>
+        <item name="secondaryTextColor">#8e2975</item>
+        <item name="inGameBoardColor">#faf1fa</item>
+        <item name="moveColor">@color/LightBabyPink</item>
     </style>
 
     <style name="EclipseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -100,6 +114,13 @@
         <item name="profileAccentColor">#986f76</item>
         <item name="chatIconNotif">@color/clearSea</item>
         <item name="chatCanalNotif">#2A5B9C</item>
+        <item name="appBar">#2c4e58</item>
+        <item name="buttonColor">#331f48</item>
+        <item name="logBackground">#281f32</item>
+        <item name="editBackgroundColor">#261e30</item>
+        <item name="secondaryTextColor">@color/Gold</item>
+        <item name="inGameBoardColor">#050a0e</item>
+        <item name="moveColor">#201f1f</item>
     </style>
 
     <style name="BlizzardTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -130,6 +151,13 @@
         <item name="profileAccentColor">#b7c1cc</item>
         <item name="chatCanalNotif">#DDDABC</item>
         <item name="chatIconNotif">#D8BDBB</item>
+        <item name="appBar">#cbc6c5</item>
+        <item name="buttonColor">#e9e9e9</item>
+        <item name="logBackground">#f3f3f3</item>
+        <item name="editBackgroundColor">#e9e9e9</item>
+        <item name="secondaryTextColor">@color/BrightSunset</item>
+        <item name="inGameBoardColor">#eff4f5</item>
+        <item name="moveColor">#ffffff</item>
     </style>
 
     <style name="GreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -160,6 +188,13 @@
         <item name="profileAccentColor">#89b034</item>
         <item name="chatIconNotif">#A2D82D</item>
         <item name="chatCanalNotif">#6AC16E</item>
+        <item name="appBar">#37582c</item>
+        <item name="buttonColor">#5a7b4f</item>
+        <item name="logBackground">#1f321f</item>
+        <item name="editBackgroundColor">#1e301e</item>
+        <item name="secondaryTextColor">#89b034</item>
+        <item name="inGameBoardColor">#0b1c09</item>
+        <item name="moveColor">#122912</item>
     </style>
 
 
