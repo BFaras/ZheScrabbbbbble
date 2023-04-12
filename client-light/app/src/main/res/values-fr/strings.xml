@@ -208,5 +208,6 @@
     <string name="bracket_label">Tours du tournoi</string>
     <string name="waiting_for_tournament_label">En attente d\'un tournoi</string>
     <string name="connexion">Connexions</string>
-    <string name="deconnexion">Déconnexion</string>
+    <string name="deconnexion">Déconnexions</string>
+    <string name="friend_code">Code Ami</string>
 </resources>

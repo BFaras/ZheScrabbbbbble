@@ -201,4 +201,5 @@
     <string name="waiting_for_tournament_label">Waiting for tournament</string>
     <string name="connexion">Log Ins</string>
     <string name="deconnexion">Log Outs</string>
+    <string name="friend_code">Friend Code</string>
 </resources>
