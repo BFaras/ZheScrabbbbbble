@@ -7,7 +7,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./confrim-pop-up.component.scss']
 })
 export class ConfrimPopUpComponent implements OnInit {
-  constructor(private dialogRef: MatDialogRef<ConfrimPopUpComponent>, @Inject(MAT_DIALOG_DATA) public message: string) {}
+  alertDisplay: string
+  constructor(private dialogRef: MatDialogRef<ConfrimPopUpComponent>, @Inject(MAT_DIALOG_DATA) public message: any) {
+
+    console.log(message)
+    this.alertDisplay = message.notification;
+  }
 
   ngOnInit(): void {
   }

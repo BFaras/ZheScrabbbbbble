@@ -16,7 +16,7 @@ button {
     padding: 10px;
     background-color: var(--button-primary);
     border-radius: 7px;
-    width: 20vh;
+    width: 10vh;
     box-shadow: var(--box-shadow);
     font-size: 17px;
     font-family: 'Courier New', Courier, monospace;
@@ -25,7 +25,12 @@ button {
     transition: color 0.5s linear;
     -webkit-transition: color 0.2s linear;
 }
-
+.buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+}
 button:hover {
     color: var(--button-text-hover);
     cursor: pointer;
@@ -39,8 +44,7 @@ h1 {
     font-family: 'Courier New', Courier, monospace;
     font-size: 18px;
     font-weight: bold;
-    margin-top: 2%;
-    margin-bottom: 0% !important;
+    margin: 2%;
 }
 
 ::ng-deep mat-dialog-container {
