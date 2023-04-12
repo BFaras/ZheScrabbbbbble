@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { CoopGameRoom } from '@app/classes/coop-game-room';
 import { GameRoom } from '@app/classes/game-room';
 import { Player } from '@app/classes/player';
@@ -5,7 +6,15 @@ import { GameStatus } from '@app/classes/tournament';
 import { VirtualPlayerEasy } from '@app/classes/virtual-player-easy';
 import { VirtualPlayerHard } from '@app/classes/virtual-player-hard';
 import { /* MAX_NUMBER_OF_PLAYERS,*/ GameType, MAX_NUMBER_OF_PLAYERS, RoomVisibility, TOURNAMENT_SIZE } from '@app/constants/basic-constants';
-import { JOIN_REQUEST_REFUSED, NO_ERROR, ROOM_IS_FULL, ROOM_NAME_TAKEN, ROOM_PASSWORD_INCORRECT } from '@app/constants/error-code-constants';
+import {
+    GAME_STARTED,
+    JOIN_REQUEST_REFUSED,
+    NO_ERROR,
+    ROOM_DELETED,
+    ROOM_IS_FULL,
+    ROOM_NAME_TAKEN,
+    ROOM_PASSWORD_INCORRECT,
+} from '@app/constants/error-code-constants';
 import {
     COOP_ACTION_ACCEPTED,
     COOP_ACTION_PROPOSED,
@@ -16,7 +25,7 @@ import {
     OUT_OF_TIME_MESSAGE,
     REPLACED_MESSAGE,
     ROUND_OVER_MESSAGE,
-    ROUND_TIME_LEFT_MESSAGE
+    ROUND_TIME_LEFT_MESSAGE,
 } from '@app/constants/game-state-constants';
 import { CommandController, CommandResult, PlayerMessage } from '@app/controllers/command.controller';
 import * as http from 'http';
@@ -123,6 +132,11 @@ export class SocketManager {
             socket.on('Join Game Room', (roomCode: string, observer: boolean, password?: string) => {
                 console.log(new Date().toLocaleTimeString() + ' | Room join request received');
                 const username = this.accountInfoService.getUsername(socket);
+                if (this.roomManager.getRoom(roomCode)) {
+                    console.log(new Date().toLocaleTimeString() + ' | Room does not exist');
+                    socket.emit('Join Room Response', ROOM_DELETED);
+                    return;
+                }
                 if (!observer && this.roomManager.isRoomFull(roomCode)) {
                     console.log(new Date().toLocaleTimeString() + ' | Room is full');
                     socket.emit('Join Room Response', ROOM_IS_FULL);
@@ -231,7 +245,18 @@ export class SocketManager {
 
             socket.on('Join Friend Game', async (roomId: string) => {
                 const currentRoom = this.roomManager.getRoom(roomId);
-                if (!currentRoom) return;
+                if (!currentRoom) {
+                    socket.emit('Join Room Response', ROOM_DELETED);
+                    return;
+                }
+                if (currentRoom.getPlayerCount() === MAX_NUMBER_OF_PLAYERS) {
+                    socket.emit('Join Room Response', ROOM_IS_FULL);
+                    return;
+                }
+                if (currentRoom.isGameStarted()) {
+                    socket.emit('Join Room Response', GAME_STARTED);
+                    return;
+                }
                 socket.join(roomId);
                 this.usersStatusService.addUserToInGameList(this.accountInfoService.getUserId(socket));
                 this.roomManager.addPlayer(
