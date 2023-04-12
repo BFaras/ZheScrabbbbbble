@@ -68,6 +68,8 @@
     <string name="ROOM_PASSWORD_INCORRECT">The password is incorrect</string>
     <string name="JOIN_REQUEST_REFUSED">The host of the game did not accept your request to join</string>
     <string name="ROOM_IS_FULL">The room is already full</string>
+    <string name="ROOM_DELETED">The room was deleted</string>
+    <string name="GAME_STARTED">The game has already</string>
     <string name="swap">Swap</string>
     <string name="reserveText">LETTERS LEFT IN RESERVE</string>
     <string name="pass">Pass</string>

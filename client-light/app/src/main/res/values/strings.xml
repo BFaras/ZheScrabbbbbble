@@ -80,6 +80,8 @@
     <string name="ROOM_PASSWORD_INCORRECT">Le mot de passe est incorrect</string>
     <string name="JOIN_REQUEST_REFUSED">Votre demande d\'adhésion a été refusée</string>
     <string name="ROOM_IS_FULL">La salle est déjà pleine</string>
+    <string name="ROOM_DELETED">La salle n\'existe plus</string>
+    <string name="GAME_STARTED">La partie est déjà commencée</string>
     <string name="ReplaceLetter"><i>Tapez une lettre à remplacer.</i></string>
     <string name="MSG_1"><![CDATA[<b>%1$s</b> a placé <i>%2$s</i> pour %3$s point(s).]]></string>
     <string name="MSG_2"><![CDATA[<b>%1$s</b> a tenté de placer un mot invalide.]]></string>

@@ -101,6 +101,7 @@ class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
 
     override fun onStop() {
         super.onStop()
+        SocketHandler.getSocket().off("Chat History Response");
         ChatModel.removeObserver(this);
         InviteService.removeObserver(this);
         notifSound?.release()
@@ -110,7 +111,7 @@ class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
     private fun loadChatMessages(){
         binding.chatProgress.visibility = View.VISIBLE
         SocketHandler.getSocket().once("Chat History Response"){ args ->
-            if(args[0]!=null){
+            try{
                 val messageArray= args[0] as JSONArray
                 val messagesBox = binding.textView
                 activity?.runOnUiThread(java.lang.Runnable {
@@ -152,6 +153,10 @@ class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
                     messagesBox.invalidate();
                     messagesBox.requestLayout();
                 });
+            }catch(e:Exception){
+                val appContext = context?.applicationContext
+                if(appContext!=null)
+                    Toast.makeText(appContext, e.toString(), Toast.LENGTH_LONG).show();
             }
         }
         binding.chatProgress.visibility = View.GONE
@@ -270,17 +275,35 @@ class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
         }
         binding.acceptInvite.setOnClickListener {
             binding.inviteSection.visibility=View.GONE;
-            SocketHandler.getSocket().emit("Join Friend Game")
-            InviteService.acceptRequest();
+            SocketHandler.getSocket().emit("Join Friend Game", request.roomId)
             SocketHandler.getSocket().once("Join Room Response"){args->
-                if(args[1]!=null){
-                    var players= arrayOf<String>()
-                    val playersArray = args[1] as JSONArray
-                    for(i in 0 until playersArray.length()){
-                        players=players.plus(playersArray.getString(i))
+                if(args[0]!=null){
+                    val errorMessage = when(args[0] as String){
+                        "0" -> R.string.NO_ERROR
+                        "ROOM-4" -> R.string.ROOM_IS_FULL
+                        "ROOM-5" -> R.string.ROOM_DELETED
+                        "ROOM-6" -> R.string.GAME_STARTED
+                        else -> R.string.ERROR
                     }
-                    GameRoomModel.initialise(GameRoom("Name", request.roomId, Visibility.Public, players, hasStarted = false, request.gameType ,-1), false);
-                    findNavController().navigate(R.id.action_ChatFragment_to_gameRoomFragment)
+                    activity?.runOnUiThread(Runnable {
+                        if(errorMessage == R.string.NO_ERROR ){
+                            if(args[1]!=null){
+                                var players= arrayOf<String>()
+                                val playersArray = args[1] as JSONArray
+                                for(i in 0 until playersArray.length()){
+                                    players=players.plus(playersArray.getString(i))
+                                }
+                                InviteService.acceptRequest();
+                                GameRoomModel.initialise(GameRoom("Name", request.roomId, Visibility.Public, players, hasStarted = false, request.gameType ,-1), false);
+                                findNavController().navigate(R.id.action_MainMenuFragment_to_gameRoomFragment)
+                            }
+                        }else{
+                            InviteService.rejectRequest();
+                            val appContext = context?.applicationContext
+                            Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
+                            verifyIfInviteRequest();
+                        }
+                    });
                 }
             }
 
@@ -288,6 +311,8 @@ class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
     }
 
     override fun updateInvite() {
-        verifyIfInviteRequest();
+        activity?.runOnUiThread(Runnable {
+            verifyIfInviteRequest();
+        });
     }
 }

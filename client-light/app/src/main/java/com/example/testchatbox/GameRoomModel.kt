@@ -35,7 +35,7 @@ object GameRoomModel :Observable{
         this.gameRoom = gameRoom;
         ChatModel.addGameChat(gameRoom)
         isPlayer=!observer
-        if(isPlayer)
+        if(isPlayer && !gameRoom.players.contains(LoggedInUser.getName()))
             gameRoom.players=gameRoom.players.plus(LoggedInUser.getName())
         SocketHandler.getSocket().on("Room Player Update"){ args ->
             if(args[0] != null){

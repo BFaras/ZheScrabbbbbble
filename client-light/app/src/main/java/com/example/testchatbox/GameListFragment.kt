@@ -410,17 +410,35 @@ class GameListFragment : Fragment(), ObserverInvite {
         }
         binding.acceptInvite.setOnClickListener {
             binding.inviteSection.visibility=View.GONE;
-            SocketHandler.getSocket().emit("Join Friend Game")
-            InviteService.acceptRequest();
+            SocketHandler.getSocket().emit("Join Friend Game", request.roomId)
             SocketHandler.getSocket().once("Join Room Response"){args->
-                if(args[1]!=null){
-                    var players= arrayOf<String>()
-                    val playersArray = args[1] as JSONArray
-                    for(i in 0 until playersArray.length()){
-                        players=players.plus(playersArray.getString(i))
+                if(args[0]!=null){
+                    val errorMessage = when(args[0] as String){
+                        "0" -> R.string.NO_ERROR
+                        "ROOM-4" -> R.string.ROOM_IS_FULL
+                        "ROOM-5" -> R.string.ROOM_DELETED
+                        "ROOM-6" -> R.string.GAME_STARTED
+                        else -> R.string.ERROR
                     }
-                    GameRoomModel.initialise(GameRoom("Name", request.roomId, Visibility.Public, players, hasStarted = false, request.gameType ,-1), false);
-                    findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment)
+                    activity?.runOnUiThread(Runnable {
+                        if(errorMessage == R.string.NO_ERROR ){
+                            if(args[1]!=null){
+                                var players= arrayOf<String>()
+                                val playersArray = args[1] as JSONArray
+                                for(i in 0 until playersArray.length()){
+                                    players=players.plus(playersArray.getString(i))
+                                }
+                                InviteService.acceptRequest();
+                                GameRoomModel.initialise(GameRoom("Name", request.roomId, Visibility.Public, players, hasStarted = false, request.gameType ,-1), false);
+                                findNavController().navigate(R.id.action_MainMenuFragment_to_gameRoomFragment)
+                            }
+                        }else{
+                            InviteService.rejectRequest();
+                            val appContext = context?.applicationContext
+                            Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
+                            verifyIfInviteRequest();
+                        }
+                    });
                 }
             }
 
@@ -428,6 +446,8 @@ class GameListFragment : Fragment(), ObserverInvite {
     }
 
     override fun updateInvite() {
-        verifyIfInviteRequest();
+        activity?.runOnUiThread(Runnable {
+            verifyIfInviteRequest();
+        });
     }
 }

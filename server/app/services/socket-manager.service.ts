@@ -132,7 +132,7 @@ export class SocketManager {
             socket.on('Join Game Room', (roomCode: string, observer: boolean, password?: string) => {
                 console.log(new Date().toLocaleTimeString() + ' | Room join request received');
                 const username = this.accountInfoService.getUsername(socket);
-                if (this.roomManager.getRoom(roomCode)) {
+                if (!this.roomManager.getRoom(roomCode)) {
                     console.log(new Date().toLocaleTimeString() + ' | Room does not exist');
                     socket.emit('Join Room Response', ROOM_DELETED);
                     return;
