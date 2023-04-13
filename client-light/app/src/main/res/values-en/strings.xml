@@ -104,7 +104,7 @@
     <string name="new_password">New Password</string>
     <string name="register_new_passsword">Change Passsword</string>
     <string name="times_up">TIME\'S UP!</string>
-    <string name="talkingIntext">Now talking in</string>
+    <string name="talkingIntext">talking with</string>
     <string name="manage_chats">Manage Chats</string>
     <string name="hello_message"><![CDATA[Hello <b>%1$s</b>!]]></string>
     <string name="privateRoom">Private</string>
@@ -162,7 +162,7 @@
     <string name="greenTheme">Green</string>
     <string name="pinkTheme">Pink</string>
     <string name="blizzardTheme">Blizzard</string>
-    <string name="sorry_nno_hints_have_been_found">Sorry… \\nNo hints have been found.</string>
+    <string name="sorry_nno_hints_have_been_found">Sorry…<br/>No hints have been found.</string>
     <string name="join_a_room">join a room</string>
     <string name="observer">Observer</string>
     <string name="player">Player</string>

@@ -71,8 +71,12 @@ export class GamePageComponent implements OnInit, OnDestroy {
             }
             this.actionHistory.push(message);
         }));
-        this.subscriptions.push(this.gameStateService.getClueObservable().subscribe((clues: string[]) => {
-            this.actionHistory.push({ messageType: 'MSG-CLUE', values: clues });
+        this.subscriptions.push(this.gameStateService.getClueObservable().subscribe((clues: {command: string, value: number}[]) => {
+            const values = [];
+            for(const clue of clues){
+                values.push(clue.command + ' | ' + clue.value);
+            }
+            this.actionHistory.push({ messageType: 'MSG-CLUE', values: values});
         }))
         if (this.gameStateService.isTournamentGame()) {
             this.waitingRoomManagerService.getStartGameObservable().subscribe((info: { isCoop: boolean, roomCode?: string }) => {
@@ -204,7 +208,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
     playHint(command: string) {
         this.clearHints();
-        this.chatService.sendCommand(command.substring(command.indexOf(' ') + 1), command.split(' ')[0]);
+        this.chatService.sendCommand(command.substring(command.indexOf(' ') + 1).split(' | ')[0].trim(), command.split(' ')[0]);
     }
 
     clearHints() {

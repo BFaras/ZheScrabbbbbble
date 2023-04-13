@@ -112,7 +112,7 @@
     <string name="new_password">Nouveau mot de passe</string>
     <string name="register_new_passsword">Enregister le nouveau mot de passe</string>
     <string name="times_up">TEMPS ÉCOULÉ!</string>
-    <string name="talkingIntext">Présentement dans</string>
+    <string name="talkingIntext">en train de discuter avec</string>
     <string name="manage_chats">Gérer les chats</string>
     <string name="hello_message"><![CDATA[Bonjour <b>%1$s</b>!]]></string>
     <string name="privateRoom">Privée</string>
@@ -170,7 +170,7 @@
     <string name="greenTheme">Vert</string>
     <string name="pinkTheme">Rose</string>
     <string name="blizzardTheme">Blizzard</string>
-    <string name="sorry_nno_hints_have_been_found">Désolé… \\nAucun indice n\'a été trouvé.</string>
+    <string name="sorry_nno_hints_have_been_found">Désolé…<br/>Aucun indice n\'a été trouvé.</string>
     <string name="join_a_room">joindre une salle</string>
     <string name="observer">Observateur</string>
     <string name="player">Joueur</string>

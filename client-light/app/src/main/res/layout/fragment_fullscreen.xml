@@ -161,7 +161,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18dp"
+                    android:textSize="14dp"
                     android:textAlignment="center"
                     android:textStyle="italic"
                     android:textColor="?colorOnPrimary"
@@ -170,7 +170,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:textSize="14dp"
+                    android:textSize="12dp"
                     android:textAlignment="center"
                     android:textStyle="italic|bold"
                     android:textColor="?colorOnPrimary"
@@ -187,12 +187,6 @@
                     android:textColor="?colorOnPrimary"
                     android:text="@string/sorry_nno_hints_have_been_found"></TextView>
 
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="none"
-                    android:layout_gravity="center"
-                    >
                     <LinearLayout
                         android:layout_gravity="center"
                         android:gravity="center"
@@ -207,12 +201,11 @@
                             android:columnCount="2"
                             android:rowCount="3"></GridLayout>
                     </LinearLayout>
-                </HorizontalScrollView>
                 <FrameLayout
                     android:id="@+id/noHelpHint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/background_direction_panel"
                     android:backgroundTint="?colorSecondary">
                     <TextView
