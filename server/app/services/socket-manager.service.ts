@@ -83,10 +83,10 @@ export class SocketManager {
                 socket.to(currentRoom.getID()).emit('Get First Tile', userPreview);
             });
 
-            socket.on('Remove Selected Tile', (activeSquare: { x: string; y: number }) => {
+            socket.on('Remove Selected Tile', (userPreview: PreviewUser) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
-                if (!currentRoom || activeSquare === null || activeSquare === undefined) return;
-                socket.to(currentRoom.getID()).emit('Remove Selected Tile Response', activeSquare);
+                if (!currentRoom || userPreview.position === null || userPreview.position === undefined) return;
+                socket.to(currentRoom.getID()).emit('Remove Selected Tile Response', userPreview);
             });
 
             socket.on(

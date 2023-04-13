@@ -65,15 +65,19 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         })
 
         this.removeTilePreviewSubscription = this.previewFirstTileService.getSelectedTileStatus().subscribe((position) => {
+            console.log("remove a first tile")
+            console.log(this.previewFirstTileService.verifyPositionExistInListPlayerTile(position.position))
             if (this.GameStateService.isCoop()) {
-                this.gridService.deleteActivePlayerFirstTile(position, this.letterAdderService.addedLettersLog)
+                if (!this.previewFirstTileService.verifyPositionExistInListPlayerTile(position.position)) {
+                    console.log("remove a first tile coop" + position.username)
+                    this.gridService.deleteActivePlayerFirstTile(position.position, this.letterAdderService.addedLettersLog)
+                }
             } else {
-                this.gridService.deleteActivePlayerFirstTile(position)
+                this.gridService.deleteActivePlayerFirstTile(position.position)
             }
         })
-
-
     }
+
 
     initializePreviewTileIfCoop() {
         this.previewFirstTileService.setUpPreviewPartnerFirstTileCoop(undefined)

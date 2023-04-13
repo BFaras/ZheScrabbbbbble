@@ -26,6 +26,7 @@ export class PreviewPlayersActionService {
 
   setUpPreviewPartnerFirstTileCoop(value: { x: string; y: number } | undefined) {
     this.previewPartnerFirstTileCoop = value;
+    this.listPlayersFirstTilesCoop = new Map<string, { x: string; y: number }>();
   }
 
   addPreviewTile(tilePosition: { x: string; y: number }) {
@@ -92,19 +93,42 @@ export class PreviewPlayersActionService {
   }
 
   removeSelectedTile(activeSquare: { x: string; y: number }) {
-    this.socket.emit('Remove Selected Tile', activeSquare);
+    const playerPosition: PreviewUser = {
+      username: this.accountService.getUsername(),
+      position: activeSquare
+    };
+    this.socket.emit('Remove Selected Tile', playerPosition);
 
   }
 
-  getSelectedTileStatus(): Observable<{ x: string, y: number }> {
-    return new Observable((observer: Observer<{ x: string, y: number }>) => {
-      this.socket.on('Remove Selected Tile Response', (activeSquare: { x: string, y: number }) => {
+  getSelectedTileStatus(): Observable<PreviewUser> {
+    return new Observable((observer: Observer<PreviewUser>) => {
+      this.socket.on('Remove Selected Tile Response', (otherUserPreview: PreviewUser) => {
         this.previewPartnerFirstTileCoop = undefined
-        observer.next(activeSquare)
+        this.listPlayersFirstTilesCoop.delete(otherUserPreview.username)
+        observer.next(otherUserPreview)
       })
     })
   }
 
+  getlistPlayersFirstTilesCoop() {
+    return this.listPlayersFirstTilesCoop
+  }
+
+  verifyPositionExistInListPlayerTile(postion: { x: string; y: number }) {
+    let isLetterPresent = false;
+    const listPlayersFirstTilesCoopArray = Array.from(this.listPlayersFirstTilesCoop.values())
+    for (let i = 0; i < listPlayersFirstTilesCoopArray.length; i++) {
+      if (listPlayersFirstTilesCoopArray[i].x === postion.x && listPlayersFirstTilesCoopArray[i].y === postion.y) {
+        isLetterPresent = true;
+        console.log(isLetterPresent)
+        return isLetterPresent
+      }
+
+    }
+    console.log(isLetterPresent)
+    return isLetterPresent
+  }
   getPreviewFirstTileCoop() {
     return this.previewPartnerFirstTileCoop;
   }
