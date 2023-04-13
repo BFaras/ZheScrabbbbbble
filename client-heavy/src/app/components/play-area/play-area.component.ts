@@ -183,8 +183,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
 
     openBlankTileDialog(letter: CdkDragDrop<string>, coord: Vec2) {
         const dialogReference = this.dialogBlankTile.open(BlankTilePopUpComponent, {
-            width: '250px',
-            height: '250px',
+            width: '450px',
+            height: '230px',
             panelClass: 'container-blank-letter'
         });
         dialogReference.afterClosed().subscribe(result => {
