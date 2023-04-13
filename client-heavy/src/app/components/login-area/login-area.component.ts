@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Account } from '@app/classes/account';
 import { VISIBILITY_CONSTANTS } from '@app/constants/visibility-constants';
 import { AccountAuthenticationService } from '@app/services/account-authentification-service/account-authentication.service';
 import { AccountService } from '@app/services/account-service/account.service';
+import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './login-area.component.html',
   styleUrls: ['./login-area.component.scss']
 })
-export class LoginAreaComponent {
+export class LoginAreaComponent implements OnDestroy {
   userAccount: Account = {
     username: "",
     email: "",
@@ -26,8 +26,14 @@ export class LoginAreaComponent {
 
   constructor(private accountAuthenticationService: AccountAuthenticationService,
     private router: Router, private account: AccountService,
-    private snackBar: MatSnackBar) {
-    this.accountAuthenticationService.setUpSocket()
+    private snackBarHandler: SnackBarHandlerService) {
+    this.accountAuthenticationService.setUpSocket();
+    this.subscription = this.accountAuthenticationService.getStatusOfAuthentication().subscribe((status: boolean) => {
+      this.showStatus(status);
+    });
+  }
+  ngOnDestroy(): void {
+    this.snackBarHandler.closeAlert()
   }
 
   changePasswordVisibility(): string {
@@ -41,17 +47,24 @@ export class LoginAreaComponent {
 
   loginToAccount() {
     this.accountAuthenticationService.LoginToAccount(this.userAccount);
-    this.subscription = this.accountAuthenticationService.getStatusOfAuthentication().subscribe((status: boolean) => {
-      this.showStatus(status);
-    });
   }
+
+  @HostListener('window:keypress', ['$event'])
+  onKeyDown(e: KeyboardEvent) {
+    console.log(e.key)
+    if (e.key === "Enter") {
+      this.loginToAccount()
+    }
+  }
+
 
   showStatus(status: boolean) {
     if (status == true) {
       this.account.setUsername(this.userAccount.username);
       this.router.navigate(['/home']);
     } else {
-      this.snackBar.open("Échec de l'authentification", "Fermer")
+      this.account.setMessages();
+      this.snackBarHandler.makeAnAlert(this.account.messageAuth, this.account.closeMessage);
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { VICTORY_STATUS } from '@app/classes/action-history';
 import { GameHistoryInfo } from '@app/classes/profileInfo';
 const DEFEAT = 'PROFILE-PAGE.LOSS';
@@ -10,6 +10,7 @@ const VICTORY = 'PROFILE-PAGE.WIN';
 })
 export class FormerActionHistoryAreaComponent implements OnInit {
   //il faut mettre interaction quand ce sera ready du cote serveur
+  @ViewChild('scroll', { read: ElementRef }) public scroll: ElementRef;
   @Input() formerActionsHistory: GameHistoryInfo[];
   constructor() {
   }
@@ -18,9 +19,21 @@ export class FormerActionHistoryAreaComponent implements OnInit {
 
   }
 
-  test() {
-    console.log(this.formerActionsHistory)
+  ngAfterViewInit() {
+    this.scrollBottom()
   }
+
+
+  public scrollBottom() {
+    console.log(this.scroll.nativeElement.scrollTop);
+    this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
+
+  }
+
+  public scrollToTop() {
+    this.scroll.nativeElement.scrollTop = 0;
+  }
+
   checkStatus(indexAction: number) {
     if (this.formerActionsHistory[indexAction].isWinner === VICTORY_STATUS)
       return VICTORY;

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { connectionHistory } from '@app/classes/connection-history';
 import { ConnectionInfo } from '@app/classes/profileInfo';
 
@@ -7,8 +7,8 @@ import { ConnectionInfo } from '@app/classes/profileInfo';
   templateUrl: './connection-history-area.component.html',
   styleUrls: ['./connection-history-area.component.scss']
 })
-export class ConnectionHistoryAreaComponent implements OnInit {
-
+export class ConnectionHistoryAreaComponent implements OnInit, AfterViewInit {
+  @ViewChild('scroll', { read: ElementRef }) public scroll: ElementRef;
   @Input() connectionInformation: ConnectionInfo[];
   connectionMode = true;
   connectionHistory: connectionHistory = {
@@ -16,6 +16,16 @@ export class ConnectionHistoryAreaComponent implements OnInit {
     disconnections: [],
   };
   constructor() {
+  }
+
+  public scrollBottom() {
+    console.log(this.scroll.nativeElement.scrollTop);
+    this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
+
+  }
+
+  public scrollToTop() {
+    this.scroll.nativeElement.scrollTop = 0;
   }
 
   ngOnInit(): void {
@@ -28,14 +38,20 @@ export class ConnectionHistoryAreaComponent implements OnInit {
     })
   }
 
+  ngAfterViewInit() {
+    this.scrollBottom()
+  }
+
   changeToConnection(event: Event) {
     this.connectionMode = true;
     this.setActive(event);
+    this.scrollBottom()
   }
 
   changeToDisconnection(event: Event) {
     this.connectionMode = false;
     this.setActive(event);
+    this.scrollBottom()
   }
 
   setActive(event: Event) {
@@ -45,5 +61,6 @@ export class ConnectionHistoryAreaComponent implements OnInit {
       tabsLinks[i].className = tabsLinks[i].className.replace(" active", "");
     }
     (event.currentTarget! as HTMLTextAreaElement).className += " active";
+    this.scrollBottom()
   }
 }

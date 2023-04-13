@@ -132,9 +132,10 @@ class ChatFragment : Fragment(), ObserverChat {
                 usernameMessage.text = message.username
                 timeStampMessage.text = message.timestamp
 
-                if (resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                if (activity?.resources?.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
                     Log.d("AVATAR", message.avatar)
-                    avatar.setImageResource(resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                    activity?.resources?.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName)
+                        ?.let { avatar.setImageResource(it) }
                 } else {
                     avatar.setImageResource(R.drawable.robot)
                 }
@@ -198,8 +199,8 @@ class ChatFragment : Fragment(), ObserverChat {
         usernameMessage.text = message.username
         timeStampMessage.text = message.timestamp
 
-        if (resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
-            avatar.setImageResource(resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+        if (activity?.resources?.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+            activity?.resources?.let { avatar.setImageResource(it.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName)) }
         } else {
             avatar.setImageResource(R.drawable.robot)
         }
@@ -216,7 +217,10 @@ class ChatFragment : Fragment(), ObserverChat {
 
 
     override fun updateMessage(chatCode: String, message: Message) {
-        notifSound?.start()
+        if (message.username != LoggedInUser.getName()) {
+            notifSound?.start()
+        }
+
         if(chatsList[selectedChatIndex]._id == chatCode)
         {
             addMessage(message);

@@ -1,10 +1,11 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { WaitingRoom } from '@app/classes/waiting-room';
 import { RoomVisibility } from '@app/constants/room-visibility';
+import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 import { JoinResponse, WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
@@ -24,11 +25,13 @@ export class JoinGameComponent implements OnDestroy {
     constructor(private waitingRoomManagerService: WaitingRoomManagerService,
         private router: Router, private dialog: MatDialog,
         private chatService: ChatService,
-        private snackBar: MatSnackBar
+        private snackBarHandler: SnackBarHandlerService,
+        private accountService: AccountService
     ) {}
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+        this.snackBarHandler.closeAlert()
     }
 
     ngOnInit() {
@@ -77,13 +80,14 @@ export class JoinGameComponent implements OnDestroy {
     }
 
     redirectPlayer(message: JoinResponse) {
+        this.accountService.setMessages();
         if (message.errorCode === 'ROOM-4') {
-            this.snackBar.open('Cette salle de jeu est pleine', "Fermer")
+            this.snackBarHandler.makeAnAlert(this.accountService.messageFull, this.accountService.closeMessage)
             return;
         }
         if (!message.playerNames) {
             // Should never reach here
-            this.snackBar.open('Fatal server error. No player name received', "Fermer")
+            this.snackBarHandler.makeAnAlert('Fatal server error. No player name received', "Fermer")
             return;
         }
         this.waitingRoomManagerService.setDefaultPlayersInRoom(message.playerNames);

@@ -90,7 +90,7 @@
         "QUIT": "Leave"
     },
     "HOMEPAGE": {
-        "MESSAGE": "Pick a Game Mode!",
+        "MESSAGE": "Hello ",
         "CLASSIC": "Play",
         "TOURNAMENT": "Tournament",
         "COLLABORATIVE": "Collaborative"

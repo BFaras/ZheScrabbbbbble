@@ -1,4 +1,5 @@
-import { DATABASE_UNAVAILABLE } from '@app/constants/error-code-constants';
+import { MIN_USERNAME_LENGTH, VIRTUAL_PLAYER_NAME } from '@app/constants/authentification-constants';
+import { DATABASE_UNAVAILABLE, USERNAME_INVALID } from '@app/constants/error-code-constants';
 import {
     DEFAULT_LANGUAGE,
     DEFAULT_LEVEL,
@@ -7,7 +8,7 @@ import {
     GAMES_NB_STAT_NAME,
     GAME_TIME_AVRG_STAT_NAME,
     POINTS_AVRG_STAT_NAME,
-    WINS_NB_STAT_NAME
+    WINS_NB_STAT_NAME,
 } from '@app/constants/profile-constants';
 import { ConnectivityStatus, UserStatus } from '@app/interfaces/friend-info';
 import {
@@ -17,7 +18,7 @@ import {
     LevelInfo,
     ProfileInfo,
     ProfileSettings,
-    StatisticInfo
+    StatisticInfo,
 } from '@app/interfaces/profile-info';
 import { Container, Service } from 'typedi';
 import { DatabaseService } from './database.service';
@@ -126,7 +127,11 @@ export class ProfileService {
     }
 
     async changeUsername(userId: string, newUsername: string): Promise<string> {
-        return this.dbService.changeUsername(userId, newUsername);
+        let errorCode: string = USERNAME_INVALID;
+        if (this.validateUsername(newUsername)) {
+            errorCode = await this.dbService.changeUsername(userId, newUsername);
+        }
+        return errorCode;
     }
 
     async updateUserStatsAndLevel(userId: string, newUserStats: StatisticInfo[], newLevelInfo: LevelInfo): Promise<string> {
@@ -171,6 +176,10 @@ export class ProfileService {
             errorCode = await this.dbService.changeUserProfileInfo(userId, profileInfo);
         }
         return errorCode;
+    }
+
+    validateUsername(username: string): boolean {
+        return username.length >= MIN_USERNAME_LENGTH && !username.includes(VIRTUAL_PLAYER_NAME);
     }
 
     private async updateProfileFromNewStatus(userSatus: UserStatus) {

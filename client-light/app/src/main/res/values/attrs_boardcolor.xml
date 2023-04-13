@@ -13,4 +13,11 @@
     <attr name="activeTile" format="color"></attr>
     <attr name="backgroundProfile" format="color"></attr>
     <attr name="profileAccentColor" format="color"></attr>
+    <attr name="appBar" format="color"></attr>
+    <attr name="buttonColor" format="color"></attr>
+    <attr name="logBackground" format="color"></attr>
+    <attr name="editBackgroundColor" format="color"></attr>
+    <attr name="secondaryTextColor" format="color"></attr>
+    <attr name="inGameBoardColor" format="color"></attr>
+    <attr name="moveColor" format="color"></attr>
 </resources>

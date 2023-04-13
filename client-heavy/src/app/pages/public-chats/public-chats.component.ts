@@ -1,19 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ChatInfo, ChatType } from '@app/classes/chat-info';
+import { ConfrimPopUpComponent } from '@app/components/confrim-pop-up/confrim-pop-up.component';
+import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 
 @Component({
   selector: 'app-public-chats',
   templateUrl: './public-chats.component.html',
   styleUrls: ['./public-chats.component.scss']
 })
-export class PublicChatsComponent implements OnInit {
+export class PublicChatsComponent implements OnInit, OnDestroy {
   absentChatList: ChatInfo[];
   presentChatList: ChatInfo[] = [];
   activeInput: number;
 
-  constructor(private chatService: ChatService, private snackBar: MatSnackBar) {
+  constructor(public dialog: MatDialog, private chatService: ChatService, private snackBarHandler: SnackBarHandlerService, private account: AccountService) {
     this.updateChats();
   }
 
@@ -31,13 +34,35 @@ export class PublicChatsComponent implements OnInit {
     })
   }
 
+  ngOnDestroy(): void {
+    this.snackBarHandler.closeAlert()
+  }
+
   ngOnInit(): void {
 
   }
 
   alert(chat: ChatInfo) {
-    const text = 'Êtes-vous sûr(e) de vouloir quitter ce chat?';
-    if (confirm(text)) {
+    const text = this.account.getLanguage() === 'fr' ? 'Êtes-vous sûr(e) de vouloir quitter ce chat?' : 'Are you sure you want to leave this chat?';
+    const dialogRef = this.dialog.open(ConfrimPopUpComponent, {
+      width: '450px',
+      height: '230px',
+      data: { notification: text }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log("subscription works")
+      console.log(result)
+      if (result === undefined) {
+        this.dialogResponse(false, chat)
+      } else {
+        this.dialogResponse(result.status, chat);
+      }
+    });
+  }
+
+  dialogResponse(status: boolean, chat: ChatInfo) {
+    if (status) {
       this.chatService.leaveChat(chat).subscribe((errorCode: string) => {
         this.updateChats();
         console.log(errorCode);
@@ -53,6 +78,7 @@ export class PublicChatsComponent implements OnInit {
   }
 
   addChat() {
+    this.account.setMessages();
     const chatName = (document.getElementById('chat-name') as HTMLInputElement).value;
     if (chatName.length < 35) {
       this.chatService.createChat(chatName).subscribe((errorCode: string) => {
@@ -60,7 +86,7 @@ export class PublicChatsComponent implements OnInit {
         console.log(errorCode);
       });
     }
-    else this.snackBar.open("Le nom du chat est trop long. Il ne doit pas dépasser 35 caractères.", "Fermer");
+    else this.snackBarHandler.makeAnAlert(this.account.messageChat, this.account.closeMessage);
     (document.getElementById('chat-name') as HTMLInputElement).value = "";
   }
 
