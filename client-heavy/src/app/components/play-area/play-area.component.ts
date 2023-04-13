@@ -61,7 +61,7 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         })
         this.previewFirstTileService.setUpSocket()
         this.addTilePreviewSubscription = this.previewFirstTileService.getActivePlayerFirstTile().subscribe((position) => {
-            this.gridService.showActivePlayerFirstTile(position)
+            this.gridService.showActivePlayerFirstTile(position.position)
         })
 
         this.removeTilePreviewSubscription = this.previewFirstTileService.getSelectedTileStatus().subscribe((position) => {

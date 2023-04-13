@@ -46,7 +46,11 @@ export class LetterAdderService {
     onLeftClick(coords: Vec2) {
         if (this.canClick(coords)) {
             this.gridService.deleteAndRedraw();
+            console.log("hi")
+            console.log(this.previewPlayerActionService.getPreviewFirstTileCoop())
+            /**j ai jamais faire le gert preview */
             if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
+                console.log(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
                 this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
             }
             if (this.prevActiveSquare.x === this.activeSquare.x && this.prevActiveSquare.y === this.activeSquare.y)
