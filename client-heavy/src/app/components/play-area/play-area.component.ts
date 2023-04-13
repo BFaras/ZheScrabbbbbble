@@ -42,7 +42,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         public readonly dialogBlankTile: MatDialog,
         private previewFirstTileService: PreviewPlayersActionService,
         private GameStateService: GameStateService,
-        private snackBackHandler: SnackBarHandlerService
+        private snackBackHandler: SnackBarHandlerService,
+        private previewPlayerActionService: PreviewPlayersActionService
     ) {
         this.initializePreviewTileIfCoop()
         this.subscription = this.gameStateService.getGameStateObservable().subscribe(async (gameState) => {
@@ -61,19 +62,31 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         })
         this.previewFirstTileService.setUpSocket()
         this.addTilePreviewSubscription = this.previewFirstTileService.getActivePlayerFirstTile().subscribe((position) => {
-            this.gridService.showActivePlayerFirstTile(position)
+            this.gridService.deleteActivePlayerFirstTile(position.position, this.letterAdderService.addedLettersLog)
+            const listPlayersFirstTilesCoopArray = Array.from(this.previewPlayerActionService.listPlayersFirstTilesCoop.values())
+            listPlayersFirstTilesCoopArray.forEach((position) => {
+                this.gridService.showActivePlayerFirstTile(position)
+            })
         })
 
         this.removeTilePreviewSubscription = this.previewFirstTileService.getSelectedTileStatus().subscribe((position) => {
+            console.log("remove a first tile")
+            console.log(this.previewFirstTileService.verifyPositionExistInListPlayerTile(position.position))
             if (this.GameStateService.isCoop()) {
-                this.gridService.deleteActivePlayerFirstTile(position, this.letterAdderService.addedLettersLog)
+                if (!this.previewFirstTileService.verifyPositionExistInListPlayerTile(position.position)) {
+                    console.log("remove a first tile coop" + position.username)
+                    this.gridService.deleteActivePlayerFirstTile(position.position, this.letterAdderService.addedLettersLog)
+                    const listPlayersFirstTilesCoopArray = Array.from(this.previewPlayerActionService.listPlayersFirstTilesCoop.values())
+                    listPlayersFirstTilesCoopArray.forEach((position) => {
+                        this.gridService.showActivePlayerFirstTile(position)
+                    })
+                }
             } else {
-                this.gridService.deleteActivePlayerFirstTile(position)
+                this.gridService.deleteActivePlayerFirstTile(position.position)
             }
         })
-
-
     }
+
 
     initializePreviewTileIfCoop() {
         this.previewFirstTileService.setUpPreviewPartnerFirstTileCoop(undefined)
@@ -170,8 +183,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
 
     openBlankTileDialog(letter: CdkDragDrop<string>, coord: Vec2) {
         const dialogReference = this.dialogBlankTile.open(BlankTilePopUpComponent, {
-            width: '250px',
-            height: '250px',
+            width: '450px',
+            height: '230px',
             panelClass: 'container-blank-letter'
         });
         dialogReference.afterClosed().subscribe(result => {
