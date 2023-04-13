@@ -42,7 +42,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         public readonly dialogBlankTile: MatDialog,
         private previewFirstTileService: PreviewPlayersActionService,
         private GameStateService: GameStateService,
-        private snackBackHandler: SnackBarHandlerService
+        private snackBackHandler: SnackBarHandlerService,
+        private previewPlayerActionService: PreviewPlayersActionService
     ) {
         this.initializePreviewTileIfCoop()
         this.subscription = this.gameStateService.getGameStateObservable().subscribe(async (gameState) => {
@@ -61,7 +62,11 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         })
         this.previewFirstTileService.setUpSocket()
         this.addTilePreviewSubscription = this.previewFirstTileService.getActivePlayerFirstTile().subscribe((position) => {
-            this.gridService.showActivePlayerFirstTile(position.position)
+            this.gridService.deleteActivePlayerFirstTile(position.position, this.letterAdderService.addedLettersLog)
+            const listPlayersFirstTilesCoopArray = Array.from(this.previewPlayerActionService.listPlayersFirstTilesCoop.values())
+            listPlayersFirstTilesCoopArray.forEach((position) => {
+                this.gridService.showActivePlayerFirstTile(position)
+            })
         })
 
         this.removeTilePreviewSubscription = this.previewFirstTileService.getSelectedTileStatus().subscribe((position) => {
@@ -71,6 +76,10 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
                 if (!this.previewFirstTileService.verifyPositionExistInListPlayerTile(position.position)) {
                     console.log("remove a first tile coop" + position.username)
                     this.gridService.deleteActivePlayerFirstTile(position.position, this.letterAdderService.addedLettersLog)
+                    const listPlayersFirstTilesCoopArray = Array.from(this.previewPlayerActionService.listPlayersFirstTilesCoop.values())
+                    listPlayersFirstTilesCoopArray.forEach((position) => {
+                        this.gridService.showActivePlayerFirstTile(position)
+                    })
                 }
             } else {
                 this.gridService.deleteActivePlayerFirstTile(position.position)

@@ -13,7 +13,6 @@ export class PreviewPlayersActionService {
   previewTilesPosition: { x: string; y: number }[] = [];
   firstTilePosition: { x: string; y: number } = { x: "", y: 0 };
 
-  previewPartnerFirstTileCoop: { x: string; y: number } | undefined = undefined;
   listPlayersFirstTilesCoop: Map<string, { x: string; y: number }> = new Map<string, { x: string; y: number }>();
   constructor(private socketManagerService: SocketManagerService, private accountService: AccountService) {
     this.setUpSocket()
@@ -25,7 +24,6 @@ export class PreviewPlayersActionService {
   }
 
   setUpPreviewPartnerFirstTileCoop(value: { x: string; y: number } | undefined) {
-    this.previewPartnerFirstTileCoop = value;
     this.listPlayersFirstTilesCoop = new Map<string, { x: string; y: number }>();
   }
 
@@ -86,7 +84,6 @@ export class PreviewPlayersActionService {
     return new Observable((observer: Observer<PreviewUser>) => {
       this.socket.on('Get First Tile', (otherUserPreview: PreviewUser) => {
         this.listPlayersFirstTilesCoop.set(otherUserPreview.username, otherUserPreview.position)
-        this.previewPartnerFirstTileCoop = otherUserPreview.position
         observer.next(otherUserPreview)
       })
     })
@@ -104,7 +101,6 @@ export class PreviewPlayersActionService {
   getSelectedTileStatus(): Observable<PreviewUser> {
     return new Observable((observer: Observer<PreviewUser>) => {
       this.socket.on('Remove Selected Tile Response', (otherUserPreview: PreviewUser) => {
-        this.previewPartnerFirstTileCoop = undefined
         this.listPlayersFirstTilesCoop.delete(otherUserPreview.username)
         observer.next(otherUserPreview)
       })
@@ -128,9 +124,6 @@ export class PreviewPlayersActionService {
     }
     console.log(isLetterPresent)
     return isLetterPresent
-  }
-  getPreviewFirstTileCoop() {
-    return this.previewPartnerFirstTileCoop;
   }
 
 }
