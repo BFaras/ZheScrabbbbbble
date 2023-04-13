@@ -61,7 +61,7 @@ export class CommandController {
         return { errorType: UNKNOWN_ACTION };
     }
 
-    async hintCommand(game: Game): Promise<string[]> {
+    async hintCommand(game: Game): Promise<{command: string, value: number}[]> {
         const possibleWords = await game.findWords(false);
         this.shuffleWords(possibleWords);
         return this.hintMessage(possibleWords);
@@ -97,11 +97,11 @@ export class CommandController {
             [possibleWords[i], possibleWords[j]] = [possibleWords[j], possibleWords[i]];
         }
     }
-    private hintMessage(possibleWords: PossibleWords[]): string[] {
+    private hintMessage(possibleWords: PossibleWords[]): {command: string, value: number}[] {
         const commands = [];
         const limit = possibleWords.length < HINT_WORD_LIMIT ? possibleWords.length : HINT_WORD_LIMIT; 
         for(let i = 0; i < limit; i++){
-            commands.push(CommandVerificationService.recreateCommand(possibleWords[i].command));
+            commands.push({command: CommandVerificationService.recreateCommand(possibleWords[i].command), value: possibleWords[i].value});
         }
         return commands;
     }

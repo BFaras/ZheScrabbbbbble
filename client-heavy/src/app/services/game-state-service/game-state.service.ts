@@ -34,8 +34,8 @@ export class GameStateService {
     private gameStateObservers: Observer<GameState>[] = [];
     private actionMessageObservable: Observable<PlayerMessage>;
     private actionMessageObserver: Observer<PlayerMessage>;
-    private clueObservable: Observable<string[]>;
-    private clueObserver: Observer<string[]>;
+    private clueObservable: Observable<{command: string, value: number}[]>;
+    private clueObserver: Observer<{command: string, value: number}[]>;
 
     private observerIndex: number;
     private tournamentGame: boolean;
@@ -51,7 +51,7 @@ export class GameStateService {
             if (!this.socket.active) this.refreshSocket();
             this.actionMessageObserver = observer;
         });
-        this.clueObservable = new Observable((observer: Observer<string[]>) => {
+        this.clueObservable = new Observable((observer: Observer<{command: string, value: number}[]>) => {
             if (!this.socket.active) this.refreshSocket();
             this.clueObserver = observer;
         });
@@ -69,7 +69,7 @@ export class GameStateService {
         this.socket.on('Message Action History', (msg: PlayerMessage) => {
             this.actionMessageObserver.next(msg);
         });
-        this.socket.on('Clue Response', (clues: string[]) => {
+        this.socket.on('Clue Response', (clues: {command: string, value: number}[]) => {
             this.clueObserver.next(clues);
         });
     }
@@ -78,7 +78,7 @@ export class GameStateService {
         this.socketManagerService.getSocket().emit('Request Clue');
     }
 
-    getClueObservable(): Observable<string[]> {
+    getClueObservable(): Observable<{command: string, value: number}[]> {
         return this.clueObservable;
     }
 

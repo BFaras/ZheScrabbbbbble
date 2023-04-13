@@ -85,6 +85,7 @@ class LoginFragment : Fragment() {
                     return@Observer
                 }
                 loginButton.isEnabled = loginFormState.isDataValid
+                if (loginFormState.isDataValid) loginButton.elevation = 5F
                 loginFormState.usernameError?.let {
                     usernameEditText.error = getString(it)
                 }

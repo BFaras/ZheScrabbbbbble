@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_registerFragment_to_MainMenuFragment"
             app:destination="@id/mainActivity" />
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
 
     </fragment>
     <fragment
@@ -38,6 +41,9 @@
         <action
             android:id="@+id/action_resetFragment_to_MainMenuFragment"
             app:destination="@id/mainActivity" />
+        <action
+            android:id="@+id/action_resetFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
 
 
     </fragment>

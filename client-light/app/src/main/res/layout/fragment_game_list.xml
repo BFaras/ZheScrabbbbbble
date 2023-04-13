@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?backgroundColor"
+    android:clipToPadding="false"
+    android:clipChildren="false"
     tools:context=".GameListFragment">
 
     <TextView
@@ -13,7 +15,6 @@
         android:layout_gravity="center|top"
         android:fontFamily="@font/shrikhand"
         android:text="@string/scrabbleName"
-        android:textColor="?colorSecondary"
         android:layout_marginTop="70dp"
         android:textSize="70sp">
     </TextView>
@@ -25,7 +26,7 @@
         android:gravity="center"
         android:padding="12dp"
         android:background="@drawable/background_side_panel"
-        android:backgroundTint="?colorSecondary"
+        android:backgroundTint="?appBar"
         android:layout_gravity="center|end">
 
         <ImageButton
@@ -59,8 +60,10 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_marginRight="5dp"
+            android:elevation="10dp"
             android:padding="8dp"
             android:background="@drawable/background_direction_panel"
+            android:backgroundTint="?logBackground"
             android:gravity="center">
 
             <TextView
@@ -74,11 +77,67 @@
                 android:text="@string/join_a_room">
 
             </TextView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="?profileAccentColor"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                card_view:contentPadding="10dp"
+                card_view:cardCornerRadius="5dp"
+                android:padding="8dp">
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stretchColumns="*"
+                        android:gravity="center">
+                        <TableRow
+                            android:gravity="center">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:text="@string/host"></TextView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:text="@string/room"></TextView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:text="@string/visibility"></TextView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:text="@string/players"></TextView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:text="@string/observers"></TextView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:text="@string/game_type"></TextView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:text="@string/game_status"></TextView>
+                        </TableRow>
+                    </TableLayout>
+
+
+            </androidx.cardview.widget.CardView>
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="none"
-                android:padding="10dp">
+                android:padding="3dp">
 
                 <LinearLayout
                     android:id="@+id/gameList"
@@ -96,8 +155,12 @@
             android:id="@+id/createSection"
             android:layout_width="350dp"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:clipChildren="false"
             android:layout_gravity="center|end"
             android:background="@drawable/background_direction_panel"
+            android:backgroundTint="?logBackground"
+            android:elevation="10dp"
             android:visibility="visible"
             android:padding="15dp">
 
@@ -117,6 +180,7 @@
                     android:textAllCaps="true"
                     android:textStyle="bold"
                     android:textSize="20sp"
+                    android:textColor="?colorOnPrimary"
                     android:text="@string/create_a_room" />
 
                 <RadioGroup
@@ -131,15 +195,17 @@
                     <RadioButton
                         android:id="@+id/classicGame"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="?colorSecondary"
+                        android:layout_height="30dp"
+                        android:buttonTint="#ff4081"
+                        android:textColor="?colorOnPrimary"
                         android:text="@string/classique" />
 
                     <RadioButton
                         android:id="@+id/coopGame"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="?colorSecondary"
+                        android:layout_height="30dp"
+                        android:buttonTint="#ff4081"
+                        android:textColor="?colorOnPrimary"
                         android:text="@string/collaboratif" />
                 </RadioGroup>
 
@@ -153,26 +219,26 @@
                     android:orientation="horizontal">
 
                     <RadioButton
+                        android:id="@+id/publicRoom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:textColor="?colorOnPrimary"
+                        android:buttonTint="#ff4081"
+                        android:text="@string/publicRoom" />
+
+                    <RadioButton
                         android:id="@+id/privateRoom"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="?colorSecondary"
+                        android:layout_height="30dp"
+                        android:buttonTint="#ff4081"
                         android:textColor="?colorOnPrimary"
                         android:text="@string/privateRoom" />
 
                     <RadioButton
-                        android:id="@+id/publicRoom"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="?colorOnPrimary"
-                        android:buttonTint="?colorSecondary"
-                        android:text="@string/publicRoom" />
-
-                    <RadioButton
                         android:id="@+id/protectedRoom"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="?colorSecondary"
+                        android:layout_height="30dp"
+                        android:buttonTint="#ff4081"
                         android:textColor="?colorOnPrimary"
                         android:text="@string/protectedRoom" />
                 </RadioGroup>
@@ -182,8 +248,8 @@
                     android:layout_height="wrap_content"
                     android:autofillHints="Room name"
                     android:background="@drawable/background_direction_panel"
-                    android:backgroundTint="?colorPrimaryVariant"
-                    android:layout_marginTop="15dp"
+                    android:backgroundTint="?editBackgroundColor"
+                    android:layout_marginTop="10dp"
                     android:padding="8dp"
                     android:hint="@string/enter_a_room_name"
                     android:imeOptions="actionDone"
@@ -200,7 +266,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_direction_panel"
-                    android:backgroundTint="?colorPrimaryVariant"
+                    android:backgroundTint="?editBackgroundColor"
                     android:padding="8dp"
                     android:layout_marginTop="10dp"
                     android:autofillHints="@string/prompt_password"
@@ -213,17 +279,18 @@
                     android:inputType="textShortMessage"
                     android:selectAllOnFocus="true"
                     android:textColorHint="?colorOnPrimary"
+                    android:textColor="?colorOnPrimary"
                     android:visibility="gone" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/createBtn"
-                    android:layout_width="150dp"
+                    android:layout_width="250dp"
                     android:layout_height="40dp"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginTop="10dp"
+                    android:textAllCaps="false"
                     android:background="@drawable/background_chat_input"
-                    android:backgroundTint="?colorSecondary"
-                    android:textColor="@color/black"
-                    android:text="@string/create" />
+                    android:backgroundTint="?buttonColor"
+                    android:text="@string/create_a_room" />
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>
@@ -233,6 +300,9 @@
         android:layout_width="400dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
+        android:elevation="10dp"
+        android:clipToPadding="false"
+        android:clipChildren="false"
         android:background="@drawable/background_direction_panel"
         android:backgroundTint="?colorSecondary"
         android:visibility="gone">
@@ -252,6 +322,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:clipToPadding="false"
+            android:clipChildren="false"
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:gravity="center">
@@ -262,31 +334,34 @@
                 android:textSize="20dp"
                 android:textAlignment="center"
                 android:textStyle="bold"
-                android:fontFeatureSettings="smcp"
                 android:text="@string/join_game_text" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:clipToPadding="false"
+                android:clipChildren="false"
                 android:orientation="horizontal">
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/player_button"
                     android:layout_width="120dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginRight="20dp"
                     android:background="@drawable/background_chat_input"
-                    android:backgroundTint="?colorPrimary"
+                    android:backgroundTint="?buttonColor"
                     android:textStyle="bold"
+                    android:textAllCaps="false"
                     android:text="@string/player" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/observer_button"
                     android:layout_width="120dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:background="@drawable/background_chat_input"
-                    android:backgroundTint="?colorPrimary"
+                    android:backgroundTint="?buttonColor"
                     android:textStyle="bold"
+                    android:textAllCaps="false"
                     android:text="@string/observer" />
             </LinearLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -297,6 +372,9 @@
         android:layout_width="300dp"
         android:layout_height="170dp"
         android:layout_gravity="center"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:elevation="10dp"
         android:background="@drawable/background_direction_panel"
         android:backgroundTint="?colorSecondary"
         android:visibility="gone">
@@ -304,14 +382,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:clipToPadding="false"
+            android:clipChildren="false"
             android:layout_gravity="center"
             android:gravity="center">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="18dp"
-                android:fontFeatureSettings="smcp"
+                android:textAlignment="center"
                 android:layout_marginBottom="8dp"
                 android:text="@string/waiting_for_host_approval" />
             <ProgressBar
@@ -327,10 +407,10 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/cancel_private_button"
                 android:layout_marginTop="8dp"
-                android:layout_width="150dp"
+                android:layout_width="250dp"
                 android:layout_height="35dp"
                 android:background="@drawable/background_chat_input"
-                android:backgroundTint="?colorPrimary"
+                android:backgroundTint="?buttonColor"
                 android:text="@string/cancel" />
         </LinearLayout>
     </FrameLayout>
@@ -340,7 +420,9 @@
         android:layout_width="350dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
-
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:elevation="10dp"
         android:background="@drawable/background_direction_panel"
         android:backgroundTint="?colorSecondary"
         android:visibility="gone">
@@ -360,13 +442,14 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="30dp"
+            android:clipToPadding="false"
+            android:clipChildren="false"
             android:layout_gravity="center"
             android:gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFeatureSettings="smcp"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="10dp"
@@ -377,7 +460,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_direction_panel"
-                android:backgroundTint="?colorPrimary"
+                android:backgroundTint="?editBackgroundColor"
                 android:padding="8dp"
                 android:textSize="15dp"
                 android:fontFeatureSettings="smcp"
@@ -388,11 +471,11 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/join_button"
-                android:layout_width="150dp"
+                android:layout_width="250dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/background_chat_input"
-                android:backgroundTint="?colorPrimary"
+                android:backgroundTint="?buttonColor"
                 android:text="@string/join" />
         </LinearLayout>
 

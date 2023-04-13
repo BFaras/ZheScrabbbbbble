@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?backgroundColor"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     tools:context=".ProfilFragment">
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button2"
@@ -16,21 +18,30 @@
         android:layout_marginTop="105dp"
         android:layout_marginStart="100dp"/>
 
+    <ProgressBar
+        android:id="@+id/loadingProfil"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"></ProgressBar>
+
     <LinearLayout
+        android:id="@+id/profilHolder"
         android:layout_width="900dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:orientation="vertical"
+        android:visibility="gone"
         android:layout_gravity="center">
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="570dp"
+            android:layout_height="600dp"
             android:layout_gravity="center|top"
             android:background="@drawable/background_profile"
             >
-
             <RelativeLayout
                 android:layout_width="match_parent"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:layout_height="569dp">
 
                 <LinearLayout
@@ -38,6 +49,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:layout_marginTop="25dp"
+                    android:clipToPadding="false"
+                    android:clipChildren="false"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -84,16 +97,21 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:clipChildren="false"
+
                         android:orientation="horizontal">
 
                         <FrameLayout
                             android:id="@+id/changeToFr"
                             android:layout_width="60dp"
+                            android:elevation="5dp"
                             android:layout_height="wrap_content">
 
                             <TextView
                                 android:id="@+id/frLangue"
                                 android:layout_width="55dp"
+                                android:elevation="5dp"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/background_direction_panel"
                                 android:padding="8dp"
@@ -112,6 +130,7 @@
                             <TextView
                                 android:id="@+id/enLangue"
                                 android:layout_width="55dp"
+                                android:elevation="5dp"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/background_direction_panel"
                                 android:padding="8dp"
@@ -157,9 +176,9 @@
                             android:orientation="horizontal">
 
                             <androidx.appcompat.widget.AppCompatImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/ic_medal_first"></androidx.appcompat.widget.AppCompatImageView>
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/first_place"></androidx.appcompat.widget.AppCompatImageView>
 
                             <TextView
                                 android:id="@+id/tournamentFirst"
@@ -184,7 +203,7 @@
                                 <androidx.appcompat.widget.AppCompatImageView
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
-                                    android:background="@drawable/ic_medal_second"></androidx.appcompat.widget.AppCompatImageView>
+                                    android:background="@drawable/second_place"></androidx.appcompat.widget.AppCompatImageView>
 
                                 <TextView
                                     android:id="@+id/tournamentSecond"
@@ -204,7 +223,7 @@
                                 <androidx.appcompat.widget.AppCompatImageView
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
-                                    android:background="@drawable/ic_medal_third"></androidx.appcompat.widget.AppCompatImageView>
+                                    android:background="@drawable/third_place"></androidx.appcompat.widget.AppCompatImageView>
 
                                 <TextView
                                     android:id="@+id/tournamentThird"
@@ -320,22 +339,23 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="175dp"
-                    android:layout_marginEnd="520dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="186dp"
+                    android:layout_marginStart="265dp"
                     android:textAllCaps="true"
-                    android:text="game log"
+                    android:text="@string/game_history"
                     android:textColor="?profileAccentColor"
-                    android:textSize="25dp"
+                    android:textSize="20dp"
                     android:textStyle="bold"></TextView>
 
                 <LinearLayout
                     android:layout_width="620dp"
-                    android:layout_height="330dp"
+                    android:layout_height="450dp"
+                    android:elevation="5dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true"
                     android:layout_marginEnd="30dp"
-                    android:layout_marginBottom="35dp"
+                    android:layout_marginTop="205dp"
                     android:background="@drawable/background_direction_panel"
                     android:backgroundTint="?profileAccentColor"
                     android:divider="@drawable/letters_hand_divider"
@@ -382,11 +402,35 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="160dp"
+                            android:layout_height="match_parent"
                             android:background="@drawable/background_direction_panel"
                             android:backgroundTint="?backgroundProfile"
                             android:orientation="vertical">
-
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center">
+                                <androidx.appcompat.widget.AppCompatButton
+                                    android:id="@+id/buttonConnectionLog"
+                                    android:layout_width="120dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginEnd="20dp"
+                                    android:text="@string/connexion"
+                                    android:textAllCaps="false"
+                                    android:background="@drawable/background_direction_panel"
+                                    android:backgroundTint="?buttonColor"></androidx.appcompat.widget.AppCompatButton>
+                                <androidx.appcompat.widget.AppCompatButton
+                                    android:id="@+id/buttonDisconnectionLog"
+                                    android:layout_width="120dp"
+                                    android:layout_height="30dp"
+                                    android:text="@string/deconnexion"
+                                    android:textAllCaps="false"
+                                    android:background="@drawable/background_direction_panel"
+                                    android:backgroundTint="?buttonColor">
+                                </androidx.appcompat.widget.AppCompatButton>
+                            </LinearLayout>
                             <androidx.core.widget.NestedScrollView
                                 android:id="@+id/connectionScroll"
                                 android:layout_width="match_parent"
@@ -398,7 +442,22 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:orientation="vertical"
-                                    android:padding="10dp"></LinearLayout>
+                                    android:padding="10dp" />
+                            </androidx.core.widget.NestedScrollView>
+
+                            <androidx.core.widget.NestedScrollView
+                                android:id="@+id/disconnectionScroll"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:visibility="gone"
+                                android:padding="10dp">
+
+                                <LinearLayout
+                                    android:id="@+id/disconnectionLog"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:padding="10dp" />
                             </androidx.core.widget.NestedScrollView>
                         </LinearLayout>
                     </LinearLayout>

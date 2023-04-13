@@ -1,10 +1,10 @@
 package com.example.testchatbox.chat
 
 import SocketHandler
-import android.content.Context
 import android.util.Log
 import com.example.testchatbox.GameRoom
 import com.example.testchatbox.R
+import com.example.testchatbox.login.model.LoggedInUser
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.system.exitProcess
@@ -111,8 +111,13 @@ object ChatModel : ObservableChat {
         return ArrayList(publicChatList.values);
     }
 
-    fun addGameChat(gameRoom: GameRoom){
-        chatList[gameRoom.id] = Chat(ChatType.GLOBAL, "GAME",  gameRoom.id)
+    fun addGameChat(gameRoom: GameRoom) {
+        var chatName = "Game chat"
+        when (LoggedInUser.getLang()) {
+            "fr" -> chatName = "Chat de partie"
+            "en" -> chatName = "Game chat"
+        }
+        chatList[gameRoom.id] = Chat(ChatType.GLOBAL, chatName,  gameRoom.id)
     }
 
     fun removeGameChat(gameRoom: GameRoom){

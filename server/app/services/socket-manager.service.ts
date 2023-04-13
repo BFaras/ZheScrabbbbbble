@@ -123,6 +123,7 @@ export class SocketManager {
 
             socket.on('Join Game Room', (roomCode: string, observer: boolean, password?: string) => {
                 console.log(new Date().toLocaleTimeString() + ' | Room join request received');
+                if(!this.roomManager.getRoom(roomCode)) return;
                 const username = this.accountInfoService.getUsername(socket);
                 if (!observer && this.roomManager.isRoomFull(roomCode)) {
                     console.log(new Date().toLocaleTimeString() + ' | Room is full');
@@ -130,7 +131,7 @@ export class SocketManager {
                     return;
                 }
                 /** PRIVATE*/
-                if (this.roomManager.getRoomVisibility(roomCode) === RoomVisibility.Private) {
+                if (this.roomManager?.getRoomVisibility(roomCode) === RoomVisibility.Private) {
                     this.pendingJoinGameRequests.set(username, [roomCode, socket, observer]);
                     console.log(new Date().toLocaleTimeString() + ' | Room is private. Request sent to host');
                     this.sio.to(this.roomManager.getRoomHost(roomCode).getUUID()).emit('Join Room Request', username, observer);

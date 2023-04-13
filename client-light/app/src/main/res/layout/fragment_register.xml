@@ -12,104 +12,159 @@
     android:paddingTop="@dimen/fragment_vertical_margin"
     android:paddingRight="@dimen/fragment_horizontal_margin"
     android:paddingBottom="@dimen/fragment_vertical_margin"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     tools:context=".login.RegisterFragment">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="600dp"
 
-    <LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:paddingTop="100dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:paddingBottom="35dp"
-        android:background="@drawable/background_direction_panel"
-        >
 
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints="@string/prompt_username"
-            android:hint="@string/prompt_username"
-            android:inputType="text"
-            android:textColorHint="?colorOnPrimary"
-            android:textColor="?colorOnPrimary"
-            android:selectAllOnFocus="true" />
+        android:layout_gravity="center">
 
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:autofillHints="@string/prompt_email"
-            android:hint="@string/prompt_email"
-            android:textColorHint="?colorOnPrimary"
-            android:textColor="?colorOnPrimary"
-            android:inputType="textEmailAddress"
-            android:selectAllOnFocus="true" />
+            android:layout_alignParentBottom="true"
+            android:elevation="10dp"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingTop="100dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="25dp"
+            android:clipToPadding="false"
+            android:background="@drawable/background_direction_panel"
+            android:backgroundTint="?logBackground"
+            >
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints="@string/prompt_password"
-            android:hint="@string/prompt_password"
-            android:textColorHint="?colorOnPrimary"
-            android:textColor="?colorOnPrimary"
-            android:selectAllOnFocus="true"
-            android:inputType="textPassword" />
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="@string/prompt_username"
+                android:hint="@string/prompt_username"
+                android:maxLines="1"
+                android:inputType="textShortMessage"
+                android:textColorHint="?colorOnPrimary"
+                android:textColor="?colorOnPrimary"
+                android:padding="8dp"
+                android:background="@drawable/background_direction_panel"
+                android:backgroundTint="?editBackgroundColor"
+                android:selectAllOnFocus="true" />
 
-        <EditText
-            android:id="@+id/question"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints="Security question"
-            android:hint="@string/security_question"
-            android:textColorHint="?colorOnPrimary"
-            android:textColor="?colorOnPrimary"
-            android:selectAllOnFocus="true"/>
-        <EditText
-            android:id="@+id/answer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints="Answer"
-            android:hint="@string/answer"
-            android:textColorHint="?colorOnPrimary"
-            android:textColor="?colorOnPrimary"
-            android:imeActionLabel="Register"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword"
-            android:selectAllOnFocus="true" />
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="@string/prompt_email"
+                android:hint="@string/prompt_email"
+                android:maxLines="1"
+                android:textColorHint="?colorOnPrimary"
+                android:textColor="?colorOnPrimary"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:background="@drawable/background_direction_panel"
+                android:backgroundTint="?editBackgroundColor"
+                android:inputType="textEmailAddress"
+                android:selectAllOnFocus="true" />
 
-        <Button
-            android:id="@+id/register"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:text="@string/register"
-            android:textColor="?colorOnPrimary"
-            android:backgroundTint="?colorPrimaryVariant"
-            android:layout_marginTop="10dp"/>
-    </LinearLayout>
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="@string/password"
+                android:hint="@string/password"
+                android:maxLines="1"
+                android:textColorHint="?colorOnPrimary"
+                android:textColor="?colorOnPrimary"
+                android:selectAllOnFocus="true"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:background="@drawable/background_direction_panel"
+                android:backgroundTint="?editBackgroundColor"
+                android:inputType="textPassword" />
+
+            <EditText
+                android:id="@+id/question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="Security question"
+                android:hint="@string/security_question"
+                android:maxLines="1"
+                android:inputType="textShortMessage"
+                android:textColorHint="?colorOnPrimary"
+                android:textColor="?colorOnPrimary"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:background="@drawable/background_direction_panel"
+                android:backgroundTint="?editBackgroundColor"
+                android:selectAllOnFocus="true"/>
+            <EditText
+                android:id="@+id/answer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="Answer"
+                android:hint="@string/answer"
+                android:maxLines="1"
+                android:textColorHint="?colorOnPrimary"
+                android:textColor="?colorOnPrimary"
+                android:imeActionLabel="Register"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:background="@drawable/background_direction_panel"
+                android:backgroundTint="?editBackgroundColor"
+                android:selectAllOnFocus="true" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/register"
+                style="@style/MaterialButtonStyle"
+                android:layout_width="240dp"
+                android:layout_height="40dp"
+                android:enabled="false"
+                android:text="@string/register"
+                android:textAllCaps="false"
+                android:textColor="?colorOnPrimary"
+                android:background="@drawable/background_direction_panel"
+                android:layout_marginTop="20dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancelRegister"
+                android:layout_width="240dp"
+                android:layout_height="40dp"
+                android:text="Back"
+                android:textColor="?colorOnPrimary"
+                android:textAllCaps="false"
+                android:background="@drawable/background_direction_panel"
+                app:backgroundTint="?buttonColor"
+                android:layout_marginTop="10dp"/>
+        </LinearLayout>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/playerInGameAvatar"
+            android:elevation="10dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center|top"
+            android:background="?logBackground"
+            android:padding="5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_photo"
+            app:shapeAppearance="@style/roundedImageViewRounded"
+            app:strokeColor="?logBackground"
+            app:strokeWidth="8dp"></com.google.android.material.imageview.ShapeableImageView>
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="45dp"
         android:visibility="gone" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/playerInGameAvatar"
-        android:layout_height="150dp"
-        android:layout_width="150dp"
-        android:scaleType="centerCrop"
-        android:layout_gravity="center|top"
-        android:layout_marginTop="100dp"
-        app:shapeAppearance="@style/roundedImageViewRounded"
-        android:background="@color/white">
-    </com.google.android.material.imageview.ShapeableImageView>
-
 </FrameLayout>

@@ -59,7 +59,13 @@ class ChatFragment : Fragment(), ObserverChat {
         super.onViewCreated(view, savedInstanceState);
         notifSound = MediaPlayer.create(view.context, R.raw.ding)
         loadList();
-        selectedChatIndex = if(arguments?.getString("username")!=null){ findIndexByUsername(arguments?.getString("username")!!) } else 0;
+        if ((arguments?.getString("username")!=null)) {
+            selectedChatIndex = findIndexByUsername(arguments?.getString("username")!!)
+            binding.chatRoomName.text = arguments?.getString("username")!!
+        } else {
+            selectedChatIndex = 0
+            binding.chatRoomName.text = "Global Chat"
+        }
         binding.inputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 sendMessage()
@@ -132,9 +138,10 @@ class ChatFragment : Fragment(), ObserverChat {
                 usernameMessage.text = message.username
                 timeStampMessage.text = message.timestamp
 
-                if (resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                if (activity?.resources?.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
                     Log.d("AVATAR", message.avatar)
-                    avatar.setImageResource(resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                    activity?.resources?.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName)
+                        ?.let { avatar.setImageResource(it) }
                 } else {
                     avatar.setImageResource(R.drawable.robot)
                 }
@@ -198,8 +205,8 @@ class ChatFragment : Fragment(), ObserverChat {
         usernameMessage.text = message.username
         timeStampMessage.text = message.timestamp
 
-        if (resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
-            avatar.setImageResource(resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+        if (activity?.resources?.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+            activity?.resources?.let { avatar.setImageResource(it.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName)) }
         } else {
             avatar.setImageResource(R.drawable.robot)
         }

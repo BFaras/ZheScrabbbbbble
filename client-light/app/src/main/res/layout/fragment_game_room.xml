@@ -5,6 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:clipChildren="false"
     tools:context=".GameRoomFragment">
 
     <TextView
@@ -13,7 +15,6 @@
         android:layout_gravity="center|top"
         android:fontFamily="@font/shrikhand"
         android:text="@string/scrabbleName"
-        android:textColor="?colorSecondary"
         android:layout_marginTop="70dp"
         android:textSize="70sp">
     </TextView>
@@ -25,7 +26,7 @@
         android:gravity="center"
         android:padding="12dp"
         android:background="@drawable/background_side_panel"
-        android:backgroundTint="?colorSecondary"
+        android:backgroundTint="?appBar"
         android:layout_gravity="center|end">
 
         <ImageButton
@@ -47,6 +48,8 @@
    <LinearLayout
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
+       android:clipToPadding="false"
+       android:clipChildren="false"
        android:orientation="vertical"
        android:layout_gravity="center">
        <TextView
@@ -69,13 +72,13 @@
            >
        </TextView>
        <TextView
-           android:layout_width="400dp"
+           android:layout_width="500dp"
            android:layout_height="wrap_content"
            android:layout_gravity="center"
            android:textAlignment="center"
            android:text="@string/waitingRoomText"
            android:textSize="13dp"
-           android:textColor="?colorSecondary"
+           android:textColor="?secondaryTextColor"
            android:textStyle="bold|italic"
            >
        </TextView>
@@ -83,6 +86,7 @@
            android:id="@+id/waitingPlayersList"
            android:layout_width="600dp"
            android:layout_height="wrap_content"
+           android:elevation="10dp"
            android:orientation="vertical"
            android:padding="20dp"
            android:layout_marginTop="10dp"
@@ -102,18 +106,21 @@
                android:layout_width="150dp"
                android:layout_height="40dp"
                android:text="@string/start_game"
+               android:layout_gravity="center"
+               android:textAllCaps="false"
                android:layout_marginBottom="15dp"
                android:background="@drawable/background_chat_input"
-               android:backgroundTint="?colorSecondary"
+               android:backgroundTint="?buttonColor"
                android:textColor="@color/black"
                android:visibility="gone"/>
 
            <androidx.appcompat.widget.AppCompatButton
                android:id="@+id/leave"
-               android:layout_width="150dp"
+               android:layout_width="250dp"
                android:layout_height="40dp"
+               android:textAllCaps="false"
                android:background="@drawable/background_chat_input"
-               android:backgroundTint="?colorSecondary"
+               android:backgroundTint="?buttonColor"
                android:textColor="?colorOnPrimary"
                android:text="@string/leave" />
        </LinearLayout>

@@ -4,11 +4,11 @@
     <string name="action_settings">Paramètres</string>
     <string name="tapez_quelque_chose">Tapez quelque chose…</string>
     <string name="game">Jeu</string>
-    <string name="tournois">TOURNOIS</string>
-    <string name="jouer">JOUER</string>
-    <string name="classique">CLASSIQUE</string>
-    <string name="collaboratif">COLLABORATIF</string>
-    <string name="disconnect">DECONNEXION</string>
+    <string name="tournois">Tournois</string>
+    <string name="jouer">Jouer</string>
+    <string name="classique">Classique</string>
+    <string name="collaboratif">Coop</string>
+    <string name="disconnect">Déconnexion</string>
     <string name="doubleLetter">DL</string>
     <string name="tripleLetter">TL</string>
     <string name="dummy_button" translatable="false">Dummy Button</string>
@@ -86,7 +86,14 @@
     <string name="MSG_4"><![CDATA[<b>%1$s</b> a passé son tour.]]></string>
     <string name="MSG_5"><![CDATA[<b>%1$s</b> s\'est déconnecté et a été remplacé par un JV.]]></string>
     <string name="MSG_6"><![CDATA[<b>%1$s</b> a manqué de temps et a passé son tour.]]></string>
-    <string name="MSG_7"><![CDATA[Fin de partie - <b>%1$s</b> lettres restantes]]></string>
+    <string name="MSG_7"><![CDATA[Fin de partie - lettres restantes <b>%1$s</b>]]></string>
+    <string name="MSG_8"><![CDATA[La ronde est terminée. La prochaine partie va commencer dans 20 secondes.]]></string>
+    <string name="MSG_9"><![CDATA[%1$s minute(s) avant la fin de la ronde.]]></string>
+    <string name="MSG_10"><![CDATA[%1$s s\'est déconnecté.]]></string>
+    <string name="MSG_11"><![CDATA[%1$s a accepté l\'action proposée.]]></string>
+    <string name="MSG_12"><![CDATA[%1$s a refusé l\'action proposée.]]></string>
+    <string name="MSG_13"><![CDATA[%1$s a proposé l\'action suivante pour l\'équipe : %2$s]]></string>
+    <string name="MSG_14"><![CDATA[Tout le monde a accepté l\'action proposée.]]></string>
     <string name="scrabbleName">Scrabble</string>
     <string name="info_panel">PANNEAU INFORMATIF</string>
     <string name="detectedJoker">JOKER DÉTECTÉ!</string>
@@ -106,7 +113,7 @@
     <string name="new_password">Nouveau mot de passe</string>
     <string name="register_new_passsword">Register New Passsword</string>
     <string name="times_up">TIME\'S UP!</string>
-    <string name="talkingIntext">Now talking in</string>
+    <string name="talkingIntext">Now talking with</string>
     <string name="manage_chats">Manage Chats</string>
     <string name="hello_message"><![CDATA[Hello <b>%1$s</b>!]]></string>
     <string name="privateRoom">Private</string>
@@ -151,7 +158,6 @@
     <string name="pas_besoin_d_indices">PAS BESOIN D\'INDICES</string>
     <string name="joined_public_chats">joined public chats</string>
     <string name="pss_you_can_quit_any_room_by_clicking_it">(pss…you can quit any room by clicking it)</string>
-    <string name="pss_you_can_join_any_room_by_clicking_it">(pss…you can join any room by clicking it)</string>
     <string name="create_a_public_chat">create a public chat</string>
     <string name="join_a_public_chat">join a public chat</string>
     <string name="you_can_create_a_public_chat_or_join_one_from_the_list_on_the_right">You can create a public chat or join one from the list on the right</string>
@@ -166,7 +172,7 @@
     <string name="greenTheme">Vert</string>
     <string name="pinkTheme">Rose</string>
     <string name="blizzardTheme">Blizzard</string>
-    <string name="sorry_nno_hints_have_been_found">Sorry… \nNo hints have been found.</string>
+    <string name="sorry_nno_hints_have_been_found">Sorry… No hints have been found.</string>
     <string name="join_a_room">join a room</string>
     <string name="observer">Observer</string>
     <string name="player">Player</string>
@@ -176,5 +182,35 @@
     <string name="start_game">Start game</string>
     <string name="leave">Leave</string>
     <string name="team">Équipe</string>
+    <string name="lvl_2">LVL 2</string>
+    <string name="lvl_6">LVL 6</string>
+    <string name="second_Gold">2nd Gold</string>
+    <string name="first_gold">1st Gold</string>
+    <string name="lvl_4">LVL 4</string>
+    <string name="started">commencé</string>
+    <string name="waiting_for_players">en attente de joueurs</string>
+    <string name="room">Room</string>
+    <string name="visibility">Visibility</string>
+    <string name="players"># Players</string>
+    <string name="observers"># Observers</string>
+    <string name="game_type">Game Type</string>
+    <string name="game_status">Game Status</string>
+    <string name="to_be_determined">To be determined</string>
+    <string name="password">Password</string>
+    <string name="an_action_has_been_proposed">AN ACTION HAS BEEN PROPOSED!</string>
+    <string name="accept">Accepter</string>
+    <string name="refuse">Refuser</string>
+    <string name="game_history">game history</string>
+    <string name="manage_chat_label">Gérer les chats</string>
+    <string name="game_page_label">Jeu</string>
+    <string name="game_list_label">Liste des salles</string>
+    <string name="game_room_label">Salle d\'attente</string>
+    <string name="friends_label">Gérer les amis</string>
+    <string name="ranking">Classment</string>
+    <string name="bracket_label">Tours du tournoi</string>
+    <string name="waiting_for_tournament_label">En attente d\'un tournoi</string>
+    <string name="connexion">Connexion</string>
+    <string name="deconnexion">Déconnexion</string>
+    <string name="friend_code">Friend Code</string>
 
 </resources>

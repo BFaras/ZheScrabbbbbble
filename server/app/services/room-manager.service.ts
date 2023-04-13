@@ -71,15 +71,15 @@ export class RoomManagerService {
     }
 
     getRoomPlayerNames(id: string): string[] {
-        return this.activeRooms[id].getPlayerNames();
+        return this.activeRooms[id]?.getPlayerNames();
     }
 
     getRoomVisibility(id: string): RoomVisibility {
-        return this.activeRooms[id].getVisibility();
+        return this.activeRooms[id]?.getVisibility();
     }
 
     getRoomHost(id: string): Player {
-        return this.activeRooms[id].getHostPlayer();
+        return this.activeRooms[id]?.getHostPlayer();
     }
 
     findRoomFromPlayer(playerID: string): GameRoom | null {
