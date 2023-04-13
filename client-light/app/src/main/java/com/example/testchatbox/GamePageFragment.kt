@@ -326,18 +326,19 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                 buttonPass.isEnabled = false
 
                 val hintList = arrayListOf<String>()
+                val scoreList = arrayListOf<Int>()
 
                 SocketHandler.getSocket().emit("Request Clue", "")
 
                 SocketHandler.getSocket().once("Clue Response") {args ->
-
                     Log.d("args", args[0].toString())
+
                     if (args[0] != null) {
                         val cluesListJSON = args[0] as JSONArray
                         for (i in 0 until cluesListJSON.length()) {
-                            hintList.add(cluesListJSON.getString(i).drop(6))
+                            hintList.add((cluesListJSON.getJSONObject(i).get("command") as String).drop(6))
+                            scoreList.add(cluesListJSON.getJSONObject(i).get("value") as Int)
                         }
-                        Log.d("cluesListJSON", cluesListJSON.toString())
                         Log.d("hintList", hintList.toString())
                         activity?.runOnUiThread {
                             clearTurn()
@@ -352,10 +353,12 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                             }
                             isYourTurn = true
 
-                            for (clue in hintList) {
+                            for ((index, clue) in hintList.withIndex()) {
                                 val hintButton = layoutInflater.inflate(R.layout.hint, hintHolder, false)
                                 val hint: TextView = hintButton.findViewById(R.id.displayedHint)
-                                hint.text = clue.uppercase()
+                                val score = scoreList[index]
+
+                                hint.text = clue.uppercase() + "\n" + score + "pts"
 
                                 Log.d("HINT", clue)
 
@@ -1287,15 +1290,16 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
 
     override fun update() {
         Log.i("Update", GameHistoryModel.getList().toString())
-
         activity?.runOnUiThread {
             updateMoveInfo()
             if(GameHistoryModel.playRequest!=null) {
                 showCoopPlayPrompt()
             } else {
-                isYourTurn = true
-                binding.buttonPass.isEnabled = true
-                binding.buttonHint.isEnabled = true
+                if (GameRoomModel.gameRoom?.gameType == GameType.Coop) {
+                    isYourTurn = true
+                    binding.buttonPass.isEnabled = true
+                    binding.buttonHint.isEnabled = true
+                }
                 binding.coopHolder.visibility = GONE
                 binding.teamApproval.visibility = GONE
             }

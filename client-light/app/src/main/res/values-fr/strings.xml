@@ -170,7 +170,7 @@
     <string name="greenTheme">Vert</string>
     <string name="pinkTheme">Rose</string>
     <string name="blizzardTheme">Blizzard</string>
-    <string name="sorry_nno_hints_have_been_found">Désolé… \\nAucun indice n\'a été trouvé.</string>
+    <string name="sorry_nno_hints_have_been_found">Désolé…<br/>Aucun indice n\'a été trouvé.</string>
     <string name="join_a_room">joindre une salle</string>
     <string name="observer">Observateur</string>
     <string name="player">Joueur</string>
