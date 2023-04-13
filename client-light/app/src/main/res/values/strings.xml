@@ -113,7 +113,7 @@
     <string name="new_password">Nouveau mot de passe</string>
     <string name="register_new_passsword">Register New Passsword</string>
     <string name="times_up">TIME\'S UP!</string>
-    <string name="talkingIntext">Now talking in</string>
+    <string name="talkingIntext">Now talking with</string>
     <string name="manage_chats">Manage Chats</string>
     <string name="hello_message"><![CDATA[Hello <b>%1$s</b>!]]></string>
     <string name="privateRoom">Private</string>
