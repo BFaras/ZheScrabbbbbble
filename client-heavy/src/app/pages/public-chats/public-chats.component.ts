@@ -5,6 +5,7 @@ import { ConfrimPopUpComponent } from '@app/components/confrim-pop-up/confrim-po
 import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
+import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 
 @Component({
   selector: 'app-public-chats',
@@ -16,11 +17,16 @@ export class PublicChatsComponent implements OnInit, OnDestroy {
   presentChatList: ChatInfo[] = [];
   activeInput: number;
 
-  constructor(public dialog: MatDialog, private chatService: ChatService, private snackBarHandler: SnackBarHandlerService, private account: AccountService) {
+  constructor(public dialog: MatDialog, private chatService: ChatService, private snackBarHandler: SnackBarHandlerService, private account: AccountService, private socketManagerService: SocketManagerService) {
     this.updateChats();
+
+    this.socketManagerService.getSocket().on('Chat Deleted', () => {
+      this.updateChats();
+    });
   }
 
   updateChats() {
+    console.log("UPDATED 1");
     this.chatService.getPublicChatObservable().subscribe((publicChats: ChatInfo[]) => {
       this.absentChatList = publicChats;
     })
@@ -36,6 +42,7 @@ export class PublicChatsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.snackBarHandler.closeAlert()
+    this.socketManagerService.getSocket().removeAllListeners('Chat Deleted');
   }
 
   ngOnInit(): void {
@@ -120,5 +127,4 @@ export class PublicChatsComponent implements OnInit, OnDestroy {
       }
     }
   }
-
 }
