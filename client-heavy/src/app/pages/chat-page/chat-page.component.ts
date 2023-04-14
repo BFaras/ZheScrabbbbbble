@@ -84,7 +84,7 @@ export class ChatPageComponent implements OnInit, ViewChildren {
             /*
             this.setFriendRedirect();
             if (true) {
-                
+
                 let chatId: string = "";
                 this.chatList.forEach((chat: ChatInfo) => {
                     if (this.friend.username === chat.chatName && chat.chatType === this.private) chatId = chat._id;
@@ -122,7 +122,7 @@ export class ChatPageComponent implements OnInit, ViewChildren {
             return;
         };
         this.chatService.linkGameChat(chatId);
-        this.chatList.push({ chatName: 'Room Chat', chatType: ChatType.GLOBAL, _id: chatId });
+        this.chatList.push({ chatName: 'Room Chat', chatType: ChatType.GLOBAL, _id: chatId, isChatOwner: false });
         this.chatService.updateChatList(this.chatList);
         this.changeDetector.detectChanges();
     }

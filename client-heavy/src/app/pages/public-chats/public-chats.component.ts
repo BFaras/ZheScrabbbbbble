@@ -43,7 +43,10 @@ export class PublicChatsComponent implements OnInit, OnDestroy {
   }
 
   alert(chat: ChatInfo) {
-    const text = this.account.getLanguage() === 'fr' ? 'Êtes-vous sûr(e) de vouloir quitter ce chat?' : 'Are you sure you want to leave this chat?';
+    let text = this.account.getLanguage() === 'fr' ? 'Êtes-vous sûr(e) de vouloir quitter ce chat?' : 'Are you sure you want to leave this chat?';
+    if (chat.isChatOwner) {
+      text = this.account.getLanguage() === 'fr' ? 'Quitter ce chat le supprimera, êtes-vous sûr de vouloir le faire?' : 'Leaving this chat will delete it, are you sur you want that?';
+    }
     const dialogRef = this.dialog.open(ConfrimPopUpComponent, {
       width: '450px',
       height: '230px',
