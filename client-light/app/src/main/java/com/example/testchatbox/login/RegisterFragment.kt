@@ -108,6 +108,7 @@ class RegisterFragment : Fragment() {
                     return@Observer
                 }
                 registerButton.isEnabled = registerFormState.isDataValid
+                if (registerFormState.isDataValid) registerButton.elevation = 5F
                 registerFormState.usernameError?.let {
                     usernameEditText.error = getString(it)
                 }

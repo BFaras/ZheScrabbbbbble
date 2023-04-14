@@ -358,7 +358,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                                 val hint: TextView = hintButton.findViewById(R.id.displayedHint)
                                 val score = scoreList[index]
 
-                                hint.text = clue.uppercase() + "\n" + score + "pts"
+                                hint.text = "${clue.uppercase()}\n${score}pts"
 
                                 Log.d("HINT", clue)
 
