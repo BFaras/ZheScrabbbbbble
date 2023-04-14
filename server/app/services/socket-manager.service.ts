@@ -19,7 +19,6 @@ import {
     ROUND_TIME_LEFT_MESSAGE
 } from '@app/constants/game-state-constants';
 import { CommandController, CommandResult, PlayerMessage } from '@app/controllers/command.controller';
-import { PreviewUser } from '@app/interfaces/preview-user';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
@@ -47,7 +46,7 @@ export class SocketManager {
     private accountInfoService: AccountInfoService;
     private profileSocketService: ProfileSocketService;
     private friendSocketService: FriendSocketService;
-    private dbService: DatabaseService;
+    private dbService : DatabaseService;
     private pendingJoinGameRequests: Map<string, [string, io.Socket, boolean]>;
     private tournamentQueue: io.Socket[];
 
@@ -77,16 +76,16 @@ export class SocketManager {
             this.profileSocketService.handleProfileSockets(socket);
             this.friendSocketService.handleFriendSockets(socket);
 
-            socket.on('Share First Tile', (userPreview: PreviewUser) => {
+            socket.on('Share First Tile', (activeSquare: { x: string; y: number }) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
-                if (!currentRoom || userPreview.position === null || userPreview.position === undefined) return;
-                socket.to(currentRoom.getID()).emit('Get First Tile', userPreview);
+                if (!currentRoom || activeSquare === null) return;
+                socket.to(currentRoom.getID()).emit('Get First Tile', activeSquare);
             });
 
-            socket.on('Remove Selected Tile', (userPreview: PreviewUser) => {
+            socket.on('Remove Selected Tile', (activeSquare: { x: string; y: number }) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
-                if (!currentRoom || userPreview.position === null || userPreview.position === undefined) return;
-                socket.to(currentRoom.getID()).emit('Remove Selected Tile Response', userPreview);
+                if (!currentRoom || activeSquare === null) return;
+                socket.to(currentRoom.getID()).emit('Remove Selected Tile Response', activeSquare);
             });
 
             socket.on(
@@ -110,8 +109,7 @@ export class SocketManager {
                 },
             );
 
-            socket.on('Send Emote', (emoteByPlayer: { username: string; emote: string }) => {
-                // client léger
+            socket.on('Send Emote', (emoteByPlayer: { username: string; emote: string }) => { //client léger
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
                 socket.to(currentRoom.getID()).emit('Emote Response', emoteByPlayer);
@@ -214,27 +212,24 @@ export class SocketManager {
                 socket.to(room.getID()).emit('Room Player Update', playerNames);
             });
 
-            socket.on('Invite Friend To Game', async (username: string) => {
+            socket.on('Invite Friend To Game', async(username: string) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
-                if (currentRoom.isGameStarted()) return;
+                if(currentRoom.isGameStarted()) return;
                 const userId = await this.dbService.getUserId(username);
-                if (!userId) return;
-                if (this.usersStatusService.isUserInGame(userId)) return;
+                if(!userId) return;
+                if(this.usersStatusService.isUserInGame(userId)) return;
                 const friendSocket = this.usersStatusService.getUserSocketFromId(userId);
-                if (!friendSocket) return;
-                friendSocket.emit('Game Invite Request', this.accountInfoService.getUsername(socket), currentRoom.getID());
+                if(!friendSocket) return;
+                friendSocket.emit('Game Invite Request', this.accountInfoService.getUsername(socket), currentRoom.getID(), currentRoom instanceof CoopGameRoom);
             });
 
-            socket.on('Join Friend Game', async (roomId: string) => {
+            socket.on('Join Friend Game', async(roomId: string) => {
                 const currentRoom = this.roomManager.getRoom(roomId);
                 if (!currentRoom) return;
                 socket.join(roomId);
                 this.usersStatusService.addUserToInGameList(this.accountInfoService.getUserId(socket));
-                this.roomManager.addPlayer(
-                    roomId,
-                    new Player(socket.id, this.accountInfoService.getUserId(socket), this.accountInfoService.getUsername(socket)),
-                );
+                this.roomManager.addPlayer(roomId, new Player(socket.id, this.accountInfoService.getUserId(socket), this.accountInfoService.getUsername(socket)));
                 const playerNames = this.roomManager.getRoomPlayerNames(roomId);
                 socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                 socket.to(roomId).emit('Room Player Update', playerNames);
@@ -551,8 +546,11 @@ export class SocketManager {
     private sendGameState(room: GameRoom, message?: PlayerMessage) {
         const gameState = room.getGame.createGameState();
         gameState.message = message;
+        if (!gameState.gameOver){
+            room.getGame.resetTimer();
+            gameState.timeLeft = room.getGame.getTimeLeft();
+        }
         this.sio.in(room.getID()).emit('Game State Update', gameState);
-        if (!gameState.gameOver) room.getGame.resetTimer();
     }
 
     private timerCallback(room: GameRoom, username: string, result: CommandResult) {
