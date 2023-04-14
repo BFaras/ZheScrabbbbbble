@@ -70,10 +70,6 @@ class ProfilFriendFragment : Fragment() {
         getProfile(username)
 
 
-        binding.button2.setOnClickListener {
-            findNavController().navigate(R.id.action_profilFriendFragment_to_MainMenuFragment)
-        }
-
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
         context?.theme?.resolveAttribute(R.attr.buttonColor, notSelectedColor, true)
 
