@@ -78,7 +78,6 @@ export class FriendSocketService {
 
     private async updateFriendRemovedAsFriend(userId: string, usernameOfFriend: string) {
         if (this.usersStatusService.isUserOnline(userId)) {
-            console.log('REMOVED');
             this.usersStatusService.getUserSocketFromId(userId)?.emit('Friend removed you as friend', usernameOfFriend);
         }
     }
