@@ -115,7 +115,10 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         super.onViewCreated(view, savedInstanceState)
         Coordinates.setCoordinates()
         gameModel.getAvatars()
-        timer = setTimer()
+        if(::timer.isInitialized) {
+            timer.cancel()
+            gameModel.getGameState()
+        }
 
         avatarsObserver = Observer<MutableMap<String,String>> { avatarsList ->
             playersAvatars = avatarsList
@@ -140,8 +143,9 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         }
 
         gameObserver = Observer<GameState> { gameState ->
+            if(::timer.isInitialized) timer.cancel()
+            timer = setTimer(gameState.timeLeft.toLong()*1000)
             timer.start()
-            gameModel.getAvatars()
             binding.gameWinnerHolder.visibility = GONE
             binding.reserveLength.text = gameState.reserveLength.toString()
             isPlaying = gameState.playerTurnIndex
@@ -708,7 +712,6 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
     override fun onStop() {
         super.onStop()
         GameHistoryModel.removeObserver(this)
-        timer.cancel()
     }
 
     override fun onStart() {
@@ -900,7 +903,6 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             for (player in playersList) {
                 if (player.score > isHigher) {
                     isHigher = player.score
-                    Log.d("WINNER", player.toString())
                 }
             }
         }
@@ -1234,8 +1236,8 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         Log.d(tag, "IS V STICK? - $isVerticalStick")
         return isVerticalStick
     }
-    private fun setTimer(): CountDownTimer {
-        return object : CountDownTimer(60000, 1000) {
+    private fun setTimer(timeRemaining: Long): CountDownTimer {
+        return object : CountDownTimer(timeRemaining, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val initialColor = TypedValue()
                 context?.theme?.resolveAttribute(android.R.attr.textColor, initialColor, true)
@@ -1250,7 +1252,6 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                     binding.secondsTimer.text = f.format(millisUntilFinished / 1000 % 60)
                     binding.secondsTimer.setTextColor(initialColor.data)
                 }
-
             }
             override fun onFinish() {
                 val initialColor = TypedValue()
@@ -1306,7 +1307,6 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         }
     }
 
-    //TODO : UI to call GameHistoryModel.sendCoopResponse(accept:boolean)
     private fun showCoopPlayPrompt() {
         if (GameHistoryModel.playRequest != null) {
             if (GameHistoryModel.playRequest!!.values[0] != LoggedInUser.getName()) {
