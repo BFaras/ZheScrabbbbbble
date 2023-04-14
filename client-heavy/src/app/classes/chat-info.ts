@@ -16,6 +16,7 @@ export interface ChatInfo {
     chatName: string;
     _id: string;
     chatType: ChatType;
+    isChatOwner: boolean;
 }
 
 export interface ChatCreationResponse {

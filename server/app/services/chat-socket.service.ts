@@ -51,7 +51,7 @@ export class ChatSocketService {
         });
 
         socket.on('Create New Chat', async (chatName: string, chatType: ChatType) => {
-            if (chatName && chatType) {
+            if (chatName && chatType !== undefined) {
                 const chatCreationResponse: ChatCreationResponse = await this.chatService.createChat(
                     this.accountInfoService.getUserId(socket),
                     chatName,
