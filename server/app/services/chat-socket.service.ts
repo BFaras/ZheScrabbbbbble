@@ -67,6 +67,13 @@ export class ChatSocketService {
             }
         });
 
+        socket.on('Delete Public Chat', async (chatId: string) => {
+            const userId = this.accountInfoService.getUserId(socket);
+            if (chatId && userId) {
+                this.chatService.deleteChat(userId, chatId);
+            }
+        });
+
         socket.on('Get Public Chat List', async () => {
             const userId = this.accountInfoService.getUserId(socket);
             if (userId) {

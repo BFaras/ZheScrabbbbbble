@@ -28,7 +28,8 @@ export class ChatService {
     }
 
     async createChat(userId: string, chatName: string, chatType: ChatType): Promise<ChatCreationResponse> {
-        const chatInfo: ChatInfoDB = { chatName, chatType, usersIds: [], chatHistory: [] };
+        const chatCreatorId = chatType === ChatType.PUBLIC ? userId : '';
+        const chatInfo: ChatInfoDB = { chatName, chatType, usersIds: [], chatHistory: [], chatCreatorId };
         const createdChatId: string = await this.dbService.addNewChatCanal(chatInfo);
         let errorCode = DATABASE_UNAVAILABLE;
 
@@ -37,6 +38,21 @@ export class ChatService {
         }
 
         return { errorCode, chatId: createdChatId };
+    }
+
+    async deleteChat(userId: string, chatId: string): Promise<boolean> {
+        let chatDeleted = false;
+        if (chatId && (await this.dbService.getChatType(chatId)) === ChatType.PUBLIC && (await this.dbService.isUserChatCreator(chatId, userId))) {
+            const usersIdsInChat: string[] = await this.dbService.getUsersIdsInChat(chatId);
+            this.userSocketService.getSio()?.in(this.getChatRoomName(chatId)).emit('Chat Deleted', chatId);
+            chatDeleted = true;
+            for (const userIdInChat of usersIdsInChat) {
+                if (userIdInChat) {
+                    await this.leaveChat(userIdInChat, chatId, true);
+                }
+            }
+        }
+        return chatDeleted;
     }
 
     async createFriendsChat(userId: string, friendUserId: string): Promise<string> {
@@ -61,9 +77,9 @@ export class ChatService {
         let errorCode: string = DATABASE_UNAVAILABLE;
 
         if (friendChatId !== '' && friendUserId !== '') {
-            errorCode = await this.leaveChat(userId, friendChatId);
+            errorCode = await this.leaveChat(userId, friendChatId, true);
             if (errorCode === NO_ERROR) {
-                await this.leaveChat(friendUserId, friendChatId);
+                await this.leaveChat(friendUserId, friendChatId, true);
             }
         }
 
@@ -72,7 +88,7 @@ export class ChatService {
 
     async joinChat(userId: string, chatId: string): Promise<string> {
         let errorCode = NO_ERROR;
-        if (userId === null || userId === '' || userId === undefined) {
+        if (!userId) {
             errorCode = DATABASE_UNAVAILABLE;
         } else if (!(await this.dbService.joinChatCanal(userId, chatId))) {
             errorCode = DATABASE_UNAVAILABLE;
@@ -82,11 +98,13 @@ export class ChatService {
         return errorCode;
     }
 
-    async leaveChat(userId: string, chatId: string): Promise<string> {
+    async leaveChat(userId: string, chatId: string, isDeletingChat?: boolean): Promise<string> {
         let errorCode = NO_ERROR;
 
-        if (userId === null || userId === '' || userId === undefined) {
+        if (!userId) {
             errorCode = DATABASE_UNAVAILABLE;
+        } else if (!isDeletingChat && (await this.deleteChat(userId, chatId))) {
+            errorCode = NO_ERROR;
         } else if (!(await this.dbService.leaveChatCanal(userId, chatId))) {
             errorCode = DATABASE_UNAVAILABLE;
         } else {

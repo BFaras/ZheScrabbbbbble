@@ -86,7 +86,20 @@ describe('Chat Tests', async () => {
         expect(await dbService.isUserInChat(testUserId2, chatIds[0])).to.be.true;
     });
 
-    it('should leave chat canal when other user is in it and one user should not be in it anymore while the other is still there', async () => {
+    it('should leave chat canal when other user is in it and one user should not be in it anymore while the other is still there and user is not the creator', async () => {
+        const chatCreationResponse = await chatService.createChat(testUserId, testChatName, testChatType);
+        chatIds.push(chatCreationResponse.chatId);
+        const chatJoinError = await chatService.joinChat(testUserId2, chatIds[0]);
+        const chatLeaveError = await chatService.leaveChat(testUserId2, chatIds[0]);
+
+        expect(chatCreationResponse.errorCode).to.deep.equals(NO_ERROR);
+        expect(chatJoinError).to.deep.equals(NO_ERROR);
+        expect(chatLeaveError).to.deep.equals(NO_ERROR);
+        expect(await dbService.isUserInChat(testUserId, chatIds[0])).to.be.true;
+        expect(await dbService.isUserInChat(testUserId2, chatIds[0])).to.be.false;
+    });
+
+    it('should leave chat canal and if the user leaving is the creator, no one should be in the canal', async () => {
         const chatCreationResponse = await chatService.createChat(testUserId, testChatName, testChatType);
         chatIds.push(chatCreationResponse.chatId);
         const chatJoinError = await chatService.joinChat(testUserId2, chatIds[0]);
@@ -96,7 +109,7 @@ describe('Chat Tests', async () => {
         expect(chatJoinError).to.deep.equals(NO_ERROR);
         expect(chatLeaveError).to.deep.equals(NO_ERROR);
         expect(await dbService.isUserInChat(testUserId, chatIds[0])).to.be.false;
-        expect(await dbService.isUserInChat(testUserId2, chatIds[0])).to.be.true;
+        expect(await dbService.isUserInChat(testUserId2, chatIds[0])).to.be.false;
     });
 
     it('should return a list of all the chats a user is in when calling getUserChats', async () => {
