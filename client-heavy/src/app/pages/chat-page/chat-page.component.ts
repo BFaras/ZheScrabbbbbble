@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ConnectivityStatus, Friend } from '@app/classes/friend-info';
 import { LanguageComponent } from '@app/components/language/language.component';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 import { ThemesService } from '@app/services/themes-service/themes-service';
 import { Subscription } from 'rxjs';
 
@@ -52,7 +53,8 @@ export class ChatPageComponent implements OnInit, ViewChildren {
         private router: Router,
         private themeService: ThemesService,
         private languageComponent: LanguageComponent,
-        private accountService: AccountService
+        private accountService: AccountService,
+        private socketManagerService: SocketManagerService,
         /*private friendsPage: FriendsPageComponent*/) {
         this.username = this.account.getUsername();
         if (!this.username) {
@@ -62,39 +64,14 @@ export class ChatPageComponent implements OnInit, ViewChildren {
     }
 
     ngOnInit() {
-        this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
-            this.chatList = chatList;
-            this.updateGameRoomChat();
-            const friendToSelect = this.chatService.getFriendToSelect();
-            if(friendToSelect){
-                console.log('FOUND FRIEND');
-                console.log(friendToSelect);
-                this.chatService.setFriendToSelect('');
-                for(const chat of this.chatList){
-                    console.log('user: ' + chat.chatName);
-                    if(chat.chatName !== friendToSelect) continue;
-                    this.setVisibility(chat.chatType);
-                    this.selectChat(chat._id);
-                    break;
-                }
+        this.socketManagerService.getSocket().on('Chat Deleted', (chatCode: string) => {
+            if (this.chatService.isUserInChat(chatCode)) {
+                this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
+                    this.chatList = chatList;
+                }));
             }
-            if (this.selectedChat) {
-                this.setChatHistory(this.selectedChat);
-            }
-            /*
-            this.setFriendRedirect();
-            if (true) {
-
-                let chatId: string = "";
-                this.chatList.forEach((chat: ChatInfo) => {
-                    if (this.friend.username === chat.chatName && chat.chatType === this.private) chatId = chat._id;
-                });
-                //document.querySelectorAll(chatId);
-                document.getElementById('private')!.click();
-                this.redirect = false;
-            }
-            */
-        }));
+        });
+        this.updateChatsList();
         this.subscriptions.push(this.chatService.getNewMessages().subscribe((messageInfo: MessageInfo) => {
             if (messageInfo.id === this.selectedChat) {
                 this.chatLog.push(messageInfo.message);
@@ -162,6 +139,7 @@ export class ChatPageComponent implements OnInit, ViewChildren {
 
     ngOnDestroy(): void {
         for (const subscription of this.subscriptions) subscription.unsubscribe();
+        this.socketManagerService.getSocket().removeAllListeners('Chat Deleted');
     }
 
     sendMessage() {
@@ -199,23 +177,23 @@ export class ChatPageComponent implements OnInit, ViewChildren {
         let chatLinks;
         chatLinks = document.getElementsByClassName("tabs");
         let chatId = '';
-            switch(newVisibility){
-                case ChatType.GLOBAL:
-                    chatId = 'global';
-                    break;
-                case ChatType.PRIVATE:
-                    chatId = 'private';
-                    break;
-                case ChatType.PUBLIC:
-                    chatId = 'public';
-                    break;
-            }
+        switch (newVisibility) {
+            case ChatType.GLOBAL:
+                chatId = 'global';
+                break;
+            case ChatType.PRIVATE:
+                chatId = 'private';
+                break;
+            case ChatType.PUBLIC:
+                chatId = 'public';
+                break;
+        }
         for (let i = 0; i < chatLinks.length; i++) {
-            if(chatLinks[i].id === chatId){
+            if (chatLinks[i].id === chatId) {
                 chatLinks[i].className += " active";
-            }else{
+            } else {
                 chatLinks[i].className = chatLinks[i].className.replace(" active", "");
-            }   
+            }
         }
     }
 
@@ -238,5 +216,41 @@ export class ChatPageComponent implements OnInit, ViewChildren {
         this.chatService.getChatHistory(chatId).subscribe((chatHistory: ChatMessage[]) => {
             this.chatLog = chatHistory;
         })
+    }
+
+    private updateChatsList() {
+        this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
+            this.chatList = chatList;
+            this.updateGameRoomChat();
+            const friendToSelect = this.chatService.getFriendToSelect();
+            if (friendToSelect) {
+                console.log('FOUND FRIEND');
+                console.log(friendToSelect);
+                this.chatService.setFriendToSelect('');
+                for (const chat of this.chatList) {
+                    console.log('user: ' + chat.chatName);
+                    if (chat.chatName !== friendToSelect) continue;
+                    this.setVisibility(chat.chatType);
+                    this.selectChat(chat._id);
+                    break;
+                }
+            }
+            if (this.selectedChat) {
+                this.setChatHistory(this.selectedChat);
+            }
+            /*
+            this.setFriendRedirect();
+            if (true) {
+
+                let chatId: string = "";
+                this.chatList.forEach((chat: ChatInfo) => {
+                    if (this.friend.username === chat.chatName && chat.chatType === this.private) chatId = chat._id;
+                });
+                //document.querySelectorAll(chatId);
+                document.getElementById('private')!.click();
+                this.redirect = false;
+            }
+            */
+        });
     }
 }

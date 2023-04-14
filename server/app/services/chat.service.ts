@@ -44,13 +44,13 @@ export class ChatService {
         let chatDeleted = false;
         if (chatId && (await this.dbService.getChatType(chatId)) === ChatType.PUBLIC && (await this.dbService.isUserChatCreator(chatId, userId))) {
             const usersIdsInChat: string[] = await this.dbService.getUsersIdsInChat(chatId);
-            this.userSocketService.getSio()?.in(this.getChatRoomName(chatId)).emit('Chat Deleted', chatId);
             chatDeleted = true;
             for (const userIdInChat of usersIdsInChat) {
                 if (userIdInChat) {
                     await this.leaveChat(userIdInChat, chatId, true);
                 }
             }
+            this.userSocketService.getSio()?.emit('Chat Deleted', chatId);
         }
         return chatDeleted;
     }

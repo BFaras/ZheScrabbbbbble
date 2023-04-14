@@ -26,17 +26,21 @@ export class ChatService {
             (window as any).setChatStatusCallback(this.updateChatStatus.bind(this));
             this.popupOpen = (window as any).chatOpen;
         }
+
+        this.socketManagerService.getSocket().on('Chat Deleted', (chatCode: string) => {
+            this.messageLog.delete(chatCode);
+        });
     }
 
     isPopupOpen(): boolean {
         return this.popupOpen;
     }
 
-    setFriendToSelect(username: string){
+    setFriendToSelect(username: string) {
         this.friendToSelect = username;
     }
 
-    getFriendToSelect(): string{
+    getFriendToSelect(): string {
         return this.friendToSelect;
     }
 
@@ -90,6 +94,10 @@ export class ChatService {
                 this.chatMessageObserver.next({ id, message });
             }
         });
+    }
+
+    isUserInChat(chatCode: string) {
+        return this.messageLog.has(chatCode);
     }
 
     sendMessage(message: string, chatId: string) {
