@@ -6,7 +6,7 @@ import { Question } from '@app/interfaces/question';
 import { Server } from 'app/server';
 import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { io as ioClient, Socket } from 'socket.io-client';
+import { Socket, io as ioClient } from 'socket.io-client';
 import { Container } from 'typedi';
 import { DatabaseService } from './database.service';
 
@@ -15,7 +15,7 @@ describe('Authentification Tests', async () => {
     const testPassword = 'tE!s&to~';
     const testGoodEmail = 'myTestMail12564@poly.com';
     const urlString = 'http://localhost:3000';
-    const testAvatar = '';
+    const testAvatar = 'avatar1';
     const testSecurityQuestion: Question = { question: 'Who are you?', answer: 'Me' };
 
     let mongoServer: MongoMemoryServer;
@@ -105,7 +105,7 @@ describe('Authentification Tests', async () => {
                     expect(errorCode).to.deep.equals(NO_ERROR);
                     done();
                 });
-                clientSocket.emit('Account Question Answer', testSecurityQuestion.answer, newPassword);
+                clientSocket.emit('Account Question Answer', testUsername, testSecurityQuestion.answer, newPassword);
             });
             clientSocket.emit('Reset User Password', testUsername);
         });
@@ -117,7 +117,7 @@ describe('Authentification Tests', async () => {
         const wrongAnswer = testSecurityQuestion.answer + 'hello';
         clientSocket.once('Creation result', () => {
             clientSocket.once('User Account Question', () => {
-                clientSocket.emit('Account Question Answer', wrongAnswer, newPassword);
+                clientSocket.emit('Account Question Answer', testUsername, wrongAnswer, newPassword);
                 clientSocket.once('Password Reset response', async (errorCode: string) => {
                     expect(errorCode).to.deep.equals(WRONG_SECURITY_ANSWER);
                     done();

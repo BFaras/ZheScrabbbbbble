@@ -9,7 +9,7 @@ import {
     PlayerName,
     Score,
     TopScores,
-    VirtualPlayerDifficulty
+    VirtualPlayerDifficulty,
 } from '@app/constants/database-interfaces';
 import { DATABASE_UNAVAILABLE, NO_ERROR, USERNAME_TAKEN } from '@app/constants/error-code-constants';
 import { ChatInfo, ChatInfoDB, ChatType } from '@app/interfaces/chat-info';
@@ -421,18 +421,60 @@ export class DatabaseService {
         return chatHistory;
     }
 
+    async getChatType(chatId: string): Promise<ChatType | undefined> {
+        let chatType: ChatType | undefined;
+        if (chatId) {
+            const chatDoc = await ((await this.getCollection(CollectionType.CHATCANALS)) as Collection<ChatInfoDB>)?.findOne({
+                _id: new ObjectId(chatId),
+            });
+
+            if (chatDoc !== undefined && chatDoc !== null) {
+                chatType = chatDoc.chatType;
+            }
+        }
+        return chatType;
+    }
+
+    async getUsersIdsInChat(chatId: string): Promise<string[]> {
+        let userIds: string[] = [];
+        if (chatId) {
+            const chatDoc = await ((await this.getCollection(CollectionType.CHATCANALS)) as Collection<ChatInfoDB>)?.findOne({
+                _id: new ObjectId(chatId),
+            });
+
+            if (chatDoc !== undefined && chatDoc !== null) {
+                userIds = chatDoc.usersIds;
+            }
+        }
+        return userIds;
+    }
+
+    async isUserChatCreator(chatId: string, userId: string): Promise<boolean> {
+        let isChatCreator = false;
+        if (chatId) {
+            const chatDoc = await ((await this.getCollection(CollectionType.CHATCANALS)) as Collection<ChatInfoDB>)?.findOne({
+                _id: new ObjectId(chatId),
+            });
+
+            if (chatDoc !== undefined && chatDoc !== null) {
+                isChatCreator = chatDoc.chatCreatorId === userId;
+            }
+        }
+        return isChatCreator;
+    }
+
     async getChatCanalsUserCanJoin(userId: string): Promise<ChatInfo[]> {
         const chatCanlasUserCanJoin = (await this.getCollection(CollectionType.CHATCANALS)
-            ?.find({ usersIds: { $ne: userId }, chatType: ChatType.PUBLIC }, { projection: { chatName: 1, chatType: 1 } })
+            ?.find({ usersIds: { $ne: userId }, chatType: ChatType.PUBLIC }, { projection: { chatName: 1, chatType: 1, chatCreatorId: 1 } })
             .toArray()) as unknown[];
         return this.transformMongoArrayToChatInfoArray(chatCanlasUserCanJoin);
     }
 
     async getChatsUserIsIn(userId: string): Promise<ChatInfo[]> {
         const chatCanalsUserIsIn = (await this.getCollection(CollectionType.CHATCANALS)
-            ?.find({ usersIds: userId }, { projection: { chatName: 1, chatType: 1 } })
+            ?.find({ usersIds: userId }, { projection: { chatName: 1, chatType: 1, chatCreatorId: 1 } })
             .toArray()) as unknown[];
-        return this.transformMongoArrayToChatInfoArray(chatCanalsUserIsIn);
+        return this.transformMongoArrayToChatInfoArray(chatCanalsUserIsIn, userId);
     }
 
     async getNumberOfUsersInChatCanal(chatId: string): Promise<number> {
@@ -511,11 +553,22 @@ export class DatabaseService {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    transformMongoArrayToChatInfoArray(mongoArray: any[]): ChatInfo[] {
+    transformMongoArrayToChatInfoArray(mongoArray: any[], userId?: string): ChatInfo[] {
+        const chatInfoArray: ChatInfo[] = [];
         mongoArray.forEach((mongoInfo) => {
-            mongoInfo._id = mongoInfo._id.toString();
+            chatInfoArray.push(this.transformChatInfoDBToChatInfo(mongoInfo, userId));
         });
-        return mongoArray as ChatInfo[];
+        return chatInfoArray;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    transformChatInfoDBToChatInfo(chatInfoDB: any, userId?: string) {
+        return {
+            _id: chatInfoDB._id.toString(),
+            chatName: chatInfoDB.chatName,
+            chatType: chatInfoDB.chatType,
+            isChatOwner: chatInfoDB !== undefined && chatInfoDB.chatCreatorId === userId,
+        };
     }
 
     async getTopScores(resultCount: number): Promise<TopScores> {
