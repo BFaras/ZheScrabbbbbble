@@ -15,6 +15,8 @@ export class ChatService {
     chatInGameRoom: string;
     chatMessageObserver: Observer<MessageInfo>;
     active: string = 'chat';
+
+    private friendToSelect: string = '';
     private popupOpen: boolean = false;
     private changeDetector: ChangeDetectorRef;
 
@@ -28,6 +30,14 @@ export class ChatService {
 
     isPopupOpen(): boolean {
         return this.popupOpen;
+    }
+
+    setFriendToSelect(username: string){
+        this.friendToSelect = username;
+    }
+
+    getFriendToSelect(): string{
+        return this.friendToSelect;
     }
 
     setChangeDetector(changeDetector: ChangeDetectorRef) {

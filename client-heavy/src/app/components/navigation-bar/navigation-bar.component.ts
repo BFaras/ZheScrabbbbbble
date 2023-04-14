@@ -49,6 +49,10 @@ export class NavigationBarComponent {
     });
   }
 
+  resetFriend(){
+    this.chatService.setFriendToSelect('');
+  }
+
   dialogResponse(status: boolean, data: { username: string, gameID: string }) {
     if (status) {
       this.waitingRoomManagerService.joinRoomResponse().pipe(first()).subscribe(this.joinFriendRoom.bind(this));
