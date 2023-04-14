@@ -46,8 +46,13 @@ export class LetterAdderService {
     onLeftClick(coords: Vec2) {
         if (this.canClick(coords)) {
             this.gridService.deleteAndRedraw();
-            if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
-                this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+            console.log("hi")
+            /**j ai jamais faire le gert preview */
+            if (this.previewPlayerActionService.getlistPlayersFirstTilesCoop().size >= 1) {
+                const listPlayersFirstTilesCoopArray = Array.from(this.previewPlayerActionService.listPlayersFirstTilesCoop.values())
+                listPlayersFirstTilesCoopArray.forEach((position) => {
+                    this.gridService.showActivePlayerFirstTile(position)
+                })
             }
             if (this.prevActiveSquare.x === this.activeSquare.x && this.prevActiveSquare.y === this.activeSquare.y)
                 this.arrowDirection = !this.arrowDirection;
@@ -125,8 +130,11 @@ export class LetterAdderService {
                 this.previewPlayerActionService.addPreviewTile(deepCopyActiveSquare)
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
-                if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
-                    this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+                if (this.previewPlayerActionService.getlistPlayersFirstTilesCoop().size >= 1) {
+                    const listPlayersFirstTilesCoopArray = Array.from(this.previewPlayerActionService.listPlayersFirstTilesCoop.values())
+                    listPlayersFirstTilesCoopArray.forEach((position) => {
+                        this.gridService.showActivePlayerFirstTile(position)
+                    })
                 }
                 this.changeActivePosition(1);
                 this.letterAdderMode = 'keyPress';
@@ -167,8 +175,11 @@ export class LetterAdderService {
                 this.previewPlayerActionService.addPreviewTile(this.activeSquare)
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
-                if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
-                    this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+                if (this.previewPlayerActionService.getlistPlayersFirstTilesCoop().size >= 1) {
+                    const listPlayersFirstTilesCoopArray = Array.from(this.previewPlayerActionService.listPlayersFirstTilesCoop.values())
+                    listPlayersFirstTilesCoopArray.forEach((position) => {
+                        this.gridService.showActivePlayerFirstTile(position)
+                    })
                 }
                 this.letterAdderMode = 'dragAndDrop';
             }
@@ -188,8 +199,11 @@ export class LetterAdderService {
     removeDrawingBeforeDragWithinCanvas() {
         this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
         this.gridService.deleteAndRedraw(this.addedLettersLog);
-        if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
-            this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+        if (this.previewPlayerActionService.getlistPlayersFirstTilesCoop().size >= 1) {
+            const listPlayersFirstTilesCoopArray = Array.from(this.previewPlayerActionService.listPlayersFirstTilesCoop.values())
+            listPlayersFirstTilesCoopArray.forEach((position) => {
+                this.gridService.showActivePlayerFirstTile(position)
+            })
         }
         this.previewPlayerActionService.removePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y });
     }
@@ -204,8 +218,11 @@ export class LetterAdderService {
         this.addedLettersLog.delete(this.pervForDrag.x + this.pervForDrag.y);
         if (this.addedLettersLog.size === 1) this.setAdderMode('')
         this.gridService.deleteAndRedraw(this.addedLettersLog);
-        if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
-            this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+        if (this.previewPlayerActionService.getlistPlayersFirstTilesCoop().size >= 1) {
+            const listPlayersFirstTilesCoopArray = Array.from(this.previewPlayerActionService.listPlayersFirstTilesCoop.values())
+            listPlayersFirstTilesCoopArray.forEach((position) => {
+                this.gridService.showActivePlayerFirstTile(position)
+            })
         }
         this.previewPlayerActionService.removePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y });
 
@@ -219,8 +236,11 @@ export class LetterAdderService {
         if (!this.isPositionTaken()) {
             this.addToHand(true);
             this.gridService.deleteAndRedraw(this.addedLettersLog);
-            if (this.previewPlayerActionService.getPreviewFirstTileCoop() !== undefined) {
-                this.gridService.showActivePlayerFirstTile(this.previewPlayerActionService.getPreviewFirstTileCoop()!)
+            if (this.previewPlayerActionService.getlistPlayersFirstTilesCoop().size >= 1) {
+                const listPlayersFirstTilesCoopArray = Array.from(this.previewPlayerActionService.listPlayersFirstTilesCoop.values())
+                listPlayersFirstTilesCoopArray.forEach((position) => {
+                    this.gridService.showActivePlayerFirstTile(position)
+                })
             }
             this.changeActivePosition(decrement);
         }

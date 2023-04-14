@@ -35,6 +35,7 @@ export class Game {
     private startDate: Date;
     private playerTurnIndex: number;
     private timer: NodeJS.Timeout;
+    private turnStartTime: number = 0;
     private timerEnabled: boolean
     private timerCallback: (username: string, result: CommandResult) => void;
 
@@ -155,8 +156,14 @@ export class Game {
             playerTurnIndex: this.playerTurnIndex,
             players: playerStates,
             reserveLength: this.reserve.getLength(),
-            gameOver: this.gameOver
+            gameOver: this.gameOver,
+            timeLeft: this.getTimeLeft()
         };
+    }
+
+    getTimeLeft(): number{
+        const secondsElapsed = Math.floor((Date.now() - this.turnStartTime) / 1000);
+        return (MILLISECOND_IN_MINUTES/1000) - secondsElapsed;
     }
 
     async findWords(virtualPlay: boolean): Promise<PossibleWords[]> {
@@ -192,6 +199,7 @@ export class Game {
     resetTimer() {
         if (this.timerEnabled) {
             clearTimeout(this.timer);
+            this.turnStartTime = Date.now();
             this.timer = setTimeout(() => {
                 const username = this.players[this.playerTurnIndex].getName();
                 const result = this.passTurn();

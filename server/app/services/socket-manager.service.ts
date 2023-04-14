@@ -16,7 +16,7 @@ import {
     OUT_OF_TIME_MESSAGE,
     REPLACED_MESSAGE,
     ROUND_OVER_MESSAGE,
-    ROUND_TIME_LEFT_MESSAGE
+    ROUND_TIME_LEFT_MESSAGE,
 } from '@app/constants/game-state-constants';
 import { CommandController, CommandResult, PlayerMessage } from '@app/controllers/command.controller';
 import * as http from 'http';
@@ -30,6 +30,7 @@ import { FriendSocketService } from './friend-socket.service';
 import { ProfileSocketService } from './profile-socket.service';
 import { RoomManagerService } from './room-manager.service';
 import { SocketDatabaseService } from './socket-database.service';
+import { UserSocketService } from './user-socket.service';
 import { UsersStatusService } from './users-status.service';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 
@@ -46,7 +47,8 @@ export class SocketManager {
     private accountInfoService: AccountInfoService;
     private profileSocketService: ProfileSocketService;
     private friendSocketService: FriendSocketService;
-    private dbService : DatabaseService;
+    private userSocketService: UserSocketService;
+    private dbService: DatabaseService;
     private pendingJoinGameRequests: Map<string, [string, io.Socket, boolean]>;
     private tournamentQueue: io.Socket[];
 
@@ -60,10 +62,12 @@ export class SocketManager {
         this.roomManager = Container.get(RoomManagerService);
         this.profileSocketService = Container.get(ProfileSocketService);
         this.friendSocketService = Container.get(FriendSocketService);
+        this.userSocketService = Container.get(UserSocketService);
         this.dbService = Container.get(DatabaseService);
         this.pendingJoinGameRequests = new Map<string, [string, io.Socket, boolean]>();
         this.commandController = new CommandController(this.roomManager);
         this.friendSocketService.setSio(this.sio);
+        this.userSocketService.setSio(this.sio);
         this.tournamentQueue = [];
     }
 
@@ -121,7 +125,7 @@ export class SocketManager {
 
             socket.on('Join Game Room', (roomCode: string, observer: boolean, password?: string) => {
                 console.log(new Date().toLocaleTimeString() + ' | Room join request received');
-                if(!this.roomManager.getRoom(roomCode)) return;
+                if (!this.roomManager.getRoom(roomCode)) return;
                 const username = this.accountInfoService.getUsername(socket);
                 if (!observer && this.roomManager.isRoomFull(roomCode)) {
                     console.log(new Date().toLocaleTimeString() + ' | Room is full');
@@ -221,7 +225,7 @@ export class SocketManager {
                 if(this.usersStatusService.isUserInGame(userId)) return;
                 const friendSocket = this.usersStatusService.getUserSocketFromId(userId);
                 if(!friendSocket) return;
-                friendSocket.emit('Game Invite Request', this.accountInfoService.getUsername(socket), currentRoom.getID());
+                friendSocket.emit('Game Invite Request', this.accountInfoService.getUsername(socket), currentRoom.getID(), currentRoom instanceof CoopGameRoom);
             });
 
             socket.on('Join Friend Game', async(roomId: string) => {
@@ -546,8 +550,11 @@ export class SocketManager {
     private sendGameState(room: GameRoom, message?: PlayerMessage) {
         const gameState = room.getGame.createGameState();
         gameState.message = message;
+        if (!gameState.gameOver){
+            room.getGame.resetTimer();
+            gameState.timeLeft = room.getGame.getTimeLeft();
+        }
         this.sio.in(room.getID()).emit('Game State Update', gameState);
-        if (!gameState.gameOver) room.getGame.resetTimer();
     }
 
     private timerCallback(room: GameRoom, username: string, result: CommandResult) {

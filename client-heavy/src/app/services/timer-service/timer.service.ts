@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { MAX_SECOND_VALUE, Timer } from '@app/classes/timer';
 import { TIMER_VALUES } from '@app/constants/timer-constants';
 
-const TIME: Timer = { minute: 1, second: 0 };
-
 @Injectable({
     providedIn: 'root',
 })
@@ -15,10 +13,10 @@ export class TimerService {
         this.modifyTimer();
     }
 
-    resetTimer() {
+    resetTimer(timeLeft : number) {
         this.stopTimer = false;
-        this.currentTimer.minute = TIME.minute;
-        this.currentTimer.second = TIME.second;
+        this.currentTimer.minute = Math.floor(timeLeft / 60);
+        this.currentTimer.second = timeLeft % 60;
     }
 
     getTimer(): Timer {

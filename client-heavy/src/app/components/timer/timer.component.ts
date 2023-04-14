@@ -4,6 +4,8 @@ import { GameState, GameStateService } from '@app/services/game-state-service/ga
 import { TimerService } from '@app/services/timer-service/timer.service';
 import { Subscription } from 'rxjs';
 
+const DEFAULT_TIMER_TIME = 60;
+
 @Component({
     selector: 'app-timer',
     templateUrl: './timer.component.html',
@@ -16,7 +18,7 @@ export class TimerComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.timerService.setTimerStopped(false);
-        this.timerService.resetTimer();
+        this.timerService.resetTimer(DEFAULT_TIMER_TIME);
         this.subscription = this.gameStateService.getGameStateObservable().subscribe((gameState) => this.updateTime(gameState));
     }
 
@@ -32,7 +34,8 @@ export class TimerComponent implements OnInit, OnDestroy {
         if (gameState.gameOver) {
             this.timerService.setTimerStopped(true);
         } else {
-            this.timerService.resetTimer();
+
+            this.timerService.resetTimer(gameState.timeLeft);
         }
     }
 }
