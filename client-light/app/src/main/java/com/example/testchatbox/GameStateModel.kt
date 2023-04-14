@@ -18,9 +18,14 @@ data class GameState (
     var message: PlayerMessage? = null
 )
 
-data class Timer (
-    var minute: Int,
-    var second: Int
+data class PreviewUser(
+    var username: String,
+    var position: JSONObject
+    )
+
+data class TilePreview(
+    var username: String,
+    var position: Pair<String,Int>
 )
 
 data class PlayersState (
@@ -40,8 +45,8 @@ class GameStateModel: ViewModel() {
     val gameState: LiveData<GameState>
         get() = _gameState
 
-    private var _activeTile = MutableLiveData<Pair<String, Int>>()
-    val activeTile: LiveData<Pair<String, Int>>
+    private var _activeTile = MutableLiveData<TilePreview>()
+    val activeTile: LiveData<TilePreview>
         get() = _activeTile
 
     private var _avatarsList =  MutableLiveData<MutableMap<String,String>>()
@@ -52,8 +57,8 @@ class GameStateModel: ViewModel() {
     val emote: LiveData<Pair<String, String>>
         get() = _emote
 
-    private var _deleteActiveTile = MutableLiveData<Pair<String, Int>>()
-    val deleteActiveTile: LiveData<Pair<String, Int>>
+    private var _deleteActiveTile = MutableLiveData<TilePreview>()
+    val deleteActiveTile: LiveData<TilePreview>
         get() = _deleteActiveTile
 
     init {
@@ -119,23 +124,25 @@ class GameStateModel: ViewModel() {
         SocketHandler.getSocket().on("Get First Tile") { args ->
             Log.i("args  ", args.toString())
             val firstTileJSON = args[0] as JSONObject
-            Log.i("firstTileJSON ", firstTileJSON.toString())
-            val firstTileTemp = Pair(firstTileJSON.get("x") as String, firstTileJSON.get("y") as Int)
-            Log.i("firstTileTemp ", firstTileTemp.toString())
-            _activeTile.postValue(firstTileTemp)
+            var tilePreviewTemp = TilePreview("", Pair("",-1))
+            tilePreviewTemp.username = firstTileJSON.get("username") as String
+            var positionPreviewJSON = firstTileJSON.get("position") as JSONObject
+            tilePreviewTemp.position = Pair(positionPreviewJSON.get("x") as String, positionPreviewJSON.get("y") as Int)
+            Log.d("TILE PREVIEW", tilePreviewTemp.toString())
+            _activeTile.postValue(tilePreviewTemp)
         }
 
         SocketHandler.getSocket().on("Remove Selected Tile Response") { args ->
             Log.i("args  ", args.toString())
             val firstTileJSON = args[0] as JSONObject
-            Log.i("firstTileJSON ", firstTileJSON.toString())
-            val firstTileTemp = Pair(firstTileJSON.get("x") as String, firstTileJSON.get("y") as Int)
-            Log.i("firstTileTemp ", firstTileTemp.toString())
-            _deleteActiveTile.postValue(firstTileTemp)
+            var tilePreviewTemp = TilePreview("", Pair("",-1))
+            tilePreviewTemp.username = firstTileJSON.get("username") as String
+            var positionPreviewJSON = firstTileJSON.get("position") as JSONObject
+            tilePreviewTemp.position = Pair(positionPreviewJSON.get("x") as String, positionPreviewJSON.get("y") as Int)
+            _deleteActiveTile.postValue(tilePreviewTemp)
         }
         SocketHandler.getSocket().on("Emote Response") { args ->
             val emoteJSON = args[0] as JSONObject
-            Log.i("emoteJSON  ", args[0].toString())
             _emote.postValue(Pair(emoteJSON.get("username") as String, emoteJSON.get("emote") as String))
         }
     }
