@@ -15,6 +15,8 @@ export class ChatService {
     chatInGameRoom: string;
     chatMessageObserver: Observer<MessageInfo>;
     active: string = 'chat';
+
+    private friendToSelect: string = '';
     private popupOpen: boolean = false;
     private changeDetector: ChangeDetectorRef;
 
@@ -24,10 +26,22 @@ export class ChatService {
             (window as any).setChatStatusCallback(this.updateChatStatus.bind(this));
             this.popupOpen = (window as any).chatOpen;
         }
+
+        this.socketManagerService.getSocket().on('Chat Deleted', (chatCode: string) => {
+            this.messageLog.delete(chatCode);
+        });
     }
 
     isPopupOpen(): boolean {
         return this.popupOpen;
+    }
+
+    setFriendToSelect(username: string) {
+        this.friendToSelect = username;
+    }
+
+    getFriendToSelect(): string {
+        return this.friendToSelect;
     }
 
     setChangeDetector(changeDetector: ChangeDetectorRef) {
@@ -80,6 +94,10 @@ export class ChatService {
                 this.chatMessageObserver.next({ id, message });
             }
         });
+    }
+
+    isUserInChat(chatCode: string) {
+        return this.messageLog.has(chatCode);
     }
 
     sendMessage(message: string, chatId: string) {

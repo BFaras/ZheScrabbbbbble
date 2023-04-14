@@ -19,6 +19,7 @@ import {
     ROUND_TIME_LEFT_MESSAGE,
 } from '@app/constants/game-state-constants';
 import { CommandController, CommandResult, PlayerMessage } from '@app/controllers/command.controller';
+import { PreviewUser } from '@app/interfaces/preview-user';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
@@ -80,16 +81,16 @@ export class SocketManager {
             this.profileSocketService.handleProfileSockets(socket);
             this.friendSocketService.handleFriendSockets(socket);
 
-            socket.on('Share First Tile', (activeSquare: { x: string; y: number }) => {
+            socket.on('Share First Tile', (userPreview: PreviewUser) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
-                if (!currentRoom || activeSquare === null) return;
-                socket.to(currentRoom.getID()).emit('Get First Tile', activeSquare);
+                if (!currentRoom || userPreview.position === null || userPreview.position === undefined) return;
+                socket.to(currentRoom.getID()).emit('Get First Tile', userPreview);
             });
 
-            socket.on('Remove Selected Tile', (activeSquare: { x: string; y: number }) => {
+            socket.on('Remove Selected Tile', (userPreview: PreviewUser) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
-                if (!currentRoom || activeSquare === null) return;
-                socket.to(currentRoom.getID()).emit('Remove Selected Tile Response', activeSquare);
+                if (!currentRoom || userPreview.position === null || userPreview.position === undefined) return;
+                socket.to(currentRoom.getID()).emit('Remove Selected Tile Response', userPreview);
             });
 
             socket.on(
