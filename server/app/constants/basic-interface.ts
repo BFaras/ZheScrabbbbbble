@@ -20,6 +20,7 @@ export interface GameState {
     playerTurnIndex: number;
     reserveLength: number;
     gameOver: boolean;
+    timeLeft: number;
     message?: PlayerMessage;
 }
 
