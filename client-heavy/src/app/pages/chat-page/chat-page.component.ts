@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ChatInfo, ChatMessage, ChatType, MessageInfo } from '@app/classes/chat-info';
 import { AccountService } from '@app/services/account-service/account.service';
 //import { AccountService } from '@app/services/account-service/account.service';
@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
     templateUrl: './chat-page.component.html',
     styleUrls: ['./chat-page.component.scss'],
 })
-export class ChatPageComponent implements OnInit, AfterViewInit, ViewChildren {
+export class ChatPageComponent implements OnInit, ViewChildren {
     @ViewChild('scroll', { read: ElementRef }) public scroll: ElementRef;
     @ViewChildren('chat-button') chatItems: QueryList<ElementRef>;
 
@@ -65,6 +65,19 @@ export class ChatPageComponent implements OnInit, AfterViewInit, ViewChildren {
         this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
             this.chatList = chatList;
             this.updateGameRoomChat();
+            const friendToSelect = this.chatService.getFriendToSelect();
+            if(friendToSelect){
+                console.log('FOUND FRIEND');
+                console.log(friendToSelect);
+                this.chatService.setFriendToSelect('');
+                for(const chat of this.chatList){
+                    console.log('user: ' + chat.chatName);
+                    if(chat.chatName !== friendToSelect) continue;
+                    this.setVisibility(chat.chatType);
+                    this.selectChat(chat._id);
+                    break;
+                }
+            }
             if (this.selectedChat) {
                 this.setChatHistory(this.selectedChat);
             }
@@ -112,25 +125,6 @@ export class ChatPageComponent implements OnInit, AfterViewInit, ViewChildren {
         this.chatList.push({ chatName: 'Room Chat', chatType: ChatType.GLOBAL, _id: chatId, isChatOwner: false });
         this.chatService.updateChatList(this.chatList);
         this.changeDetector.detectChanges();
-    }
-
-    public ngAfterViewInit() {
-        /*
-        if (this.redirect) {
-            //let chatId: string = "";
-            let chatIndex: number = 0;
-            this.chatList.forEach((chat: ChatInfo, index: number) => {
-                if (this.friend.username === chat.chatName && chat.chatType === this.private) {
-                    //chatId = chat._id;
-                    chatIndex = index;
-                }
-            });
-            //let privateChats = this.chatList.filter((chat: ChatInfo) => chat.chatType === ChatType.PRIVATE);
-            this.chatItems.forEach((item, index) => {
-                if (index === chatIndex) (item.nativeElement as HTMLElement).click();
-            });
-        }
-        */
     }
 
     importMainWindowsData() {
@@ -198,30 +192,37 @@ export class ChatPageComponent implements OnInit, AfterViewInit, ViewChildren {
     }
     */
 
-    setVisibility(event: Event, newVisibility: ChatType) {
+    setVisibility(newVisibility: ChatType) {
         this.visibility = newVisibility;
         this.selectedChat = "";
         this.setDisabled();
-
         let chatLinks;
         chatLinks = document.getElementsByClassName("tabs");
+        let chatId = '';
+            switch(newVisibility){
+                case ChatType.GLOBAL:
+                    chatId = 'global';
+                    break;
+                case ChatType.PRIVATE:
+                    chatId = 'private';
+                    break;
+                case ChatType.PUBLIC:
+                    chatId = 'public';
+                    break;
+            }
         for (let i = 0; i < chatLinks.length; i++) {
-            chatLinks[i].className = chatLinks[i].className.replace(" active", "");
+            if(chatLinks[i].id === chatId){
+                chatLinks[i].className += " active";
+            }else{
+                chatLinks[i].className = chatLinks[i].className.replace(" active", "");
+            }   
         }
-
-        (event.currentTarget! as HTMLTextAreaElement).className += " active";
     }
 
-    selectChat(event: Event, id: string) {
+    selectChat(id: string) {
         this.selectedChat = id;
         this.setChatHistory(this.selectedChat);
         this.setDisabled();
-        let chatButtons;
-        chatButtons = document.getElementsByClassName("chat-button");
-        for (let i = 0; i < chatButtons.length; i++) {
-            chatButtons[i].className = chatButtons[i].className.replace(" selected", "");
-        }
-        (event.currentTarget! as HTMLTextAreaElement).className += " selected";
     }
 
     setDisabled() {
