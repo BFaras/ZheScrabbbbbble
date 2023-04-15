@@ -107,14 +107,14 @@
     <string name="new_password">New Password</string>
     <string name="register_new_passsword">Change Passsword</string>
     <string name="times_up">TIME\'S UP!</string>
-    <string name="talkingIntext">Now talking in</string>
+    <string name="talkingIntext">talking with</string>
     <string name="manage_chats">Manage Chats</string>
     <string name="hello_message"><![CDATA[Hello <b>%1$s</b>!]]></string>
     <string name="privateRoom">Private</string>
     <string name="publicRoom">Public</string>
     <string name="protectedRoom">Protected</string>
     <string name="join_game_text">Do you want to join the game as an observer?</string>
-    <string name="enter_the_room_password">enter the room password</string>
+    <string name="enter_the_room_password">Enter the room password</string>
     <string name="quit">Leave</string>
     <string name="winnerName"><![CDATA[%1$s won the game!]]></string>
     <string name="waitingRoomText">If the host decides to start the game and there are at least 2 players, the remaining places will be filled by Virtual Players.</string>
@@ -165,7 +165,7 @@
     <string name="greenTheme">Green</string>
     <string name="pinkTheme">Pink</string>
     <string name="blizzardTheme">Blizzard</string>
-    <string name="sorry_nno_hints_have_been_found">Sorry… \\nNo hints have been found.</string>
+    <string name="sorry_nno_hints_have_been_found">Sorry…<br/>No hints have been found.</string>
     <string name="join_a_room">join a room</string>
     <string name="observer">Observer</string>
     <string name="player">Player</string>
@@ -184,8 +184,8 @@
     <string name="waiting_for_players">Pending</string>
     <string name="room">Room</string>
     <string name="visibility">Visibility</string>
-    <string name="players"># Players</string>
-    <string name="observers"># Observers</string>
+    <string name="players">Number of players</string>
+    <string name="observers">Number of observers</string>
     <string name="game_type">Game type</string>
     <string name="game_status">Game status</string>
     <string name="to_be_determined">TBD</string>
@@ -205,4 +205,5 @@
     <string name="connexion">Log Ins</string>
     <string name="deconnexion">Log Outs</string>
     <string name="friend_code">Friend Code</string>
+    <string name="friend_profile_label">Friend profile</string>
 </resources>

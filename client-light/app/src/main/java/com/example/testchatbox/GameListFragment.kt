@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -116,6 +117,16 @@ class GameListFragment : Fragment(), ObserverInvite {
                 R.id.protectedRoom -> binding.createPassword.visibility=View.VISIBLE
             }
         }
+        binding.name.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
+        }
+        binding.createPassword.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
+        }
         val username = arguments?.getString("username");
         if(username!=null){
             binding.gameListSection.visibility=View.GONE;
@@ -137,10 +148,20 @@ class GameListFragment : Fragment(), ObserverInvite {
                         val gameRoom = list.getJSONObject(i)
                         val playersArray = gameRoom.get("players") as JSONArray
                         var players = arrayOf<String>()
-                        for (j in 0 until playersArray.length()){
-                            players=players.plus(playersArray.get(j) as String)
+                        for (j in 0 until playersArray.length()) {
+                            players = players.plus(playersArray.get(j) as String)
                         }
-                        gameList.add(GameRoom(gameRoom.get("name") as String, gameRoom.get("id") as String, Visibility.fromNameIgnoreCase(gameRoom.get("visibility") as String), players , gameRoom.get("isStarted") as Boolean, GameType.fromBool(gameRoom.get("isCoop") as Boolean), gameRoom.get("nbObservers") as Int))
+                        gameList.add(
+                            GameRoom(
+                                gameRoom.get("name") as String,
+                                gameRoom.get("id") as String,
+                                Visibility.fromNameIgnoreCase(gameRoom.get("visibility") as String),
+                                players,
+                                gameRoom.get("isStarted") as Boolean,
+                                GameType.fromBool(gameRoom.get("isCoop") as Boolean),
+                                gameRoom.get("nbObservers") as Int
+                            )
+                        )
                     }
                     activity?.runOnUiThread(Runnable {
                         loadListView();
@@ -439,5 +460,10 @@ class GameListFragment : Fragment(), ObserverInvite {
         activity?.runOnUiThread(Runnable {
             verifyIfInviteRequest();
         });
+    }
+    
+    private fun hideKeyboard() {
+        val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
     }
 }

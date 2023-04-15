@@ -116,14 +116,14 @@
     <string name="new_password">Nouveau mot de passe</string>
     <string name="register_new_passsword">Register New Passsword</string>
     <string name="times_up">TIME\'S UP!</string>
-    <string name="talkingIntext">Now talking in</string>
+    <string name="talkingIntext">Now talking with</string>
     <string name="manage_chats">Manage Chats</string>
     <string name="hello_message"><![CDATA[Hello <b>%1$s</b>!]]></string>
     <string name="privateRoom">Private</string>
     <string name="publicRoom">Public</string>
     <string name="protectedRoom">Protected</string>
     <string name="join_game_text">Do you want to join the game as an observer?</string>
-    <string name="enter_the_room_password">enter the room password</string>
+    <string name="enter_the_room_password">Enter the room password</string>
     <string name="quit">Quitter</string>
     <string name="winnerName"><![CDATA[%1$s a gagné la partie!]]></string>
     <string name="waitingRoomText">Si l\'hôte décide de lancer la partie et qu\'il y a au minimum 2 joueurs , les places restantes seront comblées par des Joueurs Virtuels.</string>
@@ -175,7 +175,7 @@
     <string name="greenTheme">Vert</string>
     <string name="pinkTheme">Rose</string>
     <string name="blizzardTheme">Blizzard</string>
-    <string name="sorry_nno_hints_have_been_found">Sorry… \nNo hints have been found.</string>
+    <string name="sorry_nno_hints_have_been_found">Sorry… No hints have been found.</string>
     <string name="join_a_room">join a room</string>
     <string name="observer">Observer</string>
     <string name="player">Player</string>
@@ -215,5 +215,6 @@
     <string name="connexion">Connexion</string>
     <string name="deconnexion">Déconnexion</string>
     <string name="friend_code">Friend Code</string>
+    <string name="friend_profile_label">Profil d\'ami</string>
 
 </resources>

@@ -7,6 +7,8 @@
     android:background="?backgroundColor"
     android:clipToPadding="false"
     android:clipChildren="false"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     tools:context=".GameListFragment">
 
     <TextView
@@ -48,7 +50,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="300dp"
-        android:layout_gravity="center"
+        android:layout_gravity="center|left"
         android:divider="@drawable/letters_hand_divider"
         android:showDividers="middle"
         android:gravity="center_vertical|center"
@@ -56,10 +58,11 @@
         >
         <LinearLayout
             android:id="@+id/gameListSection"
-            android:layout_width="750dp"
+            android:layout_width="800dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_marginRight="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="30dp"
             android:elevation="10dp"
             android:padding="8dp"
             android:background="@drawable/background_direction_panel"
@@ -94,37 +97,37 @@
                         <TableRow
                             android:gravity="center">
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="50dp"
                                 android:layout_height="wrap_content"
                                 android:textAlignment="center"
                                 android:text="@string/host"></TextView>
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="50dp"
                                 android:layout_height="wrap_content"
                                 android:textAlignment="center"
                                 android:text="@string/room"></TextView>
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="50dp"
                                 android:layout_height="wrap_content"
                                 android:textAlignment="center"
                                 android:text="@string/visibility"></TextView>
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="50dp"
                                 android:layout_height="wrap_content"
                                 android:textAlignment="center"
                                 android:text="@string/players"></TextView>
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="50dp"
                                 android:layout_height="wrap_content"
                                 android:textAlignment="center"
                                 android:text="@string/observers"></TextView>
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="50dp"
                                 android:layout_height="wrap_content"
                                 android:textAlignment="center"
                                 android:text="@string/game_type"></TextView>
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="50dp"
                                 android:layout_height="wrap_content"
                                 android:textAlignment="center"
                                 android:text="@string/game_status"></TextView>
@@ -136,8 +139,7 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="none"
-                android:padding="10dp">
+                android:scrollbars="none">
 
                 <LinearLayout
                     android:id="@+id/gameList"

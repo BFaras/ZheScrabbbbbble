@@ -14,7 +14,7 @@
         
         <app-play-area class="play-area" tabindex="0" [receiver]="isReceiver"></app-play-area>
 
-        <section class="side-components">
+        <section class="side-components" id="abandon-langage">
             <button *ngIf="!endGame && !isObserver(); else other_content" (click)="alert()" class="button" id="abandonner">{{'GIVEUP.GIVEUP' | translate}}</button>
             <app-language></app-language>
             <ng-template #other_content><button class="button" (click)="goHome()" id="quitter">{{'GIVEUP.QUIT' | translate}}</button></ng-template>
@@ -33,9 +33,9 @@
                             </div>
                             <div *ngIf="action.messageType === 'MSG-CLUE'">
                                 <div *ngIf="action.values.length > 0">{{'ACTION-HISTORY.MSG-CLUE' | translate}}</div>
-                                <div *ngIf="action.values.length === 0">{{'ACTION-HISTORY.MSG-CLUE' | translate}}</div>
+                                <div *ngIf="action.values.length === 0">{{'ACTION-HISTORY.MSG-NO-CLUE' | translate}}</div>
                                 <div *ngFor="let hint of action.values" (click)="playHint(hint)">
-                                    <a class="hint">{{hint.substring(hint.indexOf(' ')+1)}}<br/></a>
+                                    <a class="hint">{{hint.substring(hint.indexOf(' ')+1)}} points<br/></a>
                                 </div>
                             </div>
                         </ul>

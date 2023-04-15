@@ -88,12 +88,7 @@ class FriendsFragment : Fragment(), ObserverFriend, ObserverInvite {
             friendLayout.setOnClickListener {
                 showActionMenu(friend.username)
             }
-//            val friendText = AppCompatButton((activity as MainActivity?)!!)
-//            friendText.text = friend.username  +" | " +friend.connectionStatus.name;
-//            friendText.textSize= 18F;
-//            friendText.setOnClickListener {
-//                showActionMenu(friend.username);
-//            }
+
             friendListView.addView(friendLayout)
         }
     }

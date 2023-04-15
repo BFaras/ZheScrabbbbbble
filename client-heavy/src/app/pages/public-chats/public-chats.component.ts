@@ -5,6 +5,7 @@ import { ConfrimPopUpComponent } from '@app/components/confrim-pop-up/confrim-po
 import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
 import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
+import { SocketManagerService } from '@app/services/socket-manager-service/socket-manager.service';
 
 @Component({
   selector: 'app-public-chats',
@@ -16,11 +17,16 @@ export class PublicChatsComponent implements OnInit, OnDestroy {
   presentChatList: ChatInfo[] = [];
   activeInput: number;
 
-  constructor(public dialog: MatDialog, private chatService: ChatService, private snackBarHandler: SnackBarHandlerService, private account: AccountService) {
+  constructor(public dialog: MatDialog, private chatService: ChatService, private snackBarHandler: SnackBarHandlerService, private account: AccountService, private socketManagerService: SocketManagerService) {
     this.updateChats();
+
+    this.socketManagerService.getSocket().on('Chat Deleted', () => {
+      this.updateChats();
+    });
   }
 
   updateChats() {
+    console.log("UPDATED 1");
     this.chatService.getPublicChatObservable().subscribe((publicChats: ChatInfo[]) => {
       this.absentChatList = publicChats;
     })
@@ -36,6 +42,7 @@ export class PublicChatsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.snackBarHandler.closeAlert()
+    this.socketManagerService.getSocket().removeAllListeners('Chat Deleted');
   }
 
   ngOnInit(): void {
@@ -43,7 +50,10 @@ export class PublicChatsComponent implements OnInit, OnDestroy {
   }
 
   alert(chat: ChatInfo) {
-    const text = this.account.getLanguage() === 'fr' ? 'Êtes-vous sûr(e) de vouloir quitter ce chat?' : 'Are you sure you want to leave this chat?';
+    let text = this.account.getLanguage() === 'fr' ? 'Êtes-vous sûr(e) de vouloir quitter ce chat?' : 'Are you sure you want to leave this chat?';
+    if (chat.isChatOwner) {
+      text = this.account.getLanguage() === 'fr' ? 'Quitter ce chat le supprimera, êtes-vous sûr de vouloir le faire?' : 'Leaving this chat will delete it, are you sur you want that?';
+    }
     const dialogRef = this.dialog.open(ConfrimPopUpComponent, {
       width: '450px',
       height: '230px',
@@ -117,5 +127,4 @@ export class PublicChatsComponent implements OnInit, OnDestroy {
       }
     }
   }
-
 }

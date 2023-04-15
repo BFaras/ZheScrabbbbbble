@@ -5,6 +5,7 @@ import { ConnectivityStatus, Friend } from '@app/classes/friend-info';
 import { ProfileInfo } from '@app/classes/profileInfo';
 import { ConfrimPopUpComponent } from '@app/components/confrim-pop-up/confrim-pop-up.component';
 import { AccountService } from '@app/services/account-service/account.service';
+import { ChatService } from '@app/services/chat-service/chat.service';
 import { FriendsService } from '@app/services/friends.service';
 import { SnackBarHandlerService } from '@app/services/snack-bar-handler.service';
 import { Subscription } from 'rxjs';
@@ -22,7 +23,7 @@ export class FriendsPageComponent implements OnDestroy {
   username: string = "";
   redirect: boolean = false;
 
-  constructor(public dialog: MatDialog, private snackBarHandler: SnackBarHandlerService, private friendsService: FriendsService, private account: AccountService, private router: Router) {
+  constructor(public dialog: MatDialog, private snackBarHandler: SnackBarHandlerService, private friendsService: FriendsService, private account: AccountService, private router: Router, private chatService: ChatService) {
     this.updateFriendsList();
     this.friendsService.getFriendListUpdateObservable().subscribe(() => {
       console.log('FRIEND REMOVED SOCKET TEST');
@@ -31,6 +32,14 @@ export class FriendsPageComponent implements OnDestroy {
     this.usercode = this.account.getProfile().userCode;
   }
 
+  isPopupChatOpen(){
+    return (window as any).chatOpen;
+  }
+
+  goToFriendChat(username: string){
+    this.chatService.setFriendToSelect(username);
+    this.router.navigate(['/chat']);
+  }
 
   alert(username: string) {
     this.account.setMessages();

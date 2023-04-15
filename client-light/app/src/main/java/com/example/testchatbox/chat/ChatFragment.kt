@@ -59,7 +59,13 @@ class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
         notifSound = MediaPlayer.create(view.context, R.raw.ding)
         loadList();
         verifyIfInviteRequest();
-        selectedChatIndex = if(arguments?.getString("username")!=null){ findIndexByUsername(arguments?.getString("username")!!) } else 0;
+        if ((arguments?.getString("username")!=null)) {
+            selectedChatIndex = findIndexByUsername(arguments?.getString("username")!!)
+            binding.chatRoomName.text = arguments?.getString("username")!!
+        } else {
+            selectedChatIndex = findIndexByUsername("Global")
+            binding.chatRoomName.text = "Global"
+        }
         binding.inputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 sendMessage()

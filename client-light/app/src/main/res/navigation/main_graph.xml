@@ -202,7 +202,7 @@
     <fragment
         android:id="@+id/profilFriendFragment"
         android:name="com.example.testchatbox.ProfilFriendFragment"
-        android:label="fragment_profil_friend"
+        android:label="@string/friend_profile_label"
         tools:layout="@layout/fragment_profil_friend" >
         <action
             android:id="@+id/action_profilFriendFragment_to_MainMenuFragment"

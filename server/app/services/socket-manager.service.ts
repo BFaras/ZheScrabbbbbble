@@ -28,6 +28,7 @@ import {
     ROUND_TIME_LEFT_MESSAGE,
 } from '@app/constants/game-state-constants';
 import { CommandController, CommandResult, PlayerMessage } from '@app/controllers/command.controller';
+import { PreviewUser } from '@app/interfaces/preview-user';
 import * as http from 'http';
 import * as io from 'socket.io';
 import Container from 'typedi';
@@ -39,6 +40,7 @@ import { FriendSocketService } from './friend-socket.service';
 import { ProfileSocketService } from './profile-socket.service';
 import { RoomManagerService } from './room-manager.service';
 import { SocketDatabaseService } from './socket-database.service';
+import { UserSocketService } from './user-socket.service';
 import { UsersStatusService } from './users-status.service';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 
@@ -55,6 +57,10 @@ export class SocketManager {
     private accountInfoService: AccountInfoService;
     private profileSocketService: ProfileSocketService;
     private friendSocketService: FriendSocketService;
+<<<<<<< HEAD
+=======
+    private userSocketService: UserSocketService;
+>>>>>>> main
     private dbService: DatabaseService;
     private pendingJoinGameRequests: Map<string, [string, io.Socket, boolean]>;
     private tournamentQueue: io.Socket[];
@@ -69,10 +75,12 @@ export class SocketManager {
         this.roomManager = Container.get(RoomManagerService);
         this.profileSocketService = Container.get(ProfileSocketService);
         this.friendSocketService = Container.get(FriendSocketService);
+        this.userSocketService = Container.get(UserSocketService);
         this.dbService = Container.get(DatabaseService);
         this.pendingJoinGameRequests = new Map<string, [string, io.Socket, boolean]>();
         this.commandController = new CommandController(this.roomManager);
         this.friendSocketService.setSio(this.sio);
+        this.userSocketService.setSio(this.sio);
         this.tournamentQueue = [];
     }
 
@@ -85,16 +93,16 @@ export class SocketManager {
             this.profileSocketService.handleProfileSockets(socket);
             this.friendSocketService.handleFriendSockets(socket);
 
-            socket.on('Share First Tile', (activeSquare: { x: string; y: number }) => {
+            socket.on('Share First Tile', (userPreview: PreviewUser) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
-                if (!currentRoom || activeSquare === null) return;
-                socket.to(currentRoom.getID()).emit('Get First Tile', activeSquare);
+                if (!currentRoom || userPreview.position === null || userPreview.position === undefined) return;
+                socket.to(currentRoom.getID()).emit('Get First Tile', userPreview);
             });
 
-            socket.on('Remove Selected Tile', (activeSquare: { x: string; y: number }) => {
+            socket.on('Remove Selected Tile', (userPreview: PreviewUser) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
-                if (!currentRoom || activeSquare === null) return;
-                socket.to(currentRoom.getID()).emit('Remove Selected Tile Response', activeSquare);
+                if (!currentRoom || userPreview.position === null || userPreview.position === undefined) return;
+                socket.to(currentRoom.getID()).emit('Remove Selected Tile Response', userPreview);
             });
 
             socket.on(
@@ -131,6 +139,7 @@ export class SocketManager {
 
             socket.on('Join Game Room', (roomCode: string, observer: boolean, password?: string) => {
                 console.log(new Date().toLocaleTimeString() + ' | Room join request received');
+                if (!this.roomManager.getRoom(roomCode)) return;
                 const username = this.accountInfoService.getUsername(socket);
                 if (!this.roomManager.getRoom(roomCode)) {
                     console.log(new Date().toLocaleTimeString() + ' | Room does not exist');
@@ -143,7 +152,7 @@ export class SocketManager {
                     return;
                 }
                 /** PRIVATE*/
-                if (this.roomManager.getRoomVisibility(roomCode) === RoomVisibility.Private) {
+                if (this.roomManager?.getRoomVisibility(roomCode) === RoomVisibility.Private) {
                     this.pendingJoinGameRequests.set(username, [roomCode, socket, observer]);
                     console.log(new Date().toLocaleTimeString() + ' | Room is private. Request sent to host');
                     this.sio.to(this.roomManager.getRoomHost(roomCode).getUUID()).emit('Join Room Request', username, observer);
@@ -234,6 +243,7 @@ export class SocketManager {
                 if (!userId) return;
                 if (this.usersStatusService.isUserInGame(userId)) return;
                 const friendSocket = this.usersStatusService.getUserSocketFromId(userId);
+<<<<<<< HEAD
                 if (!friendSocket) return;
                 friendSocket.emit(
                     'Game Invite Request',
@@ -241,6 +251,10 @@ export class SocketManager {
                     currentRoom.getID(),
                     currentRoom instanceof CoopGameRoom,
                 );
+=======
+                if(!friendSocket) return;
+                friendSocket.emit('Game Invite Request', this.accountInfoService.getUsername(socket), currentRoom.getID(), currentRoom instanceof CoopGameRoom);
+>>>>>>> main
             });
 
             socket.on('Join Friend Game', async (roomId: string) => {
@@ -579,8 +593,11 @@ export class SocketManager {
     private sendGameState(room: GameRoom, message?: PlayerMessage) {
         const gameState = room.getGame.createGameState();
         gameState.message = message;
+        if (!gameState.gameOver){
+            room.getGame.resetTimer();
+            gameState.timeLeft = room.getGame.getTimeLeft();
+        }
         this.sio.in(room.getID()).emit('Game State Update', gameState);
-        if (!gameState.gameOver) room.getGame.resetTimer();
     }
 
     private timerCallback(room: GameRoom, username: string, result: CommandResult) {

@@ -15,12 +15,14 @@ export interface ChatInfoDB {
     chatType: ChatType;
     usersIds: string[];
     chatHistory: ChatMessageDB[];
+    chatCreatorId: string;
 }
 
 export interface ChatInfo {
     chatName: string;
     _id: string;
     chatType: ChatType;
+    isChatOwner: boolean;
 }
 
 export interface ChatCreationResponse {

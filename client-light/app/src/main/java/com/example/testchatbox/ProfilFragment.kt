@@ -643,7 +643,17 @@ class ProfilFragment : Fragment() {
             else -> {}
         }
 
-        binding.theme.text= LoggedInUser.getTheme()
+        if (LoggedInUser.getLang() == "fr") {
+            when (LoggedInUser.getTheme()) {
+                "pink" -> binding.theme.text="Rose"
+                "green" -> binding.theme.text="Vert"
+                "blizzard" -> binding.theme.text="blizzard"
+                "classic" -> binding.theme.text="Classique"
+                "inverted" -> binding.theme.text="Contraste"
+                else -> {}
+            }
+        } else binding.theme.text= LoggedInUser.getTheme()
+
         binding.level.text= "${profile.level.level}"
 
         binding.tournamentFirst.text = profile.tournamentWins[0].toString()

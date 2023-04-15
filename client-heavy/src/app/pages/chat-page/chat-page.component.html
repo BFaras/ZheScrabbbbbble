@@ -7,14 +7,14 @@
         <div id="tabs-container">
             <span class="title">Chats</span>
             <div id="title-tabs">
-                <span class="tabs active" id="global" (click)="setVisibility($event, global)">{{ 'TABS.GLOBAL' | translate }}</span>
-                <span class="tabs" id="public" (click)="setVisibility($event, public)">{{ 'TABS.PUBLIC' | translate }}</span>
-                <span class="tabs" id="private" (click)="setVisibility($event, private)">{{ 'TABS.PRIVATE' | translate }}</span>
+                <span class="tabs active" id="global" (click)="setVisibility(global)">{{ 'TABS.GLOBAL' | translate }}</span>
+                <span class="tabs" id="public" (click)="setVisibility(public)">{{ 'TABS.PUBLIC' | translate }}</span>
+                <span class="tabs" id="private" (click)="setVisibility(private)">{{ 'TABS.PRIVATE' | translate }}</span>
             </div>
         </div>
         <div class="chats-container">
             <ng-container *ngFor="let chat of chatList">
-                <button class="chat-button" id="{{ chat._id }}" *ngIf="chat.chatType === visibility" (click)="selectChat($event, chat._id)" > 
+                <button class="chat-button" [ngClass]="{'selected': chat._id === selectedChat}"  id="{{ chat._id }}" *ngIf="chat.chatType === visibility" (click)="selectChat(chat._id)" > 
                     <p class="chat-content">{{ chat.chatName }}</p>
                 </button>
             </ng-container>

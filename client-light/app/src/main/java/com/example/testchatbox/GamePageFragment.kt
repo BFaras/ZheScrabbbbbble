@@ -89,8 +89,8 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
     private lateinit var playerHand: ArrayList<String>
     private lateinit var lettersOnBoard: Array<Array<String>>
     private lateinit var gameObserver: Observer<GameState>
-    private lateinit var activeTileObserver: Observer<Pair<String, Int>>
-    private lateinit var deleteActiveTileObserver: Observer<Pair<String, Int>>
+    private lateinit var activeTileObserver: Observer<TilePreview>
+    private lateinit var deleteActiveTileObserver: Observer<TilePreview>
     private lateinit var emoteObserver: Observer<Pair<String, String>>
     private lateinit var avatarsObserver: Observer<MutableMap<String,String>>
     private lateinit var firstLetterPlaced: LetterInHand
@@ -115,7 +115,10 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         super.onViewCreated(view, savedInstanceState)
         Coordinates.setCoordinates()
         gameModel.getAvatars()
-        timer = setTimer()
+        if(::timer.isInitialized) {
+            timer.cancel()
+            gameModel.getGameState()
+        }
 
         avatarsObserver = Observer<MutableMap<String,String>> { avatarsList ->
             playersAvatars = avatarsList
@@ -140,8 +143,9 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         }
 
         gameObserver = Observer<GameState> { gameState ->
+            if(::timer.isInitialized) timer.cancel()
+            timer = setTimer(gameState.timeLeft.toLong()*1000)
             timer.start()
-            gameModel.getAvatars()
             binding.gameWinnerHolder.visibility = GONE
             binding.reserveLength.text = gameState.reserveLength.toString()
             isPlaying = gameState.playerTurnIndex
@@ -199,11 +203,11 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         }
         gameModel.gameState.observe(viewLifecycleOwner, gameObserver)
 
-        activeTileObserver = Observer<Pair<String, Int>> { activeTile ->
-            binding.gameBoard.removeView(binding.gameBoard.findViewWithTag("activeTile"))
+        activeTileObserver = Observer<TilePreview> { activeTile ->
+            binding.gameBoard.removeView(binding.gameBoard.findViewWithTag("${activeTile.username}-activeTile"))
             val selectedTile = layoutInflater.inflate(R.layout.active_tile, binding.gameBoard, false)
-            val columnCoordinates = columnsPos[activeTile.second-1].first
-            val rowCoordinates = ROWS[activeTile.first.uppercase()]
+            val columnCoordinates = columnsPos[activeTile.position.second-1].first
+            val rowCoordinates = ROWS[activeTile.position.first.uppercase()]
 
             val params = RelativeLayout.LayoutParams(
                 GridConstants.DEFAULT_SIDE.toInt(),
@@ -211,13 +215,13 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             )
             params.leftMargin = columnCoordinates.toInt() //x
             params.topMargin = rowCoordinates!!.toInt() //y
-            selectedTile.tag = "activeTile"
+            selectedTile.tag = "${activeTile.username}-activeTile"
             binding.gameBoard.addView(selectedTile, params)
         }
         gameModel.activeTile.observe(viewLifecycleOwner, activeTileObserver)
 
-        deleteActiveTileObserver = Observer<Pair<String, Int>> {
-            binding.gameBoard.removeView(binding.gameBoard.findViewWithTag("activeTile"))
+        deleteActiveTileObserver = Observer<TilePreview> { deleteActiveTile ->
+            binding.gameBoard.removeView(binding.gameBoard.findViewWithTag("${deleteActiveTile.username}-activeTile"))
         }
         gameModel.deleteActiveTile.observe(viewLifecycleOwner, deleteActiveTileObserver)
 
@@ -326,18 +330,19 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                 buttonPass.isEnabled = false
 
                 val hintList = arrayListOf<String>()
+                val scoreList = arrayListOf<Int>()
 
                 SocketHandler.getSocket().emit("Request Clue", "")
 
                 SocketHandler.getSocket().once("Clue Response") {args ->
-
                     Log.d("args", args[0].toString())
+
                     if (args[0] != null) {
                         val cluesListJSON = args[0] as JSONArray
                         for (i in 0 until cluesListJSON.length()) {
-                            hintList.add(cluesListJSON.getString(i).drop(6))
+                            hintList.add((cluesListJSON.getJSONObject(i).get("command") as String).drop(6))
+                            scoreList.add(cluesListJSON.getJSONObject(i).get("value") as Int)
                         }
-                        Log.d("cluesListJSON", cluesListJSON.toString())
                         Log.d("hintList", hintList.toString())
                         activity?.runOnUiThread {
                             clearTurn()
@@ -352,10 +357,12 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                             }
                             isYourTurn = true
 
-                            for (clue in hintList) {
+                            for ((index, clue) in hintList.withIndex()) {
                                 val hintButton = layoutInflater.inflate(R.layout.hint, hintHolder, false)
                                 val hint: TextView = hintButton.findViewById(R.id.displayedHint)
-                                hint.text = clue.uppercase()
+                                val score = scoreList[index]
+
+                                hint.text = "${clue.uppercase()}\n${score}pts"
 
                                 Log.d("HINT", clue)
 
@@ -593,8 +600,8 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                                         oldPosCol = letterInHand.col
                                         oldPosRow = letterInHand.row
                                     }
-                                    if (!isInside) SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("x" to letterInHand.row, "y" to letterInHand.col)))
-                                    if (letterInHand.viewTag == firstLetterPlaced.viewTag) SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("x" to oldPosRow, "y" to oldPosCol)))
+                                    if (!isInside) SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("username" to LoggedInUser.getName(), "position" to JSONObject(mapOf("x" to letterInHand.row, "y" to letterInHand.col)))))
+                                    if (letterInHand.viewTag == firstLetterPlaced.viewTag) SocketHandler.getSocket().emit("Remove Selected Tile",  JSONObject(mapOf("username" to LoggedInUser.getName(), "position" to JSONObject(mapOf("x" to oldPosRow, "y" to oldPosCol)))))
 
                                     letterInHand.viewTag = draggableItem.tag as Int
 
@@ -606,7 +613,8 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                                         is GameBoardView -> {
                                             (draggableItem.parent as GameBoardView).removeView(draggableItem)
                                             if (letterInHand.viewTag == firstLetterPlaced.viewTag) {
-                                                SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("x" to oldPosRow, "y" to oldPosCol)))
+
+                                                SocketHandler.getSocket().emit("Remove Selected Tile",  JSONObject(mapOf("username" to LoggedInUser.getName(), "position" to JSONObject(mapOf("x" to oldPosRow, "y" to oldPosCol)))))
                                             }
                                         }
                                         else -> {}
@@ -624,7 +632,11 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                                         isPlaced.add(letterInHand)
 
                                         if (letterInHand.viewTag == firstLetterPlaced.viewTag)  {
-                                            SocketHandler.getSocket().emit("Share First Tile", JSONObject(mapOf("x" to letterInHand.row, "y" to letterInHand.col)))
+                                            var position = mapOf("x" to letterInHand.row, "y" to letterInHand.col)
+                                            SocketHandler.getSocket().emit("Share First Tile", JSONObject(mapOf("username" to LoggedInUser.getName(), "position" to JSONObject(position)))) //mapOf("x" to letterInHand.row, "y" to letterInHand.col)
+                                            Log.d("USERPREVIEW",
+                                                PreviewUser(LoggedInUser.getName(), JSONObject(position)).toString()
+                                            )
                                             oldPosCol = letterInHand.col
                                             oldPosRow = letterInHand.row
                                         }
@@ -640,7 +652,8 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                                             isInside = false
                                         } else {
                                             firstLetterPlaced = isPlaced[0]
-                                            SocketHandler.getSocket().emit("Share First Tile", JSONObject(mapOf("x" to isPlaced[0].row, "y" to isPlaced[0].col)))
+                                            var position = mapOf("x" to isPlaced[0].row, "y" to isPlaced[0].col)
+                                            SocketHandler.getSocket().emit("Share First Tile", JSONObject(mapOf("username" to LoggedInUser.getName(), "position" to JSONObject(position))))
                                             oldPosCol = isPlaced[0].col
                                             oldPosRow = isPlaced[0].row
                                         }
@@ -705,7 +718,6 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
     override fun onStop() {
         super.onStop()
         GameHistoryModel.removeObserver(this)
-        timer.cancel()
     }
 
     override fun onStart() {
@@ -897,7 +909,6 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             for (player in playersList) {
                 if (player.score > isHigher) {
                     isHigher = player.score
-                    Log.d("WINNER", player.toString())
                 }
             }
         }
@@ -985,7 +996,20 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         val alreadyOnBoard = TypedValue()
         context?.theme?.resolveAttribute(R.attr.lettersOnBoard, alreadyOnBoard, true)
 
-        binding.gameBoard.removeAllViews()
+        var viewCount: Int = binding.gameBoard.childCount - 1
+
+        if (viewCount >= 0) {
+            while (viewCount != -1) {
+                if ((binding.gameBoard.getChildAt(viewCount).tag is String) && (binding.gameBoard.getChildAt(
+                        viewCount
+                    ).tag as String).contains("activeTile")
+                ) { } else {
+                    binding.gameBoard.removeViewAt(viewCount)
+                }
+                viewCount--
+            }
+        }
+
         for (row in gameBoardCoord.indices) { //row
             for (col in 0 until gameBoardCoord[row].size) { //col
                 if (gameBoardCoord[row][col] != "") {
@@ -1046,8 +1070,8 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
     private fun clearTurn() {
         updateBoard(lettersOnBoard)
         updateRack(playerHand)
-        binding.gameBoard.removeView(binding.gameBoard.findViewWithTag("activeTile"))
-        if (isInside) SocketHandler.getSocket().emit("Remove Selected Tile", JSONObject(mapOf("x" to oldPosRow, "y" to oldPosCol)))
+        binding.gameBoard.removeView(binding.gameBoard.findViewWithTag("${LoggedInUser.getName()}-activeTile"))
+        if (isInside) SocketHandler.getSocket().emit("Remove Selected Tile",  JSONObject(mapOf("username" to LoggedInUser.getName(), "position" to JSONObject(mapOf("x" to oldPosRow, "y" to oldPosCol)))))
         isPlaced.clear()
         binding.toggleSwap.isEnabled = true
         binding.buttonPlay.isEnabled = false
@@ -1231,8 +1255,8 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         Log.d(tag, "IS V STICK? - $isVerticalStick")
         return isVerticalStick
     }
-    private fun setTimer(): CountDownTimer {
-        return object : CountDownTimer(60000, 1000) {
+    private fun setTimer(timeRemaining: Long): CountDownTimer {
+        return object : CountDownTimer(timeRemaining, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val initialColor = TypedValue()
                 context?.theme?.resolveAttribute(android.R.attr.textColor, initialColor, true)
@@ -1247,7 +1271,6 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                     binding.secondsTimer.text = f.format(millisUntilFinished / 1000 % 60)
                     binding.secondsTimer.setTextColor(initialColor.data)
                 }
-
             }
             override fun onFinish() {
                 val initialColor = TypedValue()
@@ -1287,22 +1310,22 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
 
     override fun update() {
         Log.i("Update", GameHistoryModel.getList().toString())
-
         activity?.runOnUiThread {
             updateMoveInfo()
             if(GameHistoryModel.playRequest!=null) {
                 showCoopPlayPrompt()
             } else {
-                isYourTurn = true
-                binding.buttonPass.isEnabled = true
-                binding.buttonHint.isEnabled = true
+                if (GameRoomModel.gameRoom?.gameType == GameType.Coop) {
+                    isYourTurn = true
+                    binding.buttonPass.isEnabled = true
+                    binding.buttonHint.isEnabled = true
+                }
                 binding.coopHolder.visibility = GONE
                 binding.teamApproval.visibility = GONE
             }
         }
     }
 
-    //TODO : UI to call GameHistoryModel.sendCoopResponse(accept:boolean)
     private fun showCoopPlayPrompt() {
         if (GameHistoryModel.playRequest != null) {
             if (GameHistoryModel.playRequest!!.values[0] != LoggedInUser.getName()) {

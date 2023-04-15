@@ -51,7 +51,7 @@ export class ChatSocketService {
         });
 
         socket.on('Create New Chat', async (chatName: string, chatType: ChatType) => {
-            if (chatName && chatType) {
+            if (chatName && chatType !== undefined) {
                 const chatCreationResponse: ChatCreationResponse = await this.chatService.createChat(
                     this.accountInfoService.getUserId(socket),
                     chatName,
@@ -64,6 +64,13 @@ export class ChatSocketService {
             } else {
                 const chatCreationResponse: ChatCreationResponse = { chatId: '', errorCode: INVALID_DATA_SENT };
                 socket.emit('Chat Creation Response', chatCreationResponse);
+            }
+        });
+
+        socket.on('Delete Public Chat', async (chatId: string) => {
+            const userId = this.accountInfoService.getUserId(socket);
+            if (chatId && userId) {
+                this.chatService.deleteChat(userId, chatId);
             }
         });
 

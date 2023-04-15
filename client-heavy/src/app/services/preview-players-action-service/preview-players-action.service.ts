@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { PreviewUser } from '@app/classes/preview-user';
 import { Observable, Observer } from 'rxjs';
 import { Socket } from 'socket.io-client';
+import { AccountService } from '../account-service/account.service';
 import { SocketManagerService } from '../socket-manager-service/socket-manager.service';
 
 @Injectable({
@@ -11,8 +13,8 @@ export class PreviewPlayersActionService {
   previewTilesPosition: { x: string; y: number }[] = [];
   firstTilePosition: { x: string; y: number } = { x: "", y: 0 };
 
-  previewPartnerFirstTileCoop: { x: string; y: number } | undefined = undefined;
-  constructor(private socketManagerService: SocketManagerService) {
+  listPlayersFirstTilesCoop: Map<string, { x: string; y: number }> = new Map<string, { x: string; y: number }>();
+  constructor(private socketManagerService: SocketManagerService, private accountService: AccountService) {
     this.setUpSocket()
 
   }
@@ -22,7 +24,7 @@ export class PreviewPlayersActionService {
   }
 
   setUpPreviewPartnerFirstTileCoop(value: { x: string; y: number } | undefined) {
-    this.previewPartnerFirstTileCoop = value;
+    this.listPlayersFirstTilesCoop = new Map<string, { x: string; y: number }>();
   }
 
   addPreviewTile(tilePosition: { x: string; y: number }) {
@@ -70,34 +72,58 @@ export class PreviewPlayersActionService {
   };
 
   sharePlayerFirstTile(activeSquare: { x: string; y: number }) {
-    this.socketManagerService.getSocket().emit('Share First Tile', activeSquare);
+    const playerPosition: PreviewUser = {
+      username: this.accountService.getUsername(),
+      position: activeSquare
+    };
+    console.log(playerPosition)
+    this.socketManagerService.getSocket().emit('Share First Tile', playerPosition);
   }
 
-  getActivePlayerFirstTile(): Observable<{ x: string, y: number }> {
-    return new Observable((observer: Observer<{ x: string, y: number }>) => {
-      this.socket.on('Get First Tile', (activeSquare: { x: string, y: number }) => {
-        this.previewPartnerFirstTileCoop = activeSquare;
-        observer.next(activeSquare)
+  getActivePlayerFirstTile(): Observable<PreviewUser> {
+    return new Observable((observer: Observer<PreviewUser>) => {
+      this.socket.on('Get First Tile', (otherUserPreview: PreviewUser) => {
+        this.listPlayersFirstTilesCoop.set(otherUserPreview.username, otherUserPreview.position)
+        observer.next(otherUserPreview)
       })
     })
   }
 
   removeSelectedTile(activeSquare: { x: string; y: number }) {
-    this.socket.emit('Remove Selected Tile', activeSquare);
+    const playerPosition: PreviewUser = {
+      username: this.accountService.getUsername(),
+      position: activeSquare
+    };
+    this.socket.emit('Remove Selected Tile', playerPosition);
 
   }
 
-  getSelectedTileStatus(): Observable<{ x: string, y: number }> {
-    return new Observable((observer: Observer<{ x: string, y: number }>) => {
-      this.socket.on('Remove Selected Tile Response', (activeSquare: { x: string, y: number }) => {
-        this.previewPartnerFirstTileCoop = undefined
-        observer.next(activeSquare)
+  getSelectedTileStatus(): Observable<PreviewUser> {
+    return new Observable((observer: Observer<PreviewUser>) => {
+      this.socket.on('Remove Selected Tile Response', (otherUserPreview: PreviewUser) => {
+        this.listPlayersFirstTilesCoop.delete(otherUserPreview.username)
+        observer.next(otherUserPreview)
       })
     })
   }
 
-  getPreviewFirstTileCoop() {
-    return this.previewPartnerFirstTileCoop;
+  getlistPlayersFirstTilesCoop() {
+    return this.listPlayersFirstTilesCoop
+  }
+
+  verifyPositionExistInListPlayerTile(postion: { x: string; y: number }) {
+    let isLetterPresent = false;
+    const listPlayersFirstTilesCoopArray = Array.from(this.listPlayersFirstTilesCoop.values())
+    for (let i = 0; i < listPlayersFirstTilesCoopArray.length; i++) {
+      if (listPlayersFirstTilesCoopArray[i].x === postion.x && listPlayersFirstTilesCoopArray[i].y === postion.y) {
+        isLetterPresent = true;
+        console.log(isLetterPresent)
+        return isLetterPresent
+      }
+
+    }
+    console.log(isLetterPresent)
+    return isLetterPresent
   }
 
 }
