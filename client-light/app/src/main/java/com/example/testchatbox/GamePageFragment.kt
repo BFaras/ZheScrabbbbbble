@@ -2,6 +2,7 @@ package com.example.testchatbox
 
 import SocketHandler
 import android.annotation.SuppressLint
+import android.app.FragmentManager
 import android.content.ClipData
 import android.content.Context
 import android.graphics.Color
@@ -25,6 +26,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.text.HtmlCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -41,6 +43,7 @@ import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
@@ -85,6 +88,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
     private var gameOver = false
     private var toBeObserved = 0
     private var playersAvatars = mutableMapOf<String, String>()
+    private var players: ArrayList<PlayersState>? = null
 
     private lateinit var playerHand: ArrayList<String>
     private lateinit var lettersOnBoard: Array<Array<String>>
@@ -122,6 +126,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
 
         avatarsObserver = Observer<MutableMap<String,String>> { avatarsList ->
             playersAvatars = avatarsList
+            players?.let { updatePlayersInfo(it, playersAvatars) }
         }
         gameModel.avatarsList.observe(viewLifecycleOwner, avatarsObserver)
 
@@ -139,10 +144,18 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
         if (GameRoomModel.gameRoom?.gameType == GameType.Coop) binding.timerHolder.visibility = GONE
 
         SocketHandler.getSocket().on("Game Started"){
-            gameOver=false
+            SocketHandler.getSocket().emit("Abandon")
+            if(gameOver){
+            gameOver = false
+            binding.abandonButton.text = getString(R.string.abandonner)
+            timer.start()
+            }
+            gameModel.getAvatars()
+            gameModel.getGameState()
         }
 
         gameObserver = Observer<GameState> { gameState ->
+            Log.i("GameState2", gameState.toString())
             if(::timer.isInitialized) timer.cancel()
             timer = setTimer(gameState.timeLeft.toLong()*1000)
             timer.start()
@@ -150,7 +163,8 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             binding.gameWinnerHolder.visibility = GONE
             binding.reserveLength.text = gameState.reserveLength.toString()
             isPlaying = gameState.playerTurnIndex
-            isYourTurn = (gameState.players[isPlaying].username == LoggedInUser.getName())
+            if(isPlaying<gameState.players.size)
+                isYourTurn = (gameState.players[isPlaying].username == LoggedInUser.getName())
             binding.coopHolder.visibility = GONE
             if (GameRoomModel.gameRoom?.gameType == GameType.Coop) isYourTurn = true
 
@@ -204,8 +218,8 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                 moveInfo = gameState.message!!
                 GameHistoryModel.addMoveInfo(moveInfo)
             }
-
-            updatePlayersInfo(gameState.players, playersAvatars)
+            players=gameState.players
+            updatePlayersInfo(players!!, playersAvatars)
             clearTurn()
         }
         gameModel.gameState.observe(viewLifecycleOwner, gameObserver)
@@ -703,6 +717,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             binding.gameBoard.setOnDragListener(dragListener)
             binding.letterRack.setOnDragListener(dragListener)
         }
+        gameModel.getGameState();
     }
 
     override fun onResume() {
@@ -954,6 +969,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                 playerPoints.setTextColor(isYouColor.data)
             }
             if (!gameOver) {
+                binding.gameWinnerHolder.visibility = GONE
                 if (playersList.indexOf(player) == isPlaying) {
                     playerTurn.setBackgroundResource(R.drawable.player_turn_border)
                 }
