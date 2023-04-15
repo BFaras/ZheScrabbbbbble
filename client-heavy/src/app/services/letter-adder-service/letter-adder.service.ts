@@ -73,16 +73,11 @@ export class LetterAdderService {
     }
 
     findDirectionOfDrop(row: string, column: number) {
-        console.log(Number(this.firstActiveSquarePositionDrag.substring(1)));
-        console.log(column);
-        console.log(this.firstActiveSquarePositionDrag[0]);
-        console.log(row);
         if (Number(this.firstActiveSquarePositionDrag.substring(1)) === column && this.firstActiveSquarePositionDrag[0] !== row) {
             this.arrowDirection = false;
         } else if (Number(this.firstActiveSquarePositionDrag.substring(1)) !== column && this.firstActiveSquarePositionDrag[0] === row) {
             this.arrowDirection = true;
         }
-        console.log("direction du drop" + this.formatDirection())
     }
 
     setActiveSquare(xIndex: string, yIndex: number): boolean {
@@ -160,7 +155,6 @@ export class LetterAdderService {
             if (!this.isPositionTaken()) {
 
                 this.updateDragLetterLog()
-                console.log(this.addedLettersLog)
                 if (this.addedLettersLog.size > 1)
                     this.findDirectionOfDrop(this.activeSquare.x, this.activeSquare.y)
                 this.previewPlayerActionService.movePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y }, this.activeSquare)
@@ -178,12 +172,6 @@ export class LetterAdderService {
         if (this.inPlayerHand() && this.isInBounds()) {
             if (!this.isPositionTaken()) {
                 this.addToHand(false);
-                /**On va mettre cela en commentaire */
-                /*
-                if (this.addedLettersLog.size === 0) {
-                    this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
-                }*/
-                console.log(this.addedLettersLog)
                 if (this.addedLettersLog.size > 1)
                     this.findDirectionOfDrop(this.activeSquare.x, this.activeSquare.y)
                 this.previewPlayerActionService.addPreviewTile(this.activeSquare)
@@ -421,25 +409,18 @@ export class LetterAdderService {
 
             }
         })
-        console.log("mappedBoardState: " + Array.from(this.mappedBoardState));
-        console.log("firstValue: " + firstValuePosition);
-        console.log("lastValue: " + lastValuePosition);
         if (!this.arrowDirection) {
             LettersOnOneDirection = new Map<string, string>([...LettersOnOneDirection.entries()].sort());
             let LettersOnOneDirectionArray = Array.from(LettersOnOneDirection.keys())
             LettersOnOneDirectionArray = LettersOnOneDirectionArray.filter((value) => value.charCodeAt(0) >= firstValuePosition.charCodeAt(0))
-            console.log("V direction :" + LettersOnOneDirectionArray)
             let positionLetter = LettersOnOneDirectionArray[0][0].charCodeAt(0)
-            console.log("Position Letter" + positionLetter);
             for (const position of LettersOnOneDirectionArray) {
                 if (position[0].charCodeAt(0) === positionLetter) {
                     if (position === lastValuePosition) {
-                        console.log(position)
                         return true
                     }
                     positionLetter += 1
                 } else {
-                    console.log(position)
                     return false
                 }
             }
@@ -450,28 +431,22 @@ export class LetterAdderService {
                         localeCompare(rightLetter[0].substring(1, rightLetter[0].length), undefined, { numeric: true })
                 }));
             let LettersOnOneDirectionArray = Array.from(LettersOnOneDirection.keys())
-            console.log("H direction before:" + LettersOnOneDirectionArray)
             LettersOnOneDirectionArray = LettersOnOneDirectionArray.filter((value) => Number(value.substring(1)) >= Number(firstValuePosition.substring(1)))
-            console.log("H direction after:" + LettersOnOneDirectionArray)
             let positionLetter = LettersOnOneDirectionArray[0].substring(1);
-            console.log(positionLetter);
 
             for (const position of LettersOnOneDirectionArray) {
                 if (position.substring(1) === positionLetter) {
                     if (position === lastValuePosition) {
-                        console.log(position)
                         return true
                     }
                     positionLetter = (Number(positionLetter) + 1).toString();
                 } else {
-                    console.log(position)
                     return false
                 }
 
             }
 
         }
-        console.log('je devrais jamais venir la');
         return true
 
 
