@@ -46,6 +46,7 @@ private var _binding: FragmentMainMenuBinding? = null
         super.onViewCreated(view, savedInstanceState)
         setupChatNotifs(view.context)
         verifyIfInviteRequest();
+        if(TournamentModel.inQueue || TournamentModel.inTournament) TournamentModel.exitTournament();
         WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
             // Hide both the status bar and the navigation bar
             hide(WindowInsetsCompat.Type.systemBars())

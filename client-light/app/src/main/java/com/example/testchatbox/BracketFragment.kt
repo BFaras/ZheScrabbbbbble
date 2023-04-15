@@ -56,6 +56,17 @@ class BracketFragment : Fragment(), Observer {
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
 
+
+        SocketHandler.getSocket().on("Avatars from Usernames Response") { args ->
+            val avatarListJSON = args[0] as JSONObject
+            for (i in 0 until avatarListJSON.length()) {
+                avatars[avatarListJSON.names()?.getString(i) as String] = (avatarListJSON.names()?.getString(i)?.let { avatarListJSON.get(it) }) as String
+            }
+        }
+        for (game in TournamentModel.getGameData()) {
+            SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray(game.players))
+        }
+
         binding.buttonchat.setOnClickListener {
             findNavController().navigate(R.id.action_bracketFragment_to_ChatFragment)
         }
@@ -102,6 +113,7 @@ class BracketFragment : Fragment(), Observer {
                 }
             }
         }
+        Thread.sleep(1000)
         SocketHandler.getSocket().emit("Get Tournament Data")
     }
 
@@ -149,16 +161,7 @@ class BracketFragment : Fragment(), Observer {
         activity?.runOnUiThread(Runnable {
             for (game in TournamentModel.getGameData()) {
                 SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray(game.players))
-                SocketHandler.getSocket().once("Avatars from Usernames Response") { args ->
-                    val avatarListJSON = args[0] as JSONObject
-                    Log.d("AVATARS JSON IN ROOM", args[0].toString())
-
-                    for (i in 0 until avatarListJSON.length()) {
-                        avatars[avatarListJSON.names()?.getString(i) as String] = (avatarListJSON.names()?.getString(i)?.let { avatarListJSON.get(it) }) as String
-                    }
-                }
             }
-            Log.d("AVATARS IN TOURNAMENT", avatars.toString())
             if(TournamentModel.tournamentTimer.phase==2){
                 binding.quitBtn.setOnClickListener {
                     findNavController().navigate(R.id.action_bracketFragment_to_rankingFragment)
@@ -263,7 +266,7 @@ class BracketFragment : Fragment(), Observer {
                         if(game.players.size==2) {
                             binding.final1player2.text = game.players[1]
                             for ((name, avatar) in avatars) {
-                                if (name ==  game.players[0]) {
+                                if (name ==  game.players[1]) {
                                     if (resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
                                         binding.player2Final1.setImageResource(resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
                                     }
@@ -302,7 +305,7 @@ class BracketFragment : Fragment(), Observer {
                         if(game.players.size==2) {
                             binding.final2player2.text = game.players[1]
                             for ((name, avatar) in avatars) {
-                                if (name ==  game.players[0]) {
+                                if (name ==  game.players[1]) {
                                     if (resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
                                         binding.player2Final2.setImageResource(resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
                                     }
