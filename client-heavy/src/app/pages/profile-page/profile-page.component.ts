@@ -144,8 +144,20 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   selectProfile() {
     if (this.isBuilt) this.profileMode = true;
     this.getUserName();
-    if (this.profileMode) this.accountProfile = this.accountService.getProfile();
-    else this.accountProfile = this.friends.getProfile();
+    if (this.profileMode) {
+      this.accountProfile = this.accountService.getProfile();
+      console.log(this.accountProfile.stats[2].statAmount);
+      console.log(this.accountProfile.stats[3].statAmount)
+      this.accountProfile.stats[2].statAmount = Math.round(this.accountProfile.stats[2].statAmount);
+      this.accountProfile.stats[3].statAmount = Math.round(this.accountProfile.stats[3].statAmount);
+    }
+    else {
+      this.accountProfile = this.friends.getProfile();
+      this.accountProfile.stats[2].statAmount = Math.round(this.accountProfile.stats[2].statAmount);
+      this.accountProfile.stats[3].statAmount = Math.round(this.accountProfile.stats[3].statAmount);
+      console.log(this.accountProfile.stats[2].statAmount);
+      console.log(this.accountProfile.stats[3].statAmount)
+    }
     this.avatarCircle = "assets/avatar/" + this.accountProfile.avatar;
     this.progressionBarValue = (this.accountProfile.levelInfo.xp / this.accountProfile.levelInfo.nextLevelXp) * 100
     console.log(this.accountProfile)
