@@ -32,11 +32,11 @@ export class FriendsPageComponent implements OnDestroy {
     this.usercode = this.account.getProfile().userCode;
   }
 
-  isPopupChatOpen(){
+  isPopupChatOpen() {
     return (window as any).chatOpen;
   }
 
-  goToFriendChat(username: string){
+  goToFriendChat(username: string) {
     this.chatService.setFriendToSelect(username);
     this.router.navigate(['/chat']);
   }
@@ -82,15 +82,15 @@ export class FriendsPageComponent implements OnDestroy {
         this.updateFriendsList();
         console.log(errorCode);
       });
-    } else
-      this.snackBarHandler.makeAnAlert(this.account.messageFriend, this.account.closeMessage);
-
+    } else this.snackBarHandler.makeAnAlert(this.account.messageFriend, this.account.closeMessage);
     (document.getElementById('friendCode') as HTMLInputElement).value = "";
   }
 
   updateFriendsList() {
     this.subscriptions.push(this.friendsService.getFriendsListObservable().subscribe((friendsList: Friend[]) => {
-      this.friends = friendsList;
+      const equals = (a: Friend[], b: Friend[]) => JSON.stringify(a) === JSON.stringify(b);
+      if (equals(this.friends, friendsList)) this.snackBarHandler.makeAnAlert(this.account.unvalidFriend, this.account.closeMessage);
+      else this.friends = friendsList;
     }));
     this.friendsService.getFriendsList();
   }

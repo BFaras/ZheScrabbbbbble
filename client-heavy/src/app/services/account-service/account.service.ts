@@ -38,6 +38,7 @@ export class AccountService {
   messageDir: string;
   messageNameEmpty: string;
   messageLetters: string;
+  unvalidFriend: string;
 
   constructor(private socketManagerService: SocketManagerService, private themeService: ThemesService) {
     this.setUpSocket();
@@ -99,6 +100,7 @@ export class AccountService {
     this.messageDir = this.language === 'fr' ? "le mot place n'est pas dans la même direction" : "The word is not all in the same direction.";
     this.messageNameEmpty = this.language === 'fr' ? "Veuillez vous assurer que votre nom n'est pas vide." : "The username cannot be be empty.";
     this.messageLetters = this.language === 'fr' ? "les lettres placées doivent être reliées les unes aux autres" : "The letters need to be next to one another.";
+    this.unvalidFriend = this.language === 'fr' ? "Ce code code d'amitié est invalide." : "This friend code is unvalid.";
     this.closeMessage = this.language === 'fr' ? 'Fermer' : 'Close';
   }
 
