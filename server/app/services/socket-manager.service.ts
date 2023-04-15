@@ -57,10 +57,7 @@ export class SocketManager {
     private accountInfoService: AccountInfoService;
     private profileSocketService: ProfileSocketService;
     private friendSocketService: FriendSocketService;
-<<<<<<< HEAD
-=======
     private userSocketService: UserSocketService;
->>>>>>> main
     private dbService: DatabaseService;
     private pendingJoinGameRequests: Map<string, [string, io.Socket, boolean]>;
     private tournamentQueue: io.Socket[];
@@ -243,18 +240,9 @@ export class SocketManager {
                 if (!userId) return;
                 if (this.usersStatusService.isUserInGame(userId)) return;
                 const friendSocket = this.usersStatusService.getUserSocketFromId(userId);
-<<<<<<< HEAD
-                if (!friendSocket) return;
-                friendSocket.emit(
-                    'Game Invite Request',
-                    this.accountInfoService.getUsername(socket),
-                    currentRoom.getID(),
-                    currentRoom instanceof CoopGameRoom,
-                );
-=======
                 if(!friendSocket) return;
                 friendSocket.emit('Game Invite Request', this.accountInfoService.getUsername(socket), currentRoom.getID(), currentRoom instanceof CoopGameRoom);
->>>>>>> main
+
             });
 
             socket.on('Join Friend Game', async (roomId: string) => {
