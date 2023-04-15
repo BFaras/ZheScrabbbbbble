@@ -15,6 +15,7 @@ export class LetterAdderService {
     arrowDirection: boolean = true;
     activeSquare: { x: string; y: number } = { x: 'P', y: 0 };
     prevActiveSquare: { x: string; y: number } = { x: 'P', y: 0 };
+    firstActiveSquarePositionDrag: string = "";
     pervForDrag: { x: string; y: number; text: string } = { x: 'P', y: 0, text: "" };
     droppedSpotDrag: { x: string; y: number } = { x: 'P', y: 0 };
     addedLettersLog = new Map<string, string>();
@@ -65,17 +66,23 @@ export class LetterAdderService {
     onDropLetterSpot(coords: Vec2) {
         if (this.canDrop(coords)) {
             this.gridService.deleteAndRedraw();
-            this.prevActiveSquare = this.activeSquare;
+            /**THIS one is a problem we dont neeed prevActiveSquare we will use last value */
+            this.firstActiveSquarePositionDrag = Array.from(this.addedLettersLog.keys())[0];
             return true
         } else return false
     }
 
     findDirectionOfDrop(row: string, column: number) {
-        if (this.prevActiveSquare.y === column && this.prevActiveSquare.x !== row) {
+        console.log(Number(this.firstActiveSquarePositionDrag.substring(1)));
+        console.log(column);
+        console.log(this.firstActiveSquarePositionDrag[0]);
+        console.log(row);
+        if (Number(this.firstActiveSquarePositionDrag.substring(1)) === column && this.firstActiveSquarePositionDrag[0] !== row) {
             this.arrowDirection = false;
-        } else if (this.prevActiveSquare.y !== column && this.prevActiveSquare.x === row) {
+        } else if (Number(this.firstActiveSquarePositionDrag.substring(1)) !== column && this.firstActiveSquarePositionDrag[0] === row) {
             this.arrowDirection = true;
         }
+        console.log("direction du drop" + this.formatDirection())
     }
 
     setActiveSquare(xIndex: string, yIndex: number): boolean {
@@ -86,7 +93,6 @@ export class LetterAdderService {
 
     canDrop(coords: Vec2): boolean {
         const foundCoords = this.findCoords(coords.x, coords.y);
-        this.findDirectionOfDrop(foundCoords.row, foundCoords.column)
         return this.canPlay && foundCoords.valid && this.setActiveSquare(foundCoords.row, foundCoords.column) && !this.isPositionTakenDragAndDrop();
     }
 
@@ -154,10 +160,15 @@ export class LetterAdderService {
             if (!this.isPositionTaken()) {
 
                 this.updateDragLetterLog()
+                console.log(this.addedLettersLog)
+                if (this.addedLettersLog.size > 1)
+                    this.findDirectionOfDrop(this.activeSquare.x, this.activeSquare.y)
                 this.previewPlayerActionService.movePreviewTile({ x: this.pervForDrag.x, y: this.pervForDrag.y }, this.activeSquare)
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
+
                 this.letterAdderMode = 'dragAndDrop';
+
             }
         }
     }
@@ -172,6 +183,9 @@ export class LetterAdderService {
                 if (this.addedLettersLog.size === 0) {
                     this.previewPlayerActionService.sharePlayerFirstTile(this.activeSquare);
                 }*/
+                console.log(this.addedLettersLog)
+                if (this.addedLettersLog.size > 1)
+                    this.findDirectionOfDrop(this.activeSquare.x, this.activeSquare.y)
                 this.previewPlayerActionService.addPreviewTile(this.activeSquare)
                 this.gridService.drawLetter(this.activeSquare.y, this.activeSquare.x, this.key);
                 this.gridService.deleteAndRedraw(this.addedLettersLog);
@@ -476,19 +490,23 @@ export class LetterAdderService {
     isHorizontal(keys: string[]): boolean {
         console.log(keys)
         const expectedValue = keys[0][0];
+        console.log(expectedValue)
         for (const element of keys) {
             if (element[0] === expectedValue) {
                 continue
             }
             else {
+                console.log(element)
+                console.log("got false")
                 return false;
             }
         }
-
+        console.log("got true")
         return true;
     }
 
     isVertical(keys: string[]): boolean {
+        console.log(keys)
         const expectedValue = keys[0].substring(1)
         for (const element of keys) {
 

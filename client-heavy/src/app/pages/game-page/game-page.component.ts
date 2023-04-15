@@ -61,6 +61,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
             if (message.messageType === 'MSG-13') {
                 this.letterAdderService.removeAll();
                 this.gameStateService.setPendingAction(true);
+                this.letterAdderService.getLetterNotAcceptedObservable().next(true)
             }
             if (message.messageType === 'MSG-12' || message.messageType === 'MSG-14') {
                 this.gameStateService.setPendingAction(false);
@@ -71,12 +72,12 @@ export class GamePageComponent implements OnInit, OnDestroy {
             }
             this.actionHistory.push(message);
         }));
-        this.subscriptions.push(this.gameStateService.getClueObservable().subscribe((clues: {command: string, value: number}[]) => {
+        this.subscriptions.push(this.gameStateService.getClueObservable().subscribe((clues: { command: string, value: number }[]) => {
             const values = [];
-            for(const clue of clues){
+            for (const clue of clues) {
                 values.push(clue.command + ' | ' + clue.value);
             }
-            this.actionHistory.push({ messageType: 'MSG-CLUE', values: values});
+            this.actionHistory.push({ messageType: 'MSG-CLUE', values: values });
         }))
         if (this.gameStateService.isTournamentGame()) {
             this.waitingRoomManagerService.getStartGameObservable().subscribe((info: { isCoop: boolean, roomCode?: string }) => {

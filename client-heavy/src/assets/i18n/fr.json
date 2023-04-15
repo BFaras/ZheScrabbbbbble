@@ -245,5 +245,13 @@
         "TIGER": "Niveau 6",
         "SKELETON": "1 médaille d'or",
         "UNLOCKED": "Déverrouillé!"
+    },
+    "CONFIRMATION": {
+        "POSITIVE": "Oui",
+        "NEGATIVE": "Non",
+        "ACCEPTED":"Confirmer"
+    },
+    "BLANK-TILE": {
+        "MESSAGE": "Veuillez choisir une lettre"
     }
 }
