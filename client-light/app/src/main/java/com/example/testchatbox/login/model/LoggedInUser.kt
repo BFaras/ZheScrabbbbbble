@@ -23,7 +23,7 @@ object LoggedInUser {
     }
 
     fun getName():String{
-        return this.user.username
+        return this.user.username.trim();
     }
     fun getTheme():String{
         return this.user.theme

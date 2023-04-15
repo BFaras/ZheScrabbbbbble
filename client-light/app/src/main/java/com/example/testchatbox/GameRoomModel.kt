@@ -66,7 +66,8 @@ object GameRoomModel :Observable{
             ChatModel.removeGameChat(gameRoom as GameRoom)
         gameRoom=null;
         SocketHandler.getSocket().off("Join Room Request")
-        SocketHandler.getSocket().off("Game Started")
+        if(!TournamentModel.inTournament)
+            SocketHandler.getSocket().off("Game Started")
         joinRequest= arrayListOf()
         observers = arrayListOf();
         GameHistoryModel.reset();

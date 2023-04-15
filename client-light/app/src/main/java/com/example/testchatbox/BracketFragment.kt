@@ -51,21 +51,6 @@ class BracketFragment : Fragment(), Observer {
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
 
-
-        for (game in TournamentModel.gamesData) {
-            SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray(game.players))
-            SocketHandler.getSocket().on("Avatars from Usernames Response") { args ->
-                val avatarListJSON = args[0] as JSONObject
-                Log.d("AVATARS JSON IN ROOM", args[0].toString())
-
-                for (i in 0 until avatarListJSON.length()) {
-                    avatars[avatarListJSON.names()?.getString(i) as String] = (avatarListJSON.names()?.getString(i)?.let { avatarListJSON.get(it) }) as String
-                }
-            }
-        }
-        Log.d("AVATARS IN TOURNAMENT", avatars.toString())
-
-
         binding.buttonchat.setOnClickListener {
             findNavController().navigate(R.id.action_bracketFragment_to_ChatFragment)
         }
@@ -157,16 +142,30 @@ class BracketFragment : Fragment(), Observer {
 
     override fun update() {
         activity?.runOnUiThread(Runnable {
-            Log.i("Update", "Bracket")
-            Thread.sleep(10);
-            if(GameRoomModel.gameRoom!=null && GameRoomModel.gameRoom!!.hasStarted)
+            for (game in TournamentModel.getGameData()) {
+                SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray(game.players))
+                SocketHandler.getSocket().once("Avatars from Usernames Response") { args ->
+                    val avatarListJSON = args[0] as JSONObject
+                    Log.d("AVATARS JSON IN ROOM", args[0].toString())
+
+                    for (i in 0 until avatarListJSON.length()) {
+                        avatars[avatarListJSON.names()?.getString(i) as String] = (avatarListJSON.names()?.getString(i)?.let { avatarListJSON.get(it) }) as String
+                    }
+                }
+            }
+            Log.d("AVATARS IN TOURNAMENT", avatars.toString())
+            if(TournamentModel.tournamentTimer.phase==2){
+                binding.quitBtn.setOnClickListener {
+                    findNavController().navigate(R.id.action_bracketFragment_to_rankingFragment)
+                }
+                binding.quitBtn.setText(R.string.TournamentResult)
+            }
+            else if(GameRoomModel.gameRoom!=null && GameRoomModel.gameRoom!!.hasStarted)
                 findNavController().navigate(R.id.action_bracketFragment_to_fullscreenFragment);
-            if(TournamentModel.tournamentTimer.phase==2)
-                findNavController().navigate(R.id.action_bracketFragment_to_rankingFragment)
             if(::timer.isInitialized) timer.cancel()
             timer = setTimer(TournamentModel.tournamentTimer.timeRemaning.toLong()*1000)
             timer.start()
-            for (game in TournamentModel.gamesData) {
+            for (game in TournamentModel.getGameData()) {
                 Log.d("GAME TOURNAMENT", game.toString())
                 when (game.type) {
                     "Semi1" -> {

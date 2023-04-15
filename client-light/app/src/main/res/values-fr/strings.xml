@@ -32,6 +32,8 @@
     <string name="FriendCode">Entrez le code se trouvant sur le profil de votre ami pour l\'ajouter </string>
 
 
+    <string name ="TournamentResult"> Voir les résultats du tournoi</string>
+
     <string name ="InvitePrompt"> vous a invité à joindre sa partie</string>
     <string name="friendModified"> a remplacé son nom par </string>
     <string name="friendRemoved"> n\'est plus votre ami</string>

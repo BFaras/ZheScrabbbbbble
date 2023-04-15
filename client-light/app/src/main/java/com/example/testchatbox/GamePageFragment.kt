@@ -172,6 +172,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                         playerHand = gameState.players[0].hand
                     } else {
                         for (player in gameState.players) {
+                            Log.i("Players", player.username+LoggedInUser.getName()+ " : "+(player.username == LoggedInUser.getName()).toString())
                             if (player.username == LoggedInUser.getName()) playerHand = player.hand
                         }
                     }
