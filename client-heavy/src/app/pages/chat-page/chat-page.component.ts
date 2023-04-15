@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ChatInfo, ChatMessage, ChatType, MessageInfo } from '@app/classes/chat-info';
 import { AccountService } from '@app/services/account-service/account.service';
 //import { AccountService } from '@app/services/account-service/account.service';
@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
     templateUrl: './chat-page.component.html',
     styleUrls: ['./chat-page.component.scss'],
 })
-export class ChatPageComponent implements OnInit, ViewChildren {
+export class ChatPageComponent implements OnInit, ViewChildren, AfterViewChecked {
     @ViewChild('scroll', { read: ElementRef }) public scroll: ElementRef;
     @ViewChildren('chat-button') chatItems: QueryList<ElementRef>;
 
@@ -44,6 +44,7 @@ export class ChatPageComponent implements OnInit, ViewChildren {
     selector: any;
     static?: boolean | undefined;
     isPopup: boolean = false;
+    updateScrollStatus = false;
     //chatButton: HTMLElement;
 
     constructor(
@@ -62,12 +63,19 @@ export class ChatPageComponent implements OnInit, ViewChildren {
             this.importMainWindowsData();
         }
     }
+    ngAfterViewChecked(): void {
+        if (this.updateScrollStatus) {
+            this.scrollBottom()
+            this.updateScrollStatus = false
+        }
+    }
 
     ngOnInit() {
         this.socketManagerService.getSocket().on('Chat Deleted', (chatCode: string) => {
             if (this.chatService.isUserInChat(chatCode)) {
                 this.subscriptions.push(this.chatService.getChatsList().subscribe((chatList: ChatInfo[]) => {
                     this.chatList = chatList;
+                    this.updateScrollStatus = true
                 }));
             }
         });
@@ -75,6 +83,7 @@ export class ChatPageComponent implements OnInit, ViewChildren {
         this.subscriptions.push(this.chatService.getNewMessages().subscribe((messageInfo: MessageInfo) => {
             if (messageInfo.id === this.selectedChat) {
                 this.chatLog.push(messageInfo.message);
+                this.updateScrollStatus = true
             }
         }));
     }
