@@ -92,6 +92,7 @@ class ManageChatFragment : Fragment(), ObserverChat {
     private fun loadList(){
         resetSearchBoxes()
         chatList = ChatModel.getList();
+        Log.i("Chats", chatList.toString())
         chatButtons = arrayListOf()
         val chatListView = binding.chatList;
         chatListView.removeAllViews()

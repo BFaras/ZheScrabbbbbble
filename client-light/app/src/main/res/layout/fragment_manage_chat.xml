@@ -276,7 +276,7 @@
                     android:layout_marginRight="20dp"
                     android:background="@drawable/background_chat_input"
                     android:backgroundTint="?colorPrimary"
-                    android:text="@string/no"
+                    android:text="@string/refuser"
                     android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -285,7 +285,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_chat_input"
                     android:backgroundTint="?colorPrimary"
-                    android:text="@string/yes"
+                    android:text="@string/accepter"
                     android:textStyle="bold" />
             </LinearLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>

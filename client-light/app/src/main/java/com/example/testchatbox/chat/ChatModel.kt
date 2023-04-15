@@ -75,7 +75,10 @@ object ChatModel : ObservableChat {
                     if(!chatList.containsKey(chat.get("_id"))){
                         var isOwner= false;
                         try {
-                            isOwner=chat.get("isOwner") as Boolean
+                            isOwner=chat.get("isChatOwner") as Boolean
+                        }
+                        catch (e:Exception){
+                            Log.i("Chat", "No owner")
                         }
                         finally {
                             chatList[chat.get("_id") as String]=(Chat(ChatType.fromInt(chat.get("chatType") as Int), chat.get("chatName") as String, chat.get("_id") as String, isOwner))

@@ -165,7 +165,9 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             binding.buttonHint.isEnabled = isYourTurn
             binding.backInHand.visibility = GONE
 
+            Log.i("Game", gameState.players.toString())
             if (!GameRoomModel.isPlayer) {
+                Log.i("Game","Observer")
                 playerHand = gameState.players[toBeObserved].hand
                 binding.nowObservingText.setText(HtmlCompat.fromHtml(getString(R.string.now_observing_player1, gameState.players[0].username), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
                 binding.observedPlayers.removeAllViews()
@@ -184,8 +186,10 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                     binding.observedPlayers.addView(btnPlayer)
                 }
             } else if (GameRoomModel.gameRoom?.gameType == GameType.Coop) {
+                Log.i("Game","COOP")
                 playerHand = gameState.players[0].hand
             } else {
+                Log.i("Game",LoggedInUser.getName())
                 for (player in gameState.players) {
                     if (player.username == LoggedInUser.getName()) playerHand = player.hand
                 }
