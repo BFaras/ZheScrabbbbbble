@@ -17,8 +17,8 @@
         </mat-card-content>
     </div>
     <div class="auto-scroll">
-        <p class="tabs scroll-button" (click) = 'scrollBottom()' >Bottom</p>
-        <p class="tabs scroll-button" (click) = 'scrollToTop()' >Top</p>
+        <p class="scroll-button" (click)='scrollBottom()'>{{ 'PROFILE-PAGE.BOTTOM' | translate }}</p>
+        <p class="scroll-button" (click)='scrollToTop()'>{{ 'PROFILE-PAGE.TOP' | translate }}</p>
     </div>
 
 </mat-card>

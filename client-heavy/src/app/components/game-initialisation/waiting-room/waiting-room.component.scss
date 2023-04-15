@@ -75,7 +75,7 @@ h2{
 .header-item {
     justify-content: center;
     text-align: center;
-    padding: 100px 0px 50px 0px;
+    padding-top: 100px;
 }
 
 .mode-buttons {
@@ -101,6 +101,16 @@ h2{
     font-family: 'Courier New', Courier, monospace;
     font-size: 25px;
     font-weight: bold;
+}
+
+.VP {
+    font-size: 15px;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding-bottom: 50px;
+    width: 650px;
+    white-space: normal;
+    text-align: center;
 }
 
 .players {
