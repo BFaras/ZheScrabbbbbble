@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ConfrimPopUpComponent } from '@app/components/confrim-pop-up/confrim-pop-up.component';
@@ -19,7 +19,8 @@ import { Subscription } from 'rxjs';
     templateUrl: './game-page.component.html',
     styleUrls: ['./game-page.component.scss'],
 })
-export class GamePageComponent implements OnInit, OnDestroy {
+export class GamePageComponent implements OnInit, OnDestroy, AfterViewChecked {
+    @ViewChild('scroll', { read: ElementRef }) public scroll: ElementRef;
     isReceiver: string;
     endGame: boolean = false;
     subscriptions: Subscription[] = [];
@@ -28,7 +29,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
     actionHistory: PlayerMessage[] = [];
 
     hasPendingAction: boolean;
-
+    updateScrollStatus = false;
     constructor(
         private readonly gameStateService: GameStateService,
         private readonly letterHolderService: LetterHolderService,
@@ -47,13 +48,22 @@ export class GamePageComponent implements OnInit, OnDestroy {
         this.chatService.setChangeDetector(this.changeDetector);
     }
 
+    ngAfterViewChecked(): void {
+        if (this.updateScrollStatus) {
+            this.scrollBottom()
+            this.updateScrollStatus = false
+        }
+    }
 
 
     ngOnInit() {
         this.hasPendingAction = false;
         this.gameStateService.setPendingAction(false);
         this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => {
-            if (gameState.message) this.actionHistory.push(gameState.message);
+            if (gameState.message) {
+                this.actionHistory.push(gameState.message);
+                this.updateScrollStatus = true;
+            }
             this.clearHints();
             this.endGame = gameState.gameOver;
         }));
@@ -71,6 +81,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
                 this.hasPendingAction = true;
             }
             this.actionHistory.push(message);
+            this.updateScrollStatus = true;
         }));
         this.subscriptions.push(this.gameStateService.getClueObservable().subscribe((clues: { command: string, value: number }[]) => {
             const values = [];
@@ -78,6 +89,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
                 values.push(clue.command + ' | ' + clue.value);
             }
             this.actionHistory.push({ messageType: 'MSG-CLUE', values: values });
+            this.updateScrollStatus = true;
         }))
         if (this.gameStateService.isTournamentGame()) {
             this.waitingRoomManagerService.getStartGameObservable().subscribe((info: { isCoop: boolean, roomCode?: string }) => {
@@ -167,6 +179,11 @@ export class GamePageComponent implements OnInit, OnDestroy {
         if (!this.hasPendingAction) return;
         this.hasPendingAction = false;
         this.gameStateService.respondCoopAction(answer);
+    }
+
+    public scrollBottom() {
+        this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
+
     }
 
     isLatestProposedAction(index: number) {
