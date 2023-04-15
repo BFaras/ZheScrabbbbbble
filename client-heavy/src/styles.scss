@@ -129,16 +129,17 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .snack-bar{
+    border-radius: 20px;
     background-color: var(--background-tertiary);
     color: var(--text-default);
-    font-family: 'Courier New', Courier, monospace;
     font-size: 18px;
-    button {    text-decoration: none;
+    padding: 15px;
+    button {    
+        text-decoration: none;
         text-align: center;
         border: none;
         background-color: var(--button-primary);
         border-radius: 7px;
-        box-shadow: var(--box-shadow);
         font-family: 'Courier New', Courier, monospace;
         font-weight: bold;
         color: var(--button-text-default);
@@ -151,4 +152,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
         transition-property: background-color;
         transition-duration: 0.2s;
     }
+
+    span {
+        font-family: 'Courier New', Courier, monospace;
+    }
+
 }

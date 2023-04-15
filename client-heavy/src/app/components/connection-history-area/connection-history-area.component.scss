@@ -29,11 +29,11 @@
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    width:100%;
+    width:50%;
 }
 
 .scroll-button{
-    margin-top:2%;
+    margin-top: 10%;
     
 }
 
@@ -78,7 +78,8 @@ p{
     flex-direction: row;
     width: 350px;
     justify-content: space-between;
-    margin-bottom: 0px !important;
+    margin-bottom: 5px !important;
+    margin-top: 15px;
 }
 
 .tabs {
@@ -94,6 +95,33 @@ p{
     background-color: var(--button-primary-hover);
     color: var(--button-text-hover);
     font-weight: bold;
+}
+
+.scroll-button {
+    width: 100px;
+    text-decoration: none;
+    margin-right: 20px;
+    text-align: center;
+    border: none;
+    padding: 5px;
+    padding-left: 12px;
+    background-color: var(--button-primary);
+    border-radius: 7px;
+    //box-shadow: var(--box-shadow);
+    font-size: 15px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: var(--button-text-default);
+    transition: color 0.5s linear;
+    -webkit-transition: color 0.2s linear;
+}
+
+.scroll-button:hover {
+    color: var(--button-text-hover);
+    cursor: pointer;
+    background: var(--button-primary-hover);
+    transition-property: background-color;
+    transition-duration: 0.2s;
 }
 
 .active {

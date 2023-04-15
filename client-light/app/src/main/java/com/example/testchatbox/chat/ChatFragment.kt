@@ -334,7 +334,7 @@ class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
                                 }
                                 InviteService.acceptRequest();
                                 GameRoomModel.initialise(GameRoom("Name", request.roomId, Visibility.Public, players, hasStarted = false, request.gameType ,-1), false);
-                                findNavController().navigate(R.id.action_MainMenuFragment_to_gameRoomFragment)
+                                findNavController().navigate(R.id.action_ChatFragment_to_gameRoomFragment)
                             }
                         }else{
                             InviteService.rejectRequest();
