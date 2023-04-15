@@ -2,6 +2,7 @@ package com.example.testchatbox
 
 import SocketHandler
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.navigation.fragment.findNavController
 import org.json.JSONArray
 import org.json.JSONObject
@@ -40,6 +41,11 @@ object TournamentModel :Observable{
         tournamentTimer = TournamentTimer(0, 0)
         SocketHandler.getSocket().off("Tournament Data Response")
         SocketHandler.getSocket().off("Tournament Found")
+        SocketHandler.getSocket().off("Game Started")
+    }
+
+    fun getGameData():Array<GameData>{
+        return gamesData.toTypedArray();
     }
 
     fun queueForTournament(){
@@ -54,7 +60,9 @@ object TournamentModel :Observable{
         }
 
         SocketHandler.getSocket().on("Tournament Data Response"){args->
+            Log.i("Update", "DataResponse")
             val gamesArray = args[0] as JSONArray;
+            gamesData= arrayListOf();
             for(i in 0 until gamesArray.length()){
                 val gameJSON = gamesArray.get(i) as JSONObject;
                 val playersArray = gameJSON.get("players") as JSONArray;
@@ -70,6 +78,7 @@ object TournamentModel :Observable{
         }
 
         SocketHandler.getSocket().on("Game Started"){args->
+            Log.i("Update", "GameStarted")
             val roomCode = args[1] as String;
             populateGameRoomModel(roomCode, false);
         }
@@ -83,6 +92,7 @@ object TournamentModel :Observable{
             if(game.roomCode==gameId)
                 GameRoomModel.initialise(GameRoom(game.type, gameId, Visibility.Public, game.players, hasStarted = true, GameType.Classic, 0),observer)
         }
+        Log.i("Update", "GameRoom")
     }
 
 }

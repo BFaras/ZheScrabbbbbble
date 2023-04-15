@@ -38,7 +38,7 @@ object GameHistoryModel : Observable {
     }
 
     fun getList(): Array<PlayerMessage> {
-        return actionMessages.toArray() as Array<PlayerMessage>;
+        return actionMessages.toTypedArray();
     }
 
     fun reset(){

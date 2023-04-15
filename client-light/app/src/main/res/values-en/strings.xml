@@ -24,6 +24,7 @@
     <string name="friendJoin">Invite to a game</string>
     <string name="friendRemove">Remove from friend list</string>
 
+    <string name ="TournamentResult"> See tournament results</string>
 
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Main menu</string>

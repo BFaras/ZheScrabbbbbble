@@ -33,6 +33,8 @@
     <string name="friendJoin">Inviter dans une partie</string>
     <string name="friendRemove">Retire de la liste d\'amis</string>
 
+    <string name ="TournamentResult"> Voir les résultats du tournoi</string>
+
     <string name="changeUsername">Changement de votre nom d\'utilisateur </string>
     <string name="deleteChat">Vous vous apprêter à effacer ce chat public. Voulez vous continuer?</string>
 
