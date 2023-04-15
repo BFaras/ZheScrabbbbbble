@@ -10,6 +10,7 @@ import { GameStateService, PlayerMessage } from '@app/services/game-state-servic
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
+import { PreviewPlayersActionService } from '@app/services/preview-players-action-service/preview-players-action.service';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -42,6 +43,7 @@ export class GamePageComponent implements OnInit, OnDestroy, AfterViewChecked {
         private readonly translate: TranslateService,
         private readonly chatService: ChatService,
         private readonly changeDetector: ChangeDetectorRef,
+        private previewPlayerActionService: PreviewPlayersActionService,
         //private readonly confirmationHandler: ConfirmationDialogHandlerService,
         public dialog: MatDialog
     ) {
@@ -133,7 +135,9 @@ export class GamePageComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     dialogResponse(status: boolean) {
         if (status) {
+            this.previewPlayerActionService.removeSelectedTile(this.previewPlayerActionService.getFirstTilePosition())
             this.gameStateService.sendAbandonRequest();
+
             if (this.gameStateService.isTournamentGame()) {
                 this.router.navigate(['/tournament-bracket']);
             } else {
