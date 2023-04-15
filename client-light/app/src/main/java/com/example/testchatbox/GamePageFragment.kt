@@ -6,6 +6,7 @@ import android.content.ClipData
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -101,6 +102,9 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
     private var isSwap = false
     private var moveInfo: PlayerMessage = PlayerMessage("", arrayListOf())
 
+    private var isChatIconChanged = false;
+    private var notifSound: MediaPlayer? = null;
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -113,6 +117,7 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
     @SuppressLint("MissingInflatedId", "DiscouragedApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupChatNotifs(view.context)
         Coordinates.setCoordinates()
         gameModel.getAvatars()
         if(::timer.isInitialized) {
@@ -721,6 +726,9 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
 
     override fun onStop() {
         super.onStop()
+        NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        NotificationInfoHolder.setFunctionOnChatDeleted(null);
+        notifSound?.release()
         GameHistoryModel.removeObserver(this)
     }
 
@@ -1364,6 +1372,38 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                 Log.d("PLAYER REQUEST", GameHistoryModel.playRequest.toString())
 
             }
+        }
+    }
+
+    fun setupChatNotifs(context: Context) {
+        isChatIconChanged = false;
+        NotificationInfoHolder.startObserverChat();
+        NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
+        NotificationInfoHolder.setFunctionOnChatDeleted(::changeToNoNotifChatIcon);
+        notifSound = MediaPlayer.create(context, R.raw.ding)
+
+        notifSound?.setOnCompletionListener { notifSound?.release() }
+
+        if(NotificationInfoHolder.areChatsUnread())
+            changeToNotifChatIcon();
+    }
+
+    fun playNotifSoundAndChangeIcon() {
+        if (!isChatIconChanged) {
+            changeToNotifChatIcon()
+            notifSound?.start()
+        }
+    }
+
+    fun changeToNotifChatIcon() {
+        binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+        isChatIconChanged = true;
+    }
+
+    fun changeToNoNotifChatIcon() {
+        if (isChatIconChanged) {
+            binding.buttonchat.setBackgroundResource(R.drawable.ic_chat);
+            isChatIconChanged = false;
         }
     }
 }

@@ -53,6 +53,8 @@ class ManageChatFragment : Fragment(), ObserverChat {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        ChatModel.updatePublicList()
+        ChatModel.updateList()
         super.onViewCreated(view, savedInstanceState);
         binding.createChat.setOnClickListener {
             val name = binding.chatName.text.toString().trim()

@@ -10,6 +10,7 @@ object NotificationInfoHolder: ObserverChat {
     private var selectedChatCode: String = "";
     private var isStarted = false;
     private var functionOnMessageReceived: (() -> Unit)? = null;
+    private var functionOnChatDeleted: (() -> Unit)? = null;
 
     fun startObserverChat() {
         if (!isStarted) {
@@ -27,6 +28,10 @@ object NotificationInfoHolder: ObserverChat {
 
     fun setFunctionOnMessageReceived(function : (() -> Unit)?){
         functionOnMessageReceived = function;
+    }
+
+    fun setFunctionOnChatDeleted(function : (() -> Unit)?){
+        functionOnChatDeleted = function;
     }
 
     fun changeSelectedChatCode(newVal: String) {
@@ -53,6 +58,14 @@ object NotificationInfoHolder: ObserverChat {
     }
 
     override fun updateChannels() {
+        for (chatCode in chatsUnread) {
+            if (!ChatModel.getListAsMap().containsKey(chatCode)) {
+                chatsUnread.remove(chatCode);
+                if (!this.areChatsUnread()) {
+                    functionOnChatDeleted?.invoke()
+                }
+            }
+        }
     }
 
     override fun updatePublicChannels() {

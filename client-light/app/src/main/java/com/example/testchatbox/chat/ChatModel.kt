@@ -116,6 +116,10 @@ object ChatModel : ObservableChat {
         return ArrayList(chatList.values);
     }
 
+    fun getListAsMap() : LinkedHashMap<String, Chat> {
+        return chatList;
+    }
+
     fun getPublicList() : ArrayList<Chat> {
         return ArrayList(publicChatList.values);
     }
