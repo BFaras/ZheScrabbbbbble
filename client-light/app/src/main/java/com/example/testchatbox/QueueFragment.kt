@@ -75,6 +75,7 @@ class QueueFragment : Fragment(), Observer {
     override fun onStop() {
         super.onStop()
         NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        NotificationInfoHolder.setFunctionOnChatDeleted(null);
         notifSound?.release()
         TournamentModel.removeObserver(this);
     }
@@ -83,6 +84,7 @@ class QueueFragment : Fragment(), Observer {
         isChatIconChanged = false;
         NotificationInfoHolder.startObserverChat();
         NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
+        NotificationInfoHolder.setFunctionOnChatDeleted(::changeToNoNotifChatIcon);
         notifSound = MediaPlayer.create(context, R.raw.ding)
 
         notifSound?.setOnCompletionListener { notifSound?.release() }
@@ -103,4 +105,10 @@ class QueueFragment : Fragment(), Observer {
         isChatIconChanged = true;
     }
 
+    fun changeToNoNotifChatIcon() {
+        if (isChatIconChanged) {
+            binding.buttonchat.setBackgroundResource(R.drawable.ic_chat);
+            isChatIconChanged = false;
+        }
+    }
 }
