@@ -14,6 +14,8 @@ export const ROOM_NAME_TAKEN = 'ROOM-1';
 export const ROOM_PASSWORD_INCORRECT = 'ROOM-2';
 export const JOIN_REQUEST_REFUSED = 'ROOM-3';
 export const ROOM_IS_FULL = 'ROOM-4';
+export const ROOM_DELETED = 'ROOM-5';
+export const GAME_STARTED = 'ROOM-6';
 
 // Game error codes
 export const UNKNOWN_ACTION = 'GAME-1';

@@ -467,6 +467,7 @@ class ProfilFragment : Fragment() {
                     arrayListOf(),
                     arrayListOf()
                 )
+                Log.i("Profile", args[0].toString())
                 val profileJSON = args[0] as JSONObject
                 profileTemp.avatar= profileJSON.get("avatar") as String;
                 Log.d("AVATAR ", profileTemp.avatar)

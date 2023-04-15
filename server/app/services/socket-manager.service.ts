@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { CoopGameRoom } from '@app/classes/coop-game-room';
 import { GameRoom } from '@app/classes/game-room';
 import { Player } from '@app/classes/player';
@@ -5,7 +6,15 @@ import { GameStatus } from '@app/classes/tournament';
 import { VirtualPlayerEasy } from '@app/classes/virtual-player-easy';
 import { VirtualPlayerHard } from '@app/classes/virtual-player-hard';
 import { /* MAX_NUMBER_OF_PLAYERS,*/ GameType, MAX_NUMBER_OF_PLAYERS, RoomVisibility, TOURNAMENT_SIZE } from '@app/constants/basic-constants';
-import { JOIN_REQUEST_REFUSED, NO_ERROR, ROOM_IS_FULL, ROOM_NAME_TAKEN, ROOM_PASSWORD_INCORRECT } from '@app/constants/error-code-constants';
+import {
+    GAME_STARTED,
+    JOIN_REQUEST_REFUSED,
+    NO_ERROR,
+    ROOM_DELETED,
+    ROOM_IS_FULL,
+    ROOM_NAME_TAKEN,
+    ROOM_PASSWORD_INCORRECT,
+} from '@app/constants/error-code-constants';
 import {
     COOP_ACTION_ACCEPTED,
     COOP_ACTION_PROPOSED,
@@ -48,7 +57,10 @@ export class SocketManager {
     private accountInfoService: AccountInfoService;
     private profileSocketService: ProfileSocketService;
     private friendSocketService: FriendSocketService;
+<<<<<<< HEAD
+=======
     private userSocketService: UserSocketService;
+>>>>>>> main
     private dbService: DatabaseService;
     private pendingJoinGameRequests: Map<string, [string, io.Socket, boolean]>;
     private tournamentQueue: io.Socket[];
@@ -114,7 +126,8 @@ export class SocketManager {
                 },
             );
 
-            socket.on('Send Emote', (emoteByPlayer: { username: string; emote: string }) => { //client léger
+            socket.on('Send Emote', (emoteByPlayer: { username: string; emote: string }) => {
+                // client léger
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
                 socket.to(currentRoom.getID()).emit('Emote Response', emoteByPlayer);
@@ -128,6 +141,11 @@ export class SocketManager {
                 console.log(new Date().toLocaleTimeString() + ' | Room join request received');
                 if (!this.roomManager.getRoom(roomCode)) return;
                 const username = this.accountInfoService.getUsername(socket);
+                if (!this.roomManager.getRoom(roomCode)) {
+                    console.log(new Date().toLocaleTimeString() + ' | Room does not exist');
+                    socket.emit('Join Room Response', ROOM_DELETED);
+                    return;
+                }
                 if (!observer && this.roomManager.isRoomFull(roomCode)) {
                     console.log(new Date().toLocaleTimeString() + ' | Room is full');
                     socket.emit('Join Room Response', ROOM_IS_FULL);
@@ -217,24 +235,48 @@ export class SocketManager {
                 socket.to(room.getID()).emit('Room Player Update', playerNames);
             });
 
-            socket.on('Invite Friend To Game', async(username: string) => {
+            socket.on('Invite Friend To Game', async (username: string) => {
                 const currentRoom = this.roomManager.findRoomFromPlayer(socket.id);
                 if (!currentRoom) return;
-                if(currentRoom.isGameStarted()) return;
+                if (currentRoom.isGameStarted()) return;
                 const userId = await this.dbService.getUserId(username);
-                if(!userId) return;
-                if(this.usersStatusService.isUserInGame(userId)) return;
+                if (!userId) return;
+                if (this.usersStatusService.isUserInGame(userId)) return;
                 const friendSocket = this.usersStatusService.getUserSocketFromId(userId);
+<<<<<<< HEAD
+                if (!friendSocket) return;
+                friendSocket.emit(
+                    'Game Invite Request',
+                    this.accountInfoService.getUsername(socket),
+                    currentRoom.getID(),
+                    currentRoom instanceof CoopGameRoom,
+                );
+=======
                 if(!friendSocket) return;
                 friendSocket.emit('Game Invite Request', this.accountInfoService.getUsername(socket), currentRoom.getID(), currentRoom instanceof CoopGameRoom);
+>>>>>>> main
             });
 
-            socket.on('Join Friend Game', async(roomId: string) => {
+            socket.on('Join Friend Game', async (roomId: string) => {
                 const currentRoom = this.roomManager.getRoom(roomId);
-                if (!currentRoom) return;
+                if (!currentRoom) {
+                    socket.emit('Join Room Response', ROOM_DELETED);
+                    return;
+                }
+                if (currentRoom.getPlayerCount() === MAX_NUMBER_OF_PLAYERS) {
+                    socket.emit('Join Room Response', ROOM_IS_FULL);
+                    return;
+                }
+                if (currentRoom.isGameStarted()) {
+                    socket.emit('Join Room Response', GAME_STARTED);
+                    return;
+                }
                 socket.join(roomId);
                 this.usersStatusService.addUserToInGameList(this.accountInfoService.getUserId(socket));
-                this.roomManager.addPlayer(roomId, new Player(socket.id, this.accountInfoService.getUserId(socket), this.accountInfoService.getUsername(socket)));
+                this.roomManager.addPlayer(
+                    roomId,
+                    new Player(socket.id, this.accountInfoService.getUserId(socket), this.accountInfoService.getUsername(socket)),
+                );
                 const playerNames = this.roomManager.getRoomPlayerNames(roomId);
                 socket.broadcast.emit('Game Room List Response', this.roomManager.getGameRooms());
                 socket.to(roomId).emit('Room Player Update', playerNames);
