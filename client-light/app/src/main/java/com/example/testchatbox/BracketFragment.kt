@@ -242,7 +242,6 @@ class BracketFragment : Fragment(), Observer {
                         }
                     }
                     "Final1" -> {
-                        binding.finals.visibility = View.VISIBLE
                         binding.final1player1.text = game.players[0]
                         binding.Final1.setOnClickListener {
                             if(game.status==GameStatus.IN_PROGRESS)
@@ -281,7 +280,6 @@ class BracketFragment : Fragment(), Observer {
                         }
                     }
                     "Final2" -> {
-                        binding.finals.visibility = View.VISIBLE
                         binding.final2player1.text = game.players[0]
                         binding.Final2.setOnClickListener {
                             if(game.status==GameStatus.IN_PROGRESS)
