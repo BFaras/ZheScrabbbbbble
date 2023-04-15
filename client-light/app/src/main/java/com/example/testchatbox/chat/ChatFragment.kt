@@ -121,7 +121,8 @@ class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
             val messagesBox = binding.textView
             activity?.runOnUiThread(java.lang.Runnable {
                 messagesBox.removeAllViews()
-            })
+            });
+            try {
             for(i in 0 until messageArray.length()){
                 val messageJSON = messageArray.get(i) as JSONObject
                 val message = Message(messageJSON.get("username") as String, messageJSON.get("timestamp") as String, messageJSON.get("message") as String, messageJSON.get("avatar") as String)
@@ -188,6 +189,7 @@ class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
                     messagesBox.invalidate();
                     messagesBox.requestLayout();
                 });
+            }
             }catch(e:Exception){
                 val appContext = context?.applicationContext
                 if(appContext!=null)

@@ -103,7 +103,8 @@ class ManageChatFragment : Fragment(), ObserverChat {
                 chatRoomName.text = chat.chatName
                 chatRoomLayout.id = i
                 chatRoomLayout.setOnClickListener{
-                    ChatModel.leaveChat(chatList[i]._id)
+                    if(chat.isOwner==true) askDelete(chatList[i]._id);
+                    else ChatModel.leaveChat(chatList[i]._id);
                 }
                 chatListView.addView(chatRoomLayout)
             }
@@ -211,6 +212,21 @@ class ManageChatFragment : Fragment(), ObserverChat {
     private fun hideKeyboard() {
         val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+    }
+
+    private fun askDelete(id:String){
+        binding.deleteSection.visibility=View.VISIBLE;
+        binding.rejectDelete.setOnClickListener {
+            binding.deleteSection.visibility=View.GONE;
+            binding.acceptDelete.setOnClickListener(null);
+            binding.rejectDelete.setOnClickListener(null);
+        }
+        binding.acceptDelete.setOnClickListener {
+            binding.deleteSection.visibility=View.GONE;
+            binding.acceptDelete.setOnClickListener(null);
+            binding.rejectDelete.setOnClickListener(null);
+            ChatModel.leaveChat(id);
+        }
     }
 
 }

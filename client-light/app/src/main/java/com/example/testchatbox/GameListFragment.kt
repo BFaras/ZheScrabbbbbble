@@ -461,7 +461,7 @@ class GameListFragment : Fragment(), ObserverInvite {
             verifyIfInviteRequest();
         });
     }
-    
+
     private fun hideKeyboard() {
         val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)

@@ -53,6 +53,7 @@
     <string name="register_failed">"Failed to register new account"</string>
 
     <string name="changeUsername">Change your username </string>
+    <string name="deleteChat">You are going to delete this public chat. Do you want to continue?</string>
     <!-- Strings related to errors -->
     <string name="NO_ERROR">No error</string>
     <string name="ERROR">Error</string>
@@ -150,7 +151,7 @@
     <string name="tournament_ranking">tournament ranking</string>
     <string name="pas_besoin_d_indices">no need for hints</string>
     <string name="joined_public_chats">joined public chats</string>
-    <string name="pss_you_can_quit_any_room_by_clicking_it">(pss…you can quit any room by clicking it)</string>
+    <string name="pss_you_can_quit_any_room_by_clicking_it">(pss…you can quit any room or delete one you created by clicking it)</string>
     <string name="create_a_public_chat">Create a public chat</string>
     <string name="join_a_public_chat">join a public chat</string>
     <string name="you_can_create_a_public_chat_or_join_one_from_the_list_on_the_right">You can create a public chat or join one from the list on the right</string>
