@@ -63,8 +63,8 @@ class ChatFragment : Fragment(), ObserverChat {
             selectedChatIndex = findIndexByUsername(arguments?.getString("username")!!)
             binding.chatRoomName.text = arguments?.getString("username")!!
         } else {
-            selectedChatIndex = 0
-            binding.chatRoomName.text = "Global Chat"
+            selectedChatIndex = findIndexByUsername("Global")
+            binding.chatRoomName.text = "Global"
         }
         binding.inputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {

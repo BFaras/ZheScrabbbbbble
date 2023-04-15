@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -112,6 +113,16 @@ class GameListFragment : Fragment() {
         }
         binding.createBtn.setOnClickListener{
             createRoom();
+        }
+        binding.name.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
+        }
+        binding.createPassword.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
         }
         binding.buttonchat.setOnClickListener {
             findNavController().navigate(R.id.action_gameListFragment_to_ChatFragment)
@@ -366,5 +377,10 @@ class GameListFragment : Fragment() {
     fun changeToNotifChatIcon() {
         binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
         isChatIconChanged = true;
+    }
+
+    private fun hideKeyboard() {
+        val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
     }
 }

@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     tools:context=".chat.ManageChatFragment">
 
 <LinearLayout

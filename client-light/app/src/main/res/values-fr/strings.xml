@@ -119,7 +119,7 @@
     <string name="publicRoom">Publique</string>
     <string name="protectedRoom">Protégéé</string>
     <string name="join_game_text">Voulez-vous rejoindre la partie en tant qu\'observateur?</string>
-    <string name="enter_the_room_password">entrez le mot de passe</string>
+    <string name="enter_the_room_password">Entrez le mot de passe</string>
     <string name="quit">Quitter</string>
     <string name="winnerName"><![CDATA[%1$s a gagné la partie!]]></string>
     <string name="waitingRoomText">Si l\'hôte décide de lancer la partie et qu\'il y a au minimum 2 joueurs , les places restantes seront comblées par des Joueurs Virtuels.</string>
@@ -189,8 +189,8 @@
     <string name="waiting_for_players">En attente</string>
     <string name="room">Salle</string>
     <string name="visibility">Visibilité</string>
-    <string name="players"># Joueurs</string>
-    <string name="observers"># Observateurs</string>
+    <string name="players">Nombre de joueurs</string>
+    <string name="observers">Nombre d\'observateurs</string>
     <string name="game_type">Type de partie</string>
     <string name="game_status">Status de la partie</string>
     <string name="to_be_determined">À déterminer</string>
@@ -210,4 +210,5 @@
     <string name="connexion">Connexions</string>
     <string name="deconnexion">Déconnexions</string>
     <string name="friend_code">Code Ami</string>
+    <string name="friend_profile_label">Profil d\'ami</string>
 </resources>
