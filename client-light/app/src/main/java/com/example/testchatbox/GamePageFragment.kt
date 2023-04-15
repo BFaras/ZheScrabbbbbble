@@ -966,13 +966,22 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                     playerTurn.setBackgroundResource(R.drawable.player_turn_border)
                 }
             } else {
-                if (player.score == isHigher) isWinner = player
-                if (player == isWinner) {
-                    playerBackground.setCardBackgroundColor(isYouColor.data)
-                    playerName.setTextColor(Color.BLACK)
-                    playerPoints.setTextColor(Color.BLACK)
-                    binding.gameWinnerHolder.visibility = VISIBLE
-                    binding.gameWinner.setText(HtmlCompat.fromHtml(getString(R.string.winnerName, player.username), HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
+                if (GameRoomModel.gameRoom?.gameType != GameType.Coop) {
+                    if (player.score == isHigher) isWinner = player
+                    if (player == isWinner) {
+                        playerBackground.setCardBackgroundColor(isYouColor.data)
+                        playerName.setTextColor(Color.BLACK)
+                        playerPoints.setTextColor(Color.BLACK)
+                        binding.gameWinnerHolder.visibility = VISIBLE
+                        binding.gameWinner.setText(
+                            HtmlCompat.fromHtml(
+                                getString(
+                                    R.string.winnerName,
+                                    player.username
+                                ), HtmlCompat.FROM_HTML_MODE_LEGACY
+                            ), TextView.BufferType.SPANNABLE
+                        )
+                    }
                 }
             }
             playerInfo.tag = player.username

@@ -661,7 +661,11 @@ class ProfilFragment : Fragment() {
         binding.tournamentThird.text = profile.tournamentWins[2].toString()
 
         val neededXP = (profile.level.nextLevelXp - profile.level.xp).toString()
-        binding.xpNeeded.setText(activity?.let { HtmlCompat.fromHtml(it.getString(R.string.xp_needed_till_next_level_00, neededXP), HtmlCompat.FROM_HTML_MODE_LEGACY) }, TextView.BufferType.SPANNABLE)
+        if (LoggedInUser.getLang() == "fr") {
+            binding.xpNeeded.text = "XP nécessaires pour le prochain niveau - ${neededXP}"
+        } else {
+            binding.xpNeeded.text = "XP needed until next level - ${neededXP}"
+        }
         binding.levelProgress.max = profile.level.nextLevelXp
         binding.levelProgress.progress = profile.level.xp
         Log.i("GAME HISTORY", profile.gameHistory.toString())

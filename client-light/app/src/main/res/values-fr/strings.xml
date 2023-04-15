@@ -217,4 +217,5 @@
     <string name="deconnexion">Déconnexions</string>
     <string name="friend_code">Code Ami</string>
     <string name="friend_profile_label">Profil d\'ami</string>
+    <string name="waiting_for_team_approval">en attente d\'approbation</string>
 </resources>

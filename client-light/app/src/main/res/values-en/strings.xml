@@ -208,4 +208,5 @@
     <string name="deconnexion">Log Outs</string>
     <string name="friend_code">Friend Code</string>
     <string name="friend_profile_label">Friend profile</string>
+    <string name="waiting_for_team_approval">waiting for team approval</string>
 </resources>

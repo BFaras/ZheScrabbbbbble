@@ -230,12 +230,12 @@ class BracketFragment : Fragment(), Observer {
                         if (game.status == GameStatus.FINISHED){
                             when (game.winnerIndex) {
                                 0 -> {
-                                    binding.semi1player1.typeface = Typeface.DEFAULT_BOLD
-                                    binding.semi1player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                                    binding.semi2player1.typeface = Typeface.DEFAULT_BOLD
+                                    binding.semi2player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
                                 }
                                 1 -> {
-                                    binding.semi1player2.typeface = Typeface.DEFAULT_BOLD
-                                    binding.semi1player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                                    binding.semi2player2.typeface = Typeface.DEFAULT_BOLD
+                                    binding.semi2player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
                                 }
                                 else -> {}
                             }
