@@ -163,9 +163,8 @@ class BracketFragment : Fragment(), Observer {
                 findNavController().navigate(R.id.action_bracketFragment_to_fullscreenFragment);
             if(TournamentModel.tournamentTimer.phase==2)
                 findNavController().navigate(R.id.action_bracketFragment_to_rankingFragment)
-
+            if(::timer.isInitialized) timer.cancel()
             timer = setTimer(TournamentModel.tournamentTimer.timeRemaning.toLong()*1000)
-            timer.cancel()
             timer.start()
             for (game in TournamentModel.gamesData) {
                 Log.d("GAME TOURNAMENT", game.toString())
