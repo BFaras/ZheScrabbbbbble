@@ -40,8 +40,9 @@ object FriendModel : ObservableFriend{
 
     init {
         SocketHandler.getSocket().on("Update friend status"){args->
+            Log.i("Friend", args[0].toString() + args[1].toString())
             if(args[0] != null && args[1] !=null){
-                updateStatus(args[1] as String, ConnectionStatus.fromInt(args[0] as Int))
+                updateStatus(args[0] as String, ConnectionStatus.fromInt((args[1] as Int)))
             }
         }
         SocketHandler.getSocket().on("Friend removed you as friend"){args->
@@ -66,7 +67,8 @@ object FriendModel : ObservableFriend{
                     val friend = friends.get(i) as JSONObject
                     friendList.add(Friend(friend.get("username") as String, ConnectionStatus.fromInt(friend.get("status") as Int)))
                 }
-                notifyObserver()
+                Log.i("Friends", friendList.toString())
+                notifyObserver();
             }catch(e:Exception){
             }
         }
@@ -99,6 +101,14 @@ object FriendModel : ObservableFriend{
             }
         }
         notifyObserver()
+    }
+
+    fun isAvailable(username: String):Boolean{
+        for(friend in friendList){
+            if(friend.username==username)
+                return friend.connectionStatus==ConnectionStatus.ONLINE
+        }
+        return false
     }
 
 }

@@ -19,8 +19,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.testchatbox.MainActivity
-import com.example.testchatbox.R
+import com.example.testchatbox.*
 import com.example.testchatbox.databinding.FragmentChatBinding
 import com.example.testchatbox.login.model.LoggedInUser
 import com.google.android.material.imageview.ShapeableImageView
@@ -34,7 +33,7 @@ import kotlin.collections.LinkedHashMap
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class ChatFragment : Fragment(), ObserverChat {
+class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
 
     private var _binding: FragmentChatBinding? = null
 
@@ -59,6 +58,7 @@ class ChatFragment : Fragment(), ObserverChat {
         super.onViewCreated(view, savedInstanceState);
         notifSound = MediaPlayer.create(view.context, R.raw.ding)
         loadList();
+        verifyIfInviteRequest();
         if ((arguments?.getString("username")!=null)) {
             selectedChatIndex = findIndexByUsername(arguments?.getString("username")!!)
             binding.chatRoomName.text = arguments?.getString("username")!!
@@ -101,12 +101,15 @@ class ChatFragment : Fragment(), ObserverChat {
     override fun onStart() {
         super.onStart()
         ChatModel.addObserver(this);
+        InviteService.addObserver(this);
         NotificationInfoHolder.changeSelectedChatCode(chatsList[selectedChatIndex]._id);
     }
 
     override fun onStop() {
         super.onStop()
+        SocketHandler.getSocket().off("Chat History Response");
         ChatModel.removeObserver(this);
+        InviteService.removeObserver(this);
         notifSound?.release()
         NotificationInfoHolder.changeSelectedChatCode("");
     }
@@ -118,7 +121,8 @@ class ChatFragment : Fragment(), ObserverChat {
             val messagesBox = binding.textView
             activity?.runOnUiThread(java.lang.Runnable {
                 messagesBox.removeAllViews()
-            })
+            });
+            try {
             for(i in 0 until messageArray.length()){
                 val messageJSON = messageArray.get(i) as JSONObject
                 val message = Message(messageJSON.get("username") as String, messageJSON.get("timestamp") as String, messageJSON.get("message") as String, messageJSON.get("avatar") as String)
@@ -147,15 +151,50 @@ class ChatFragment : Fragment(), ObserverChat {
                 }
 
                 activity?.runOnUiThread(java.lang.Runnable {
-                    binding.chatProgress.visibility = View.GONE
-                    messagesBox.addView(messageContainer)
-                    binding.scrollView.post { binding.scrollView.fullScroll(View.FOCUS_DOWN) }
+                    messagesBox.removeAllViews()
                 })
+                for(i in 0 until messageArray.length()){
+                    val messageJSON = messageArray.get(i) as JSONObject
+                    val message = Message(messageJSON.get("username") as String, messageJSON.get("timestamp") as String, messageJSON.get("message") as String, messageJSON.get("avatar") as String)
+
+                    val messageContainer : View = if (message.username == LoggedInUser.getName()) {
+                        layoutInflater.inflate(R.layout.sent_message, messagesBox, false)
+                    } else {
+                        layoutInflater.inflate(R.layout.received_message, messagesBox, false)
+                    }
+
+                    val messageText: TextView = messageContainer.findViewById(R.id.textMessage)
+                    val usernameMessage: TextView = messageContainer.findViewById(R.id.usernameMessage)
+                    val timeStampMessage: TextView = messageContainer.findViewById(R.id.textDateTime)
+                    val avatar = messageContainer.findViewById<ShapeableImageView>(R.id.avatarProfile)
+
+                    messageText.text = message.message
+                    usernameMessage.text = message.username
+                    timeStampMessage.text = message.timestamp
+
+                    if (resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
+                        Log.d("AVATAR", message.avatar)
+                        avatar.setImageResource(resources.getIdentifier((message.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
+                    } else {
+                        avatar.setImageResource(R.drawable.robot)
+                    }
+
+                    activity?.runOnUiThread(java.lang.Runnable {
+                        binding.chatProgress.visibility = View.GONE
+                        messagesBox.addView(messageContainer)
+                        binding.scrollView.post { binding.scrollView.fullScroll(View.FOCUS_DOWN) }
+                    })
+                }
+                activity?.runOnUiThread(Runnable {
+                    messagesBox.invalidate();
+                    messagesBox.requestLayout();
+                });
             }
-            activity?.runOnUiThread(Runnable {
-                messagesBox.invalidate();
-                messagesBox.requestLayout();
-            });
+            }catch(e:Exception){
+                val appContext = context?.applicationContext
+                if(appContext!=null)
+                    Toast.makeText(appContext, e.toString(), Toast.LENGTH_LONG).show();
+            }
         }
         binding.chatProgress.visibility = View.GONE
         SocketHandler.getSocket().emit("Get Chat History", chatsList[selectedChatIndex]._id)
@@ -264,4 +303,56 @@ class ChatFragment : Fragment(), ObserverChat {
         return 0;
     }
 
+    private fun verifyIfInviteRequest(){
+        val request = InviteService.getFirst() ?: return;
+        if(binding.inviteSection.visibility==View.VISIBLE) return;
+        binding.invitePrompt.text= request.username+ binding.invitePrompt.text;
+        binding.inviteSection.visibility=View.VISIBLE;
+        binding.rejectInvite.setOnClickListener {
+            InviteService.rejectRequest();
+            binding.inviteSection.visibility=View.GONE;
+            verifyIfInviteRequest();
+        }
+        binding.acceptInvite.setOnClickListener {
+            binding.inviteSection.visibility=View.GONE;
+            SocketHandler.getSocket().emit("Join Friend Game", request.roomId)
+            SocketHandler.getSocket().once("Join Room Response"){args->
+                if(args[0]!=null){
+                    val errorMessage = when(args[0] as String){
+                        "0" -> R.string.NO_ERROR
+                        "ROOM-4" -> R.string.ROOM_IS_FULL
+                        "ROOM-5" -> R.string.ROOM_DELETED
+                        "ROOM-6" -> R.string.GAME_STARTED
+                        else -> R.string.ERROR
+                    }
+                    activity?.runOnUiThread(Runnable {
+                        if(errorMessage == R.string.NO_ERROR ){
+                            if(args[1]!=null){
+                                var players= arrayOf<String>()
+                                val playersArray = args[1] as JSONArray
+                                for(i in 0 until playersArray.length()){
+                                    players=players.plus(playersArray.getString(i))
+                                }
+                                InviteService.acceptRequest();
+                                GameRoomModel.initialise(GameRoom("Name", request.roomId, Visibility.Public, players, hasStarted = false, request.gameType ,-1), false);
+                                findNavController().navigate(R.id.action_MainMenuFragment_to_gameRoomFragment)
+                            }
+                        }else{
+                            InviteService.rejectRequest();
+                            val appContext = context?.applicationContext
+                            Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
+                            verifyIfInviteRequest();
+                        }
+                    });
+                }
+            }
+
+        }
+    }
+
+    override fun updateInvite() {
+        activity?.runOnUiThread(Runnable {
+            verifyIfInviteRequest();
+        });
+    }
 }

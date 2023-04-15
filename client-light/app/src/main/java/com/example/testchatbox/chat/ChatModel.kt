@@ -26,7 +26,7 @@ class Message(val username:String, val timestamp:String, val message: String, va
     }
 }
 
-class Chat(val chatType : ChatType, var chatName :String, val _id:String)
+class Chat(val chatType : ChatType, var chatName :String, val _id:String, val isOwner: Boolean?)
 
 interface ObserverChat {
     fun updateMessage(chatCode: String, message: Message)
@@ -73,8 +73,17 @@ object ChatModel : ObservableChat {
                 for (i in 0 until chats.length()) {
                     val chat = chats.getJSONObject(i)
                     if(!chatList.containsKey(chat.get("_id"))){
-                        chatList[chat.get("_id") as String]=(Chat(ChatType.fromInt(chat.get("chatType") as Int), chat.get("chatName") as String, chat.get("_id") as String))
-                        changed=true;
+                        var isOwner= false;
+                        try {
+                            isOwner=chat.get("isChatOwner") as Boolean
+                        }
+                        catch (e:Exception){
+                            Log.i("Chat", "No owner")
+                        }
+                        finally {
+                            chatList[chat.get("_id") as String]=(Chat(ChatType.fromInt(chat.get("chatType") as Int), chat.get("chatName") as String, chat.get("_id") as String, isOwner))
+                            changed=true;
+                        }
                     }
                 }
                 if(changed) notifyNewChanel();
@@ -93,7 +102,7 @@ object ChatModel : ObservableChat {
                     Log.i("JSON", chat.toString())
                     if(!publicChatList.containsKey(chat.get("_id"))){
                         publicChatList[chat.get("_id") as String]=(Chat(ChatType.fromInt(chat.get("chatType") as Int),
-                            chat.get("chatName") as String, chat.get("_id") as String))
+                            chat.get("chatName") as String, chat.get("_id") as String, false))
                             changed=true;
                     }
                 }
@@ -117,7 +126,7 @@ object ChatModel : ObservableChat {
             "fr" -> chatName = "Chat de partie"
             "en" -> chatName = "Game chat"
         }
-        chatList[gameRoom.id] = Chat(ChatType.GLOBAL, chatName,  gameRoom.id)
+        chatList[gameRoom.id] = Chat(ChatType.GLOBAL, chatName,  gameRoom.id, null)
     }
 
     fun removeGameChat(gameRoom: GameRoom){
@@ -190,6 +199,11 @@ object ChatModel : ObservableChat {
                 notifyNewMessage(chatCode, message);
             }
         }
+        SocketHandler.getSocket().on("Chat Deleted"){args->
+            if(args[0] != null){
+                deletePublicChat(args[0] as String);
+            }
+        }
     }
 
     fun removePrivateChat(username: String){
@@ -197,6 +211,19 @@ object ChatModel : ObservableChat {
         if(id=="-1")  {Log.i("Chat", "No modify :$username"); return}
         chatList.remove(id);
         notifyNewChanel();
+    }
+
+    fun deletePublicChat(id: String){
+        var chat = chatList[id];
+        if(chat!=null) {
+            chatList.remove(id);
+            notifyNewChanel();
+        }
+        chat = publicChatList[id];
+        if(chat!=null) {
+            publicChatList.remove(id);
+            notifyNewPublicChanel();
+        }
     }
 
     fun modifyPrivateChat(oldUsername: String, newUsername:String){

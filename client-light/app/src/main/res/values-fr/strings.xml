@@ -31,8 +31,10 @@
     <string name="queueMessage">À la recherche d\'un tournoi</string>
     <string name="FriendCode">Entrez le code se trouvant sur le profil de votre ami pour l\'ajouter </string>
 
+
+    <string name ="InvitePrompt"> vous a invité à joindre sa partie</string>
     <string name="friendModified"> a remplacé son nom par </string>
-    <string name="friendRemoved"> vous a retiré de sa liste d\'amis</string>
+    <string name="friendRemoved"> n\'est plus votre ami</string>
     <string name="friendChat">Voir clavardage</string>
     <string name="friendProfile">Voir le profil</string>
     <string name="friendJoin">Inviter dans une partie</string>
@@ -40,7 +42,7 @@
 
 
     <string name="changeUsername">Changement de votre nom d\'utilisateur </string>
-
+    <string name="deleteChat">Vous vous apprêter à effacer ce chat public. Voulez vous continuer?</string>
 
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Menu principal</string>
@@ -80,6 +82,8 @@
     <string name="ROOM_PASSWORD_INCORRECT">Le mot de passe est incorrect</string>
     <string name="JOIN_REQUEST_REFUSED">Votre demande d\'adhésion a été refusée</string>
     <string name="ROOM_IS_FULL">La salle est déjà pleine</string>
+    <string name="ROOM_DELETED">La salle n\'existe plus</string>
+    <string name="GAME_STARTED">La partie est déjà commencée</string>
     <string name="ReplaceLetter"><i>Entrez une lettre...</i></string>
     <string name="MSG_1"><![CDATA[<b>%1$s</b> a placé <i>%2$s</i> pour %3$s point(s).]]></string>
     <string name="MSG_2"><![CDATA[<b>%1$s</b> a tenté de placer un mot invalide.]]></string>
@@ -155,7 +159,7 @@
     <string name="tournament_ranking">classement du tournoi</string>
     <string name="pas_besoin_d_indices">PAS BESOIN D\'INDICES</string>
     <string name="joined_public_chats">chats publics rejoints</string>
-    <string name="pss_you_can_quit_any_room_by_clicking_it">(pss…tu peux quitter un chat en cliquant dessus)</string>
+    <string name="pss_you_can_quit_any_room_by_clicking_it">(pss…tu peux quitter un chat ou effacer un chat que tu as créé en cliquant dessus)</string>
     <string name="create_a_public_chat">Créer un chat public</string>
     <string name="join_a_public_chat">joindre un chat public</string>
     <string name="you_can_create_a_public_chat_or_join_one_from_the_list_on_the_right">Vous pouvez créer un chat public ou rejoindre un de la liste de droite.</string>
