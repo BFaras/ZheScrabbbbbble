@@ -1,5 +1,6 @@
 package com.example.testchatbox.chat
 
+import NotificationInfoHolder
 import SocketHandler
 import android.util.Log
 import com.example.testchatbox.GameRoom
@@ -116,6 +117,10 @@ object ChatModel : ObservableChat {
         return ArrayList(chatList.values);
     }
 
+    fun getListAsMap() : LinkedHashMap<String, Chat> {
+        return chatList;
+    }
+
     fun getPublicList() : ArrayList<Chat> {
         return ArrayList(publicChatList.values);
     }
@@ -131,6 +136,8 @@ object ChatModel : ObservableChat {
 
     fun removeGameChat(gameRoom: GameRoom){
         chatList.remove(gameRoom.id)
+        NotificationInfoHolder.changeSelectedChatCode(gameRoom.id)
+        NotificationInfoHolder.changeSelectedChatCode("")
     }
 
     fun joinPublicList(_id:String){

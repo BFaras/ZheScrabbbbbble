@@ -99,6 +99,7 @@ private var _binding: FragmentMainMenuBinding? = null
     override fun onStop() {
         super.onStop()
         NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        NotificationInfoHolder.setFunctionOnChatDeleted(null);
         InviteService.removeObserver(this);
         notifSound?.release()
     }
@@ -107,6 +108,7 @@ private var _binding: FragmentMainMenuBinding? = null
         isChatIconChanged = false;
         NotificationInfoHolder.startObserverChat();
         NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
+        NotificationInfoHolder.setFunctionOnChatDeleted(::changeToNoNotifChatIcon);
         notifSound = MediaPlayer.create(context, R.raw.ding)
 
         notifSound?.setOnCompletionListener { notifSound?.release() }
@@ -125,6 +127,13 @@ private var _binding: FragmentMainMenuBinding? = null
     fun changeToNotifChatIcon() {
         binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
         isChatIconChanged = true;
+    }
+
+    fun changeToNoNotifChatIcon() {
+        if (isChatIconChanged) {
+            binding.buttonchat.setBackgroundResource(R.drawable.ic_chat);
+            isChatIconChanged = false;
+        }
     }
 
     private fun verifyIfInviteRequest(){

@@ -1,9 +1,11 @@
 package com.example.testchatbox
 
 import SocketHandler
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -32,6 +34,8 @@ class BracketFragment : Fragment(), Observer {
     private val binding get() = _binding!!
     private lateinit var timer: CountDownTimer
     var avatars = mutableMapOf<String, String>()
+    private var isChatIconChanged = false;
+    private var notifSound: MediaPlayer? = null;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +47,7 @@ class BracketFragment : Fragment(), Observer {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupChatNotifs(view.context)
         WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
             // Hide both the status bar and the navigation bar
             hide(WindowInsetsCompat.Type.systemBars())
@@ -334,6 +339,9 @@ class BracketFragment : Fragment(), Observer {
 
     override fun onStop() {
         super.onStop()
+        NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        NotificationInfoHolder.setFunctionOnChatDeleted(null);
+        notifSound?.release()
         TournamentModel.removeObserver(this);
     }
     private fun setTimer(timeRemaining: Long): CountDownTimer {
@@ -346,6 +354,38 @@ class BracketFragment : Fragment(), Observer {
             override fun onFinish() {
                 cancel()
             }
+        }
+    }
+
+    fun setupChatNotifs(context: Context) {
+        isChatIconChanged = false;
+        NotificationInfoHolder.startObserverChat();
+        NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
+        NotificationInfoHolder.setFunctionOnChatDeleted(::changeToNoNotifChatIcon);
+        notifSound = MediaPlayer.create(context, R.raw.ding)
+
+        notifSound?.setOnCompletionListener { notifSound?.release() }
+
+        if(NotificationInfoHolder.areChatsUnread())
+            changeToNotifChatIcon();
+    }
+
+    fun playNotifSoundAndChangeIcon() {
+        if (!isChatIconChanged) {
+            changeToNotifChatIcon()
+            notifSound?.start()
+        }
+    }
+
+    fun changeToNotifChatIcon() {
+        binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+        isChatIconChanged = true;
+    }
+
+    fun changeToNoNotifChatIcon() {
+        if (isChatIconChanged) {
+            binding.buttonchat.setBackgroundResource(R.drawable.ic_chat);
+            isChatIconChanged = false;
         }
     }
 

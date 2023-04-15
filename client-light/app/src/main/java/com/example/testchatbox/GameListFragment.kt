@@ -382,6 +382,7 @@ class GameListFragment : Fragment(), ObserverInvite {
         super.onStop()
         InviteService.addObserver(this);
         NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        NotificationInfoHolder.setFunctionOnChatDeleted(null);
         notifSound?.release()
     }
 
@@ -389,6 +390,7 @@ class GameListFragment : Fragment(), ObserverInvite {
         isChatIconChanged = false;
         NotificationInfoHolder.startObserverChat();
         NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
+        NotificationInfoHolder.setFunctionOnChatDeleted(::changeToNoNotifChatIcon);
         notifSound = MediaPlayer.create(context, R.raw.ding)
 
         notifSound?.setOnCompletionListener { notifSound?.release() }
@@ -407,6 +409,13 @@ class GameListFragment : Fragment(), ObserverInvite {
     fun changeToNotifChatIcon() {
         binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
         isChatIconChanged = true;
+    }
+
+    fun changeToNoNotifChatIcon() {
+        if (isChatIconChanged) {
+            binding.buttonchat.setBackgroundResource(R.drawable.ic_chat);
+            isChatIconChanged = false;
+        }
     }
 
     private fun verifyIfInviteRequest(){
