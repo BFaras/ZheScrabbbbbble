@@ -52,6 +52,19 @@ class BracketFragment : Fragment(), Observer {
         }
 
 
+        for (game in TournamentModel.gamesData) {
+            SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray(game.players))
+            SocketHandler.getSocket().on("Avatars from Usernames Response") { args ->
+                val avatarListJSON = args[0] as JSONObject
+                Log.d("AVATARS JSON IN ROOM", args[0].toString())
+
+                for (i in 0 until avatarListJSON.length()) {
+                    avatars[avatarListJSON.names()?.getString(i) as String] = (avatarListJSON.names()?.getString(i)?.let { avatarListJSON.get(it) }) as String
+                }
+            }
+        }
+        Log.d("AVATARS IN TOURNAMENT", avatars.toString())
+
 
         binding.buttonchat.setOnClickListener {
             findNavController().navigate(R.id.action_bracketFragment_to_ChatFragment)
@@ -143,20 +156,9 @@ class BracketFragment : Fragment(), Observer {
     }
 
     override fun update() {
-        for (game in TournamentModel.gamesData) {
-            SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray(game.players))
-            SocketHandler.getSocket().on("Avatars from Usernames Response") { args ->
-                val avatarListJSON = args[0] as JSONObject
-                Log.d("AVATARS JSON IN ROOM", args[0].toString())
-
-                for (i in 0 until avatarListJSON.length()) {
-                    avatars[avatarListJSON.names()?.getString(i) as String] = (avatarListJSON.names()?.getString(i)?.let { avatarListJSON.get(it) }) as String
-                }
-            }
-        }
-        Log.d("AVATARS IN TOURNAMENT", avatars.toString())
-
         activity?.runOnUiThread(Runnable {
+            Log.i("Update", "Bracket")
+            Thread.sleep(10);
             if(GameRoomModel.gameRoom!=null && GameRoomModel.gameRoom!!.hasStarted)
                 findNavController().navigate(R.id.action_bracketFragment_to_fullscreenFragment);
             if(TournamentModel.tournamentTimer.phase==2)
@@ -173,6 +175,7 @@ class BracketFragment : Fragment(), Observer {
                         binding.semi1player2.text = game.players[1]
 
                         binding.Semi1.setOnClickListener {
+                            Log.i("Semi1", (game.status==GameStatus.IN_PROGRESS).toString())
                             if(game.status==GameStatus.IN_PROGRESS)
                                 observeGame(game.roomCode)
                         }
@@ -208,6 +211,7 @@ class BracketFragment : Fragment(), Observer {
                         binding.semi2player2.text = game.players[1]
 
                         binding.Semi2.setOnClickListener {
+                            Log.i("Semi2", (game.status==GameStatus.IN_PROGRESS).toString())
                             if(game.status==GameStatus.IN_PROGRESS)
                                 observeGame(game.roomCode)
                         }

@@ -46,11 +46,12 @@ class RankingFragment : Fragment() {
         binding.Rank4.text=player[3]
     }
 
-    fun getRank():Array<String>{
-        val players = arrayOf<String>("N/A","N/A","N/A","N/A")
+    private fun getRank():Array<String>{
+        val players = arrayOf("N/A","N/A","N/A","N/A")
+        Log.i("Game players", players.size.toString())
         for(game in TournamentModel.gamesData){
             if(game.type=="Final1"){
-                Log.i("Game players", game.players.toString())
+                Log.i("Game players", game.players.size.toString())
                 players[0]= game.players[game.winnerIndex]
                 players[1]=game.players[if(game.winnerIndex==1)0 else 1]
             }

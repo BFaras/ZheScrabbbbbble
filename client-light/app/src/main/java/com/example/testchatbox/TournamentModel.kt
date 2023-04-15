@@ -2,6 +2,7 @@ package com.example.testchatbox
 
 import SocketHandler
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.navigation.fragment.findNavController
 import org.json.JSONArray
 import org.json.JSONObject
@@ -83,6 +84,7 @@ object TournamentModel :Observable{
             if(game.roomCode==gameId)
                 GameRoomModel.initialise(GameRoom(game.type, gameId, Visibility.Public, game.players, hasStarted = true, GameType.Classic, 0),observer)
         }
+        Log.i("Update", "GameRoom")
     }
 
 }
