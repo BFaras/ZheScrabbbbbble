@@ -52,13 +52,23 @@ class RankingFragment : Fragment() {
         for(game in TournamentModel.gamesData){
             if(game.type=="Final1"){
                 Log.i("Game players", game.players.size.toString() + game.players[0])
-                players[0]= game.players[game.winnerIndex]
+                if(game.winnerIndex!=-1){
+                players[0]=game.players[game.winnerIndex]
                 players[1]=game.players[if(game.winnerIndex==1)0 else 1]
+                }else{
+                    players[0]="N/A"
+                    players[1]="N/A"
+                }
             }
             else if(game.type=="Final2"){
                 Log.i("Game players", game.players.toString()+ game.players[0])
+                if(game.winnerIndex!=-1){
                 players[2]= game.players[game.winnerIndex]
                 players[3]=game.players[if(game.winnerIndex==1)0 else 1]
+                }else{
+                    players[2]="N/A"
+                    players[3]="N/A"
+                }
             }
         }
         return players

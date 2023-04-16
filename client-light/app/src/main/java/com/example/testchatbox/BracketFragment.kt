@@ -159,22 +159,21 @@ class BracketFragment : Fragment(), Observer {
 
     override fun update() {
         activity?.runOnUiThread(Runnable {
-            for (game in TournamentModel.getGameData()) {
-                SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray(game.players))
-            }
-            if(TournamentModel.tournamentTimer.phase==2){
-                binding.quitBtn.setOnClickListener {
-                    findNavController().navigate(R.id.action_bracketFragment_to_rankingFragment)
-                }
-                binding.quitBtn.setText(R.string.TournamentResult)
-            }
-            else if(GameRoomModel.gameRoom!=null && GameRoomModel.gameRoom!!.hasStarted)
-                findNavController().navigate(R.id.action_bracketFragment_to_fullscreenFragment);
-            if(::timer.isInitialized) timer.cancel()
-            timer = setTimer(TournamentModel.tournamentTimer.timeRemaning.toLong()*1000)
-            timer.start()
             try {
-
+                for (game in TournamentModel.getGameData()) {
+                    SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray(game.players))
+                }
+                if(TournamentModel.tournamentTimer.phase==2){
+                    binding.quitBtn.setOnClickListener {
+                        findNavController().navigate(R.id.action_bracketFragment_to_rankingFragment)
+                    }
+                    binding.quitBtn.setText(R.string.TournamentResult)
+                }
+                else if(GameRoomModel.gameRoom!=null && GameRoomModel.gameRoom!!.hasStarted)
+                    findNavController().navigate(R.id.action_bracketFragment_to_fullscreenFragment);
+                if(::timer.isInitialized) timer.cancel()
+                timer = setTimer(TournamentModel.tournamentTimer.timeRemaning.toLong()*1000)
+                timer.start()
                 for (game in TournamentModel.getGameData()) {
                     Log.d("GAME TOURNAMENT", game.toString())
                     when (game.type) {
