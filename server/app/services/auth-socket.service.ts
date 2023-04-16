@@ -93,6 +93,7 @@ export class AuthSocketService {
         const userId = await this.authentificationService.getUserId(username);
         this.accountInfoService.setUsername(socket, username);
         this.accountInfoService.setUserId(socket, userId);
+        socket.data.secondary = isSecondarySocket;
         await this.joinUserChatRooms(userId, socket);
         await this.joinUserFriendsRooms(userId, socket);
         await this.chatService.joinGlobalChat(userId);

@@ -22,7 +22,6 @@ export class LanguageComponent {
     this.translate.use(lang);
     this.accountService.setLanguage(lang);
     if (updateSocket) this.updateLanguage(lang);
-    //localStorage.setItem("currentLang", lang);
   }
 
   resetActive() {
