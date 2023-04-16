@@ -40,23 +40,28 @@ class QueueFragment : Fragment(), Observer {
         super.onViewCreated(view, savedInstanceState)
         setupChatNotifs(view.context)
 
-        WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
-            // Hide both the status bar and the navigation bar
-            hide(WindowInsetsCompat.Type.systemBars())
-            hide(WindowInsetsCompat.Type.statusBars())
-            // Behavior of system bars
-            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        if(TournamentModel.inTournament){
+            findNavController().navigate(R.id.action_queueFragment_to_bracketFragment);
         }
-        binding.buttonchat.setOnClickListener {
-            findNavController().navigate(R.id.action_queueFragment_to_ChatFragment)
-        }
-        binding.buttonfriends.setOnClickListener {
-            findNavController().navigate(R.id.action_queueFragment_to_friendsFragment)
-        }
-        TournamentModel.queueForTournament()
-        binding.annulerBtn.setOnClickListener{
-            TournamentModel.exitTournament()
-            findNavController().navigate(R.id.action_queueFragment_to_MainMenuFragment)
+        else{
+            WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
+                // Hide both the status bar and the navigation bar
+                hide(WindowInsetsCompat.Type.systemBars())
+                hide(WindowInsetsCompat.Type.statusBars())
+                // Behavior of system bars
+                systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+            binding.buttonchat.setOnClickListener {
+                findNavController().navigate(R.id.action_queueFragment_to_ChatFragment)
+            }
+            binding.buttonfriends.setOnClickListener {
+                findNavController().navigate(R.id.action_queueFragment_to_friendsFragment)
+            }
+            TournamentModel.queueForTournament()
+            binding.annulerBtn.setOnClickListener{
+                TournamentModel.exitTournament()
+                findNavController().navigate(R.id.action_queueFragment_to_MainMenuFragment)
+            }
         }
 
     }

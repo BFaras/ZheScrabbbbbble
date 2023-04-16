@@ -157,6 +157,11 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
             }
             gameModel.getAvatars()
             gameModel.getGameState()
+            if(binding.observedHolder.visibility == VISIBLE) {
+                activity?.runOnUiThread(Runnable {
+                    findNavController().navigate(R.id.action_fullscreenFragment_to_bracketFragment2);
+                });
+            }
         }
 
         gameObserver = Observer<GameState> { gameState ->
@@ -529,6 +534,12 @@ class GamePageFragment : Fragment(), com.example.testchatbox.Observer {
                     SocketHandler.getSocket().emit("Abandon")
                     GameRoomModel.leaveRoom()
                     if(TournamentModel.inTournament) {
+                        SocketHandler.getSocket().off("Game Started")
+                        SocketHandler.getSocket().on("Game Started"){args->
+                            GameRoomModel.leaveRoom()
+                            val roomCode = args[1] as String;
+                            TournamentModel.populateGameRoomModel(roomCode, false);
+                        }
                         findNavController().navigate(R.id.action_fullscreenFragment_to_bracketFragment2)
                     } else {
                         findNavController().navigate(R.id.action_fullscreenFragment_to_MainMenuFragment)

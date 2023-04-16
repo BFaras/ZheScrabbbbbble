@@ -13,6 +13,7 @@ object GameHistoryModel : Observable {
     var playRequest: PlayerMessage? = null;
 
     fun initialise(){
+        reset();
         SocketHandler.getSocket().on("Message Action History"){ args->
             val messageJSON = args[0] as JSONObject
             val messageArray = messageJSON.get("values") as JSONArray
