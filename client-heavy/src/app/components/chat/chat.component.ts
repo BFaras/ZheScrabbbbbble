@@ -3,6 +3,7 @@ import { ChatMessage } from '@app/classes/chat-info';
 import { Message } from '@app/classes/message';
 import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
 import { MessageParserService } from '@app/services/message-parser-service/message-parser.service';
 import { ThemesService } from '@app/services/themes-service/themes-service';
 import { Subscription } from 'rxjs';
@@ -31,7 +32,9 @@ export class ChatComponent implements OnDestroy, AfterViewChecked {
     subscriptionMessage: Subscription;
     subscriptionHistoryMessage: Subscription;
 
-    constructor(private chatService: ChatService, private messageParserService: MessageParserService, private accountService: AccountService, private themeService: ThemesService) {
+    constructor(private chatService: ChatService,
+        private messageParserService: MessageParserService, private accountService: AccountService,
+        private themeService: ThemesService, private letterAdderService: LetterAdderService) {
 
         this.subscriptionHistoryMessage = this.chatService.getChatHistory(this.chatService.getChatInGameRoom()).subscribe((chatHistory: ChatMessage[]) => {
             chatHistory.forEach((chatMessage) => {
@@ -79,6 +82,7 @@ export class ChatComponent implements OnDestroy, AfterViewChecked {
     isReceiver() {
         this.switch = !this.switch;
         this.receiver.emit('chatbox' + this.switch);
+        this.letterAdderService.getLetterNotAcceptedObservable().next(true)
     }
 
     ngOnDestroy() {
