@@ -25,7 +25,7 @@ data class TournamentTimer (var timeRemaning:Int, var phase:Int)
 data class GameData (val type: String, val status: GameStatus, val players: Array<String>, val winnerIndex: Int, val roomCode: String)
 
 object TournamentModel :Observable{
-    private var inQueue=false;
+    var inQueue=false;
     override var observers: ArrayList<Observer> = arrayListOf()
     var gamesData : ArrayList<GameData> = arrayListOf()
     var tournamentTimer:TournamentTimer = TournamentTimer(0, 0)
@@ -78,6 +78,7 @@ object TournamentModel :Observable{
         }
 
         SocketHandler.getSocket().on("Game Started"){args->
+            GameRoomModel.leaveRoom()
             Log.i("Update", "GameStarted")
             val roomCode = args[1] as String;
             populateGameRoomModel(roomCode, false);
@@ -87,7 +88,6 @@ object TournamentModel :Observable{
 
 
     fun populateGameRoomModel(gameId:String, observer: Boolean){
-        GameRoomModel.leaveRoom()
         for(game in gamesData){
             if(game.roomCode==gameId)
                 GameRoomModel.initialise(GameRoom(game.type, gameId, Visibility.Public, game.players, hasStarted = true, GameType.Classic, 0),observer)
