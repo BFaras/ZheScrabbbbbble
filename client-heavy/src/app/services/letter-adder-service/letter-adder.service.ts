@@ -59,6 +59,7 @@ export class LetterAdderService {
                 this.arrowDirection = !this.arrowDirection;
             else this.arrowDirection = true;
             this.addArrowSquare();
+            this.letterAdderMode = "keyPress"
             this.prevActiveSquare = this.activeSquare;
         }
     }
@@ -112,7 +113,7 @@ export class LetterAdderService {
                 break;
             }
             default: {
-                if (this.letterAdderMode === "keyPress" || this.letterAdderMode === "") {
+                if (this.letterAdderMode === "keyPress") {
                     this.addLetters(key);
                 }
             }

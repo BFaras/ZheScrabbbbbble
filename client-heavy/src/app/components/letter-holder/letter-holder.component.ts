@@ -56,6 +56,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     }
 
     cancelManipulationAndSelection(event: CdkDragStart) {
+        this.mouseIsIn = false;
         this.manipulationRack.cancelAll(isSelected);
         this.manipulationRack.cancelManipulation()
     }
@@ -81,11 +82,13 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         if (this.isObserver())
             return;
         if (e.button === MouseButton.Right && !this.isDisabled()) {
+            this.letterAdderService.letterAdderMode = ""
             this.letterAdderService.getLetterNotAcceptedObservable().next(true)
             this.manipulationRack.cancelManipulation();
             this.manipulationRack.selectLetterOnRack(indexOfElement + 1);
             this.makingSelection = Object.values(isSelected).some((selection) => selection === true);
         } else if (e.button === MouseButton.Left) {
+            this.letterAdderService.letterAdderMode = ""
             this.letterAdderService.getLetterNotAcceptedObservable().next(true)
             e.stopPropagation();
             this.makingSelection = false;
@@ -249,6 +252,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     }
 
     isReceiver() {
+        console.log("isReceuver")
         this.switch = !this.switch;
         this.receiver.emit('letterholder' + this.switch);
         this.mouseIsIn = true;
