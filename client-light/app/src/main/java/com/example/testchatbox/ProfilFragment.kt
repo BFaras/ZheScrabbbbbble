@@ -713,7 +713,9 @@ class ProfilFragment : Fragment() {
             }
             when (stat.name) {
                 "Points Average" -> statValue.text = stat.statAmount.toFloat().toBigDecimal().setScale(1, RoundingMode.UP).toDouble().toString()
-                "Average Game Time" -> statValue.text = stat.statAmount.toFloat().toBigDecimal().setScale(1, RoundingMode.UP).toDouble().toString()
+                "Average Game Time" -> statValue.text = "${
+                    stat.statAmount.toFloat().toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+                }s"
                 else -> statValue.text = stat.statAmount.toString()
             }
             binding.statsLog.addView(statsHolder)
