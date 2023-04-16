@@ -17,6 +17,7 @@ export class AvatarPopUpComponent {
     private accountService: AccountService) {
     this.accountService.updateAvatars();
     this.allAvatars = this.accountService.getAvatars();
+    console.log(this.allAvatars);
     this.lockedAvatars = this.accountService.getLockedAvatars();
   }
 

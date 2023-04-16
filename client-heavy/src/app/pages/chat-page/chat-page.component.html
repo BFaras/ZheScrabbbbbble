@@ -15,7 +15,7 @@
         <div class="chats-container">
             <ng-container *ngFor="let chat of chatList">
                 <button class="chat-button" [ngClass]="{'selected': chat._id === selectedChat}"  id="{{ chat._id }}" *ngIf="chat.chatType === visibility" (click)="selectChat(chat._id)" > 
-                    <p class="chat-content">{{ chat.chatName }}</p>
+                    <p class="chat-content">{{ chat.chatName === 'Room Chat' ? ('CHATBOX.ROOM-CHAT' | translate) : chat.chatName }}</p>
                 </button>
             </ng-container>
         </div>

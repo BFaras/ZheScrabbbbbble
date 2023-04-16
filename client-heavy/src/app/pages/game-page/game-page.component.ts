@@ -115,7 +115,7 @@ export class GamePageComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     alert() {
-        const text = this.accountService.getLanguage() === 'fr' ? 'Êtes-vous sûr(e) de vouloir quitter la partie? Tout votre progrès sera perdu.' : 'Are you sure you want to quit? All progress will be lost.';
+        const text = this.accountService.getLanguage() === 'fr' ? 'Êtes-vous sûr(e) de vouloir quitter la partie? Cette action est irréversible.' : "Are you sure you want to quit the current game? You can't come back once you quit.";
         const dialogRef = this.dialog.open(ConfrimPopUpComponent, {
             width: '450px',
             height: '230px',
