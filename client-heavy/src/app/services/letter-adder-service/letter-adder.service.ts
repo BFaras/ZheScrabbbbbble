@@ -411,28 +411,39 @@ export class LetterAdderService {
             }
         })
         if (!this.arrowDirection) {
+            console.log("vertical")
             LettersOnOneDirection = new Map<string, string>([...LettersOnOneDirection.entries()].sort());
             let LettersOnOneDirectionArray = Array.from(LettersOnOneDirection.keys())
-            LettersOnOneDirectionArray = LettersOnOneDirectionArray.filter((value) => value.charCodeAt(0) >= firstValuePosition.charCodeAt(0))
+            console.log(LettersOnOneDirectionArray)
+            LettersOnOneDirectionArray = LettersOnOneDirectionArray.filter((value) => value.charCodeAt(0) >= firstValuePosition.charCodeAt(0) && Number(value.substring(1)) === Number(firstValuePosition.substring(1)))
+            console.log(LettersOnOneDirectionArray)
             let positionLetter = LettersOnOneDirectionArray[0][0].charCodeAt(0)
+            console.log(positionLetter)
             for (const position of LettersOnOneDirectionArray) {
                 if (position[0].charCodeAt(0) === positionLetter) {
+                    console.log(position[0].charCodeAt(0));
+                    console.log(positionLetter)
                     if (position === lastValuePosition) {
                         return true
                     }
                     positionLetter += 1
                 } else {
+                    console.log(position)
+                    console.log(lastValuePosition)
                     return false
                 }
             }
         } else {
+            console.log("horizontal")
             LettersOnOneDirection = new Map([...LettersOnOneDirection.entries()].sort(
                 (leftLetter, rightLetter) => {
                     return leftLetter[0].substring(1, leftLetter[0].length).
                         localeCompare(rightLetter[0].substring(1, rightLetter[0].length), undefined, { numeric: true })
                 }));
             let LettersOnOneDirectionArray = Array.from(LettersOnOneDirection.keys())
+            console.log(LettersOnOneDirectionArray)
             LettersOnOneDirectionArray = LettersOnOneDirectionArray.filter((value) => Number(value.substring(1)) >= Number(firstValuePosition.substring(1)))
+            console.log(LettersOnOneDirectionArray)
             let positionLetter = LettersOnOneDirectionArray[0].substring(1);
 
             for (const position of LettersOnOneDirectionArray) {
