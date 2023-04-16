@@ -481,6 +481,7 @@ export class SocketManager {
             });
 
             socket.on('disconnect', async () => {
+                if(socket.data.secondary) return;
                 console.log(new Date().toLocaleTimeString() + ' | User Disconnected from server');
                 this.usersStatusService.removeUserFromInGameList(this.accountInfoService.getUserId(socket));
                 this.usersStatusService.removeOnlineUser(this.accountInfoService.getUserId(socket));

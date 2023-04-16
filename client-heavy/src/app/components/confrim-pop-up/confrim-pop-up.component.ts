@@ -25,5 +25,4 @@ export class ConfrimPopUpComponent implements OnInit {
     this.dialogRef.close({ status: false })
 
   }
-
 }

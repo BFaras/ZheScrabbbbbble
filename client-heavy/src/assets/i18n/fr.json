@@ -57,7 +57,8 @@
         "DEFAULT": "Tapez une commande",
         "SEND": "Envoyer",
         "JOIN": "Joindre des chats publics",
-        "SELECT": "Veuillez sélectionner un chat à gauche"
+        "SELECT": "Veuillez sélectionner un chat à gauche",
+        "ROOM-CHAT": "Chat de partie"
     },
     "PUBLIC-CHATS":{
         "MESSAGEJOIN":"Joignez des chats publiques",

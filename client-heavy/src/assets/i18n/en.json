@@ -57,7 +57,8 @@
         "DEFAULT": "Type a command",
         "SEND": "Send",
         "JOIN": "Join Public Chats",
-        "SELECT": "Please select a chat on the left"
+        "SELECT": "Please select a chat on the left",
+        "ROOM-CHAT": "Game chat"
     },
     "PUBLIC-CHATS":{
         "MESSAGEJOIN":"Join public chats here",

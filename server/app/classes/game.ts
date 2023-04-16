@@ -219,7 +219,7 @@ export class Game {
                 playerIndex = i;
             }
         }
-        return this.players[playerIndex].getName();
+        return this.players[playerIndex]?.getName();
     }
 
     async attemptVirtualPlay(): Promise<CommandDetails | null> {
