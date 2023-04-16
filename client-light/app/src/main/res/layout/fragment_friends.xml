@@ -202,8 +202,7 @@
         android:background="@drawable/background_direction_panel"
         android:backgroundTint="?colorSecondary"
         android:visibility="gone">
-
-
+        
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -394,7 +394,7 @@
                     android:textStyle="bold"
                     android:textColor="?colorOnPrimary"
                     android:textAllCaps="true"
-                    android:text="waiting for the team approval"></TextView>
+                    android:text="@string/waiting_for_team_approval"></TextView>
                 <ProgressBar
                     android:layout_width="50dp"
                     android:layout_height="50dp"

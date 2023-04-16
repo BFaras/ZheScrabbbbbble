@@ -129,7 +129,7 @@ class GameListFragment : Fragment(), ObserverInvite {
         }
         val username = arguments?.getString("username");
         if(username!=null){
-            binding.gameListSection.visibility=View.GONE;
+            binding.gameListSection.visibility=View.INVISIBLE;
             binding.createBtn.setOnClickListener{
                 createRoom();
                 SocketHandler.getSocket().emit("Invite Friend To Game", username);
@@ -421,7 +421,7 @@ class GameListFragment : Fragment(), ObserverInvite {
     private fun verifyIfInviteRequest(){
         val request = InviteService.getFirst() ?: return;
         if(binding.inviteSection.visibility==View.VISIBLE) return;
-        binding.invitePrompt.text= request.username+ binding.invitePrompt.text;
+        binding.invitePrompt.text=  "${request.username} ${binding.invitePrompt.text}";
         binding.inviteSection.visibility=View.VISIBLE;
         binding.rejectInvite.setOnClickListener {
             InviteService.rejectRequest();
