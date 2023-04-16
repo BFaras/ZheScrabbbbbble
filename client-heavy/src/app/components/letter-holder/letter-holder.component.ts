@@ -206,7 +206,6 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
                 playerIndex = 0;
             } else {
                 for (playerIndex = 0; playerIndex < gameState.players.length; playerIndex++) {
-                    console.log(this.accountService.getUsername())
                     if (gameState.players[playerIndex].username === this.accountService.getUsername()) break;
                 }
             }
@@ -252,7 +251,6 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     }
 
     isReceiver() {
-        console.log("isReceuver")
         this.switch = !this.switch;
         this.receiver.emit('letterholder' + this.switch);
         this.mouseIsIn = true;

@@ -20,7 +20,6 @@ export class BlankTilePopUpComponent implements OnInit {
   }
 
   verifyItIsNotALetter() {
-    console.log(this.letterChosen.charCodeAt(0))
     if (this.letterChosen.charCodeAt(0) < 65 ||
       this.letterChosen.charCodeAt(0) > 90 && this.letterChosen.charCodeAt(0) < 97 ||
       this.letterChosen.charCodeAt(0) > 122)

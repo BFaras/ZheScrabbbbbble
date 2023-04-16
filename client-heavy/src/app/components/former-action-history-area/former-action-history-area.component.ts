@@ -25,7 +25,7 @@ export class FormerActionHistoryAreaComponent implements OnInit {
 
 
   public scrollBottom() {
-    console.log(this.scroll.nativeElement.scrollTop);
+
     this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
 
   }

@@ -82,7 +82,8 @@ export class ChatComponent implements OnDestroy, AfterViewChecked {
     isReceiver() {
         this.switch = !this.switch;
         this.receiver.emit('chatbox' + this.switch);
-        this.letterAdderService.getLetterNotAcceptedObservable().next(true)
+        this.letterAdderService.getLetterNotAcceptedObservable().next(true);
+        this.letterAdderService.letterAdderMode = "";
     }
 
     ngOnDestroy() {

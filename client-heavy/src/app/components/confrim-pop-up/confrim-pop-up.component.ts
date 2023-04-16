@@ -10,7 +10,6 @@ export class ConfrimPopUpComponent implements OnInit {
   alertDisplay: string
   constructor(private dialogRef: MatDialogRef<ConfrimPopUpComponent>, @Inject(MAT_DIALOG_DATA) public message: any) {
 
-    console.log(message)
     this.alertDisplay = message.notification;
   }
 
