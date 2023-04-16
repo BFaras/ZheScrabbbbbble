@@ -158,6 +158,7 @@ export class BracketPageComponent implements OnDestroy {
         if (game.status !== GameStatus.IN_PROGRESS) return;
         this.waitingRoomManagerService.setObserver(true);
         this.waitingRoomManagerService.joinRoomResponse().pipe(first()).subscribe(() => {
+            if (game.roomCode) this.chatService.setChatInGameRoom(game.roomCode);
             this.gameStateService.setObserver(0);
             this.gameStateService.setTournamentGame(true);
             this.router.navigate(['/game']).then(() => {
