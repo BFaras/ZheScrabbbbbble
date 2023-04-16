@@ -70,11 +70,8 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
         })
 
         this.removeTilePreviewSubscription = this.previewFirstTileService.getSelectedTileStatus().subscribe((position) => {
-            console.log("remove a first tile")
-            console.log(this.previewFirstTileService.verifyPositionExistInListPlayerTile(position.position))
             if (this.GameStateService.isCoop()) {
                 if (!this.previewFirstTileService.verifyPositionExistInListPlayerTile(position.position)) {
-                    console.log("remove a first tile coop" + position.username)
                     this.gridService.deleteActivePlayerFirstTile(position.position, this.letterAdderService.addedLettersLog)
                     const listPlayersFirstTilesCoopArray = Array.from(this.previewPlayerActionService.listPlayersFirstTilesCoop.values())
                     listPlayersFirstTilesCoopArray.forEach((position) => {
@@ -138,17 +135,14 @@ export class PlayAreaComponent implements AfterViewInit, OnChanges, OnDestroy, O
                 }
                 this.changeTilePositionLastMovedTile(field, newField)
                 this.letterAdderService.moveLetterInBoard(field.text)
-                /*il faut que e soit dans cet ordre pour enlever les dessin quand je bouge */
                 this.letterAdderService.removeDrawingBeforeDragWithinCanvas()
 
             } else {
-                /**Il faut ca remet dans la main  */
                 this.letterAdderService.removeDrawingBeforeDragOutsideCanvasOrNotValidSpot()
                 this.fields = this.fields.filter((x) => x != field);
             }
         } else {
             this.fields = this.fields.filter((x) => x != field);
-            /**Il faut ca remet dans la main  */
             this.letterAdderService.removeDrawingBeforeDragOutsideCanvasOrNotValidSpot()
         }
 

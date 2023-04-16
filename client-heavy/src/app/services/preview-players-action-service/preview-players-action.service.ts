@@ -98,6 +98,10 @@ export class PreviewPlayersActionService {
 
   }
 
+  getFirstTilePosition() {
+    return this.firstTilePosition
+  }
+
   getSelectedTileStatus(): Observable<PreviewUser> {
     return new Observable((observer: Observer<PreviewUser>) => {
       this.socket.on('Remove Selected Tile Response', (otherUserPreview: PreviewUser) => {

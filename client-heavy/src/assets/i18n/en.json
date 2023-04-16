@@ -248,5 +248,14 @@
         "TIGER": "Level 6",
         "SKELETON": "1 gold medal",
         "UNLOCKED": "Unlocked!"
+    },
+    "CONFIRMATION": {
+        "POSITIVE": "Yes",
+        "NEGATIVE": "No",
+        "ACCEPTED":"Confirm"
+    },
+    "BLANK-TILE": {
+        "MESSAGE": "Please choose a letter"
     }
+    
 }

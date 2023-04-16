@@ -20,7 +20,7 @@ export class ResultPageComponent {
         if (this.avatarInRooms.getAvatarUserMap(username))
             return this.avatarInRooms.getAvatarUserMap(username)
         else {
-            return "virtual.png"
+            return "robot.png"
         }
     }
 

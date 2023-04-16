@@ -19,7 +19,6 @@ export class ConnectionHistoryAreaComponent implements OnInit, AfterViewInit {
   }
 
   public scrollBottom() {
-    console.log(this.scroll.nativeElement.scrollTop);
     this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
 
   }

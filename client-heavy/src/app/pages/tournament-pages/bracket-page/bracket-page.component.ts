@@ -63,7 +63,7 @@ export class BracketPageComponent implements OnDestroy {
         if (this.avatarInRoomService.getAvatarUserMap(username)) {
             return this.avatarInRoomService.getAvatarUserMap(username);
         } else {
-            return "virtual.png"
+            return "robot.png"
         }
 
     }

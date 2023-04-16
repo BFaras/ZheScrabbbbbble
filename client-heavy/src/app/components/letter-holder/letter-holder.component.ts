@@ -56,6 +56,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     }
 
     cancelManipulationAndSelection(event: CdkDragStart) {
+        this.mouseIsIn = false;
         this.manipulationRack.cancelAll(isSelected);
         this.manipulationRack.cancelManipulation()
     }
@@ -81,10 +82,14 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         if (this.isObserver())
             return;
         if (e.button === MouseButton.Right && !this.isDisabled()) {
+            this.letterAdderService.letterAdderMode = ""
+            this.letterAdderService.getLetterNotAcceptedObservable().next(true)
             this.manipulationRack.cancelManipulation();
             this.manipulationRack.selectLetterOnRack(indexOfElement + 1);
             this.makingSelection = Object.values(isSelected).some((selection) => selection === true);
         } else if (e.button === MouseButton.Left) {
+            this.letterAdderService.letterAdderMode = ""
+            this.letterAdderService.getLetterNotAcceptedObservable().next(true)
             e.stopPropagation();
             this.makingSelection = false;
             this.manipulationRack.cancelAll(isSelected);
@@ -197,11 +202,10 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
     updateHolder(gameState: GameState) {
         let playerIndex = this.gameStateService.getObserverIndex();
         if (playerIndex < 0) {
-            if(this.gameStateService.isCoop()){
+            if (this.gameStateService.isCoop()) {
                 playerIndex = 0;
-            }else{
+            } else {
                 for (playerIndex = 0; playerIndex < gameState.players.length; playerIndex++) {
-                    console.log(this.accountService.getUsername())
                     if (gameState.players[playerIndex].username === this.accountService.getUsername()) break;
                 }
             }
@@ -238,7 +242,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         return letters;
     }
 
-    requestClue(){
+    requestClue() {
         this.gameStateService.requestClue();
     }
 
@@ -311,7 +315,7 @@ export class LetterHolderComponent implements AfterViewInit, OnDestroy {
         return this.gameStateService.getObserverIndex() >= 0;
     }
 
-    isDisabled(): boolean { 
+    isDisabled(): boolean {
         return this.gameStateService.hasPendingAction() || this.disabled;
     }
 
