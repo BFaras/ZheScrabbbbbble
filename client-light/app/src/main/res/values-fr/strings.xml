@@ -144,7 +144,7 @@
     <string name="move_mode">mode placer</string>
     <string name="swap_mode">mode échanger</string>
     <string name="indice">indice</string>
-    <string name="xp_needed_till_next_level_00"><![CDATA[xp nécessaire pour le prochain niveau - %1$s]]></string>
+    <string name="xp_needed_till_next_level_00"><![CDATA[xp nécessaires pour le prochain niveau - %1$s]]></string>
     <string name="lvl">niv</string>
     <string name="iswinner">gagné</string>
     <string name="isloser">perdu</string>
