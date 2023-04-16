@@ -40,7 +40,7 @@ export class InfoPanelComponent implements OnDestroy {
         return player.name === this.playersInfo[index].name;
     }
 
-    isCoop(): boolean{
+    isCoop(): boolean {
         return this.gameStateService.isCoop();
     }
 
@@ -87,7 +87,7 @@ export class InfoPanelComponent implements OnDestroy {
                 this.playersInfo[i].avatar = this.avatarInRoomsService.getAvatarUserMap(this.playersInfo[i].name)!;
             }
             else {
-                this.playersInfo[i].avatar = 'virtual.png'
+                this.playersInfo[i].avatar = 'robot.png'
             }
         }
     }

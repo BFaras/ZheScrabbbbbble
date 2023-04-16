@@ -131,7 +131,8 @@
         "ACCEPT": "Accept",
         "DECLINE": "Decline",
         "START": "Start",
-        "INVITE-FRIENDS": "Invite friends"
+        "INVITE-FRIENDS": "Invite friends",
+        "VP": "If the host decides to start the game and there are at least 2 players, the remaining places will be filled by Virtual Players."
     },
     "JOIN-GAME": {
         "HOST": "Host",
@@ -219,7 +220,9 @@
         "GAMESTATE": "Game state: ",
         "NEWNAME": "Please enter your new username",
         "LOSS": "Loss",
-        "WIN": "Win"
+        "WIN": "Win",
+        "TOP": "Oldest",
+        "BOTTOM": "Most recent"
     },
     "TOURNAMENT-QUEUE": {
         "TITLE": "In search of a tournament",
@@ -245,5 +248,14 @@
         "TIGER": "Level 6",
         "SKELETON": "1 gold medal",
         "UNLOCKED": "Unlocked!"
+    },
+    "CONFIRMATION": {
+        "POSITIVE": "Yes",
+        "NEGATIVE": "No",
+        "ACCEPTED":"Confirm"
+    },
+    "BLANK-TILE": {
+        "MESSAGE": "Please choose a letter"
     }
+    
 }

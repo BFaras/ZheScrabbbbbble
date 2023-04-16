@@ -257,3 +257,10 @@ button {
     justify-content: flex-start;
     flex-direction: column;
 }
+
+#stat-list{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+}

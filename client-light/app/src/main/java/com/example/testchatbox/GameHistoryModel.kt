@@ -43,6 +43,7 @@ object GameHistoryModel : Observable {
 
     fun reset(){
         actionMessages = arrayListOf<PlayerMessage>()
+        SocketHandler.getSocket().off("Message Action History")
     }
 
     fun clearPlayRequest(){

@@ -29,7 +29,8 @@ button {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    width: 100%;
+    width: 50%;
+    margin-bottom: 30px;
 }
 button:hover {
     color: var(--button-text-hover);
@@ -44,7 +45,8 @@ h1 {
     font-family: 'Courier New', Courier, monospace;
     font-size: 18px;
     font-weight: bold;
-    margin: 2%;
+    margin: 30px;
+    text-align: center;
 }
 
 ::ng-deep mat-dialog-container {

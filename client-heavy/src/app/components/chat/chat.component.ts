@@ -1,8 +1,9 @@
-import { Component, ElementRef, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
 import { ChatMessage } from '@app/classes/chat-info';
 import { Message } from '@app/classes/message';
 import { AccountService } from '@app/services/account-service/account.service';
 import { ChatService } from '@app/services/chat-service/chat.service';
+import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
 import { MessageParserService } from '@app/services/message-parser-service/message-parser.service';
 import { ThemesService } from '@app/services/themes-service/themes-service';
 import { Subscription } from 'rxjs';
@@ -15,11 +16,11 @@ const LIMIT_OF_CHARACTERS = 512;
     styleUrls: ['./chat.component.scss'],
 })
 
-export class ChatComponent implements OnDestroy {
+export class ChatComponent implements OnDestroy, AfterViewChecked {
     @ViewChild('scroll', { read: ElementRef }) public scroll: ElementRef;
     @Output() receiver = new EventEmitter();
     switch = false;
-
+    updateScrollStatus = false;
     message: Message = {
         username: '',
         body: '',
@@ -31,7 +32,9 @@ export class ChatComponent implements OnDestroy {
     subscriptionMessage: Subscription;
     subscriptionHistoryMessage: Subscription;
 
-    constructor(private chatService: ChatService, private messageParserService: MessageParserService, private accountService: AccountService, private themeService: ThemesService) {
+    constructor(private chatService: ChatService,
+        private messageParserService: MessageParserService, private accountService: AccountService,
+        private themeService: ThemesService, private letterAdderService: LetterAdderService) {
 
         this.subscriptionHistoryMessage = this.chatService.getChatHistory(this.chatService.getChatInGameRoom()).subscribe((chatHistory: ChatMessage[]) => {
             chatHistory.forEach((chatMessage) => {
@@ -49,13 +52,18 @@ export class ChatComponent implements OnDestroy {
     }
     updateMessageHistory(chatMessage: ChatMessage) {
         this.messageHistory.push(chatMessage);
-        this.scrollBottom()
-        sessionStorage.setItem('chat', JSON.stringify(this.messageHistory));
+        this.updateScrollStatus = true
     }
 
     openPopupChat() {
         if ((window as any).openChat) {
             (window as any).openChat(this.accountService.getFullAccountInfo(), this.themeService.getActiveTheme(), this.accountService.getLanguage());
+        }
+    }
+    ngAfterViewChecked() {
+        if (this.updateScrollStatus === true) {
+            this.scrollBottom()
+            this.updateScrollStatus = false
         }
     }
 
@@ -74,6 +82,8 @@ export class ChatComponent implements OnDestroy {
     isReceiver() {
         this.switch = !this.switch;
         this.receiver.emit('chatbox' + this.switch);
+        this.letterAdderService.getLetterNotAcceptedObservable().next(true);
+        this.letterAdderService.letterAdderMode = "";
     }
 
     ngOnDestroy() {

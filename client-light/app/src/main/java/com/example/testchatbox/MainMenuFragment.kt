@@ -46,6 +46,7 @@ private var _binding: FragmentMainMenuBinding? = null
         super.onViewCreated(view, savedInstanceState)
         setupChatNotifs(view.context)
         verifyIfInviteRequest();
+        if(TournamentModel.inQueue || TournamentModel.inTournament) TournamentModel.exitTournament();
         WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
             // Hide both the status bar and the navigation bar
             hide(WindowInsetsCompat.Type.systemBars())
@@ -138,7 +139,7 @@ private var _binding: FragmentMainMenuBinding? = null
     private fun verifyIfInviteRequest(){
         val request = InviteService.getFirst() ?: return;
         if(binding.inviteSection.visibility==View.VISIBLE) return;
-        binding.invitePrompt.text= request.username+ binding.invitePrompt.text;
+        binding.invitePrompt.text= "${request.username} ${binding.invitePrompt.text}";
         binding.inviteSection.visibility=View.VISIBLE;
         binding.rejectInvite.setOnClickListener {
             InviteService.rejectRequest();

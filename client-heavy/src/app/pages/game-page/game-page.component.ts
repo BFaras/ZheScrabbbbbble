@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ConfrimPopUpComponent } from '@app/components/confrim-pop-up/confrim-pop-up.component';
@@ -10,6 +10,7 @@ import { GameStateService, PlayerMessage } from '@app/services/game-state-servic
 import { GridService } from '@app/services/grid-service/grid.service';
 import { LetterAdderService } from '@app/services/letter-adder-service/letter-adder.service';
 import { LetterHolderService } from '@app/services/letter-holder-service/letter-holder.service';
+import { PreviewPlayersActionService } from '@app/services/preview-players-action-service/preview-players-action.service';
 import { WaitingRoomManagerService } from '@app/services/waiting-room-manager-service/waiting-room-manager.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -19,7 +20,8 @@ import { Subscription } from 'rxjs';
     templateUrl: './game-page.component.html',
     styleUrls: ['./game-page.component.scss'],
 })
-export class GamePageComponent implements OnInit, OnDestroy {
+export class GamePageComponent implements OnInit, OnDestroy, AfterViewChecked {
+    @ViewChild('scroll', { read: ElementRef }) public scroll: ElementRef;
     isReceiver: string;
     endGame: boolean = false;
     subscriptions: Subscription[] = [];
@@ -28,7 +30,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
     actionHistory: PlayerMessage[] = [];
 
     hasPendingAction: boolean;
-
+    updateScrollStatus = false;
     constructor(
         private readonly gameStateService: GameStateService,
         private readonly letterHolderService: LetterHolderService,
@@ -41,19 +43,29 @@ export class GamePageComponent implements OnInit, OnDestroy {
         private readonly translate: TranslateService,
         private readonly chatService: ChatService,
         private readonly changeDetector: ChangeDetectorRef,
+        private previewPlayerActionService: PreviewPlayersActionService,
         //private readonly confirmationHandler: ConfirmationDialogHandlerService,
         public dialog: MatDialog
     ) {
         this.chatService.setChangeDetector(this.changeDetector);
     }
 
+    ngAfterViewChecked(): void {
+        if (this.updateScrollStatus) {
+            this.scrollBottom()
+            this.updateScrollStatus = false
+        }
+    }
 
 
     ngOnInit() {
         this.hasPendingAction = false;
         this.gameStateService.setPendingAction(false);
         this.subscriptions.push(this.gameStateService.getGameStateObservable().subscribe((gameState) => {
-            if (gameState.message) this.actionHistory.push(gameState.message);
+            if (gameState.message) {
+                this.actionHistory.push(gameState.message);
+                this.updateScrollStatus = true;
+            }
             this.clearHints();
             this.endGame = gameState.gameOver;
         }));
@@ -61,6 +73,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
             if (message.messageType === 'MSG-13') {
                 this.letterAdderService.removeAll();
                 this.gameStateService.setPendingAction(true);
+                this.letterAdderService.getLetterNotAcceptedObservable().next(true)
             }
             if (message.messageType === 'MSG-12' || message.messageType === 'MSG-14') {
                 this.gameStateService.setPendingAction(false);
@@ -70,13 +83,15 @@ export class GamePageComponent implements OnInit, OnDestroy {
                 this.hasPendingAction = true;
             }
             this.actionHistory.push(message);
+            this.updateScrollStatus = true;
         }));
-        this.subscriptions.push(this.gameStateService.getClueObservable().subscribe((clues: {command: string, value: number}[]) => {
+        this.subscriptions.push(this.gameStateService.getClueObservable().subscribe((clues: { command: string, value: number }[]) => {
             const values = [];
-            for(const clue of clues){
+            for (const clue of clues) {
                 values.push(clue.command + ' | ' + clue.value);
             }
-            this.actionHistory.push({ messageType: 'MSG-CLUE', values: values});
+            this.actionHistory.push({ messageType: 'MSG-CLUE', values: values });
+            this.updateScrollStatus = true;
         }))
         if (this.gameStateService.isTournamentGame()) {
             this.waitingRoomManagerService.getStartGameObservable().subscribe((info: { isCoop: boolean, roomCode?: string }) => {
@@ -120,7 +135,9 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
     dialogResponse(status: boolean) {
         if (status) {
+            this.previewPlayerActionService.removeSelectedTile(this.previewPlayerActionService.getFirstTilePosition())
             this.gameStateService.sendAbandonRequest();
+
             if (this.gameStateService.isTournamentGame()) {
                 this.router.navigate(['/tournament-bracket']);
             } else {
@@ -166,6 +183,11 @@ export class GamePageComponent implements OnInit, OnDestroy {
         if (!this.hasPendingAction) return;
         this.hasPendingAction = false;
         this.gameStateService.respondCoopAction(answer);
+    }
+
+    public scrollBottom() {
+        this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
+
     }
 
     isLatestProposedAction(index: number) {

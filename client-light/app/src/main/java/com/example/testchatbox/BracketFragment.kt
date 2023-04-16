@@ -1,9 +1,11 @@
 package com.example.testchatbox
 
 import SocketHandler
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -32,6 +34,8 @@ class BracketFragment : Fragment(), Observer {
     private val binding get() = _binding!!
     private lateinit var timer: CountDownTimer
     var avatars = mutableMapOf<String, String>()
+    private var isChatIconChanged = false;
+    private var notifSound: MediaPlayer? = null;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,12 +47,24 @@ class BracketFragment : Fragment(), Observer {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupChatNotifs(view.context)
         WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).apply {
             // Hide both the status bar and the navigation bar
             hide(WindowInsetsCompat.Type.systemBars())
             hide(WindowInsetsCompat.Type.statusBars())
             // Behavior of system bars
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+
+
+        SocketHandler.getSocket().on("Avatars from Usernames Response") { args ->
+            val avatarListJSON = args[0] as JSONObject
+            for (i in 0 until avatarListJSON.length()) {
+                avatars[avatarListJSON.names()?.getString(i) as String] = (avatarListJSON.names()?.getString(i)?.let { avatarListJSON.get(it) }) as String
+            }
+        }
+        for (game in TournamentModel.getGameData()) {
+            SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray(game.players))
         }
 
         binding.buttonchat.setOnClickListener {
@@ -97,6 +113,7 @@ class BracketFragment : Fragment(), Observer {
                 }
             }
         }
+        Thread.sleep(1000)
         SocketHandler.getSocket().emit("Get Tournament Data")
     }
 
@@ -144,16 +161,7 @@ class BracketFragment : Fragment(), Observer {
         activity?.runOnUiThread(Runnable {
             for (game in TournamentModel.getGameData()) {
                 SocketHandler.getSocket().emit("Get Avatars from Usernames", JSONArray(game.players))
-                SocketHandler.getSocket().once("Avatars from Usernames Response") { args ->
-                    val avatarListJSON = args[0] as JSONObject
-                    Log.d("AVATARS JSON IN ROOM", args[0].toString())
-
-                    for (i in 0 until avatarListJSON.length()) {
-                        avatars[avatarListJSON.names()?.getString(i) as String] = (avatarListJSON.names()?.getString(i)?.let { avatarListJSON.get(it) }) as String
-                    }
-                }
             }
-            Log.d("AVATARS IN TOURNAMENT", avatars.toString())
             if(TournamentModel.tournamentTimer.phase==2){
                 binding.quitBtn.setOnClickListener {
                     findNavController().navigate(R.id.action_bracketFragment_to_rankingFragment)
@@ -230,19 +238,18 @@ class BracketFragment : Fragment(), Observer {
                         if (game.status == GameStatus.FINISHED){
                             when (game.winnerIndex) {
                                 0 -> {
-                                    binding.semi1player1.typeface = Typeface.DEFAULT_BOLD
-                                    binding.semi1player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                                    binding.semi2player1.typeface = Typeface.DEFAULT_BOLD
+                                    binding.semi2player1.paintFlags = Paint.UNDERLINE_TEXT_FLAG
                                 }
                                 1 -> {
-                                    binding.semi1player2.typeface = Typeface.DEFAULT_BOLD
-                                    binding.semi1player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+                                    binding.semi2player2.typeface = Typeface.DEFAULT_BOLD
+                                    binding.semi2player2.paintFlags = Paint.UNDERLINE_TEXT_FLAG
                                 }
                                 else -> {}
                             }
                         }
                     }
                     "Final1" -> {
-                        binding.finals.visibility = View.VISIBLE
                         binding.final1player1.text = game.players[0]
                         binding.Final1.setOnClickListener {
                             if(game.status==GameStatus.IN_PROGRESS)
@@ -258,7 +265,7 @@ class BracketFragment : Fragment(), Observer {
                         if(game.players.size==2) {
                             binding.final1player2.text = game.players[1]
                             for ((name, avatar) in avatars) {
-                                if (name ==  game.players[0]) {
+                                if (name ==  game.players[1]) {
                                     if (resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
                                         binding.player2Final1.setImageResource(resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
                                     }
@@ -281,7 +288,6 @@ class BracketFragment : Fragment(), Observer {
                         }
                     }
                     "Final2" -> {
-                        binding.finals.visibility = View.VISIBLE
                         binding.final2player1.text = game.players[0]
                         binding.Final2.setOnClickListener {
                             if(game.status==GameStatus.IN_PROGRESS)
@@ -297,7 +303,7 @@ class BracketFragment : Fragment(), Observer {
                         if(game.players.size==2) {
                             binding.final2player2.text = game.players[1]
                             for ((name, avatar) in avatars) {
-                                if (name ==  game.players[0]) {
+                                if (name ==  game.players[1]) {
                                     if (resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName) != 0) {
                                         binding.player2Final2.setImageResource(resources.getIdentifier((avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
                                     }
@@ -331,6 +337,9 @@ class BracketFragment : Fragment(), Observer {
 
     override fun onStop() {
         super.onStop()
+        NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        NotificationInfoHolder.setFunctionOnChatDeleted(null);
+        notifSound?.release()
         TournamentModel.removeObserver(this);
     }
     private fun setTimer(timeRemaining: Long): CountDownTimer {
@@ -343,6 +352,38 @@ class BracketFragment : Fragment(), Observer {
             override fun onFinish() {
                 cancel()
             }
+        }
+    }
+
+    fun setupChatNotifs(context: Context) {
+        isChatIconChanged = false;
+        NotificationInfoHolder.startObserverChat();
+        NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
+        NotificationInfoHolder.setFunctionOnChatDeleted(::changeToNoNotifChatIcon);
+        notifSound = MediaPlayer.create(context, R.raw.ding)
+
+        notifSound?.setOnCompletionListener { notifSound?.release() }
+
+        if(NotificationInfoHolder.areChatsUnread())
+            changeToNotifChatIcon();
+    }
+
+    fun playNotifSoundAndChangeIcon() {
+        if (!isChatIconChanged) {
+            changeToNotifChatIcon()
+            notifSound?.start()
+        }
+    }
+
+    fun changeToNotifChatIcon() {
+        binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
+        isChatIconChanged = true;
+    }
+
+    fun changeToNoNotifChatIcon() {
+        if (isChatIconChanged) {
+            binding.buttonchat.setBackgroundResource(R.drawable.ic_chat);
+            isChatIconChanged = false;
         }
     }
 

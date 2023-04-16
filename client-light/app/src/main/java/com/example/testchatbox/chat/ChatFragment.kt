@@ -93,7 +93,6 @@ class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
             binding.inputText.setText("")
             SocketHandler.getSocket().emit("New Chat Message", text, chatsList[selectedChatIndex]._id)
             binding.scrollView.post { binding.scrollView.fullScroll(View.FOCUS_DOWN) }
-            binding.inputText.clearFocus()
         }
     }
 
@@ -306,7 +305,7 @@ class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
     private fun verifyIfInviteRequest(){
         val request = InviteService.getFirst() ?: return;
         if(binding.inviteSection.visibility==View.VISIBLE) return;
-        binding.invitePrompt.text= request.username+ binding.invitePrompt.text;
+        binding.invitePrompt.text= "${request.username} ${binding.invitePrompt.text}";
         binding.inviteSection.visibility=View.VISIBLE;
         binding.rejectInvite.setOnClickListener {
             InviteService.rejectRequest();
@@ -335,7 +334,7 @@ class ChatFragment : Fragment(), ObserverChat , ObserverInvite{
                                 }
                                 InviteService.acceptRequest();
                                 GameRoomModel.initialise(GameRoom("Name", request.roomId, Visibility.Public, players, hasStarted = false, request.gameType ,-1), false);
-                                findNavController().navigate(R.id.action_MainMenuFragment_to_gameRoomFragment)
+                                findNavController().navigate(R.id.action_ChatFragment_to_gameRoomFragment)
                             }
                         }else{
                             InviteService.rejectRequest();

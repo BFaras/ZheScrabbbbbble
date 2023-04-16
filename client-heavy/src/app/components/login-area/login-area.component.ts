@@ -51,7 +51,6 @@ export class LoginAreaComponent implements OnDestroy {
 
   @HostListener('window:keypress', ['$event'])
   onKeyDown(e: KeyboardEvent) {
-    console.log(e.key)
     if (e.key === "Enter") {
       this.loginToAccount()
     }

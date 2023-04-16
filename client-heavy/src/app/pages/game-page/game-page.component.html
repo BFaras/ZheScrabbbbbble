@@ -23,7 +23,7 @@
 
             <div class="state-history">
                 <p class="centered-title">{{'ACTION-HISTORY.TITLE' | translate}}</p>
-                <div id="history-container">
+                <div id="history-container" #scroll>
                     <div *ngFor="let action of actionHistory; let i = index" #scrollMe [scrollTop]="scrollMe.scrollHeight">
                         <ul class="action">
                             <div *ngIf="action.messageType !== 'MSG-CLUE'">{{formatActionInList((('ACTION-HISTORY.' + action.messageType) | translate), action.values, action.messageType)}}</div>

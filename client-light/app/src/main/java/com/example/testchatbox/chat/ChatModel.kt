@@ -1,5 +1,6 @@
 package com.example.testchatbox.chat
 
+import NotificationInfoHolder
 import SocketHandler
 import android.util.Log
 import com.example.testchatbox.GameRoom
@@ -135,6 +136,8 @@ object ChatModel : ObservableChat {
 
     fun removeGameChat(gameRoom: GameRoom){
         chatList.remove(gameRoom.id)
+        NotificationInfoHolder.changeSelectedChatCode(gameRoom.id)
+        NotificationInfoHolder.changeSelectedChatCode("")
     }
 
     fun joinPublicList(_id:String){

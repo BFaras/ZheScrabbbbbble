@@ -208,14 +208,14 @@ class FriendsFragment : Fragment(), ObserverFriend, ObserverInvite {
         activity?.runOnUiThread(Runnable {
             if(newUsername==null){
                 val appContext = context?.applicationContext;
-                Toast.makeText(appContext, username+getString(R.string.friendRemoved), Toast.LENGTH_LONG).show();
+                Toast.makeText(appContext, username+" "+getString(R.string.friendRemoved), Toast.LENGTH_LONG).show();
                 if(binding.actionMenu.visibility==View.VISIBLE && binding.actionMenuUsername.text==username){
                     hideActionMenu();
                 }
             }
             else{
                 val appContext = context?.applicationContext;
-                Toast.makeText(appContext, username+getString(R.string.friendModified)+newUsername, Toast.LENGTH_LONG).show();
+                Toast.makeText(appContext, username+" "+getString(R.string.friendModified)+newUsername, Toast.LENGTH_LONG).show();
                 if(binding.actionMenu.visibility==View.VISIBLE && binding.actionMenuUsername.text==username){
                     binding.actionMenuUsername.text==newUsername
                 }
@@ -231,7 +231,7 @@ class FriendsFragment : Fragment(), ObserverFriend, ObserverInvite {
     private fun verifyIfInviteRequest(){
         val request = InviteService.getFirst() ?: return;
         if(binding.inviteSection.visibility==View.VISIBLE) return;
-        binding.invitePrompt.text= request.username+ binding.invitePrompt.text;
+        binding.invitePrompt.text= "${request.username} ${binding.invitePrompt.text}";
         binding.inviteSection.visibility=View.VISIBLE;
         binding.rejectInvite.setOnClickListener {
             InviteService.rejectRequest();
@@ -260,7 +260,7 @@ class FriendsFragment : Fragment(), ObserverFriend, ObserverInvite {
                                 }
                                 InviteService.acceptRequest();
                                 GameRoomModel.initialise(GameRoom("Name", request.roomId, Visibility.Public, players, hasStarted = false, request.gameType ,-1), false);
-                                findNavController().navigate(R.id.action_MainMenuFragment_to_gameRoomFragment)
+                                findNavController().navigate(R.id.action_friendsFragment_to_gameRoomFragment)
                             }
                         }else{
                             InviteService.rejectRequest();
