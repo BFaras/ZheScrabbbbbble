@@ -19,76 +19,69 @@
         android:gravity="center">
         <TextView
             android:id="@+id/hostName"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="name"
             android:textAlignment="center"
             android:textStyle="bold"
             android:textColor="?colorOnPrimary"
-            android:fontFeatureSettings="smcp"
-            android:textSize="16dp">
+            android:fontFeatureSettings="smcp">
         </TextView>
         <TextView
             android:id="@+id/gameRoomName"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="room name"
             android:textAlignment="center"
             android:textStyle="bold"
             android:textColor="?colorOnPrimary"
-            android:fontFeatureSettings="smcp"
-            android:textSize="16dp">
+            android:fontFeatureSettings="smcp">
         </TextView>
         <TextView
             android:id="@+id/roomVisibility"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="visibility"
             android:textAlignment="center"
             android:textStyle="bold"
             android:textColor="?colorOnPrimary"
-            android:fontFeatureSettings="smcp"
-            android:textSize="16dp">
+            android:fontFeatureSettings="smcp">
         </TextView>
         <TextView
             android:id="@+id/numberPlayers"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="@string/numberPlayers"
             android:textAlignment="center"
             android:textStyle="bold"
-            android:textColor="?colorOnPrimary"
-            android:textSize="16dp">
+            android:textColor="?colorOnPrimary">
         </TextView>
         <TextView
             android:id="@+id/numberObservers"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="@string/numberPlayers"
             android:textAlignment="center"
             android:textStyle="bold"
-            android:textColor="?colorOnPrimary"
-            android:textSize="16dp">
+            android:textColor="?colorOnPrimary">
         </TextView>
         <TextView
             android:id="@+id/gameType"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="game type"
             android:textAlignment="center"
             android:textStyle="bold"
-            android:textColor="?colorOnPrimary"
-            android:textSize="16dp">
+            android:textColor="?colorOnPrimary">
         </TextView>
         <TextView
             android:id="@+id/roomStatus"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="room status"
             android:textAlignment="center"
             android:textStyle="bold"
-            android:textColor="?colorOnPrimary"
-            android:textSize="16dp">
+            android:textColor="?colorOnPrimary">
         </TextView>
     </TableRow>
     </TableLayout>

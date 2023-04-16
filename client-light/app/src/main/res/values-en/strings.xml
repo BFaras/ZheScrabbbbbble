@@ -16,13 +16,15 @@
     <string name="FriendCode">"Enter your friend's code to add them "</string>
     <string name="queueMessage">In search of a tournament</string>
 
+    <string name ="InvitePrompt"> invited you to his/her game</string>
     <string name="friendModified"> replaced is username with </string>
-    <string name="friendRemoved"> removed you from his friend list</string>
+    <string name="friendRemoved"> isn\'t your friend anymore</string>
     <string name="friendChat">Chat</string>
     <string name="friendProfile">Profile</string>
     <string name="friendJoin">Invite to a game</string>
     <string name="friendRemove">Remove from friend list</string>
 
+    <string name ="TournamentResult"> See tournament results</string>
 
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Main menu</string>
@@ -52,6 +54,7 @@
     <string name="register_failed">"Failed to register new account"</string>
 
     <string name="changeUsername">Change your username </string>
+    <string name="deleteChat">You are going to delete this public chat. Do you want to continue?</string>
     <!-- Strings related to errors -->
     <string name="NO_ERROR">No error</string>
     <string name="ERROR">Error</string>
@@ -67,6 +70,8 @@
     <string name="ROOM_PASSWORD_INCORRECT">The password is incorrect</string>
     <string name="JOIN_REQUEST_REFUSED">The host of the game did not accept your request to join</string>
     <string name="ROOM_IS_FULL">The room is already full</string>
+    <string name="ROOM_DELETED">The room was deleted</string>
+    <string name="GAME_STARTED">The game has already</string>
     <string name="swap">Swap</string>
     <string name="reserveText">LETTERS LEFT IN RESERVE</string>
     <string name="pass">Pass</string>
@@ -111,7 +116,7 @@
     <string name="publicRoom">Public</string>
     <string name="protectedRoom">Protected</string>
     <string name="join_game_text">Do you want to join the game as an observer?</string>
-    <string name="enter_the_room_password">enter the room password</string>
+    <string name="enter_the_room_password">Enter the room password</string>
     <string name="quit">Leave</string>
     <string name="winnerName"><![CDATA[%1$s won the game!]]></string>
     <string name="waitingRoomText">If the host decides to start the game and there are at least 2 players, the remaining places will be filled by Virtual Players.</string>
@@ -147,7 +152,7 @@
     <string name="tournament_ranking">tournament ranking</string>
     <string name="pas_besoin_d_indices">no need for hints</string>
     <string name="joined_public_chats">joined public chats</string>
-    <string name="pss_you_can_quit_any_room_by_clicking_it">(pss…you can quit any room by clicking it)</string>
+    <string name="pss_you_can_quit_any_room_by_clicking_it">(pss…you can quit any room or delete one you created by clicking it)</string>
     <string name="create_a_public_chat">Create a public chat</string>
     <string name="join_a_public_chat">join a public chat</string>
     <string name="you_can_create_a_public_chat_or_join_one_from_the_list_on_the_right">You can create a public chat or join one from the list on the right</string>
@@ -181,8 +186,8 @@
     <string name="waiting_for_players">Pending</string>
     <string name="room">Room</string>
     <string name="visibility">Visibility</string>
-    <string name="players"># Players</string>
-    <string name="observers"># Observers</string>
+    <string name="players">Number of players</string>
+    <string name="observers">Number of observers</string>
     <string name="game_type">Game type</string>
     <string name="game_status">Game status</string>
     <string name="to_be_determined">TBD</string>
@@ -202,4 +207,6 @@
     <string name="connexion">Log Ins</string>
     <string name="deconnexion">Log Outs</string>
     <string name="friend_code">Friend Code</string>
+    <string name="friend_profile_label">Friend profile</string>
+    <string name="waiting_for_team_approval">waiting for team approval</string>
 </resources>

@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -72,7 +73,7 @@ class GameRoom(val name:String, val id:String, val visibility: Visibility, var p
 }
 
 
-class GameListFragment : Fragment() {
+class GameListFragment : Fragment(), ObserverInvite {
 
     private var _binding: FragmentGameListBinding? = null
     private val binding get() = _binding!!
@@ -99,7 +100,13 @@ class GameListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupChatNotifs(view.context)
-        updateGameList();
+        verifyIfInviteRequest();
+        binding.buttonchat.setOnClickListener {
+            findNavController().navigate(R.id.action_gameListFragment_to_ChatFragment)
+        }
+        binding.buttonfriends.setOnClickListener {
+            findNavController().navigate(R.id.action_gameListFragment_to_friendsFragment)
+        }
         binding.roomType.check(R.id.publicRoom)
         binding.gameType.check(R.id.classicGame)
         binding.roomType.setOnCheckedChangeListener { radioGroup, i ->
@@ -110,31 +117,56 @@ class GameListFragment : Fragment() {
                 R.id.protectedRoom -> binding.createPassword.visibility=View.VISIBLE
             }
         }
-        binding.createBtn.setOnClickListener{
-            createRoom();
+        binding.name.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
         }
-        binding.buttonchat.setOnClickListener {
-            findNavController().navigate(R.id.action_gameListFragment_to_ChatFragment)
+        binding.createPassword.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
+            }
         }
-        binding.buttonfriends.setOnClickListener {
-            findNavController().navigate(R.id.action_gameListFragment_to_friendsFragment)
-        }
-        SocketHandler.getSocket().on("Game Room List Response"){ args ->
-            if(args[0] != null){
-                val list = args[0] as JSONArray;
-                gameList= arrayListOf();
-                for (i in 0 until list.length()) {
-                    val gameRoom = list.getJSONObject(i)
-                    val playersArray = gameRoom.get("players") as JSONArray
-                    var players = arrayOf<String>()
-                    for (j in 0 until playersArray.length()){
-                        players=players.plus(playersArray.get(j) as String)
+        val username = arguments?.getString("username");
+        if(username!=null){
+            binding.gameListSection.visibility=View.INVISIBLE;
+            binding.createBtn.setOnClickListener{
+                createRoom();
+                SocketHandler.getSocket().emit("Invite Friend To Game", username);
+            }
+        }else{
+
+            binding.createBtn.setOnClickListener{
+                createRoom();
+            }
+            updateGameList();
+            SocketHandler.getSocket().on("Game Room List Response"){ args ->
+                if(args[0] != null){
+                    val list = args[0] as JSONArray;
+                    gameList= arrayListOf();
+                    for (i in 0 until list.length()) {
+                        val gameRoom = list.getJSONObject(i)
+                        val playersArray = gameRoom.get("players") as JSONArray
+                        var players = arrayOf<String>()
+                        for (j in 0 until playersArray.length()) {
+                            players = players.plus(playersArray.get(j) as String)
+                        }
+                        gameList.add(
+                            GameRoom(
+                                gameRoom.get("name") as String,
+                                gameRoom.get("id") as String,
+                                Visibility.fromNameIgnoreCase(gameRoom.get("visibility") as String),
+                                players,
+                                gameRoom.get("isStarted") as Boolean,
+                                GameType.fromBool(gameRoom.get("isCoop") as Boolean),
+                                gameRoom.get("nbObservers") as Int
+                            )
+                        )
                     }
-                    gameList.add(GameRoom(gameRoom.get("name") as String, gameRoom.get("id") as String, Visibility.fromNameIgnoreCase(gameRoom.get("visibility") as String), players , gameRoom.get("isStarted") as Boolean, GameType.fromBool(gameRoom.get("isCoop") as Boolean), gameRoom.get("nbObservers") as Int))
+                    activity?.runOnUiThread(Runnable {
+                        loadListView();
+                    });
                 }
-                activity?.runOnUiThread(Runnable {
-                    loadListView();
-                });
             }
         }
     }
@@ -253,10 +285,13 @@ class GameListFragment : Fragment() {
                     if(errorMessage == R.string.NO_ERROR){
                         GameRoomModel.initialise(gameRoom, observer)
                         findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment)
-                    } else {
+                    }else{
+                        binding.cancelSection.visibility=View.GONE;
+                        binding.cancelPrivateButton.setOnClickListener(null);
+                        binding.gameListSection.visibility=View.VISIBLE;
+                        binding.createSection.visibility=View.VISIBLE;
                         val appContext = context?.applicationContext
                         Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
-                        binding.cancelSection.visibility = View.GONE
                     }
                 });
             }
@@ -338,9 +373,16 @@ class GameListFragment : Fragment() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        InviteService.addObserver(this);
+    }
+
     override fun onStop() {
         super.onStop()
+        InviteService.addObserver(this);
         NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        NotificationInfoHolder.setFunctionOnChatDeleted(null);
         notifSound?.release()
     }
 
@@ -348,6 +390,7 @@ class GameListFragment : Fragment() {
         isChatIconChanged = false;
         NotificationInfoHolder.startObserverChat();
         NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
+        NotificationInfoHolder.setFunctionOnChatDeleted(::changeToNoNotifChatIcon);
         notifSound = MediaPlayer.create(context, R.raw.ding)
 
         notifSound?.setOnCompletionListener { notifSound?.release() }
@@ -366,5 +409,70 @@ class GameListFragment : Fragment() {
     fun changeToNotifChatIcon() {
         binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
         isChatIconChanged = true;
+    }
+
+    fun changeToNoNotifChatIcon() {
+        if (isChatIconChanged) {
+            binding.buttonchat.setBackgroundResource(R.drawable.ic_chat);
+            isChatIconChanged = false;
+        }
+    }
+
+    private fun verifyIfInviteRequest(){
+        val request = InviteService.getFirst() ?: return;
+        if(binding.inviteSection.visibility==View.VISIBLE) return;
+        binding.invitePrompt.text=  "${request.username} ${binding.invitePrompt.text}";
+        binding.inviteSection.visibility=View.VISIBLE;
+        binding.rejectInvite.setOnClickListener {
+            InviteService.rejectRequest();
+            binding.inviteSection.visibility=View.GONE;
+            verifyIfInviteRequest();
+        }
+        binding.acceptInvite.setOnClickListener {
+            binding.inviteSection.visibility=View.GONE;
+            SocketHandler.getSocket().emit("Join Friend Game", request.roomId)
+            SocketHandler.getSocket().once("Join Room Response"){args->
+                if(args[0]!=null){
+                    val errorMessage = when(args[0] as String){
+                        "0" -> R.string.NO_ERROR
+                        "ROOM-4" -> R.string.ROOM_IS_FULL
+                        "ROOM-5" -> R.string.ROOM_DELETED
+                        "ROOM-6" -> R.string.GAME_STARTED
+                        else -> R.string.ERROR
+                    }
+                    activity?.runOnUiThread(Runnable {
+                        if(errorMessage == R.string.NO_ERROR ){
+                            if(args[1]!=null){
+                                var players= arrayOf<String>()
+                                val playersArray = args[1] as JSONArray
+                                for(i in 0 until playersArray.length()){
+                                    players=players.plus(playersArray.getString(i))
+                                }
+                                InviteService.acceptRequest();
+                                GameRoomModel.initialise(GameRoom("Name", request.roomId, Visibility.Public, players, hasStarted = false, request.gameType ,-1), false);
+                                findNavController().navigate(R.id.action_gameListFragment_to_gameRoomFragment)
+                            }
+                        }else{
+                            InviteService.rejectRequest();
+                            val appContext = context?.applicationContext
+                            Toast.makeText(appContext, errorMessage, Toast.LENGTH_LONG).show()
+                            verifyIfInviteRequest();
+                        }
+                    });
+                }
+            }
+
+        }
+    }
+
+    override fun updateInvite() {
+        activity?.runOnUiThread(Runnable {
+            verifyIfInviteRequest();
+        });
+    }
+
+    private fun hideKeyboard() {
+        val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
     }
 }

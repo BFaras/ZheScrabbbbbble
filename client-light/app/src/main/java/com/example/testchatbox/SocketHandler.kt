@@ -19,7 +19,7 @@ object SocketHandler {
             // If you want to use your physical phone you could use your ip address plus :3000
             // This will allow your Android Emulator and physical device at your home to connect to the server
             //"http://ec2-52-3-241-220.compute-1.amazonaws.com:3000"
-            mSocket = IO.socket("http://10.0.2.2:3000")
+            mSocket = IO.socket("http://192.168.2.172:3000")
         } catch (e: URISyntaxException) {
 
         }

@@ -467,6 +467,7 @@ class ProfilFragment : Fragment() {
                     arrayListOf(),
                     arrayListOf()
                 )
+                Log.i("Profile", args[0].toString())
                 val profileJSON = args[0] as JSONObject
                 profileTemp.avatar= profileJSON.get("avatar") as String;
                 Log.d("AVATAR ", profileTemp.avatar)
@@ -642,7 +643,17 @@ class ProfilFragment : Fragment() {
             else -> {}
         }
 
-        binding.theme.text= LoggedInUser.getTheme()
+        if (LoggedInUser.getLang() == "fr") {
+            when (LoggedInUser.getTheme()) {
+                "pink" -> binding.theme.text="Rose"
+                "green" -> binding.theme.text="Vert"
+                "blizzard" -> binding.theme.text="blizzard"
+                "classic" -> binding.theme.text="Classique"
+                "inverted" -> binding.theme.text="Contraste"
+                else -> {}
+            }
+        } else binding.theme.text= LoggedInUser.getTheme()
+
         binding.level.text= "${profile.level.level}"
 
         binding.tournamentFirst.text = profile.tournamentWins[0].toString()
@@ -650,7 +661,11 @@ class ProfilFragment : Fragment() {
         binding.tournamentThird.text = profile.tournamentWins[2].toString()
 
         val neededXP = (profile.level.nextLevelXp - profile.level.xp).toString()
-        binding.xpNeeded.setText(activity?.let { HtmlCompat.fromHtml(it.getString(R.string.xp_needed_till_next_level_00, neededXP), HtmlCompat.FROM_HTML_MODE_LEGACY) }, TextView.BufferType.SPANNABLE)
+        if (LoggedInUser.getLang() == "fr") {
+            binding.xpNeeded.text = "XP nécessaires pour le prochain niveau - ${neededXP}"
+        } else {
+            binding.xpNeeded.text = "XP needed until next level - ${neededXP}"
+        }
         binding.levelProgress.max = profile.level.nextLevelXp
         binding.levelProgress.progress = profile.level.xp
         Log.i("GAME HISTORY", profile.gameHistory.toString())

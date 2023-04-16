@@ -1,7 +1,13 @@
 <mat-card id="former-actions">
-    <mat-card-header class="title">
-        {{ 'PROFILE-PAGE.GAMEHISTORY' | translate }}
-    </mat-card-header >
+    <div class="title-box">
+        <mat-card-header class="title">
+            {{ 'PROFILE-PAGE.GAMEHISTORY' | translate }}
+        </mat-card-header >
+        <div class="auto-scroll">
+            <p class="tabs scroll-button" (click) = 'scrollBottom()' >{{ 'PROFILE-PAGE.BOTTOM' | translate }}</p>
+            <p class="tabs scroll-button" (click) = 'scrollToTop()' >{{ 'PROFILE-PAGE.TOP' | translate }}</p>
+        </div>
+    </div>
     <div id="table-container" #scroll>
         <table id="data-list"  >
             <tr>
@@ -16,8 +22,5 @@
             </tr>
         </table>
     </div>
-    <div class="auto-scroll">
-        <p class="tabs scroll-button" (click) = 'scrollBottom()' >Bottom</p>
-        <p class="tabs scroll-button" (click) = 'scrollToTop()' >Top</p>
-    </div>
+    
 </mat-card>

@@ -2,6 +2,7 @@ package com.example.testchatbox
 
 import SocketHandler
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.navigation.fragment.findNavController
 import org.json.JSONArray
 import org.json.JSONObject
@@ -24,7 +25,7 @@ data class TournamentTimer (var timeRemaning:Int, var phase:Int)
 data class GameData (val type: String, val status: GameStatus, val players: Array<String>, val winnerIndex: Int, val roomCode: String)
 
 object TournamentModel :Observable{
-    private var inQueue=false;
+    var inQueue=false;
     override var observers: ArrayList<Observer> = arrayListOf()
     var gamesData : ArrayList<GameData> = arrayListOf()
     var tournamentTimer:TournamentTimer = TournamentTimer(0, 0)
@@ -40,6 +41,11 @@ object TournamentModel :Observable{
         tournamentTimer = TournamentTimer(0, 0)
         SocketHandler.getSocket().off("Tournament Data Response")
         SocketHandler.getSocket().off("Tournament Found")
+        SocketHandler.getSocket().off("Game Started")
+    }
+
+    fun getGameData():Array<GameData>{
+        return gamesData.toTypedArray();
     }
 
     fun queueForTournament(){
@@ -54,7 +60,9 @@ object TournamentModel :Observable{
         }
 
         SocketHandler.getSocket().on("Tournament Data Response"){args->
+            Log.i("Update", "DataResponse")
             val gamesArray = args[0] as JSONArray;
+            gamesData= arrayListOf();
             for(i in 0 until gamesArray.length()){
                 val gameJSON = gamesArray.get(i) as JSONObject;
                 val playersArray = gameJSON.get("players") as JSONArray;
@@ -70,6 +78,8 @@ object TournamentModel :Observable{
         }
 
         SocketHandler.getSocket().on("Game Started"){args->
+            GameRoomModel.leaveRoom()
+            Log.i("Update", "GameStarted")
             val roomCode = args[1] as String;
             populateGameRoomModel(roomCode, false);
         }
@@ -78,11 +88,11 @@ object TournamentModel :Observable{
 
 
     fun populateGameRoomModel(gameId:String, observer: Boolean){
-        GameRoomModel.leaveRoom()
         for(game in gamesData){
             if(game.roomCode==gameId)
                 GameRoomModel.initialise(GameRoom(game.type, gameId, Visibility.Public, game.players, hasStarted = true, GameType.Classic, 0),observer)
         }
+        Log.i("Update", "GameRoom")
     }
 
 }

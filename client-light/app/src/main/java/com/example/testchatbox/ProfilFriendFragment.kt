@@ -70,10 +70,6 @@ class ProfilFriendFragment : Fragment() {
         getProfile(username)
 
 
-        binding.button2.setOnClickListener {
-            findNavController().navigate(R.id.action_profilFriendFragment_to_MainMenuFragment)
-        }
-
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
         context?.theme?.resolveAttribute(R.attr.buttonColor, notSelectedColor, true)
 
@@ -169,7 +165,7 @@ class ProfilFriendFragment : Fragment() {
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorSecondary, selectedColor, true)
         context?.theme?.resolveAttribute(com.google.android.material.R.attr.colorPrimary, notSelectedColor, true)
 
-        binding.playerName.text = LoggedInUser.getName()
+        binding.playerName.text = username;
         binding.playerInGameAvatar.setImageResource(resources.getIdentifier((profile.avatar.dropLast(4)).lowercase(), "drawable", activity?.packageName))
 
         binding.level.text= "${profile.level.level}"

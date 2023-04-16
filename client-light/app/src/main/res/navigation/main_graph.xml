@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_MainMenuFragment_to_queueFragment"
             app:destination="@id/queueFragment" />
+        <action
+            android:id="@+id/action_MainMenuFragment_to_gameRoomFragment"
+            app:destination="@id/gameRoomFragment" />
     </fragment>
     <fragment
         android:id="@+id/ChatFragment"
@@ -42,6 +45,9 @@
         <action
             android:id="@+id/action_ChatFragment_to_manageChatFragment"
             app:destination="@id/manageChatFragment" />
+        <action
+            android:id="@+id/action_ChatFragment_to_gameRoomFragment"
+            app:destination="@id/gameRoomFragment" />
     </fragment>
 
     <fragment
@@ -128,6 +134,12 @@
         <action
             android:id="@+id/action_friendsFragment_to_profilFriendFragment"
             app:destination="@id/profilFriendFragment" />
+        <action
+            android:id="@+id/action_friendsFragment_to_gameListFragment"
+            app:destination="@id/gameListFragment" />
+        <action
+            android:id="@+id/action_friendsFragment_to_gameRoomFragment"
+            app:destination="@id/gameRoomFragment" />
     </fragment>
     <activity
         android:id="@+id/profileActivity"
@@ -190,7 +202,7 @@
     <fragment
         android:id="@+id/profilFriendFragment"
         android:name="com.example.testchatbox.ProfilFriendFragment"
-        android:label="fragment_profil_friend"
+        android:label="@string/friend_profile_label"
         tools:layout="@layout/fragment_profil_friend" >
         <action
             android:id="@+id/action_profilFriendFragment_to_MainMenuFragment"

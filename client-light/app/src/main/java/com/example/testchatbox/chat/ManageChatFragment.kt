@@ -1,6 +1,7 @@
 package com.example.testchatbox.chat
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -51,6 +53,8 @@ class ManageChatFragment : Fragment(), ObserverChat {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        ChatModel.updatePublicList()
+        ChatModel.updateList()
         super.onViewCreated(view, savedInstanceState);
         binding.createChat.setOnClickListener {
             val name = binding.chatName.text.toString().trim()
@@ -58,6 +62,12 @@ class ManageChatFragment : Fragment(), ObserverChat {
                 ChatModel.createPublicChat(name);
                 binding.chatName.setText("");
                 binding.chatName.clearFocus()
+            }
+        }
+
+        binding.chatName.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                hideKeyboard()
             }
         }
 
@@ -84,6 +94,7 @@ class ManageChatFragment : Fragment(), ObserverChat {
     private fun loadList(){
         resetSearchBoxes()
         chatList = ChatModel.getList();
+        Log.i("Chats", chatList.toString())
         chatButtons = arrayListOf()
         val chatListView = binding.chatList;
         chatListView.removeAllViews()
@@ -95,18 +106,10 @@ class ManageChatFragment : Fragment(), ObserverChat {
                 chatRoomName.text = chat.chatName
                 chatRoomLayout.id = i
                 chatRoomLayout.setOnClickListener{
-                    ChatModel.leaveChat(chatList[i]._id)
+                    if(chat.isOwner==true) askDelete(chatList[i]._id);
+                    else ChatModel.leaveChat(chatList[i]._id);
                 }
                 chatListView.addView(chatRoomLayout)
-
-//                val btn = Button((activity as MainActivity?)!!)
-//                btn.text = chat.chatName;
-//                btn.id = i;
-//                btn.textSize= 30F;
-//                btn.setOnClickListener{
-//                    ChatModel.leaveChat(chatList[i]._id)
-//                }
-//                chatListView.addView(btn)
             }
         }
     }
@@ -129,15 +132,6 @@ class ManageChatFragment : Fragment(), ObserverChat {
                     ChatModel.joinPublicList(publicChatList[i]._id)
                 }
                 chatListView.addView(chatRoomLayout)
-
-//                val btn = Button((activity as MainActivity?)!!)
-//                btn.text = chat.chatName;
-//                btn.id = i;
-//                btn.textSize= 30F;
-//                btn.setOnClickListener{
-//                    ChatModel.joinPublicList(publicChatList[i]._id)
-//                }
-//                chatListView.addView(btn)
             }
         }
     }
@@ -182,7 +176,7 @@ class ManageChatFragment : Fragment(), ObserverChat {
 
     private fun searchChats(chatRoomButtons: ArrayList<CardView>, chatSearchText: String) {
         val lowerCaseSearchText = chatSearchText.lowercase()
-        
+
         for (chatRoomButton in chatRoomButtons) {
             val chatRoomName = chatRoomButton.findViewById<TextView>(R.id.chatbutton)
             val chatName: String = chatRoomName.text.toString().lowercase()
@@ -217,6 +211,25 @@ class ManageChatFragment : Fragment(), ObserverChat {
         activity?.runOnUiThread(Runnable {
             loadPublicList()
         });
+    }
+    private fun hideKeyboard() {
+        val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+    }
+
+    private fun askDelete(id:String){
+        binding.deleteSection.visibility=View.VISIBLE;
+        binding.rejectDelete.setOnClickListener {
+            binding.deleteSection.visibility=View.GONE;
+            binding.acceptDelete.setOnClickListener(null);
+            binding.rejectDelete.setOnClickListener(null);
+        }
+        binding.acceptDelete.setOnClickListener {
+            binding.deleteSection.visibility=View.GONE;
+            binding.acceptDelete.setOnClickListener(null);
+            binding.rejectDelete.setOnClickListener(null);
+            ChatModel.leaveChat(id);
+        }
     }
 
 }

@@ -14,7 +14,7 @@
         android:gravity="center"
         android:padding="12dp"
         android:background="@drawable/background_side_panel"
-        android:backgroundTint="?colorSecondary"
+        android:backgroundTint="?appBar"
         android:layout_gravity="center|end">
 
         <ImageButton

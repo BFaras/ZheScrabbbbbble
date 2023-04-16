@@ -37,12 +37,13 @@ object GameHistoryModel : Observable {
         SocketHandler.getSocket().emit("Respond Coop Action", accept)
     }
 
-    fun getList():ArrayList<PlayerMessage>{
-        return actionMessages;
+    fun getList(): Array<PlayerMessage> {
+        return actionMessages.toTypedArray();
     }
 
     fun reset(){
         actionMessages = arrayListOf<PlayerMessage>()
+        SocketHandler.getSocket().off("Message Action History")
     }
 
     fun clearPlayRequest(){

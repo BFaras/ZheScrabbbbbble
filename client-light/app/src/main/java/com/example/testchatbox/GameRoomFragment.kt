@@ -55,8 +55,6 @@ class GameRoomFragment : Fragment(), Observer {
         super.onViewCreated(view, savedInstanceState)
         setupChatNotifs(view.context)
         update();
-
-
         binding.leave.setOnClickListener {
             GameRoomModel.leaveRoom();
             SocketHandler.getSocket().emit("Leave Game Room")
@@ -81,6 +79,7 @@ class GameRoomFragment : Fragment(), Observer {
     override fun onStop() {
         super.onStop()
         NotificationInfoHolder.setFunctionOnMessageReceived(null);
+        NotificationInfoHolder.setFunctionOnChatDeleted(null);
         notifSound?.release()
         GameRoomModel.removeObserver(this);
     }
@@ -108,7 +107,6 @@ class GameRoomFragment : Fragment(), Observer {
 
     @SuppressLint("MissingInflatedId")
     private fun updateNames(){
-        binding.roomName.text = GameRoomModel.gameRoom!!.name
         binding.waitingPlayersList.removeAllViews()
         for (player in GameRoomModel.gameRoom!!.players) {
             val playerInfo =
@@ -135,14 +133,8 @@ class GameRoomFragment : Fragment(), Observer {
                 isOwner.visibility = GONE
             }
             binding.waitingPlayersList.addView(playerInfo)
-//            binding.startGame.visibility=View.VISIBLE
         }
-//        for(i in 0..3){
-//            if(i< GameRoomModel.gameRoom!!.players.size)
-//                playerView[i].text = GameRoomModel.gameRoom!!.players[i];
-//            else
-//                playerView[i].text = "";
-//        }
+
         if(LoggedInUser.getName()==GameRoomModel.gameRoom!!.players[0])
             binding.startGame.visibility = VISIBLE
     }
@@ -161,6 +153,7 @@ class GameRoomFragment : Fragment(), Observer {
             hideJoinSection(true)
         }
     }
+
     private fun hideJoinSection(response: Boolean){
         SocketHandler.getSocket().emit("Join Request Response", response, GameRoomModel.joinRequest.removeAt(0))
         binding.joinSection.visibility=View.GONE
@@ -175,6 +168,7 @@ class GameRoomFragment : Fragment(), Observer {
         isChatIconChanged = false;
         NotificationInfoHolder.startObserverChat();
         NotificationInfoHolder.setFunctionOnMessageReceived(::playNotifSoundAndChangeIcon);
+        NotificationInfoHolder.setFunctionOnChatDeleted(::changeToNoNotifChatIcon);
         notifSound = MediaPlayer.create(context, R.raw.ding)
 
         notifSound?.setOnCompletionListener { notifSound?.release() }
@@ -193,5 +187,12 @@ class GameRoomFragment : Fragment(), Observer {
     fun changeToNotifChatIcon() {
         binding.buttonchat.setBackgroundResource(R.drawable.ic_chat_notif);
         isChatIconChanged = true;
+    }
+
+    fun changeToNoNotifChatIcon() {
+        if (isChatIconChanged) {
+            binding.buttonchat.setBackgroundResource(R.drawable.ic_chat);
+            isChatIconChanged = false;
+        }
     }
 }

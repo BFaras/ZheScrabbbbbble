@@ -6,9 +6,9 @@ export interface FriendsDB {
 }
 
 export enum ConnectivityStatus {
-    OFFLINE,
-    ONLINE,
-    INGAME,
+    OFFLINE = 0,
+    ONLINE = 1,
+    INGAME = 2,
 }
 
 export interface UserStatus {
